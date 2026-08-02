@@ -637,3 +637,63 @@ function deleteTeacher(nip) {
     renderDataGuru();
   }
 }
+
+function previewTeacherAvatar(e) {
+  const target = e.target;
+  if (target && target.files && target.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const previewImg = document.getElementById('settingAvatarPreview');
+      if (previewImg && evt.target) previewImg.src = evt.target.result;
+    };
+    reader.readAsDataURL(target.files[0]);
+  }
+}
+
+async function saveTeacherProfileSettings(e) {
+  e.preventDefault();
+  const nameInput = document.getElementById('settingTeacherName').value.trim();
+  const nipInput = document.getElementById('settingTeacherNip').value.trim();
+  const subjectInput = document.getElementById('settingTeacherSubject').value.trim();
+  const schoolInput = document.getElementById('settingSchoolName').value.trim();
+  const kecamatanInput = document.getElementById('settingKecamatan').value.trim();
+  const previewImg = document.getElementById('settingAvatarPreview');
+  const avatarFileInput = document.getElementById('settingAvatarFile');
+
+  appData.teacher.name = nameInput;
+  appData.teacher.nip = nipInput;
+  appData.teacher.subject = subjectInput;
+  appData.teacher.school = schoolInput;
+  appData.teacher.kecamatan = kecamatanInput;
+
+  if (avatarFileInput && avatarFileInput.files && avatarFileInput.files[0]) {
+    if (typeof uploadAvatarToSupabaseStorage === 'function') {
+      const uploadedUrl = await uploadAvatarToSupabaseStorage(avatarFileInput.files[0], nipInput);
+      if (uploadedUrl) {
+        appData.teacher.avatar = uploadedUrl;
+      } else if (previewImg && previewImg.src) {
+        appData.teacher.avatar = previewImg.src;
+      }
+    } else if (previewImg && previewImg.src) {
+      appData.teacher.avatar = previewImg.src;
+    }
+  } else if (previewImg && previewImg.src) {
+    appData.teacher.avatar = previewImg.src;
+  }
+
+  // Update in teachers list
+  if (appData.teachers) {
+    const idx = appData.teachers.findIndex(t => t.nip === nipInput);
+    if (idx !== -1) {
+      appData.teachers[idx] = { ...appData.teacher };
+    }
+  }
+
+  saveStorage();
+  if (typeof saveTeacherToSupabase === 'function') {
+    await saveTeacherToSupabase(appData.teacher);
+  }
+  renderTeacherProfile();
+  renderDataGuru();
+  alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan ke Supabase Cloud!');
+}
