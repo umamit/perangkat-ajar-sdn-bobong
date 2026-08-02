@@ -2,8 +2,15 @@
 import { Student, JournalEntry, Teacher, AppData } from './types';
 import { INITIAL_DATA } from './data';
 
-const SUPABASE_URL: string = "https://evslcvjucmnyxkqwfdye.supabase.co";
-const SUPABASE_ANON_KEY: string = "[REDACTED_KEY]";
+const metaEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env : null;
+
+const SUPABASE_URL: string = (metaEnv && metaEnv.VITE_SUPABASE_URL)
+  ? metaEnv.VITE_SUPABASE_URL
+  : "https://evslcvjucmnyxkqwfdye.supabase.co";
+
+const SUPABASE_ANON_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_ANON_KEY)
+  ? metaEnv.VITE_SUPABASE_ANON_KEY
+  : "[REDACTED_KEY]";
 
 let supabaseClient: any = null;
 
