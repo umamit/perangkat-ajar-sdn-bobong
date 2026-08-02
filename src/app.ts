@@ -131,8 +131,16 @@ export function closeMobileSidebar(): void {
   }
 }
 
-// Teacher Info Render
+// // Teacher Info Render & Form Auto-Populate
 export function renderTeacherProfile(): void {
+  if (appData.teachers && appData.teachers.length > 0) {
+    const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '199610272019032006';
+    const matched = appData.teachers.find(t => t.nip === activeNip);
+    if (matched) {
+      appData.teacher = { ...appData.teacher, ...matched };
+    }
+  }
+
   const teacher = appData.teacher || {};
   if (document.getElementById('teacherNameSidebar')) document.getElementById('teacherNameSidebar')!.innerText = teacher.name || 'Husnita Usman, M.Pd.';
   if (document.getElementById('teacherNipSidebar')) document.getElementById('teacherNipSidebar')!.innerText = `NIP: ${teacher.nip || '199610272019032006'}`;
