@@ -981,7 +981,7 @@ function renderDataGuru() {
   const tbody = document.getElementById('teacherTableBody');
   if (!tbody) return;
 
-  const teachers = appData.teachers || [appData.teacher];
+  const teachers = (appData.teachers && appData.teachers.length > 0) ? appData.teachers : [INITIAL_DATA.teacher];
   tbody.innerHTML = teachers.map(t => `
     <tr>
       <td><strong>${t.nip}</strong></td>
@@ -990,7 +990,7 @@ function renderDataGuru() {
       <td><span class="badge badge-info">${t.role || 'Guru'}</span></td>
       <td><span class="badge badge-success">Aktif</span></td>
       <td>
-        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;">
+        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;" title="Hapus Guru">
           <i class="ri-delete-bin-line"></i> Hapus
         </button>
       </td>
@@ -1042,8 +1042,18 @@ function saveTeacher(e) {
     avatar: 'assets/logo-sdn-bobong.png'
   };
 
-  if (!appData.teachers) appData.teachers = [];
-  appData.teachers.push(newT);
+  if (!appData.teachers || appData.teachers.length === 0) {
+    appData.teachers = [...INITIAL_DATA.teachers];
+  }
+
+  // Check duplicate NIP
+  const existingIdx = appData.teachers.findIndex(t => t.nip === newT.nip);
+  if (existingIdx !== -1) {
+    appData.teachers[existingIdx] = newT;
+  } else {
+    appData.teachers.push(newT);
+  }
+
   saveStorage();
   saveTeacherToSupabase(newT);
   renderDataGuru();
@@ -1052,8 +1062,16 @@ function saveTeacher(e) {
 }
 
 function deleteTeacher(nip) {
+  if (nip === '199610272019032006') {
+    alert('Akun utama Husnita Usman, M.Pd. (Plt. Kepala Sekolah) tidak dapat dihapus demi keamanan sistem.');
+    return;
+  }
+
   if (confirm(`Apakah Anda yakin ingin menghapus akun guru NIP ${nip}?`)) {
-    appData.teachers = appData.teachers.filter(t => t.nip !== nip);
+    appData.teachers = (appData.teachers || []).filter(t => t.nip !== nip);
+    if (appData.teachers.length === 0) {
+      appData.teachers = [...INITIAL_DATA.teachers];
+    }
     saveStorage();
     deleteTeacherFromSupabase(nip);
     renderDataGuru();

@@ -5,6 +5,7 @@ import {
   uploadAvatarToSupabaseStorage, getCookie, setCookie, eraseCookie
 } from './helpers';
 import { renderModulAjar } from './views';
+import { INITIAL_DATA } from './data';
 import { Student, JournalEntry, Teacher } from './types';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -659,8 +660,8 @@ export function renderDataGuru(): void {
   const tbody = document.getElementById('teacherTableBody');
   if (!tbody) return;
 
-  const teachers = appData.teachers || [appData.teacher];
-  tbody.innerHTML = teachers.map(t => `
+  const teachers = (appData.teachers && appData.teachers.length > 0) ? appData.teachers : [(INITIAL_DATA as any).teacher];
+  tbody.innerHTML = teachers.map((t: any) => `
     <tr>
       <td><strong>${t.nip}</strong></td>
       <td>${t.name}</td>
@@ -668,7 +669,7 @@ export function renderDataGuru(): void {
       <td><span class="badge badge-info">${t.role || 'Guru'}</span></td>
       <td><span class="badge badge-success">Aktif</span></td>
       <td>
-        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;">
+        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;" title="Hapus Guru">
           <i class="ri-delete-bin-line"></i> Hapus
         </button>
       </td>
@@ -730,8 +731,16 @@ export function saveTeacher(e: Event): void {
 }
 
 export function deleteTeacher(nip: string): void {
+  if (nip === '199610272019032006') {
+    alert('Akun utama Husnita Usman, M.Pd. (Plt. Kepala Sekolah) tidak dapat dihapus demi keamanan sistem.');
+    return;
+  }
+
   if (confirm(`Apakah Anda yakin ingin menghapus akun guru NIP ${nip}?`)) {
-    appData.teachers = appData.teachers.filter(t => t.nip !== nip);
+    appData.teachers = (appData.teachers || []).filter(t => t.nip !== nip);
+    if (appData.teachers.length === 0) {
+      appData.teachers = [...(INITIAL_DATA as any).teachers];
+    }
     saveStorage();
     deleteTeacherFromSupabase(nip);
     renderDataGuru();
