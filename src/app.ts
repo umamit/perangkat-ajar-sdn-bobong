@@ -96,9 +96,14 @@ export function initApp(): void {
   const backdrop = document.getElementById('sidebarBackdrop');
 
   if (document.getElementById('menuToggle') && sidebar && backdrop) {
-    document.getElementById('menuToggle')!.addEventListener('click', () => {
+    const toggleBtn = document.getElementById('menuToggle')!;
+    toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('active');
       backdrop.classList.toggle('active');
+      const icon = toggleBtn.querySelector('i');
+      if (icon) {
+        icon.className = sidebar.classList.contains('active') ? 'ri-close-line' : 'ri-menu-line';
+      }
     });
   }
 
