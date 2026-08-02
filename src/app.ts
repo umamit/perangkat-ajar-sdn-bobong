@@ -101,5 +101,6 @@ if (typeof window !== 'undefined') {
   (window as any).filterSiswa = filterSiswa;
   (window as any).renderAllViews = initApp;
   (window as any).renderTeacherProfile = renderTeacherProfile;
+  (window as any).renderDataGuru = renderDataGuru;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

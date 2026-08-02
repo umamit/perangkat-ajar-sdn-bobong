@@ -5,7 +5,7 @@ export function renderDataGuru(): void {
   const tbody = document.getElementById('teacherTableBody');
   if (!tbody) return;
 
-  const teachers = (appData.teachers && appData.teachers.length > 0) ? appData.teachers : [(INITIAL_DATA as any).teacher];
+  const teachers = (appData.teachers && appData.teachers.length > 0) ? appData.teachers : [...(INITIAL_DATA as any).teachers];
   tbody.innerHTML = teachers.map((t: any) => `
     <tr>
       <td><strong>${t.nip}</strong></td>

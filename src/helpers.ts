@@ -73,6 +73,9 @@ export async function syncFromSupabase(): Promise<void> {
     if (typeof (window as any).renderTeacherProfile === 'function') {
       (window as any).renderTeacherProfile();
     }
+    if (typeof (window as any).renderDataGuru === 'function') {
+      (window as any).renderDataGuru();
+    }
     if (typeof (window as any).renderAllViews === 'function') {
       (window as any).renderAllViews();
     }
