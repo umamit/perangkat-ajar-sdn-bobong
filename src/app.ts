@@ -3,15 +3,33 @@ import {
   appData, loadStorage, saveStorage, syncFromSupabase
 } from './helpers';
 
-import { checkAuthSession, handleLogin, handleLogout } from './modules/authModule';
-import { renderTeacherProfile, renderPengaturanForm, getTeacherClasses, renderDataGuru, deleteTeacher } from './modules/teacherModule';
-import { renderDataSiswa, searchStudent, filterSiswa, renderDataKelas } from './modules/studentModule';
-import { 
-  renderDashboard, renderAbsensi, renderDaftarNilai, renderJurnal, 
-  renderTimetable, renderMateriFlashcards, renderTugas, renderLaporan, 
-  showAddJournalModal, saveJournal, adjustGrade, updateStudentGrade 
-} from './modules/academicModule';
-import { openModal, closeModal, closeMobileSidebar, setupNavigation, switchRoleMode } from './modules/uiModule';
+import { checkAuthSession } from './modules/checkAuthSession';
+import { handleLogin } from './modules/handleLogin';
+import { handleLogout } from './modules/handleLogout';
+import { renderTeacherProfile } from './modules/renderTeacherProfile';
+import { renderPengaturanForm } from './modules/renderPengaturanForm';
+import { getTeacherClasses } from './modules/getTeacherClasses';
+import { renderDataGuru } from './modules/renderDataGuru';
+import { deleteTeacher } from './modules/deleteTeacher';
+
+import { renderDataSiswa } from './modules/renderDataSiswa';
+import { filterSiswa, searchStudent } from './modules/searchStudent';
+import { renderDataKelas } from './modules/renderDataKelas';
+
+import { renderDashboard } from './modules/renderDashboard';
+import { renderAbsensi } from './modules/renderAbsensi';
+import { renderDaftarNilai, adjustGrade, updateStudentGrade } from './modules/renderDaftarNilai';
+import { renderJurnal, showAddJournalModal, saveJournal } from './modules/renderJurnal';
+import { renderTimetable } from './modules/renderTimetable';
+import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
+import { renderTugas } from './modules/renderTugas';
+import { renderLaporan } from './modules/renderLaporan';
+
+import { openModal, closeModal } from './modules/openModal';
+import { closeMobileSidebar } from './modules/closeMobileSidebar';
+import { setupNavigation } from './modules/setupNavigation';
+import { switchRoleMode } from './modules/switchRoleMode';
+
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
 document.addEventListener('DOMContentLoaded', () => {
