@@ -72,6 +72,12 @@ function togglePasswordVisibility() {
 }
 
 function initApp() {
+  if (!appData.activeRoleMode) {
+    appData.activeRoleMode = 'guru_inggris';
+  }
+  const selectElem = document.getElementById('roleModeSelect');
+  if (selectElem) selectElem.value = appData.activeRoleMode;
+
   renderTeacherProfile();
   setupNavigation();
   renderDashboard();

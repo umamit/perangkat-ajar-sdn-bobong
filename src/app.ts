@@ -70,6 +70,12 @@ export function handleLogout(): void {
 }
 
 export function initApp(): void {
+  if (!(appData as any).activeRoleMode) {
+    (appData as any).activeRoleMode = 'guru_inggris';
+  }
+  const selectElem = document.getElementById('roleModeSelect') as HTMLSelectElement | null;
+  if (selectElem) selectElem.value = (appData as any).activeRoleMode;
+
   renderTeacherProfile();
   setupNavigation();
   renderDashboard();
