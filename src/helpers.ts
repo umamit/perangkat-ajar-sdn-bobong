@@ -23,16 +23,14 @@ export async function syncFromSupabase(): Promise<void> {
 
   try {
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
-    if (students && students.length > 0) {
-      appData.students = students.map((s: any) => ({
-        id: s.nis,
-        uuid: s.id,
-        nis: s.nis,
-        name: s.name,
-        classId: s.class_id,
-        gender: s.gender || 'L'
-      }));
-    }
+    appData.students = (students || []).map((s: any) => ({
+      id: s.nis,
+      uuid: s.id,
+      nis: s.nis,
+      name: s.name,
+      classId: s.class_id,
+      gender: s.gender || 'L'
+    }));
 
     const { data: journals } = await client.from('journals').select('id, date, time_slot, class_id, topic, notes, attendance_summary');
     if (journals && journals.length > 0) {

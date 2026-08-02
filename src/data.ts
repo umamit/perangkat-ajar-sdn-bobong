@@ -39,18 +39,7 @@ export const INITIAL_DATA: AppData = {
     { id: "6A", name: "Kelas 6 - A", count: 25, room: "Ruang 06", phase: "Fase C" }
   ],
 
-  students: [
-    { id: "S001", nis: "1001", name: "Ahmad Fauzi", classId: "4A", gender: "L", scoreFormatif: 85, scoreSumatif: 88 },
-    { id: "S002", nis: "1002", name: "Anisa Rahma", classId: "4A", gender: "P", scoreFormatif: 90, scoreSumatif: 92 },
-    { id: "S003", nis: "1003", name: "Bagus Pratama", classId: "4A", gender: "L", scoreFormatif: 78, scoreSumatif: 80 },
-    { id: "S004", nis: "1004", name: "Citra Dewi", classId: "4A", gender: "P", scoreFormatif: 95, scoreSumatif: 96 },
-    { id: "S005", nis: "1005", name: "Dion Prasetyo", classId: "4A", gender: "L", scoreFormatif: 82, scoreSumatif: 84 },
-    { id: "S006", nis: "1006", name: "Eka Fitriani", classId: "4A", gender: "P", scoreFormatif: 88, scoreSumatif: 85 },
-    { id: "S007", nis: "1007", name: "Fajar Hidayat", classId: "1A", gender: "L", scoreFormatif: 80, scoreSumatif: 83 },
-    { id: "S008", nis: "1008", name: "Gita Gutawa", classId: "1A", gender: "P", scoreFormatif: 92, scoreSumatif: 90 },
-    { id: "S009", nis: "1009", name: "Hafiz Maulana", classId: "5A", gender: "L", scoreFormatif: 87, scoreSumatif: 89 },
-    { id: "S010", nis: "1010", name: "Indah Permata", classId: "5A", gender: "P", scoreFormatif: 94, scoreSumatif: 95 }
-  ],
+  students: [],
 
   journals: [
     {
