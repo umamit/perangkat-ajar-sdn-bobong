@@ -1,10 +1,9 @@
 // Application Main Script for Perangkat Ajar Guru Bahasa Inggris SD Negeri Bobong
-
-
 document.addEventListener('DOMContentLoaded', () => {
   loadStorage();
   checkAuthSession();
   initApp();
+  syncFromSupabase();
 });
 
 function checkAuthSession() {
@@ -740,6 +739,7 @@ function saveJournal(e) {
 
   appData.journals.unshift(newJ);
   saveStorage();
+  saveJournalToSupabase(newJ);
   sendToGoogleSheets("Jurnal", newJ);
   renderDashboard();
   renderJurnal();
@@ -790,6 +790,7 @@ function saveStudent(e) {
 
   appData.students.push(newS);
   saveStorage();
+  saveStudentToSupabase(newS);
   sendToGoogleSheets("Siswa", newS);
   renderDashboard();
   renderDataSiswa();
