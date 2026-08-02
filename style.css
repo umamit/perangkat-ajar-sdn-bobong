@@ -343,7 +343,7 @@ body {
   flex-shrink: 0;
 }
 
-.stat-icon.indigo { background: #e0e7ff; color: #4338ca; }
+.stat-icon.indigo { background: #eef6f8; color: #216c7e; }
 .stat-icon.emerald { background: #d1fae5; color: #047857; }
 .stat-icon.amber { background: #fef3c7; color: #b45309; }
 .stat-icon.rose { background: #ffe4e6; color: #be123c; }
@@ -707,6 +707,17 @@ td {
   }
 }
 
+.stat-icon.indigo { background: #eef6f8; color: #216c7e; }
+.stat-icon.emerald { background: #d1fae5; color: #047857; }
+.stat-icon.amber { background: #fef3c7; color: #b45309; }
+.stat-icon.rose { background: #ffe4e6; color: #be123c; }
+
+.stat-info h4 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
 /* ----------------------------------------------------
    LOGIN SCREEN STYLES (Mobile First)
    ---------------------------------------------------- */
@@ -716,7 +727,7 @@ td {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #164d57 50%, #216c7e 100%);
   display: flex;
   align-items: center;
   justify-content: center;
