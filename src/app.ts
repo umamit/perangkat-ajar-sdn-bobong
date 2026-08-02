@@ -53,6 +53,8 @@ import { showAddTeacherModal } from './modules/showAddTeacherModal';
 import { saveTeacher } from './modules/saveTeacher';
 import { showAddModulModal } from './modules/showAddModulModal';
 import { saveModul } from './modules/saveModul';
+import { showAddTugasModal } from './modules/showAddTugasModal';
+import { saveTugas } from './modules/saveTugas';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
@@ -127,6 +129,8 @@ if (typeof window !== 'undefined') {
   (window as any).saveEditStudent = saveEditStudent;
   (window as any).showAddModulModal = showAddModulModal;
   (window as any).saveModul = saveModul;
+  (window as any).showAddTugasModal = showAddTugasModal;
+  (window as any).saveTugas = saveTugas;
   (window as any).saveTeacherProfileSettings = saveTeacherProfileSettings;
   (window as any).previewTeacherAvatar = previewTeacherAvatar;
   (window as any).adjustGrade = adjustGrade;

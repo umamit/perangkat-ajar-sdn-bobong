@@ -100,6 +100,16 @@ export interface QuizQuestion {
   answer: string;
 }
 
+export interface TaskItem {
+  id: string;
+  title: string;
+  classId: string;
+  dueDate: string;
+  type: string;
+  status: string;
+  description: string;
+}
+
 export interface AppData {
   teacher: Teacher;
   teachers: Teacher[];
@@ -110,6 +120,7 @@ export interface AppData {
   modules: ModuleAjar[];
   flashcards: FlashcardItem[];
   quizQuestions: QuizQuestion[];
+  tasks?: TaskItem[];
   attendance?: any[];
   schedules?: any[];
 }

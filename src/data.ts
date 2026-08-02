@@ -159,6 +159,27 @@ export const INITIAL_DATA: AppData = {
     { id: 2, question: "Complete the sentence: 'She is ____ a pizza.'", options: ["sleeping", "eating", "writing", "running"], answer: "eating" },
     { id: 3, question: "What is 'Elephant' in Indonesian?", options: ["Kucing", "Gajah", "Kuda", "Jerapah"], answer: "Gajah" },
     { id: 4, question: "How do you say 'Selamat Pagi' in English?", options: ["Good Night", "Good Afternoon", "Good Morning", "Good Bye"], answer: "Good Morning" }
+  ],
+
+  tasks: [
+    {
+      id: "TSK-01",
+      title: "Kuis Kosakata Action Verbs",
+      classId: "4A",
+      dueDate: "2025-08-10",
+      type: "Formatif",
+      status: "Aktif",
+      description: "Jodohkan gambar aksi dengan kata bahasa Inggris yang tepat di lembar kerja."
+    },
+    {
+      id: "TSK-02",
+      title: "Membaca Dialog Restoran & Rasa Makanan",
+      classId: "5A",
+      dueDate: "2025-08-15",
+      type: "Sumatif",
+      status: "Aktif",
+      description: "Praktikkan dialog menyapa dan memesan makanan dalam Bahasa Inggris bersama pasangan."
+    }
   ]
 };
 
