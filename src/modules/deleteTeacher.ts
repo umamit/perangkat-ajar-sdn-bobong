@@ -3,8 +3,9 @@ import { INITIAL_DATA } from '../data';
 import { renderDataGuru } from './renderDataGuru';
 
 export function deleteTeacher(nip: string): void {
-  if (nip === '199610272019032006') {
-    alert('Akun utama Husnita Usman, M.Pd. (Plt. Kepala Sekolah) tidak dapat dihapus demi keamanan sistem.');
+  const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '';
+  if (nip === activeNip) {
+    alert(`Akun ${appData.teacher.name || 'Anda'} yang sedang aktif tidak dapat dihapus demi keamanan sistem.`);
     return;
   }
 

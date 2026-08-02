@@ -32,6 +32,10 @@ import { switchRoleMode } from './modules/switchRoleMode';
 
 import { showAddTeacherModal } from './modules/showAddTeacherModal';
 import { saveTeacher } from './modules/saveTeacher';
+import { showAddStudentModal, showEditStudentModal } from './modules/showAddStudentModal';
+import { saveStudent, saveEditStudent } from './modules/saveStudent';
+import { showAddModulModal, saveModul } from './modules/showAddModulModal';
+import { saveTeacherProfileSettings, previewTeacherAvatar } from './modules/renderPengaturanForm';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
@@ -100,6 +104,14 @@ if (typeof window !== 'undefined') {
   (window as any).showAddTeacherModal = showAddTeacherModal;
   (window as any).saveTeacher = saveTeacher;
   (window as any).deleteTeacher = deleteTeacher;
+  (window as any).showAddStudentModal = showAddStudentModal;
+  (window as any).showEditStudentModal = showEditStudentModal;
+  (window as any).saveStudent = saveStudent;
+  (window as any).saveEditStudent = saveEditStudent;
+  (window as any).showAddModulModal = showAddModulModal;
+  (window as any).saveModul = saveModul;
+  (window as any).saveTeacherProfileSettings = saveTeacherProfileSettings;
+  (window as any).previewTeacherAvatar = previewTeacherAvatar;
   (window as any).adjustGrade = adjustGrade;
   (window as any).updateStudentGrade = updateStudentGrade;
   (window as any).searchStudent = searchStudent;

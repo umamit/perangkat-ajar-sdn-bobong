@@ -38,7 +38,7 @@ export function filterSiswa(queryVal?: string): void {
       <td>${s.scoreFormatif || 80}</td>
       <td>${s.scoreSumatif || 80}</td>
       <td>
-        <button class="btn btn-secondary" onclick="alert('Edit Siswa: ${s.name}')" style="padding: 4px 8px; font-size:12px;">
+        <button class="btn btn-secondary" onclick="showEditStudentModal('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px;">
           <i class="ri-edit-line"></i> Edit
         </button>
       </td>
