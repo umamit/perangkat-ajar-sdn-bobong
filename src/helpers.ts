@@ -4,7 +4,6 @@ import { INITIAL_DATA } from './data';
 
 const SUPABASE_URL: string = "https://evslcvjucmnyxkqwfdye.supabase.co";
 const SUPABASE_ANON_KEY: string = "[REDACTED_KEY]";
-const GOOGLE_SCRIPT_URL: string = "https://script.google.com/macros/s/AKfycbwpXkZ1t6rKBb1hvZdEpmPKc-SRNV-41pRxw7Sr9TPz6WC65RdlFoI4ZI9p-FgEJxd30w/exec";
 
 let supabaseClient: any = null;
 
@@ -69,21 +68,6 @@ export async function syncFromSupabase(): Promise<void> {
   } catch (err) {
     console.warn('[Supabase Sync Warning]', err);
   }
-}
-
-// Send Data Real-Time to Google Sheets
-export function sendToGoogleSheets(targetSheet: string, payload: any): void {
-  if (!GOOGLE_SCRIPT_URL) return;
-  fetch(`${GOOGLE_SCRIPT_URL}?targetSheet=${targetSheet}`, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).then(() => {
-    console.log(`[Google Sheets] Data saved to sheet: ${targetSheet}`);
-  }).catch(err => {
-    console.error(`[Google Sheets Error]`, err);
-  });
 }
 
 // In-Memory Storage Handlers (Storage API completely removed)

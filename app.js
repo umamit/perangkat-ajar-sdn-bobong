@@ -492,7 +492,6 @@ function saveJournal(e) {
   appData.journals.unshift(newJ);
   saveStorage();
   saveJournalToSupabase(newJ);
-  sendToGoogleSheets("Jurnal", newJ);
   renderDashboard();
   renderJurnal();
   closeModal();
@@ -543,7 +542,6 @@ function saveStudent(e) {
   appData.students.push(newS);
   saveStorage();
   saveStudentToSupabase(newS);
-  sendToGoogleSheets("Siswa", newS);
   renderDashboard();
   renderDataSiswa();
   renderDaftarNilai();
