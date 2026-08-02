@@ -82,16 +82,25 @@ function sendToGoogleSheets(targetSheet, payload) {
 }
 
 // LocalStorage Handlers
+function safeMerge(defaults, saved) {
+  const result = { ...defaults };
+  if (!saved || typeof saved !== 'object') return result;
+  for (const key of Object.keys(saved)) {
+    if (saved[key] !== undefined && saved[key] !== null && saved[key] !== '') {
+      result[key] = saved[key];
+    }
+  }
+  return result;
+}
+
 function loadStorage() {
   const saved = localStorage.getItem('sdn_bobong_app_data');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      // Merge with INITIAL_DATA defaults to prevent undefined on new fields
       appData = {
-        ...INITIAL_DATA,
-        ...parsed,
-        teacher: { ...INITIAL_DATA.teacher, ...parsed.teacher }
+        ...safeMerge(INITIAL_DATA, parsed),
+        teacher: safeMerge(INITIAL_DATA.teacher, parsed.teacher)
       };
     } catch (e) {
       console.error('Failed to parse localStorage appData:', e);

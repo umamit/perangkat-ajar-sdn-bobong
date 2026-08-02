@@ -2,7 +2,7 @@
 
 const INITIAL_DATA = {
   teacher: {
-    name: "Guru Bahasa Inggris",
+    name: "Husnita Usman, M.Pd.",
     role: "Guru Mata Pelajaran",
     school: "SD Negeri Bobong",
     kecamatan: "Kecamatan Taliabu Barat",
@@ -13,7 +13,7 @@ const INITIAL_DATA = {
   },
 
   teachers: [
-    { nip: "199610272019032006", name: "Guru Bahasa Inggris", role: "Guru Mata Pelajaran", subject: "Bahasa Inggris", password: "kepseksdnbobong", avatar: "assets/logo-sdn-bobong.png" },
+    { nip: "199610272019032006", name: "Husnita Usman, M.Pd.", role: "Guru Mata Pelajaran", subject: "Bahasa Inggris", password: "kepseksdnbobong", avatar: "assets/logo-sdn-bobong.png" },
     { nip: "197508201999031002", name: "Kepala Sekolah SDN Bobong", role: "Kepala Sekolah / Admin", subject: "Manajemen Sekolah", password: "kepseksdnbobong", avatar: "assets/logo-sdn-bobong.png" },
     { nip: "199105122018021001", name: "Nurhalisa, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 1A", password: "sdnbobong", avatar: "assets/logo-sdn-bobong.png" },
     { nip: "198803152014032003", name: "Rahmat Hidayat, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 4A", password: "sdnbobong", avatar: "assets/logo-sdn-bobong.png" }
