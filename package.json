@@ -4,18 +4,13 @@
   "description": "Perangkat Ajar Online - SD Negeri Bobong (TypeScript)",
   "main": "app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --noEmit",
     "watch": "tsc -w"
   },
-  "keywords": [
-    "typescript",
-    "perangkat-ajar",
-    "sdn-bobong",
-    "supabase"
-  ],
+  "keywords": ["typescript", "perangkat-ajar", "sdn-bobong", "supabase", "pwa"],
   "author": "SD Negeri Bobong",
   "license": "MIT",
-  "devDependencies": {
-    "typescript": "^5.9.3"
+  "dependencies": {
+    "typescript": "^5.3.3"
   }
 }
