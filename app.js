@@ -479,29 +479,29 @@ function renderDaftarNilai() {
         <td>${index + 1}</td>
         <td><strong>${s.name}</strong></td>
         <td><span class="badge badge-info">${s.classId}</span></td>
-        <td>
+        <td style="text-align:center;">
           <div style="display:inline-flex; align-items:center; gap:4px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'formatif', -1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Kurangi 1">-</button>
             <input type="number" min="0" max="100" value="${formatif}" onchange="updateStudentGrade('${s.id}', 'formatif', this.value)" style="width:52px; text-align:center; padding:4px 2px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'formatif', 1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Tambah 1">+</button>
           </div>
         </td>
-        <td>
+        <td style="text-align:center;">
           <div style="display:inline-flex; align-items:center; gap:4px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sts', -1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Kurangi 1">-</button>
             <input type="number" min="0" max="100" value="${sts}" onchange="updateStudentGrade('${s.id}', 'sts', this.value)" style="width:52px; text-align:center; padding:4px 2px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sts', 1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Tambah 1">+</button>
           </div>
         </td>
-        <td>
+        <td style="text-align:center;">
           <div style="display:inline-flex; align-items:center; gap:4px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sas', -1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Kurangi 1">-</button>
             <input type="number" min="0" max="100" value="${sas}" onchange="updateStudentGrade('${s.id}', 'sas', this.value)" style="width:52px; text-align:center; padding:4px 2px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
             <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sas', 1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Tambah 1">+</button>
           </div>
         </td>
-        <td><strong style="font-size:15px; color:var(--primary-dark);">${finalScore}</strong></td>
-        <td><span class="badge ${badgeClass}">${gradeLabel}</span></td>
+        <td style="text-align:center;"><strong style="font-size:15px; color:var(--primary-dark);">${finalScore}</strong></td>
+        <td style="text-align:center; white-space:nowrap;"><span class="badge ${badgeClass}">${gradeLabel}</span></td>
       </tr>
     `;
   }).join('');
