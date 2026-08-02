@@ -110,12 +110,12 @@ function closeMobileSidebar() {
 
 // Teacher Info Render
 function renderTeacherProfile() {
-  const teacher = appData.teacher;
-  if (document.getElementById('teacherNameSidebar')) document.getElementById('teacherNameSidebar').innerText = teacher.name;
-  if (document.getElementById('teacherNipSidebar')) document.getElementById('teacherNipSidebar').innerText = `NIP: ${teacher.nip}`;
-  if (document.getElementById('teacherAvatarSidebar')) document.getElementById('teacherAvatarSidebar').src = teacher.avatar;
-  if (document.getElementById('schoolNameHeader')) document.getElementById('schoolNameHeader').innerText = teacher.school;
-  if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader').innerText = teacher.kecamatan;
+  const teacher = appData.teacher || {};
+  if (document.getElementById('teacherNameSidebar')) document.getElementById('teacherNameSidebar').innerText = teacher.name || 'Husnita Usman, M.Pd.';
+  if (document.getElementById('teacherNipSidebar')) document.getElementById('teacherNipSidebar').innerText = `NIP: ${teacher.nip || '199610272019032006'}`;
+  if (document.getElementById('teacherAvatarSidebar')) document.getElementById('teacherAvatarSidebar').src = teacher.avatar || 'logo-sdn-bobong.svg';
+  if (document.getElementById('schoolNameHeader')) document.getElementById('schoolNameHeader').innerText = teacher.school || 'SD Negeri Bobong';
+  if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader').innerText = teacher.kecamatan || 'Kecamatan Taliabu Barat';
 }
 
 // Navigation & Tab Switcher
