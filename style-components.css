@@ -90,10 +90,10 @@
 .login-card {
   background: #ffffff;
   width: 100%;
-  max-width: 420px;
-  border-radius: var(--radius-lg);
-  padding: 28px 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  max-width: 380px;
+  border-radius: 24px;
+  padding: 32px 28px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeIn 0.4s ease;
 }
@@ -101,16 +101,11 @@
 .school-logo-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-.sd-logo-svg {
-  filter: drop-shadow(0 4px 12px rgba(2, 132, 199, 0.25));
-  transition: transform 0.3s ease;
-}
-
-.sd-logo-svg:hover {
-  transform: scale(1.04);
+.login-header-text {
+  margin-bottom: 24px;
 }
 
 .login-header-text h2 {
@@ -118,26 +113,51 @@
   font-weight: 800;
   color: #0f172a;
   letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .login-header-text .sub-school {
   font-size: 13px;
   color: var(--primary);
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  padding-right: 42px !important;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-login {
   width: 100%;
-  padding: 14px 20px;
+  padding: 13px 20px;
   font-size: 15px;
   font-weight: 700;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
   color: #ffffff !important;
   border: none;
-  box-shadow: 0 8px 20px rgba(18, 165, 184, 0.35) !important;
-  transition: all 0.3s var(--ease-spring);
+  margin-top: 8px;
+  box-shadow: 0 6px 18px rgba(18, 165, 184, 0.3) !important;
+  transition: all 0.25s ease;
 }
 
 .btn-login:hover {

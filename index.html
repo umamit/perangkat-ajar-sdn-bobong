@@ -33,7 +33,6 @@
       <div class="login-header-text">
         <h2>SD NEGERI BOBONG</h2>
         <p class="sub-school">Kecamatan Taliabu Barat</p>
-        <span class="login-title-badge">Portal Perangkat Ajar Guru Bahasa Inggris</span>
       </div>
 
       <!-- Error Alert Message -->
@@ -42,12 +41,12 @@
       </div>
 
       <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="loginNip"><i class="ri-id-card-line"></i> Nomor Induk Pegawai (NIP)</label>
-          <input type="text" id="loginNip" placeholder="Masukkan NIP (Contoh: 1996...)" required autocomplete="username">
+        <div class="form-group" style="text-align:left;">
+          <label for="loginNip"><i class="ri-id-card-line"></i> NIP</label>
+          <input type="text" id="loginNip" placeholder="Masukkan NIP" required autocomplete="username">
         </div>
 
-        <div class="form-group">
+        <div class="form-group" style="text-align:left;">
           <label for="loginPassword"><i class="ri-lock-password-line"></i> Password</label>
           <div class="password-input-wrapper">
             <input type="password" id="loginPassword" placeholder="Masukkan Password" required autocomplete="current-password">
@@ -58,13 +57,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-login">
-          <i class="ri-login-box-line"></i> Masuk ke Perangkat Ajar
+          <i class="ri-login-box-line"></i> Masuk
         </button>
       </form>
-
-      <div class="login-footer">
-        <small>© 2025 SD Negeri Bobong - Kec. Taliabu Barat</small>
-      </div>
     </div>
   </div>
 
