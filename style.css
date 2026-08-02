@@ -783,3 +783,22 @@ td {
   font-weight: 700;
   margin-bottom: 8px;
 }
+
+.btn-login {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+  color: #ffffff !important;
+  border: none;
+  box-shadow: 0 8px 20px rgba(18, 165, 184, 0.35) !important;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.btn-login:hover {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%) !important;
+  box-shadow: 0 10px 24px rgba(18, 165, 184, 0.45) !important;
+  transform: translateY(-2px);
+}
