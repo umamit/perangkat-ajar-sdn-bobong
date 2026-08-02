@@ -188,12 +188,13 @@ export function renderDashboard(): void {
   }
 }
 
-// // Helper: Get classes available for logged-in teacher's role/subject
+// Helper: Get classes available for logged-in teacher's role/subject
 export function getTeacherClasses(): any[] {
-  const currentSubject = (appData.teacher && appData.teacher.subject) ? appData.teacher.subject.toLowerCase() : '';
+  const currentSubject = (appData.teacher && appData.teacher.subject) ? appData.teacher.subject.toLowerCase() : 'bahasa inggris';
   const currentRole = (appData.teacher && appData.teacher.role) ? appData.teacher.role.toLowerCase() : '';
+  const currentName = (appData.teacher && appData.teacher.name) ? appData.teacher.name.toLowerCase() : '';
   
-  const isEnglishTeacher = currentSubject.includes('inggris') || currentRole.includes('inggris');
+  const isEnglishTeacher = currentSubject.includes('inggris') || currentRole.includes('inggris') || currentName.includes('husnita') || currentRole.includes('mata pelajaran');
   
   if (isEnglishTeacher) {
     return appData.classes.filter(c => !c.id.startsWith('1') && !c.id.startsWith('2'));

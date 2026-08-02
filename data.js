@@ -4,6 +4,7 @@ const INITIAL_DATA = {
   teacher: {
     name: "Husnita Usman, M.Pd.",
     role: "Guru Mata Pelajaran",
+    subject: "Bahasa Inggris",
     school: "SD Negeri Bobong",
     kecamatan: "Kecamatan Taliabu Barat",
     nip: "199610272019032006",
