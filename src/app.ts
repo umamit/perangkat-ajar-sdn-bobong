@@ -260,7 +260,6 @@ export function renderDataKelas(): void {
   const targetClasses = getTeacherClasses();
   grid.innerHTML = targetClasses.map(c => {
     const studentCount = appData.students.filter(s => s.classId === c.id).length;
-    const countDisplay = studentCount > 0 ? studentCount : (c.count || 0);
     return `
     <div class="card" style="padding: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -270,8 +269,8 @@ export function renderDataKelas(): void {
       <h3 style="margin-bottom:6px; font-size:18px;">${c.name}</h3>
       <p style="color:var(--text-muted); font-size:13px; margin-bottom:12px;">${c.room}</p>
       <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; border-top:1px solid #e2e8f0; padding-top:10px;">
-        <span>Jumlah Siswa:</span>
-        <span style="color:var(--primary); font-weight:800;">${countDisplay} Orang</span>
+        <span>Siswa Terdaftar:</span>
+        <span style="color:${studentCount > 0 ? 'var(--primary)' : '#94a3b8'}; font-weight:800;">${studentCount} Orang</span>
       </div>
     </div>
     `;

@@ -17,7 +17,7 @@ export interface Teacher {
 export interface ClassInfo {
   id: string;
   name: string;
-  count: number;
+  count?: number;
   room: string;
   phase: string;
 }
