@@ -432,7 +432,7 @@
         <section id="view-modul" class="view-section">
           <div class="section-header">
             <h3>Modul Ajar Kurikulum Merdeka (SD Negeri Bobong)</h3>
-            <button class="btn btn-primary" onclick="alert('Fitur tambah Modul Ajar baru')">
+            <button class="btn btn-primary" onclick="showAddModulModal()">
               <i class="ri-add-line"></i> Buat Modul Ajar
             </button>
           </div>
@@ -463,7 +463,12 @@
               <h3>Flashcards Kosakata Bahasa Inggris SD</h3>
               <p style="font-size:12.5px; color:var(--text-muted);">Klik pada kartu untuk melihat arti, atau klik tombol audio pelafalan bahasa Inggris.</p>
             </div>
-            <input type="text" id="searchFlashcardInput" oninput="filterFlashcards(this.value)" placeholder="Cari Kosakata..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input type="text" id="searchFlashcardInput" oninput="filterFlashcards(this.value)" placeholder="Cari Kosakata..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
+              <button class="btn btn-primary" onclick="showAddFlashcardModal()" style="padding:8px 12px; font-size:13px;">
+                <i class="ri-add-line"></i> Tambah Kartu
+              </button>
+            </div>
           </div>
           <div class="flashcard-grid" id="flashcardsGrid"></div>
         </section>
@@ -472,7 +477,7 @@
         <section id="view-tugas" class="view-section">
           <div class="section-header">
             <h3>Tugas & Bank Soal Bahasa Inggris</h3>
-            <button class="btn btn-primary" onclick="alert('Fitur buat Tugas / Soal Kuis baru')">
+            <button class="btn btn-primary" onclick="showAddTugasModal()">
               <i class="ri-add-line"></i> Buat Tugas Baru
             </button>
           </div>
@@ -601,9 +606,9 @@
 
   <!-- JS Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="data.js?v=9.0.0"></script>
-  <script src="helpers.js?v=9.0.0"></script>
-  <script src="views.js?v=9.0.0"></script>
-  <script src="app.js?v=9.0.0"></script>
+  <script src="data.js?v=10.0.0"></script>
+  <script src="helpers.js?v=10.0.0"></script>
+  <script src="views.js?v=10.0.0"></script>
+  <script src="app.js?v=10.0.0"></script>
 </body>
 </html>

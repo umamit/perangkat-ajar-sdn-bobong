@@ -749,7 +749,9 @@ function filterFlashcards(query) {
 // 8. Materi Interaktif & Flashcards dengan Text-to-Speech (TTS)
 function renderMateriFlashcards() {
   const container = document.getElementById('flashcardsGrid');
-  container.innerHTML = appData.flashcards.map(f => `
+  if (!container) return;
+  const list = appData.flashcards || [];
+  container.innerHTML = list.map(f => `
     <div class="flashcard" onclick="flipCard(this)">
       <div class="flashcard-inner">
         <div class="flashcard-front">
@@ -763,7 +765,9 @@ function renderMateriFlashcards() {
         <div class="flashcard-back">
           <h3 style="font-size:18px; margin-bottom:6px;">${f.translate}</h3>
           <p style="font-size:13px; font-style:italic;">"${f.example}"</p>
-          <small style="margin-top:10px; opacity:0.8;">Klik untuk kembali</small>
+          <button class="btn btn-secondary" onclick="event.stopPropagation(); deleteFlashcard('${f.word}')" style="margin-top:8px; padding:2px 8px; font-size:11px; color:#dc2626;" title="Hapus Kartu">
+            <i class="ri-delete-bin-line"></i> Hapus Kartu
+          </button>
         </div>
       </div>
     </div>
@@ -789,11 +793,18 @@ function speakText(event, text) {
 // 9. Tugas & Bank Soal View
 function renderTugas() {
   const container = document.getElementById('tugasGrid');
-  container.innerHTML = appData.assignments.map(t => `
+  if (!container) return;
+  const list = appData.assignments || [];
+  container.innerHTML = list.map(t => `
     <div class="card" style="padding:20px; border-left:4px solid var(--primary);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span class="badge ${t.type === 'Formatik' ? 'badge-info' : 'badge-warning'}">${t.type}</span>
-        <span class="badge badge-success">${t.status}</span>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span class="badge badge-success">${t.status}</span>
+          <button class="btn btn-secondary" onclick="deleteTugas('${t.id}')" style="padding:2px 6px; font-size:11px; color:#dc2626;" title="Hapus Tugas">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </div>
       </div>
       <h3 style="font-size:16px; margin-bottom:6px;">${t.title}</h3>
       <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">Kelas: ${t.classId} | Tenggat: ${t.dueDate}</p>
@@ -1080,4 +1091,207 @@ if (typeof window !== 'undefined') {
   window.deleteScheduleRecord = deleteScheduleRecord;
   window.adjustGrade = adjustGrade;
   window.updateStudentGrade = updateStudentGrade;
+  window.showAddModulModal = showAddModulModal;
+  window.deleteModul = deleteModul;
+  window.showAddFlashcardModal = showAddFlashcardModal;
+  window.deleteFlashcard = deleteFlashcard;
+  window.showAddTugasModal = showAddTugasModal;
+  window.deleteTugas = deleteTugas;
+}
+
+// 13. CRUD Modul Ajar, Flashcard, & Tugas Interaktif
+function showAddModulModal() {
+  const form = `
+    <form onsubmit="saveModul(event)">
+      <div class="form-group">
+        <label>Judul Modul Ajar</label>
+        <input type="text" id="modulTitle" placeholder="Contoh: Unit 3 - My Family Members" required>
+      </div>
+      <div class="form-group">
+        <label>Tingkat / Kelas SD</label>
+        <select id="modulGrade">
+          <option value="Kelas 1 SD">Kelas 1 SD (Fase A)</option>
+          <option value="Kelas 2 SD">Kelas 2 SD (Fase A)</option>
+          <option value="Kelas 3 SD" selected>Kelas 3 SD (Fase B)</option>
+          <option value="Kelas 4 SD">Kelas 4 SD (Fase B)</option>
+          <option value="Kelas 5 SD">Kelas 5 SD (Fase C)</option>
+          <option value="Kelas 6 SD">Kelas 6 SD (Fase C)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Alokasi Waktu</label>
+        <input type="text" id="modulDuration" placeholder="Contoh: 4 JP (2 x Pertemuan)" value="4 JP (2 x Pertemuan)" required>
+      </div>
+      <div class="form-group">
+        <label>Tujuan Pembelajaran (TP)</label>
+        <textarea id="modulTarget" rows="2" placeholder="Peserta didik mampu menyebutkan nama anggota keluarga..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Media & Alat Pembelajaran</label>
+        <textarea id="modulMaterials" rows="2" placeholder="Flashcards, Gambar Keluarga, audio lagu" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Simpan Modul Ajar</button>
+    </form>
+  `;
+  openModal('Buat Modul Ajar Baru (Kurikulum Merdeka)', form);
+}
+
+function saveModul(e) {
+  e.preventDefault();
+  const gradeVal = document.getElementById('modulGrade').value;
+  const phaseVal = gradeVal.includes('1') || gradeVal.includes('2') ? 'Fase A' : gradeVal.includes('3') || gradeVal.includes('4') ? 'Fase B' : 'Fase C';
+  const newMod = {
+    id: `MOD-ENG-BOBONG-${Date.now()}`,
+    title: document.getElementById('modulTitle').value.trim(),
+    grade: gradeVal,
+    phase: phaseVal,
+    duration: document.getElementById('modulDuration').value.trim(),
+    target: document.getElementById('modulTarget').value.trim(),
+    cp: "Menyimak - Berbicara: Peserta didik menggunakan bahasa Inggris sederhana untuk berinteraksi dalam situasi sosial.",
+    materials: document.getElementById('modulMaterials').value.split(',').map(m => m.trim()),
+    steps: [
+      "Pendahuluan (10 Menit): Salam, berdoa, dan apersepsi materi.",
+      "Kegiatan Inti (50 Menit): Pemaparan materi, praktik lisan berpasangan, dan pengisian LKS.",
+      "Penutup (10 Menit): Refleksi pembelajaran dan doa penutup."
+    ],
+    assessment: "Formatik (Observasi Unjuk Kerja Lisan & Lembar Kerja Siswa)"
+  };
+
+  appData.modules.unshift(newMod);
+  saveStorage();
+  renderModulAjar();
+  closeModal();
+  alert('Modul Ajar baru berhasil diterbitkan!');
+}
+
+function deleteModul(id) {
+  if (confirm('Apakah Anda yakin ingin menghapus Modul Ajar ini?')) {
+    appData.modules = appData.modules.filter(m => m.id !== id);
+    saveStorage();
+    renderModulAjar();
+  }
+}
+
+function showAddFlashcardModal() {
+  const form = `
+    <form onsubmit="saveFlashcard(event)">
+      <div class="form-group">
+        <label>Kata Bahasa Inggris (English Word)</label>
+        <input type="text" id="fcWord" placeholder="Contoh: Reading" required>
+      </div>
+      <div class="form-group">
+        <label>Terjemahan Indonesia</label>
+        <input type="text" id="fcTranslate" placeholder="Contoh: Membaca" required>
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="fcCategory">
+          <option value="Action Verbs">Kata Kerja (Action Verbs)</option>
+          <option value="Feelings">Perasaan (Feelings)</option>
+          <option value="Animals">Hewan (Animals)</option>
+          <option value="Professions">Profesi (Professions)</option>
+          <option value="Family">Keluarga (Family)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Contoh Kalimat Sederhana</label>
+        <input type="text" id="fcExample" placeholder="Contoh: She is reading a storybook." required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Tambah Kartu Kata</button>
+    </form>
+  `;
+  openModal('Tambah Flashcard Kosakata Baru', form);
+}
+
+function saveFlashcard(e) {
+  e.preventDefault();
+  const cat = document.getElementById('fcCategory').value;
+  let iconName = 'ri-book-open-line';
+  if (cat === 'Feelings') iconName = 'ri-emotion-happy-line';
+  else if (cat === 'Animals') iconName = 'ri-bear-smile-line';
+  else if (cat === 'Professions') iconName = 'ri-user-voice-line';
+
+  const newFc = {
+    word: document.getElementById('fcWord').value.trim(),
+    translate: document.getElementById('fcTranslate').value.trim(),
+    category: cat,
+    icon: iconName,
+    example: document.getElementById('fcExample').value.trim()
+  };
+
+  appData.flashcards.unshift(newFc);
+  saveStorage();
+  renderMateriFlashcards();
+  closeModal();
+  alert('Kartu kata kosakata baru berhasil ditambahkan!');
+}
+
+function deleteFlashcard(word) {
+  if (confirm(`Hapus kartu kata "${word}"?`)) {
+    appData.flashcards = appData.flashcards.filter(f => f.word !== word);
+    saveStorage();
+    renderMateriFlashcards();
+  }
+}
+
+function showAddTugasModal() {
+  const form = `
+    <form onsubmit="saveTugas(event)">
+      <div class="form-group">
+        <label>Judul Tugas / Bank Soal</label>
+        <input type="text" id="tugasTitle" placeholder="Contoh: Latihan Kosakata Animals" required>
+      </div>
+      <div class="form-group">
+        <label>Kelas Tujuan</label>
+        <select id="tugasClass">
+          ${appData.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Batas Waktu Pengumpulan (Deadline)</label>
+        <input type="date" id="tugasDueDate" required value="${new Date(Date.now() + 7 * 864e5).toISOString().split('T')[0]}">
+      </div>
+      <div class="form-group">
+        <label>Tipe Penilaian</label>
+        <select id="tugasType">
+          <option value="Formatik">Penilaian Formatif</option>
+          <option value="Sumatif">Penilaian Sumatif</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Instruksi Pengerjaan</label>
+        <textarea id="tugasInstructions" rows="3" placeholder="Tuliskan petunjuk pengerjaan tugas bagi siswa..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Terbitkan Tugas</button>
+    </form>
+  `;
+  openModal('Buat Tugas / Soal Baru', form);
+}
+
+function saveTugas(e) {
+  e.preventDefault();
+  const newT = {
+    id: `TUG-${Date.now()}`,
+    title: document.getElementById('tugasTitle').value.trim(),
+    classId: document.getElementById('tugasClass').value,
+    dueDate: document.getElementById('tugasDueDate').value,
+    type: document.getElementById('tugasType').value,
+    status: 'Aktif',
+    instructions: document.getElementById('tugasInstructions').value.trim()
+  };
+
+  if (!appData.assignments) appData.assignments = [];
+  appData.assignments.unshift(newT);
+  saveStorage();
+  renderTugas();
+  closeModal();
+  alert('Tugas baru berhasil diterbitkan!');
+}
+
+function deleteTugas(id) {
+  if (confirm('Apakah Anda yakin ingin menghapus tugas ini?')) {
+    appData.assignments = appData.assignments.filter(t => t.id !== id);
+    saveStorage();
+    renderTugas();
+  }
 }

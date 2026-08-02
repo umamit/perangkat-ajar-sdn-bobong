@@ -106,12 +106,15 @@ function renderModulAjar() {
           <h3>${m.title}</h3>
           <p style="font-size:13px; color:var(--text-muted);"><i class="ri-time-line"></i> Alokasi Waktu: ${m.duration}</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
           <button class="btn btn-secondary" onclick="printWorksheet('${m.id}')">
             <i class="ri-file-text-line"></i> Cetak LKPD Siswa
           </button>
           <button class="btn btn-primary" onclick="printModule('${m.id}')">
             <i class="ri-printer-line"></i> Cetak Modul Ajar
+          </button>
+          <button class="btn btn-secondary" onclick="deleteModul('${m.id}')" style="color:#dc2626;" title="Hapus Modul">
+            <i class="ri-delete-bin-line"></i> Hapus
           </button>
         </div>
       </div>
