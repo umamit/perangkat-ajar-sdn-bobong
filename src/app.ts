@@ -649,13 +649,16 @@ export async function saveTeacherProfileSettings(e: Event): Promise<void> {
   alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan ke Supabase Storage!');
 }
 
-export function adjustGrade(studentId: string, type: 'formatif' | 'sumatif', delta: number): void {
+export function adjustGrade(studentId: string, type: 'formatif' | 'sts' | 'sas', delta: number): void {
   const s = appData.students.find(st => st.id === studentId || st.nis === studentId);
   if (!s) return;
   if (type === 'formatif') {
-    s.scoreFormatif = Math.min(100, Math.max(0, (s.scoreFormatif || 80) + delta));
-  } else {
-    s.scoreSumatif = Math.min(100, Math.max(0, (s.scoreSumatif || 80) + delta));
+    s.scoreFormatif = Math.min(100, Math.max(0, (s.scoreFormatif !== undefined ? s.scoreFormatif : 85) + delta));
+  } else if (type === 'sts') {
+    (s as any).scoreSts = Math.min(100, Math.max(0, ((s as any).scoreSts !== undefined ? (s as any).scoreSts : 88) + delta));
+  } else if (type === 'sas') {
+    (s as any).scoreSas = Math.min(100, Math.max(0, ((s as any).scoreSas !== undefined ? (s as any).scoreSas : (s.scoreSumatif || 86)) + delta));
+    s.scoreSumatif = (s as any).scoreSas;
   }
   saveStorage();
   if (typeof (window as any).saveStudentToSupabase === 'function') {
@@ -665,13 +668,16 @@ export function adjustGrade(studentId: string, type: 'formatif' | 'sumatif', del
   renderDataSiswa();
 }
 
-export function updateStudentGrade(studentId: string, type: 'formatif' | 'sumatif', val: string): void {
+export function updateStudentGrade(studentId: string, type: 'formatif' | 'sts' | 'sas', val: string): void {
   const num = Math.min(100, Math.max(0, parseInt(val, 10) || 0));
   const s = appData.students.find(st => st.id === studentId || st.nis === studentId);
   if (!s) return;
   if (type === 'formatif') {
     s.scoreFormatif = num;
-  } else {
+  } else if (type === 'sts') {
+    (s as any).scoreSts = num;
+  } else if (type === 'sas') {
+    (s as any).scoreSas = num;
     s.scoreSumatif = num;
   }
   saveStorage();
