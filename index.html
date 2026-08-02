@@ -489,14 +489,26 @@
             <h3>Pengaturan Akun Guru & Sekolah</h3>
           </div>
           <div class="card">
-            <form onsubmit="event.preventDefault(); alert('Pengaturan profil SD Negeri Bobong berhasil disimpan!');">
+            <form onsubmit="saveTeacherProfileSettings(event)">
+              <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding:16px; background:var(--bg-teal-50); border-radius:12px;">
+                <img id="settingAvatarPreview" src="assets/logo-sdn-bobong.png" alt="Foto Profil" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                <div>
+                  <label style="font-weight:600; font-size:13.5px; display:block; margin-bottom:4px;">Ganti Foto Profil Guru</label>
+                  <input type="file" id="settingAvatarFile" accept="image/*" onchange="previewTeacherAvatar(event)" style="font-size:12.5px;">
+                  <p style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">Format: PNG, JPG, JPEG (Maks. 2MB)</p>
+                </div>
+              </div>
               <div class="form-group">
-                <label>Nama Guru</label>
-                <input type="text" id="settingTeacherName" value="Guru Bahasa Inggris SD">
+                <label>Nama Guru (dengan Gelar)</label>
+                <input type="text" id="settingTeacherName" value="Guru Bahasa Inggris SD" required>
               </div>
               <div class="form-group">
                 <label>NIP Guru</label>
-                <input type="text" id="settingTeacherNip" value="199610272019032006">
+                <input type="text" id="settingTeacherNip" value="199610272019032006" required>
+              </div>
+              <div class="form-group">
+                <label>Mata Pelajaran / Jabatan</label>
+                <input type="text" id="settingTeacherSubject" value="Bahasa Inggris" required>
               </div>
               <div class="form-group">
                 <label>Nama Sekolah</label>
@@ -507,7 +519,9 @@
                 <input type="text" id="settingKecamatan" value="Kecamatan Taliabu Barat">
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <button type="submit" class="btn btn-primary">
+                  <i class="ri-save-line"></i> Simpan Perubahan Profil
+                </button>
                 <button type="button" class="btn btn-secondary" onclick="handleLogout()">
                   <i class="ri-logout-box-line"></i> Logout Akun
                 </button>

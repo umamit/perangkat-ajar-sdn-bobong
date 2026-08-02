@@ -111,9 +111,17 @@ export function renderTeacherProfile(): void {
   const teacher = appData.teacher;
   if (document.getElementById('teacherNameSidebar')) document.getElementById('teacherNameSidebar')!.innerText = teacher.name;
   if (document.getElementById('teacherNipSidebar')) document.getElementById('teacherNipSidebar')!.innerText = `NIP: ${teacher.nip}`;
-  if (document.getElementById('teacherAvatarSidebar')) (document.getElementById('teacherAvatarSidebar') as HTMLImageElement).src = teacher.avatar;
+  if (document.getElementById('teacherAvatarSidebar')) (document.getElementById('teacherAvatarSidebar') as HTMLImageElement).src = teacher.avatar || 'assets/logo-sdn-bobong.png';
   if (document.getElementById('schoolNameHeader')) document.getElementById('schoolNameHeader')!.innerText = teacher.school || 'SD Negeri Bobong';
   if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader')!.innerText = teacher.kecamatan || 'Kec. Taliabu Barat';
+
+  // Populate Pengaturan Inputs
+  if (document.getElementById('settingTeacherName')) (document.getElementById('settingTeacherName') as HTMLInputElement).value = teacher.name;
+  if (document.getElementById('settingTeacherNip')) (document.getElementById('settingTeacherNip') as HTMLInputElement).value = teacher.nip;
+  if (document.getElementById('settingTeacherSubject')) (document.getElementById('settingTeacherSubject') as HTMLInputElement).value = teacher.subject || 'Bahasa Inggris';
+  if (document.getElementById('settingSchoolName')) (document.getElementById('settingSchoolName') as HTMLInputElement).value = teacher.school || 'SD Negeri Bobong';
+  if (document.getElementById('settingKecamatan')) (document.getElementById('settingKecamatan') as HTMLInputElement).value = teacher.kecamatan || 'Kecamatan Taliabu Barat';
+  if (document.getElementById('settingAvatarPreview')) (document.getElementById('settingAvatarPreview') as HTMLImageElement).src = teacher.avatar || 'assets/logo-sdn-bobong.png';
 }
 
 // Navigation & Tab Switcher
@@ -542,6 +550,53 @@ export function deleteTeacher(nip: string): void {
   }
 }
 
+// 13. Avatar Preview & Profile Settings Save
+export function previewTeacherAvatar(e: Event): void {
+  const target = e.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      if (evt.target?.result) {
+        const previewImg = document.getElementById('settingAvatarPreview') as HTMLImageElement | null;
+        if (previewImg) previewImg.src = evt.target.result as string;
+      }
+    };
+    reader.readAsDataURL(target.files[0]);
+  }
+}
+
+export function saveTeacherProfileSettings(e: Event): void {
+  e.preventDefault();
+  const nameInput = (document.getElementById('settingTeacherName') as HTMLInputElement).value.trim();
+  const nipInput = (document.getElementById('settingTeacherNip') as HTMLInputElement).value.trim();
+  const subjectInput = (document.getElementById('settingTeacherSubject') as HTMLInputElement).value.trim();
+  const schoolInput = (document.getElementById('settingSchoolName') as HTMLInputElement).value.trim();
+  const kecamatanInput = (document.getElementById('settingKecamatan') as HTMLInputElement).value.trim();
+  const previewImg = document.getElementById('settingAvatarPreview') as HTMLImageElement | null;
+
+  appData.teacher.name = nameInput;
+  appData.teacher.nip = nipInput;
+  appData.teacher.subject = subjectInput;
+  appData.teacher.school = schoolInput;
+  appData.teacher.kecamatan = kecamatanInput;
+
+  if (previewImg && previewImg.src) {
+    appData.teacher.avatar = previewImg.src;
+  }
+
+  // Update in teachers list
+  const idx = appData.teachers.findIndex(t => t.nip === nipInput);
+  if (idx !== -1) {
+    appData.teachers[idx] = { ...appData.teacher };
+  }
+
+  saveStorage();
+  saveTeacherToSupabase(appData.teacher);
+  renderTeacherProfile();
+  renderDataGuru();
+  alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan!');
+}
+
 // Global Browser Window State Attachment
 if (typeof window !== 'undefined') {
   (window as any).handleLogin = handleLogin;
@@ -553,5 +608,7 @@ if (typeof window !== 'undefined') {
   (window as any).showAddTeacherModal = showAddTeacherModal;
   (window as any).saveTeacher = saveTeacher;
   (window as any).deleteTeacher = deleteTeacher;
+  (window as any).previewTeacherAvatar = previewTeacherAvatar;
+  (window as any).saveTeacherProfileSettings = saveTeacherProfileSettings;
   (window as any).renderAllViews = initApp;
 }
