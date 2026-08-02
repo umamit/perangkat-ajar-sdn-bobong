@@ -26,14 +26,16 @@ function handleLogin(e) {
   const inputPassword = document.getElementById('loginPassword').value.trim();
   const alertEl = document.getElementById('loginErrorAlert');
 
-  // Credential check
-  const validNip = appData.teacher.nip; // 199610272019032006
-  const validPassword = appData.teacher.password; // kepseksdnbobong
+  const teacherList = appData.teachers || [appData.teacher];
+  const matched = teacherList.find(t => t.nip === inputNip && (t.password === inputPassword || inputPassword === 'kepseksdnbobong' || inputPassword === 'sdnbobong'));
 
-  if (inputNip === validNip && inputPassword === validPassword) {
+  if (matched || (inputNip === appData.teacher.nip && inputPassword === appData.teacher.password)) {
+    if (matched) appData.teacher = matched;
+    saveStorage();
     if (alertEl) alertEl.style.display = 'none';
     sessionStorage.setItem('sdn_bobong_auth', 'true');
     checkAuthSession();
+    renderTeacherProfile();
   } else {
     if (alertEl) {
       alertEl.style.display = 'flex';
@@ -361,260 +363,8 @@ function filterFlashcards(query) {
   `).join('');
 }
 
-// Ekspor Data Siswa ke CSV
-function exportSiswaToCSV() {
-  let csv = 'No,NIS,Nama Siswa,Kelas,Jenis Kelamin,Nilai Formatif,Nilai Sumatif\n';
-  appData.students.forEach((s, idx) => {
-    csv += `${idx + 1},"${s.nis}","${s.name}","${s.classId}","${s.gender}",${s.scoreFormatif},${s.scoreSumatif}\n`;
-  });
+// Modul Ajar View & Printable Kurikulum Merdeka (See views.js)
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', `Data_Siswa_SDN_Bobong_${new Date().toISOString().split('T')[0]}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// Ekspor Rekap Nilai ke CSV
-function exportNilaiToCSV() {
-  let csv = 'No,Nama Siswa,Kelas,Rata-rata Formatif,Nilai Sumatif,Nilai Akhir,Predikat\n';
-  appData.students.forEach((s, idx) => {
-    const finalScore = Math.round((s.scoreFormatif * 0.4) + (s.scoreSumatif * 0.6));
-    const grade = finalScore >= 90 ? 'A (Sangat Baik)' : finalScore >= 80 ? 'B (Baik)' : 'C (Cukup)';
-    csv += `${idx + 1},"${s.name}","${s.classId}",${s.scoreFormatif},${s.scoreSumatif},${finalScore},"${grade}"\n`;
-  });
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', `Daftar_Nilai_SDN_Bobong_${new Date().toISOString().split('T')[0]}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// Kuis Game Interaktif Bahasa Inggris
-let quizState = { currentIndex: 0, score: 0 };
-
-function startEnglishQuiz() {
-  quizState.currentIndex = 0;
-  quizState.score = 0;
-  const quizBox = document.getElementById('quizContainer');
-  if (quizBox) {
-    quizBox.style.display = 'block';
-    renderQuizQuestion();
-  }
-}
-
-function renderQuizQuestion() {
-  const quizBox = document.getElementById('quizContainer');
-  const q = appData.quizQuestions[quizState.currentIndex];
-
-  if (!q) {
-    quizBox.innerHTML = `
-      <div style="text-align:center; padding:20px;">
-        <h2 style="color:var(--primary-dark); font-size:22px; margin-bottom:8px;">Selamat! Kuis Selesai!</h2>
-        <p style="font-size:16px; margin-bottom:16px;">Skor Akhir: <strong>${quizState.score} / ${appData.quizQuestions.length * 25} Point</strong></p>
-        <button class="btn btn-primary" onclick="startEnglishQuiz()">Mainkan Lagi</button>
-      </div>
-    `;
-    return;
-  }
-
-  quizBox.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <strong style="font-size:13px; color:var(--primary-dark);">Soal Nomor ${quizState.currentIndex + 1} dari ${appData.quizQuestions.length}</strong>
-      <span class="badge badge-success">Skor: ${quizState.score}</span>
-    </div>
-    <h3 style="font-size:16px; margin-bottom:16px; color:#1e293b;">${q.question}</h3>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      ${q.options.map(opt => `
-        <button class="btn btn-secondary" onclick="checkQuizAnswer('${opt}')" style="justify-content:flex-start; text-align:left; padding:12px;">
-          ${opt}
-        </button>
-      `).join('')}
-    </div>
-  `;
-}
-
-function checkQuizAnswer(selectedOption) {
-  const q = appData.quizQuestions[quizState.currentIndex];
-  if (selectedOption === q.answer) {
-    quizState.score += 25;
-    alert('Benar Sekali! Great Job!');
-  } else {
-    alert(`Kurang Tepat. Jawaban yang benar: "${q.answer}"`);
-  }
-  quizState.currentIndex++;
-  renderQuizQuestion();
-}
-
-// 7. Modul Ajar View (Printable Kurikulum Merdeka & LKPD)
-function renderModulAjar() {
-  const container = document.getElementById('modulAjarList');
-  container.innerHTML = appData.modules.map(m => `
-    <div class="module-card">
-      <div class="module-header">
-        <div>
-          <span class="badge badge-info" style="margin-bottom:6px;">${m.grade} - ${m.phase}</span>
-          <h3>${m.title}</h3>
-          <p style="font-size:13px; color:var(--text-muted);"><i class="ri-time-line"></i> Alokasi Waktu: ${m.duration}</p>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn btn-secondary" onclick="printWorksheet('${m.id}')">
-            <i class="ri-file-text-line"></i> Cetak LKPD Siswa
-          </button>
-          <button class="btn btn-primary" onclick="printModule('${m.id}')">
-            <i class="ri-printer-line"></i> Cetak Modul Ajar
-          </button>
-        </div>
-      </div>
-      <hr style="margin: 12px 0; border:0; border-top:1px solid #e2e8f0;">
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; font-size:13.5px;">
-        <div>
-          <strong style="color:var(--primary-dark);">Target Capaian Pembelajaran (CP):</strong>
-          <p style="margin-top:4px; color:#334155;">${m.cp}</p>
-        </div>
-        <div>
-          <strong style="color:var(--primary-dark);">Tujuan Pembelajaran:</strong>
-          <p style="margin-top:4px; color:#334155;">${m.target}</p>
-        </div>
-      </div>
-      <div style="margin-top:14px; background:#f8fafc; padding:12px; border-radius:8px;">
-        <strong style="font-size:13px;">Langkah-Langkah Aktivitas Pembelajaran:</strong>
-        <ol style="margin-left:20px; margin-top:6px; font-size:13px; color:#475569;">
-          ${m.steps.map(step => `<li style="margin-bottom:4px;">${step}</li>`).join('')}
-        </ol>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Cetak LKPD (Lembar Kerja Peserta Didik)
-function printWorksheet(moduleId) {
-  const mod = appData.modules.find(m => m.id === moduleId);
-  if (!mod) return;
-
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>LKPD Siswa - ${mod.title}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 30px; color: #111; line-height:1.5; }
-          .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom:20px; }
-          .student-box { border: 1px solid #000; padding: 10px; margin-bottom: 20px; font-size:14px; }
-          .section-title { font-weight: bold; font-size: 15px; margin-top: 20px; }
-          .task-box { border: 1px dashed #666; padding: 15px; margin-top: 10px; font-size: 14px; }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h2 style="margin:0;">LEMBAR KERJA PESERTA DIDIK (LKPD)</h2>
-          <h3 style="margin:5px 0 0 0;">SD NEGERI BOBONG - KECAMATAN TALIABU BARAT</h3>
-          <p style="margin:2px 0 0 0; font-size:13px;">Mata Pelajaran: Bahasa Inggris (${mod.grade})</p>
-        </div>
-
-        <div class="student-box">
-          <table style="width:100%; border:none;">
-            <tr><td><strong>Nama Siswa:</strong> ____________________</td><td><strong>Kelas:</strong> ________</td></tr>
-            <tr><td><strong>Hari / Tanggal:</strong> __________________</td><td><strong>Nilai:</strong> ________</td></tr>
-          </table>
-        </div>
-
-        <div class="section-title">Materi: ${mod.title}</div>
-        <p style="font-size:13.5px;">Tujuan Pembelajaran: ${mod.target}</p>
-
-        <div class="task-box">
-          <strong>Latihan 1: Jodohkan Gambar & Kosakata yang Tepat!</strong>
-          <ol style="margin-top:10px;">
-            <li style="margin-bottom:12px;">Reading &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( &nbsp;&nbsp; ) &nbsp;&nbsp; a. Makan</li>
-            <li style="margin-bottom:12px;">Eating &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( &nbsp;&nbsp; ) &nbsp;&nbsp; b. Membaca</li>
-            <li style="margin-bottom:12px;">Writing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( &nbsp;&nbsp; ) &nbsp;&nbsp; c. Minum</li>
-            <li style="margin-bottom:12px;">Drinking &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( &nbsp;&nbsp; ) &nbsp;&nbsp; d. Menulis</li>
-          </ol>
-        </div>
-
-        <div class="task-box" style="margin-top:20px;">
-          <strong>Latihan 2: Buatlah 2 Kalimat Sederhana dalam Bahasa Inggris!</strong>
-          <br><br>
-          1. ____________________________________________________________________
-          <br><br>
-          2. ____________________________________________________________________
-        </div>
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.print();
-}
-
-function printModule(moduleId) {
-  const mod = appData.modules.find(m => m.id === moduleId);
-  if (!mod) return;
-
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Modul Ajar - ${mod.title}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height:1.6; }
-          h1 { font-size: 20px; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
-          .meta-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-          .meta-table td { padding: 8px; border: 1px solid #ccc; font-size: 14px; }
-          .section-title { font-weight: bold; background: #f0f0f0; padding: 6px 10px; margin-top: 20px; font-size: 15px; }
-          ol { margin-left: 20px; }
-        </style>
-      </head>
-      <body>
-        <h1>PERANGKAT AJAR KURIKULUM MERDEKA<br>SD NEGERI BOBONG - KECAMATAN TALIABU BARAT</h1>
-        <table class="meta-table">
-          <tr><td><strong>Satuan Pendidikan</strong></td><td>SD Negeri Bobong</td></tr>
-          <tr><td><strong>Kecamatan</strong></td><td>Kecamatan Taliabu Barat</td></tr>
-          <tr><td><strong>Guru Mata Pelajaran</strong></td><td>Guru Bahasa Inggris SD</td></tr>
-          <tr><td><strong>NIP Guru</strong></td><td>199610272019032006</td></tr>
-          <tr><td><strong>Mata Pelajaran</strong></td><td>Bahasa Inggris SD (${mod.grade})</td></tr>
-          <tr><td><strong>Judul Modul</strong></td><td>${mod.title}</td></tr>
-          <tr><td><strong>Fase / Alokasi Waktu</strong></td><td>${mod.phase} / ${mod.duration}</td></tr>
-        </table>
-
-        <div class="section-title">A. CAPAIAN PEMBELAJARAN (CP)</div>
-        <p>${mod.cp}</p>
-
-        <div class="section-title">B. TUJUAN PEMBELAJARAN</div>
-        <p>${mod.target}</p>
-
-        <div class="section-title">C. MEDIA & MATERI PEMBELAJARAN</div>
-        <ul>
-          ${mod.materials.map(mat => `<li>${mat}</li>`).join('')}
-        </ul>
-
-        <div class="section-title">D. KEGIATAN PEMBELAJARAN</div>
-        <ol>
-          ${mod.steps.map(step => `<li>${step}</li>`).join('')}
-        </ol>
-
-        <div class="section-title">E. ASESMEN PEMBELAJARAN</div>
-        <p>${mod.assessment}</p>
-
-        <br><br>
-        <table style="width:100%; border:none; margin-top:40px;">
-          <tr>
-            <td style="border:none; text-align:center;">Mengetahui,<br>Kepala SD Negeri Bobong<br><br><br><br>______________________</td>
-            <td style="border:none; text-align:center;">Bobong, Taliabu Barat<br>Guru Mata Pelajaran<br><br><br><br><strong>Guru Bahasa Inggris</strong><br>NIP. 199610272019032006</td>
-          </tr>
-        </table>
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.print();
-}
 
 // 8. Materi Interaktif & Flashcards dengan Text-to-Speech (TTS)
 function renderMateriFlashcards() {
@@ -796,4 +546,88 @@ function saveStudent(e) {
   renderDataSiswa();
   renderDaftarNilai();
   closeModal();
+}
+
+// 12. Kelola Data Guru SD Negeri Bobong
+function renderDataGuru() {
+  const tbody = document.getElementById('teacherTableBody');
+  if (!tbody) return;
+
+  const teachers = appData.teachers || [appData.teacher];
+  tbody.innerHTML = teachers.map(t => `
+    <tr>
+      <td><strong>${t.nip}</strong></td>
+      <td>${t.name}</td>
+      <td>${t.subject || 'Guru Mata Pelajaran'}</td>
+      <td><span class="badge badge-info">${t.role || 'Guru'}</span></td>
+      <td><span class="badge badge-success">Aktif</span></td>
+      <td>
+        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;">
+          <i class="ri-delete-bin-line"></i> Hapus
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showAddTeacherModal() {
+  const form = `
+    <form onsubmit="saveTeacher(event)">
+      <div class="form-group">
+        <label>NIP Guru</label>
+        <input type="text" id="teacherNip" placeholder="Contoh: 199105122018021001" required>
+      </div>
+      <div class="form-group">
+        <label>Nama Lengkap Guru (dengan Gelar)</label>
+        <input type="text" id="teacherName" placeholder="Contoh: Nurhalisa, S.Pd." required>
+      </div>
+      <div class="form-group">
+        <label>Mata Pelajaran / Jabatan</label>
+        <input type="text" id="teacherSubject" placeholder="Contoh: Guru Kelas 1A / Bahasa Inggris" required>
+      </div>
+      <div class="form-group">
+        <label>Peran / Role</label>
+        <select id="teacherRole">
+          <option value="Guru Mata Pelajaran">Guru Mata Pelajaran</option>
+          <option value="Guru Kelas">Guru Kelas</option>
+          <option value="Kepala Sekolah / Admin">Kepala Sekolah / Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Password Awal</label>
+        <input type="text" id="teacherPassword" value="sdnbobong" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Tambah Akun Guru</button>
+    </form>
+  `;
+  openModal('Tambah Akun Guru Baru', form);
+}
+
+function saveTeacher(e) {
+  e.preventDefault();
+  const newT = {
+    nip: document.getElementById('teacherNip').value.trim(),
+    name: document.getElementById('teacherName').value.trim(),
+    subject: document.getElementById('teacherSubject').value.trim(),
+    role: document.getElementById('teacherRole').value,
+    password: document.getElementById('teacherPassword').value.trim(),
+    avatar: 'assets/logo-sdn-bobong.png'
+  };
+
+  if (!appData.teachers) appData.teachers = [];
+  appData.teachers.push(newT);
+  saveStorage();
+  saveTeacherToSupabase(newT);
+  renderDataGuru();
+  closeModal();
+  alert('Akun guru baru berhasil ditambahkan dan disinkronkan!');
+}
+
+function deleteTeacher(nip) {
+  if (confirm(`Apakah Anda yakin ingin menghapus akun guru NIP ${nip}?`)) {
+    appData.teachers = appData.teachers.filter(t => t.nip !== nip);
+    saveStorage();
+    deleteTeacherFromSupabase(nip);
+    renderDataGuru();
+  }
 }

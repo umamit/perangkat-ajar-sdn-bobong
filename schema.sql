@@ -92,6 +92,27 @@ CREATE TABLE IF NOT EXISTS public.modules (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 7. Tabel Guru (Teachers)
+CREATE TABLE IF NOT EXISTS public.teachers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nip TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    role TEXT DEFAULT 'Guru Mata Pelajaran',
+    subject TEXT NOT NULL,
+    password TEXT NOT NULL DEFAULT 'sdnbobong',
+    avatar_url TEXT DEFAULT 'assets/logo-sdn-bobong.png',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Seed Data Guru SD Negeri Bobong
+INSERT INTO public.teachers (nip, name, role, subject, password, avatar_url) VALUES
+('199610272019032006', 'Guru Bahasa Inggris', 'Guru Mata Pelajaran', 'Bahasa Inggris', 'kepseksdnbobong', 'assets/logo-sdn-bobong.png'),
+('197508201999031002', 'Kepala Sekolah SDN Bobong', 'Kepala Sekolah / Admin', 'Manajemen Sekolah', 'kepseksdnbobong', 'assets/logo-sdn-bobong.png'),
+('199105122018021001', 'Nurhalisa, S.Pd.', 'Guru Kelas', 'Guru Kelas 1A', 'sdnbobong', 'assets/logo-sdn-bobong.png'),
+('198803152014032003', 'Rahmat Hidayat, S.Pd.', 'Guru Kelas', 'Guru Kelas 4A', 'sdnbobong', 'assets/logo-sdn-bobong.png')
+ON CONFLICT (nip) DO NOTHING;
+
 -- Aktifkan Row Level Security (RLS) & Kebijakan Akses Publik Read/Write
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
@@ -99,6 +120,7 @@ ALTER TABLE public.attendance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.grades ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.journals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.teachers ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow public read classes" ON public.classes FOR SELECT USING (true);
 CREATE POLICY "Allow public read/write students" ON public.students FOR ALL USING (true);
@@ -106,3 +128,4 @@ CREATE POLICY "Allow public read/write attendance" ON public.attendance FOR ALL 
 CREATE POLICY "Allow public read/write grades" ON public.grades FOR ALL USING (true);
 CREATE POLICY "Allow public read/write journals" ON public.journals FOR ALL USING (true);
 CREATE POLICY "Allow public read/write modules" ON public.modules FOR ALL USING (true);
+CREATE POLICY "Allow public read/write teachers" ON public.teachers FOR ALL USING (true);

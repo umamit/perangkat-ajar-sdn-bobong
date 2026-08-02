@@ -43,6 +43,20 @@ async function syncFromSupabase() {
       }));
     }
 
+    const { data: teachers } = await client.from('teachers').select('id, nip, name, role, subject, password, avatar_url, is_active');
+    if (teachers && teachers.length > 0) {
+      appData.teachers = teachers.map(t => ({
+        id: t.id,
+        nip: t.nip,
+        name: t.name,
+        role: t.role || 'Guru Mata Pelajaran',
+        subject: t.subject || 'Bahasa Inggris',
+        password: t.password || 'sdnbobong',
+        avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
+        isActive: t.is_active !== false
+      }));
+    }
+
     saveStorage();
     if (typeof renderAllViews === 'function') {
       renderAllViews();
@@ -167,5 +181,33 @@ async function saveJournalToSupabase(j) {
     console.warn('[Supabase Journal Save Warning]', err);
   }
 }
+
+async function saveTeacherToSupabase(t) {
+  const client = getSupabase();
+  if (!client) return;
+  try {
+    await client.from('teachers').upsert({
+      nip: t.nip,
+      name: t.name,
+      role: t.role || 'Guru Mata Pelajaran',
+      subject: t.subject || 'Bahasa Inggris',
+      password: t.password || 'sdnbobong',
+      avatar_url: t.avatar || 'assets/logo-sdn-bobong.png'
+    }, { onConflict: 'nip' });
+  } catch (err) {
+    console.warn('[Supabase Teacher Save Warning]', err);
+  }
+}
+
+async function deleteTeacherFromSupabase(nip) {
+  const client = getSupabase();
+  if (!client) return;
+  try {
+    await client.from('teachers').delete().eq('nip', nip);
+  } catch (err) {
+    console.warn('[Supabase Teacher Delete Warning]', err);
+  }
+}
+
 
 

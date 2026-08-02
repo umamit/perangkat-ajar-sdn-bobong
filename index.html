@@ -112,6 +112,9 @@
           <a class="nav-item" data-view="laporan">
             <i class="ri-bar-chart-box-line"></i> Laporan
           </a>
+          <a class="nav-item" data-view="guru">
+            <i class="ri-user-star-line"></i> Kelola Data Guru
+          </a>
           <a class="nav-item" data-view="pengaturan">
             <i class="ri-settings-4-line"></i> Pengaturan
           </a>
@@ -448,7 +451,39 @@
           </div>
         </section>
 
-        <!-- 11. PENGATURAN VIEW -->
+        <!-- 11. KELOLA DATA GURU VIEW -->
+        <section id="view-guru" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3>Kelola Data Akun Guru SD Negeri Bobong</h3>
+              <p style="font-size:12.5px; color:var(--text-muted);">Daftar guru, NIP, peran, dan mata pelajaran yang diampu di SD Negeri Bobong.</p>
+            </div>
+            <button class="btn btn-primary" onclick="showAddTeacherModal()">
+              <i class="ri-user-add-line"></i> Tambah Guru Baru
+            </button>
+          </div>
+          <div class="card">
+            <div style="overflow-x:auto;">
+              <table class="data-table" id="teacherTable">
+                <thead>
+                  <tr>
+                    <th>NIP</th>
+                    <th>Nama Guru</th>
+                    <th>Mapel / Jabatan</th>
+                    <th>Peran</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="teacherTableBody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12. PENGATURAN VIEW -->
         <section id="view-pengaturan" class="view-section">
           <div class="section-header">
             <h3>Pengaturan Akun Guru & Sekolah</h3>
@@ -500,6 +535,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data.js"></script>
   <script src="helpers.js"></script>
+  <script src="views.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
