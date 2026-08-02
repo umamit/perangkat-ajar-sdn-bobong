@@ -61,9 +61,18 @@ export async function syncFromSupabase(): Promise<void> {
         avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
         isActive: t.is_active !== false
       }));
+
+      const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '199610272019032006';
+      const matched = appData.teachers.find((t: any) => t.nip === activeNip);
+      if (matched) {
+        appData.teacher = { ...appData.teacher, ...matched };
+      }
     }
 
     saveStorage();
+    if (typeof (window as any).renderTeacherProfile === 'function') {
+      (window as any).renderTeacherProfile();
+    }
     if (typeof (window as any).renderAllViews === 'function') {
       (window as any).renderAllViews();
     }

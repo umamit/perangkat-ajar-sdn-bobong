@@ -57,9 +57,19 @@ async function syncFromSupabase() {
         avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
         isActive: t.is_active !== false
       }));
+
+      // Directly update appData.teacher with matched NIP from Supabase data
+      const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '199610272019032006';
+      const matched = appData.teachers.find(t => t.nip === activeNip);
+      if (matched) {
+        appData.teacher = { ...appData.teacher, ...matched };
+      }
     }
 
     saveStorage();
+    if (typeof renderTeacherProfile === 'function') {
+      renderTeacherProfile();
+    }
     if (typeof renderAllViews === 'function') {
       renderAllViews();
     }
