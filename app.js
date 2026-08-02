@@ -214,8 +214,33 @@ function renderDashboard() {
 function switchRoleMode(mode) {
   appData.activeRoleMode = mode;
   saveStorage();
+  
   const selectElem = document.getElementById('roleModeSelect');
   if (selectElem) selectElem.value = mode;
+
+  const btnGuru = document.getElementById('btnRoleGuru');
+  const btnKepsek = document.getElementById('btnRoleKepsek');
+
+  if (btnGuru && btnKepsek) {
+    if (mode === 'guru_inggris') {
+      btnGuru.style.background = 'var(--primary)';
+      btnGuru.style.color = '#ffffff';
+      btnGuru.style.boxShadow = '0 4px 12px rgba(18, 165, 184, 0.35)';
+
+      btnKepsek.style.background = 'transparent';
+      btnKepsek.style.color = 'var(--text-muted)';
+      btnKepsek.style.boxShadow = 'none';
+    } else {
+      btnKepsek.style.background = 'var(--primary-dark)';
+      btnKepsek.style.color = '#ffffff';
+      btnKepsek.style.boxShadow = '0 4px 12px rgba(10, 126, 141, 0.35)';
+
+      btnGuru.style.background = 'transparent';
+      btnGuru.style.color = 'var(--text-muted)';
+      btnGuru.style.boxShadow = 'none';
+    }
+  }
+
   renderDataKelas();
   renderDataSiswa();
   renderDaftarNilai();

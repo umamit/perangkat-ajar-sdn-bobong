@@ -70,28 +70,17 @@ const INITIAL_DATA = {
   ],
 
   attendance: [
-    { date: "2025-08-01", classId: "4A", hadir: 24, izin: 1, sakit: 1, alpa: 0 },
-    { date: "2025-08-02", classId: "1A", hadir: 23, izin: 0, sakit: 1, alpa: 0 },
-    { date: "2025-08-02", classId: "5A", hadir: 27, izin: 1, sakit: 0, alpa: 0 }
+    { date: "2025-08-01", classId: "3A", hadir: 22, izin: 0, sakit: 0, alpa: 0 }
   ],
 
   journals: [
     {
       id: "J01",
       date: "2025-08-01",
-      classId: "4A",
-      topic: "Unit 1: What Are You Doing?",
-      activity: "Siswa berlatih percakapan Present Continuous Tense menggunakan gambar aksi kegiatan sehari-hari di SDN Bobong.",
-      notes: "Siswa antusias mengucapkan 'I am reading' dan 'She is writing'.",
-      status: "Selesai"
-    },
-    {
-      id: "J02",
-      date: "2025-08-02",
-      classId: "1A",
-      topic: "Unit 1: How are you?",
-      activity: "Menyanyikan lagu 'Hello, How Are You?' dan bermain peran menyapa teman sekelas.",
-      notes: "Siswa sangat aktif mengikuti gerak lagu.",
+      classId: "3A",
+      topic: "Unit 1: Animals Around Us",
+      activity: "Siswa membaca dan mengidentifikasi nama-nama hewan dalam Bahasa Inggris.",
+      notes: "22 Siswa Kelas 3A hadir lengkap dan sangat antusias.",
       status: "Selesai"
     }
   ],

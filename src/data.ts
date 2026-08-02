@@ -75,19 +75,10 @@ export const INITIAL_DATA: AppData = {
       id: "J01",
       date: "2025-08-01",
       time: "07.30 - 08.40",
-      classId: "4A",
-      topic: "Unit 1: What Are You Doing?",
-      notes: "Siswa berlatih percakapan Present Continuous Tense menggunakan gambar aksi kegiatan sehari-hari di SDN Bobong.",
-      attendance: "Hadir 24, Izin 1, Sakit 1"
-    },
-    {
-      id: "J02",
-      date: "2025-08-02",
-      time: "07.30 - 08.40",
-      classId: "1A",
-      topic: "Unit 1: How are you?",
-      notes: "Menyanyikan lagu 'Hello, How Are You?' dan bermain peran menyapa teman sekelas.",
-      attendance: "Hadir 23, Sakit 1"
+      classId: "3A",
+      topic: "Unit 1: Animals Around Us",
+      notes: "22 Siswa Kelas 3A hadir lengkap dan sangat antusias.",
+      attendance: "Hadir 22"
     }
   ],
 
