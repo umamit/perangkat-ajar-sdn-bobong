@@ -166,17 +166,43 @@ function renderDashboard() {
   document.getElementById('statTotalModules').innerText = totalModules;
   document.getElementById('statTotalJournals').innerText = totalJournals;
 
+  // Timetable
+  const timetableBody = document.getElementById('timetableBody');
+  if (timetableBody) {
+    if (!appData.schedules || appData.schedules.length === 0) {
+      appData.schedules = [
+        { day: "Senin", time: "07.30 - 08.40", classId: "4A", topic: "Unit 1: What Are You Doing?" },
+        { day: "Selasa", time: "08.40 - 09.50", classId: "1A", topic: "Unit 1: How Are You?" },
+        { day: "Rabu", time: "07.30 - 08.40", classId: "5A", topic: "Unit 1: What Time Is It?" },
+        { day: "Kamis", time: "09.50 - 11.00", classId: "3A", topic: "Unit 1: I Like Dancing" },
+        { day: "Jumat", time: "08.00 - 09.10", classId: "2A", topic: "Unit 1: My Family" }
+      ];
+    }
+    timetableBody.innerHTML = appData.schedules.map((s, idx) => `
+      <tr>
+        <td><strong>${s.day}</strong></td>
+        <td>${s.time}</td>
+        <td><span class="badge badge-info">${s.classId}</span></td>
+        <td>${s.topic}</td>
+        <td>
+          <button class="btn btn-danger" onclick="deleteScheduleRecord(${idx})" style="padding:2px 6px; font-size:11px;" title="Hapus Jadwal">&times;</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
   // Recent Journals Table
   const tbody = document.getElementById('recentJournalsBody');
-  tbody.innerHTML = appData.journals.slice(0, 3).map(j => `
-    <tr>
-      <td>${j.date}</td>
-      <td><span class="badge badge-info">${j.classId}</span></td>
-      <td><strong>${j.topic}</strong></td>
-      <td>${j.activity}</td>
-      <td><span class="badge badge-success">${j.status}</span></td>
-    </tr>
-  `).join('');
+  if (tbody) {
+    tbody.innerHTML = appData.journals.slice(0, 3).map(j => `
+      <tr>
+        <td>${j.date}</td>
+        <td><span class="badge badge-info">${j.classId}</span></td>
+        <td><strong>${j.topic}</strong></td>
+        <td><span class="badge badge-success">${j.status}</span></td>
+      </tr>
+    `).join('');
+  }
 }
 
 // 2. Data Siswa View
@@ -235,21 +261,189 @@ function renderDataKelas() {
 // 4. Absensi View
 function renderAbsensi() {
   const tbody = document.getElementById('absensiTableBody');
+  if (!tbody) return;
   tbody.innerHTML = appData.attendance.map(a => `
     <tr>
-      <td>${a.date}</td>
+      <td><strong>${a.date}</strong></td>
       <td><span class="badge badge-info">${a.classId}</span></td>
       <td><span class="badge badge-success">${a.hadir} Siswa</span></td>
       <td><span class="badge badge-warning">${a.izin} Siswa</span></td>
       <td><span class="badge badge-warning">${a.sakit} Siswa</span></td>
       <td><span class="badge badge-danger">${a.alpa} Siswa</span></td>
       <td>
-        <button class="btn btn-secondary" onclick="alert('Fitur ubah absensi tanggal ${a.date}')" style="padding: 4px 8px; font-size:12px;">
-          Update Presensi
+        <button class="btn btn-secondary" onclick="editAttendanceRecord('${a.date}', '${a.classId}')" style="padding: 4px 8px; font-size:12px;">
+          <i class="ri-edit-line"></i> Edit
+        </button>
+        <button class="btn btn-danger" onclick="deleteAttendanceRecord('${a.date}', '${a.classId}')" style="padding: 4px 8px; font-size:12px;" title="Hapus Catatan">
+          <i class="ri-delete-bin-line"></i>
         </button>
       </td>
     </tr>
   `).join('');
+}
+
+function showAddAttendanceModal() {
+  const today = new Date().toISOString().split('T')[0];
+  const classOptions = appData.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  const form = `
+    <form onsubmit="saveAttendanceRecord(event)">
+      <div class="form-group">
+        <label>Tanggal Presensi</label>
+        <input type="date" id="attDate" value="${today}" required>
+      </div>
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="attClassId" required>${classOptions}</select>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Jumlah Hadir</label>
+          <input type="number" id="attHadir" min="0" value="20" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Izin</label>
+          <input type="number" id="attIzin" min="0" value="0" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Sakit</label>
+          <input type="number" id="attSakit" min="0" value="0" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Alpa</label>
+          <input type="number" id="attAlpa" min="0" value="0" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">Simpan Catatan Presensi</button>
+    </form>
+  `;
+  openModal('Catat Presensi Harian Siswa', form);
+}
+
+function editAttendanceRecord(date, classId) {
+  const item = appData.attendance.find(a => a.date === date && a.classId === classId);
+  if (!item) return;
+  const classOptions = appData.classes.map(c => `<option value="${c.id}" ${c.id === classId ? 'selected' : ''}>${c.name}</option>`).join('');
+  const form = `
+    <form onsubmit="saveAttendanceRecord(event)">
+      <div class="form-group">
+        <label>Tanggal Presensi</label>
+        <input type="date" id="attDate" value="${item.date}" required>
+      </div>
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="attClassId" required>${classOptions}</select>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Jumlah Hadir</label>
+          <input type="number" id="attHadir" min="0" value="${item.hadir}" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Izin</label>
+          <input type="number" id="attIzin" min="0" value="${item.izin}" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Sakit</label>
+          <input type="number" id="attSakit" min="0" value="${item.sakit}" required>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Alpa</label>
+          <input type="number" id="attAlpa" min="0" value="${item.alpa}" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">Update Presensi</button>
+    </form>
+  `;
+  openModal('Edit Presensi Harian Siswa', form);
+}
+
+function saveAttendanceRecord(e) {
+  e.preventDefault();
+  const date = document.getElementById('attDate').value;
+  const classId = document.getElementById('attClassId').value;
+  const hadir = parseInt(document.getElementById('attHadir').value, 10) || 0;
+  const izin = parseInt(document.getElementById('attIzin').value, 10) || 0;
+  const sakit = parseInt(document.getElementById('attSakit').value, 10) || 0;
+  const alpa = parseInt(document.getElementById('attAlpa').value, 10) || 0;
+
+  const existingIdx = appData.attendance.findIndex(a => a.date === date && a.classId === classId);
+  const rec = { date, classId, hadir, izin, sakit, alpa };
+
+  if (existingIdx !== -1) {
+    appData.attendance[existingIdx] = rec;
+  } else {
+    appData.attendance.unshift(rec);
+  }
+
+  saveStorage();
+  renderAbsensi();
+  closeModal();
+  alert(`Data presensi kelas ${classId} tanggal ${date} berhasil disimpan!`);
+}
+
+function deleteAttendanceRecord(date, classId) {
+  if (confirm(`Hapus catatan presensi kelas ${classId} tanggal ${date}?`)) {
+    appData.attendance = appData.attendance.filter(a => !(a.date === date && a.classId === classId));
+    saveStorage();
+    renderAbsensi();
+  }
+}
+
+function showAddScheduleModal() {
+  const classOptions = appData.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  const form = `
+    <form onsubmit="saveScheduleRecord(event)">
+      <div class="form-group">
+        <label>Hari</label>
+        <select id="schDay" required>
+          <option value="Senin">Senin</option>
+          <option value="Selasa">Selasa</option>
+          <option value="Rabu">Rabu</option>
+          <option value="Kamis">Kamis</option>
+          <option value="Jumat">Jumat</option>
+          <option value="Sabtu">Sabtu</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Waktu Jam Pelajaran</label>
+        <input type="text" id="schTime" placeholder="Contoh: 07.30 - 08.40" value="07.30 - 08.40" required>
+      </div>
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="schClassId" required>${classOptions}</select>
+      </div>
+      <div class="form-group">
+        <label>Materi / Topik Pembelajaran</label>
+        <input type="text" id="schTopic" placeholder="Contoh: Unit 2: Be Healthy, Be Happy" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Tambah Jadwal Mengajar</button>
+    </form>
+  `;
+  openModal('Tambah Jadwal Mengajar Guru', form);
+}
+
+function saveScheduleRecord(e) {
+  e.preventDefault();
+  const day = document.getElementById('schDay').value;
+  const time = document.getElementById('schTime').value.trim();
+  const classId = document.getElementById('schClassId').value;
+  const topic = document.getElementById('schTopic').value.trim();
+
+  if (!appData.schedules) appData.schedules = [];
+  appData.schedules.push({ day, time, classId, topic });
+
+  saveStorage();
+  renderDashboard();
+  closeModal();
+  alert(`Jadwal mengajar ${day} (${classId}) berhasil ditambahkan!`);
+}
+
+function deleteScheduleRecord(idx) {
+  if (confirm('Hapus entri jadwal mengajar ini?')) {
+    if (appData.schedules) appData.schedules.splice(idx, 1);
+    saveStorage();
+    renderDashboard();
+  }
 }
 
 // 5. Daftar Nilai View
@@ -700,4 +894,14 @@ async function saveTeacherProfileSettings(e) {
   renderTeacherProfile();
   renderDataGuru();
   alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan ke Supabase Cloud!');
+}
+
+if (typeof window !== 'undefined') {
+  window.showAddAttendanceModal = showAddAttendanceModal;
+  window.editAttendanceRecord = editAttendanceRecord;
+  window.saveAttendanceRecord = saveAttendanceRecord;
+  window.deleteAttendanceRecord = deleteAttendanceRecord;
+  window.showAddScheduleModal = showAddScheduleModal;
+  window.saveScheduleRecord = saveScheduleRecord;
+  window.deleteScheduleRecord = deleteScheduleRecord;
 }

@@ -201,11 +201,13 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:24px;">
-            <!-- Jadwal Mengajar Widget -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:24px;">            <!-- Jadwal Mengajar Widget -->
             <div class="card" style="margin-bottom:0;">
-              <div class="section-header" style="margin-bottom:12px;">
-                <h3><i class="ri-calendar-check-line" style="color:var(--primary);"></i> Jadwal Mengajar Minggu Ini</h3>
+              <div class="section-header" style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:16px; margin:0;"><i class="ri-calendar-check-line" style="color:var(--primary);"></i> Jadwal Mengajar</h3>
+                <button class="btn btn-primary" onclick="showAddScheduleModal()" style="padding:4px 10px; font-size:12px;">
+                  <i class="ri-add-line"></i> Tambah Jadwal
+                </button>
               </div>
               <div class="table-wrapper">
                 <table>
@@ -215,6 +217,7 @@
                       <th>Waktu</th>
                       <th>Kelas</th>
                       <th>Materi</th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody id="timetableBody"></tbody>
@@ -224,9 +227,9 @@
 
             <!-- Recent Journals Card -->
             <div class="card" style="margin-bottom:0;">
-              <div class="section-header" style="margin-bottom:12px;">
-                <h3>Jurnal Mengajar Terbaru</h3>
-                <button class="btn btn-secondary" onclick="document.querySelector('[data-view=jurnal]').click()">Lihat Semua</button>
+              <div class="section-header" style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:16px; margin:0;">Jurnal Mengajar Terbaru</h3>
+                <button class="btn btn-secondary" onclick="document.querySelector('[data-view=jurnal]').click()" style="padding:4px 10px; font-size:12px;">Lihat Semua</button>
               </div>
               <div class="table-wrapper">
                 <table>
@@ -250,29 +253,40 @@
           <div class="section-header">
             <h3>Daftar Siswa SD Negeri Bobong</h3>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <input type="text" id="searchSiswaInput" oninput="filterSiswa()" placeholder="Cari Nama / NIS..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
-              <select id="filterClassSiswa" onchange="filterSiswa()" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;">
-                <option value="ALL">Semua Kelas</option>
-                <option value="1A">Kelas 1 - A</option>
-                <option value="4A">Kelas 4 - A</option>
-                <option value="5A">Kelas 5 - A</option>
-              </select>
-              <button class="btn btn-secondary" onclick="exportSiswaToCSV()" title="Ekspor ke Excel/CSV">
-                <i class="ri-file-excel-line"></i> Ekspor CSV
-              </button>
               <button class="btn btn-primary" onclick="showAddStudentModal()">
-                <i class="ri-user-add-line"></i> Tambah Siswa
+                <i class="ri-user-add-line"></i> Tambah Siswa Baru
+              </button>
+              <button class="btn btn-secondary" onclick="exportSiswaToCSV()">
+                <i class="ri-download-line"></i> Ekspor Data CSV
               </button>
             </div>
           </div>
           <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+              <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" placeholder="Cari siswa berdasarkan nama/NISN..." onkeyup="searchStudent(this.value)">
+              </div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <label style="font-size:13px; font-weight:600;">Filter Kelas:</label>
+                <select id="filterClassSelect" onchange="filterSiswaByClass(this.value)" style="padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
+                  <option value="ALL">Semua Kelas</option>
+                  <option value="1A">Kelas 1A</option>
+                  <option value="2A">Kelas 2A</option>
+                  <option value="3A">Kelas 3A</option>
+                  <option value="4A">Kelas 4A</option>
+                  <option value="5A">Kelas 5A</option>
+                  <option value="6A">Kelas 6A</option>
+                </select>
+              </div>
+            </div>
             <div class="table-wrapper">
               <table>
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>NIS</th>
-                    <th>Nama Siswa</th>
+                    <th>NISN</th>
+                    <th>Nama Lengkap</th>
                     <th>Kelas</th>
                     <th>Jenis Kelamin</th>
                     <th>Nilai Formatif</th>
@@ -296,8 +310,11 @@
 
         <!-- 4. ABSENSI VIEW -->
         <section id="view-absensi" class="view-section">
-          <div class="section-header">
+          <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Rekapitulasi Presensi / Absensi Siswa</h3>
+            <button class="btn btn-primary" onclick="showAddAttendanceModal()">
+              <i class="ri-add-line"></i> Catat Presensi Harian Baru
+            </button>
           </div>
           <div class="card">
             <div class="table-wrapper">

@@ -243,21 +243,24 @@ export function renderDataKelas(): void {
 export function renderAbsensi(): void {
   const tbody = document.getElementById('absensiTableBody');
   if (!tbody) return;
-  tbody.innerHTML = `
+  tbody.innerHTML = (appData.attendance || []).map((a: any) => `
     <tr>
-      <td>${new Date().toISOString().split('T')[0]}</td>
-      <td><span class="badge badge-info">4A</span></td>
-      <td><span class="badge badge-success">24 Siswa</span></td>
-      <td><span class="badge badge-warning">1 Siswa</span></td>
-      <td><span class="badge badge-warning">1 Siswa</span></td>
-      <td><span class="badge badge-danger">0 Siswa</span></td>
+      <td><strong>${a.date}</strong></td>
+      <td><span class="badge badge-info">${a.classId}</span></td>
+      <td><span class="badge badge-success">${a.hadir} Siswa</span></td>
+      <td><span class="badge badge-warning">${a.izin} Siswa</span></td>
+      <td><span class="badge badge-warning">${a.sakit} Siswa</span></td>
+      <td><span class="badge badge-danger">${a.alpa} Siswa</span></td>
       <td>
-        <button class="btn btn-secondary" onclick="alert('Presensi kelas 4A diperbarui!')" style="padding: 4px 8px; font-size:12px;">
-          Update Presensi
+        <button class="btn btn-secondary" onclick="editAttendanceRecord('${a.date}', '${a.classId}')" style="padding: 4px 8px; font-size:12px;">
+          <i class="ri-edit-line"></i> Edit
+        </button>
+        <button class="btn btn-danger" onclick="deleteAttendanceRecord('${a.date}', '${a.classId}')" style="padding: 4px 8px; font-size:12px;" title="Hapus Catatan">
+          <i class="ri-delete-bin-line"></i>
         </button>
       </td>
     </tr>
-  `;
+  `).join('');
 }
 
 // 5. Daftar Nilai View

@@ -110,6 +110,8 @@ export interface AppData {
   modules: ModuleAjar[];
   flashcards: FlashcardItem[];
   quizQuestions: QuizQuestion[];
+  attendance?: any[];
+  schedules?: any[];
 }
 
 declare global {
