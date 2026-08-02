@@ -188,18 +188,29 @@ export function renderDashboard(): void {
   }
 }
 
-// Helper: Get classes available for logged-in teacher's role/subject
+export function switchRoleMode(mode: string): void {
+  (appData as any).activeRoleMode = mode;
+  saveStorage();
+  const selectElem = document.getElementById('roleModeSelect') as HTMLSelectElement | null;
+  if (selectElem) selectElem.value = mode;
+  renderDataKelas();
+  renderDataSiswa();
+  renderDaftarNilai();
+  renderDashboard();
+}
+
+// Helper: Get classes available for logged-in teacher's active role mode
 export function getTeacherClasses(): any[] {
-  const currentSubject = (appData.teacher && appData.teacher.subject) ? appData.teacher.subject.toLowerCase() : 'bahasa inggris';
-  const currentRole = (appData.teacher && appData.teacher.role) ? appData.teacher.role.toLowerCase() : '';
-  const currentName = (appData.teacher && appData.teacher.name) ? appData.teacher.name.toLowerCase() : '';
+  const activeMode = (appData as any).activeRoleMode || 'guru_inggris';
+  const selectElem = document.getElementById('roleModeSelect') as HTMLSelectElement | null;
+  if (selectElem && selectElem.value !== activeMode) {
+    selectElem.value = activeMode;
+  }
   
-  const isEnglishTeacher = currentSubject.includes('inggris') || currentRole.includes('inggris') || currentName.includes('husnita') || currentRole.includes('mata pelajaran');
-  
-  if (isEnglishTeacher) {
+  if (activeMode === 'guru_inggris') {
     return appData.classes.filter(c => !c.id.startsWith('1') && !c.id.startsWith('2'));
   }
-  return appData.classes;
+  return appData.classes; // Returns all 12 classes for Kepsek mode
 }
 
 // 2. Data Siswa View

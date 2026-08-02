@@ -148,6 +148,13 @@
           </div>
         </div>
         <div class="top-actions">
+          <div class="role-switcher-container" style="display:flex; align-items:center; gap:6px; background:#eef6f8; padding:4px 10px; border-radius:20px; border:1px solid rgba(18, 165, 184, 0.3);">
+            <i class="ri-user-star-line" style="color:var(--primary); font-size:15px;"></i>
+            <select id="roleModeSelect" onchange="switchRoleMode(this.value)" style="border:none; background:transparent; font-size:12px; font-weight:700; color:var(--primary-dark); outline:none; cursor:pointer;" title="Beralih Mode Tampilan Peran">
+              <option value="guru_inggris">Mode: Guru B. Inggris (Kelas 3-6)</option>
+              <option value="kepsek">Mode: Plt. Kepala Sekolah (Semua Kelas 1-6)</option>
+            </select>
+          </div>
           <button class="btn btn-secondary" onclick="handleLogout()" title="Keluar / Logout">
             <i class="ri-logout-box-r-line"></i> <span class="hide-on-mobile">Keluar</span>
           </button>
@@ -571,9 +578,9 @@
 
   <!-- JS Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="data.js?v=5.0.0"></script>
-  <script src="helpers.js?v=5.0.0"></script>
-  <script src="views.js?v=5.0.0"></script>
-  <script src="app.js?v=5.0.0"></script>
+  <script src="data.js?v=6.0.0"></script>
+  <script src="helpers.js?v=6.0.0"></script>
+  <script src="views.js?v=6.0.0"></script>
+  <script src="app.js?v=6.0.0"></script>
 </body>
 </html>
