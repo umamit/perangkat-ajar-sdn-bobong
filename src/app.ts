@@ -17,7 +17,7 @@ import { filterSiswa, searchStudent } from './modules/searchStudent';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
-import { renderAbsensi } from './modules/renderAbsensi';
+import { renderAbsensi, renderAbsensiForm, setAbsensiStatus, saveAbsensi } from './modules/renderAbsensi';
 import { renderDaftarNilai, adjustGrade, updateStudentGrade } from './modules/renderDaftarNilai';
 import { renderJurnal, showAddJournalModal, saveJournal } from './modules/renderJurnal';
 import { renderTimetable } from './modules/renderTimetable';
@@ -112,5 +112,8 @@ if (typeof window !== 'undefined') {
   (window as any).renderDaftarNilai = renderDaftarNilai;
   (window as any).renderJurnal = renderJurnal;
   (window as any).renderAbsensi = renderAbsensi;
+  (window as any).renderAbsensiForm = renderAbsensiForm;
+  (window as any).setAbsensiStatus = setAbsensiStatus;
+  (window as any).saveAbsensi = saveAbsensi;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

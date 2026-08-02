@@ -323,27 +323,99 @@
 
         <!-- 4. ABSENSI VIEW -->
         <section id="view-absensi" class="view-section">
-          <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Rekapitulasi Presensi / Absensi Siswa</h3>
-            <button class="btn btn-primary" onclick="showAddAttendanceModal()">
-              <i class="ri-add-line"></i> Catat Presensi Harian Baru
-            </button>
+          <div class="section-header">
+            <div>
+              <h3>Presensi / Absensi Siswa</h3>
+              <p style="font-size:12.5px; color:var(--text-muted);">Catat kehadiran siswa per kelas dan tanggal secara langsung.</p>
+            </div>
           </div>
+
+          <!-- Form Input Absensi -->
+          <div class="card" style="margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
+              <div style="width:34px; height:34px; border-radius:10px; background:rgba(18,165,184,0.1); display:flex; align-items:center; justify-content:center;">
+                <i class="ri-calendar-check-line" style="font-size:18px; color:var(--primary);"></i>
+              </div>
+              <div>
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main);">Input Presensi Harian</h4>
+                <p style="font-size:12px; color:var(--text-muted);">Pilih kelas dan tanggal, lalu tandai kehadiran tiap siswa</p>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:end; margin-bottom:16px;">
+              <div>
+                <label style="font-size:12px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Pilih Kelas</label>
+                <select id="absensiClassSelect" onchange="renderAbsensiForm()" style="width:100%; padding:9px 12px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13.5px; background:white;">
+                  <option value="">-- Pilih Kelas --</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Tanggal</label>
+                <input type="date" id="absensiDateInput" onchange="renderAbsensiForm()" style="width:100%; padding:9px 12px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13.5px;">
+              </div>
+              <button class="btn btn-primary" onclick="saveAbsensi()" style="white-space:nowrap;">
+                <i class="ri-save-line"></i> Simpan Presensi
+              </button>
+            </div>
+
+            <!-- Tabel Input Per Siswa -->
+            <div id="absensiFormContainer" style="display:none;">
+              <div style="overflow-x:auto;">
+                <table class="data-table" id="absensiInputTable">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">No</th>
+                      <th>Nama Siswa</th>
+                      <th style="text-align:center; width:80px;">Hadir</th>
+                      <th style="text-align:center; width:80px;">Izin</th>
+                      <th style="text-align:center; width:80px;">Sakit</th>
+                      <th style="text-align:center; width:80px;">Alpa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="absensiInputBody"></tbody>
+                </table>
+              </div>
+              <div style="margin-top:12px; padding:10px 14px; background:rgba(18,165,184,0.06); border-radius:var(--radius-sm); font-size:12.5px; color:var(--primary-dark);">
+                <i class="ri-information-line"></i> Klik salah satu status per baris siswa. Default semua siswa: <strong>Hadir</strong>.
+              </div>
+            </div>
+            <div id="absensiFormPlaceholder" style="text-align:center; padding:30px 20px; color:var(--text-muted);">
+              <i class="ri-group-line" style="font-size:32px; display:block; margin-bottom:8px; opacity:0.4;"></i>
+              <p style="font-size:13px;">Pilih kelas dan tanggal untuk menampilkan daftar siswa</p>
+            </div>
+          </div>
+
+          <!-- Rekap Riwayat Absensi -->
           <div class="card">
-            <div class="table-wrapper">
-              <table>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border-color);">
+              <div style="width:34px; height:34px; border-radius:10px; background:rgba(42,157,92,0.1); display:flex; align-items:center; justify-content:center;">
+                <i class="ri-bar-chart-grouped-line" style="font-size:18px; color:var(--accent);"></i>
+              </div>
+              <div>
+                <h4 style="font-size:14px; font-weight:700; color:var(--text-main);">Riwayat Rekap Presensi</h4>
+                <p style="font-size:12px; color:var(--text-muted);">Data presensi yang telah tersimpan</p>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
                 <thead>
                   <tr>
                     <th>Tanggal</th>
                     <th>Kelas</th>
-                    <th>Hadir</th>
-                    <th>Izin</th>
-                    <th>Sakit</th>
-                    <th>Alpa</th>
-                    <th>Aksi</th>
+                    <th style="text-align:center;">Hadir</th>
+                    <th style="text-align:center;">Izin</th>
+                    <th style="text-align:center;">Sakit</th>
+                    <th style="text-align:center;">Alpa</th>
+                    <th style="text-align:center;">Total</th>
                   </tr>
                 </thead>
-                <tbody id="absensiTableBody"></tbody>
+                <tbody id="absensiTableBody">
+                  <tr id="absensiEmptyRow">
+                    <td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px; font-size:13px;">
+                      <i class="ri-inbox-line" style="font-size:24px; display:block; margin-bottom:6px; opacity:0.4;"></i>
+                      Belum ada riwayat presensi tersimpan
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
