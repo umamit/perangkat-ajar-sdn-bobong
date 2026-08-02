@@ -691,25 +691,34 @@ function renderTimetable() {
 }
 
 // Live Search & Filter Siswa
-function filterSiswa() {
-  const query = document.getElementById('searchSiswaInput')?.value.toLowerCase().trim() || '';
-  const classFilter = document.getElementById('filterClassSiswa')?.value || 'ALL';
+function searchStudent(query) {
+  filterSiswa(query);
+}
 
-  let filtered = appData.students;
+function filterSiswa(queryVal) {
+  const query = (queryVal !== undefined ? queryVal : (document.getElementById('searchSiswaInput')?.value || '')).toLowerCase().trim();
+  const selectElem = document.getElementById('filterClassSelect');
+  const classFilter = selectElem ? selectElem.value : 'ALL';
+
+  let filtered = appData.students || [];
 
   if (classFilter !== 'ALL') {
     filtered = filtered.filter(s => s.classId === classFilter);
+  } else {
+    const availClasses = getTeacherClasses();
+    const availIds = availClasses.map(c => c.id);
+    filtered = filtered.filter(s => availIds.includes(s.classId));
   }
 
   if (query) {
-    filtered = filtered.filter(s => s.name.toLowerCase().includes(query) || s.nis.includes(query));
+    filtered = filtered.filter(s => s.name.toLowerCase().includes(query) || (s.nis && s.nis.toLowerCase().includes(query)));
   }
 
   const container = document.getElementById('siswaTableBody');
   if (!container) return;
 
   if (filtered.length === 0) {
-    container.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Tidak ada siswa yang cocok.</td></tr>`;
+    container.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Tidak ada data siswa yang cocok dengan pencarian.</td></tr>`;
     return;
   }
 
@@ -720,8 +729,8 @@ function filterSiswa() {
       <td>${s.name}</td>
       <td><span class="badge badge-info">${s.classId}</span></td>
       <td>${s.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
-      <td>${s.scoreFormatif}</td>
-      <td>${s.scoreSumatif}</td>
+      <td>${s.scoreFormatif || 80}</td>
+      <td>${s.scoreSumatif || 80}</td>
       <td>
         <button class="btn btn-secondary" onclick="alert('Edit Siswa: ${s.name}')" style="padding: 4px 8px; font-size:12px;">
           <i class="ri-edit-line"></i> Edit
@@ -1118,6 +1127,8 @@ if (typeof window !== 'undefined') {
   window.deleteFlashcard = deleteFlashcard;
   window.showAddTugasModal = showAddTugasModal;
   window.deleteTugas = deleteTugas;
+  window.searchStudent = searchStudent;
+  window.filterSiswa = filterSiswa;
 }
 
 // 13. CRUD Modul Ajar, Flashcard, & Tugas Interaktif
