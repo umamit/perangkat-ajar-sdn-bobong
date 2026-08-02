@@ -78,15 +78,44 @@ function safeMerge(defaults, saved) {
   return result;
 }
 
+// Safe Cookie Helpers for Session Persistence Across Refresh
+function setCookie(name, value, days = 7) {
+  try {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+  } catch (e) {
+    console.warn('[Cookie Error]', e);
+  }
+}
+
+function getCookie(name) {
+  try {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+  } catch (e) {
+    console.warn('[Cookie Error]', e);
+  }
+  return null;
+}
+
+function eraseCookie(name) {
+  try {
+    document.cookie = `${name}=; Max-Age=-99999999; path=/; SameSite=Lax`;
+  } catch (e) {
+    console.warn('[Cookie Error]', e);
+  }
+  return null;
+}
+
 function loadStorage() {
-  // No localStorage - Rely purely on Supabase & Initial State
   if (!appData) {
     appData = { ...INITIAL_DATA };
   }
 }
 
 function saveStorage() {
-  // No localStorage - Data state is held in memory and synced live with Supabase
+  // Data state is held in memory and synced live with Supabase
 }
 
 // Password Visibility Toggle

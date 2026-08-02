@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let inMemoryAuth = false;
 
 export function checkAuthSession(): void {
-  const isLoggedIn = inMemoryAuth;
+  const isLoggedIn = inMemoryAuth || (typeof getCookie === 'function' && getCookie('sdn_bobong_auth') === 'true');
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
@@ -44,6 +44,9 @@ export function handleLogin(e: Event): void {
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
     inMemoryAuth = true;
+    if (typeof setCookie === 'function') {
+      setCookie('sdn_bobong_auth', 'true', 7);
+    }
     checkAuthSession();
     renderTeacherProfile();
   } else {
@@ -56,6 +59,9 @@ export function handleLogin(e: Event): void {
 
 export function handleLogout(): void {
   inMemoryAuth = false;
+  if (typeof eraseCookie === 'function') {
+    eraseCookie('sdn_bobong_auth');
+  }
   checkAuthSession();
   const nipEl = document.getElementById('loginNip') as HTMLInputElement | null;
   const passEl = document.getElementById('loginPassword') as HTMLInputElement | null;

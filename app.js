@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let inMemoryAuth = false;
 
 function checkAuthSession() {
-  const isLoggedIn = inMemoryAuth;
+  const isLoggedIn = inMemoryAuth || (typeof getCookie === 'function' && getCookie('sdn_bobong_auth') === 'true');
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
@@ -36,6 +36,9 @@ function handleLogin(e) {
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
     inMemoryAuth = true;
+    if (typeof setCookie === 'function') {
+      setCookie('sdn_bobong_auth', 'true', 7);
+    }
     checkAuthSession();
     renderTeacherProfile();
   } else {
@@ -48,6 +51,9 @@ function handleLogin(e) {
 
 function handleLogout() {
   inMemoryAuth = false;
+  if (typeof eraseCookie === 'function') {
+    eraseCookie('sdn_bobong_auth');
+  }
   checkAuthSession();
   if (document.getElementById('loginNip')) document.getElementById('loginNip').value = '';
   if (document.getElementById('loginPassword')) document.getElementById('loginPassword').value = '';
