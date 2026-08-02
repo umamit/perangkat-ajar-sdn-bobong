@@ -6,3 +6,4 @@ export { exportNilaiToCSV } from './modules/exportNilaiToCSV';
 export { startEnglishQuiz } from './modules/startEnglishQuiz';
 export { renderQuizQuestion } from './modules/renderQuizQuestion';
 export { checkQuizAnswer } from './modules/checkQuizAnswer';
+export { printModule } from './modules/printModule';

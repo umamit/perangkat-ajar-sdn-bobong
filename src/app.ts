@@ -58,8 +58,10 @@ import { saveTugas } from './modules/saveTugas';
 import { showAddFlashcardModal } from './modules/showAddFlashcardModal';
 import { saveFlashcard } from './modules/saveFlashcard';
 import { filterFlashcards } from './modules/filterFlashcards';
+import { showAddScheduleModal } from './modules/showAddScheduleModal';
+import { saveSchedule } from './modules/saveSchedule';
 
-import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
+import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet, printModule } from './views';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadStorage();
@@ -137,6 +139,9 @@ if (typeof window !== 'undefined') {
   (window as any).showAddFlashcardModal = showAddFlashcardModal;
   (window as any).saveFlashcard = saveFlashcard;
   (window as any).filterFlashcards = filterFlashcards;
+  (window as any).showAddScheduleModal = showAddScheduleModal;
+  (window as any).saveSchedule = saveSchedule;
+  (window as any).printModule = printModule;
   (window as any).saveTeacherProfileSettings = saveTeacherProfileSettings;
   (window as any).previewTeacherAvatar = previewTeacherAvatar;
   (window as any).adjustGrade = adjustGrade;
