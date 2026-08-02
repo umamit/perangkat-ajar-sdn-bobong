@@ -29,6 +29,10 @@ const INITIAL_DATA = {
   ],
 
   classes: [
+    { id: "1A", name: "Kelas 1 - A", count: 24, room: "Ruang 01A", phase: "Fase A" },
+    { id: "1B", name: "Kelas 1 - B", count: 24, room: "Ruang 01B", phase: "Fase A" },
+    { id: "2A", name: "Kelas 2 - A", count: 22, room: "Ruang 02A", phase: "Fase A" },
+    { id: "2B", name: "Kelas 2 - B", count: 22, room: "Ruang 02B", phase: "Fase A" },
     { id: "3A", name: "Kelas 3 - A", count: 22, room: "Ruang 03A", phase: "Fase B" },
     { id: "3B", name: "Kelas 3 - B", count: 22, room: "Ruang 03B", phase: "Fase B" },
     { id: "4A", name: "Kelas 4 - A", count: 25, room: "Ruang 04A", phase: "Fase B" },
