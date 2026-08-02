@@ -219,9 +219,12 @@ export function renderDataSiswa(filterClass = 'ALL'): void {
 export function renderDataKelas(): void {
   const grid = document.getElementById('kelasGrid');
   if (!grid) return;
-  grid.innerHTML = appData.classes.map(c => `
+  grid.innerHTML = appData.classes.map(c => {
+    const studentCount = appData.students.filter(s => s.classId === c.id).length;
+    const countDisplay = studentCount > 0 ? studentCount : (c.count || 0);
+    return `
     <div class="card" style="padding: 20px;">
-      <div style="display:flex; justify-shadow:space-between; align-items:center; margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <span class="badge badge-info">${c.phase}</span>
         <i class="ri-building-line" style="font-size:24px; color:var(--primary);"></i>
       </div>
@@ -229,10 +232,11 @@ export function renderDataKelas(): void {
       <p style="color:var(--text-muted); font-size:13px; margin-bottom:12px;">${c.room}</p>
       <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; border-top:1px solid #e2e8f0; padding-top:10px;">
         <span>Jumlah Siswa:</span>
-        <span style="color:var(--primary);">${c.count} Orang</span>
+        <span style="color:var(--primary); font-weight:800;">${countDisplay} Orang</span>
       </div>
     </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // 4. Absensi View
