@@ -313,7 +313,9 @@ function renderDataKelas() {
   if (!grid) return;
   const targetClasses = getTeacherClasses();
   grid.innerHTML = targetClasses.map(c => {
-    const studentCount = appData.students.filter(s => s.classId === c.id).length;
+    delete c.count; // Hapus paksa properti count fiktif jika ada di memory/cache
+    const realStudents = (appData.students || []).filter(s => s.classId === c.id);
+    const studentCount = realStudents.length;
     return `
     <div class="card" style="padding: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
