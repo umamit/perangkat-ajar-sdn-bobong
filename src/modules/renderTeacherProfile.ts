@@ -15,6 +15,6 @@ export function renderTeacherProfile(): void {
   if (document.getElementById('teacherNipSidebar')) document.getElementById('teacherNipSidebar')!.innerText = `NIP: ${teacher.nip || '199610272019032006'}`;
   if (document.getElementById('teacherAvatarSidebar')) (document.getElementById('teacherAvatarSidebar') as HTMLImageElement).src = teacher.avatar || 'logo-sdn-bobong.svg';
   if (document.getElementById('schoolNameHeader')) document.getElementById('schoolNameHeader')!.innerText = teacher.school || 'SD Negeri Bobong';
-  if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader')!.innerText = teacher.kecamatan || 'Kecamatan Taliabu Barat';
+  if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader')!.innerText = teacher.kecamatan || 'Kab. Pulau Taliabu';
   renderPengaturanForm();
 }

@@ -10,7 +10,7 @@ export function renderPengaturanForm(): void {
   set('settingTeacherNip',     teacher.nip       || '');
   set('settingTeacherSubject', teacher.subject   || '');
   set('settingSchoolName',     teacher.school    || 'SD Negeri Bobong');
-  set('settingKecamatan',      teacher.kecamatan || 'Kecamatan Taliabu Barat');
+  set('settingKecamatan',      teacher.kecamatan || 'Kabupaten Pulau Taliabu');
 
   const avatar = document.getElementById('settingAvatarPreview') as HTMLImageElement | null;
   if (avatar) avatar.src = teacher.avatar || 'assets/logo-sdn-bobong.png';

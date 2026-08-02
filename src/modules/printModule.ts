@@ -22,7 +22,7 @@ export function printModule(moduleId: string): void {
       <body>
         <div class="header">
           <h2 style="margin:0; font-size:18px;">MODUL AJAR KURIKULUM MERDEKA</h2>
-          <h3 style="margin:4px 0 0 0; font-size:15px;">SD NEGERI BOBONG - KECAMATAN TALIABU BARAT</h3>
+          <h3 style="margin:4px 0 0 0; font-size:15px;">SD NEGERI BOBONG - KABUPATEN PULAU TALIABU</h3>
           <p style="margin:2px 0 0 0; font-size:12px; color:#555;">Tahun Ajaran 2025/2026</p>
         </div>
 

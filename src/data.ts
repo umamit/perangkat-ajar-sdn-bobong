@@ -6,7 +6,7 @@ export const INITIAL_DATA: AppData = {
     name: "Guru Bahasa Inggris",
     role: "Guru Mata Pelajaran",
     school: "SD Negeri Bobong",
-    kecamatan: "Kecamatan Taliabu Barat",
+    kecamatan: "Kabupaten Pulau Taliabu",
     nip: "199610272019032006",
     password: "kepseksdnbobong",
     semester: "Ganjil 2025/2026",

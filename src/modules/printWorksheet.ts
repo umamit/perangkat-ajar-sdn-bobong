@@ -19,7 +19,7 @@ export function printWorksheet(moduleId: string): void {
       <body>
         <div class="header">
           <h2 style="margin:0;">LEMBAR KERJA PESERTA DIDIK (LKPD)</h2>
-          <h3 style="margin:5px 0 0 0;">SD NEGERI BOBONG - KECAMATAN TALIABU BARAT</h3>
+          <h3 style="margin:5px 0 0 0;">SD NEGERI BOBONG - KABUPATEN PULAU TALIABU</h3>
           <p style="margin:2px 0 0 0; font-size:13px;">Mata Pelajaran: ${appData.teacher?.subject || 'Bahasa Inggris'} | ${mod.grade} (${mod.phase})</p>
         </div>
         <div class="student-box">
