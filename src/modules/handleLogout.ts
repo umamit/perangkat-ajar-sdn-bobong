@@ -1,9 +1,9 @@
 import { eraseCookie } from '../helpers';
 import { checkAuthSession } from './checkAuthSession';
-import { inMemoryAuth } from './handleLogin';
+import { setAuthState } from './authState';
 
 export function handleLogout(): void {
-  (window as any).inMemoryAuth = false;
+  setAuthState(false);
   if (typeof eraseCookie === 'function') {
     eraseCookie('sdn_bobong_auth');
   }

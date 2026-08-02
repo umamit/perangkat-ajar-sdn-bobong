@@ -1,8 +1,7 @@
 import { appData, saveStorage, setCookie } from '../helpers';
 import { checkAuthSession } from './checkAuthSession';
 import { renderTeacherProfile } from './renderTeacherProfile';
-
-export let inMemoryAuth = false;
+import { setAuthState } from './authState';
 
 export function handleLogin(e: Event): void {
   e.preventDefault();
@@ -17,7 +16,7 @@ export function handleLogin(e: Event): void {
     if (matched) appData.teacher = matched;
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
-    inMemoryAuth = true;
+    setAuthState(true);
     if (typeof setCookie === 'function') {
       setCookie('sdn_bobong_auth', 'true', 7);
     }

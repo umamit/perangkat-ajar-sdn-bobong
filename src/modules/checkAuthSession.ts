@@ -1,8 +1,9 @@
-import { inMemoryAuth } from './handleLogin';
+import { authState } from './authState';
 import { getCookie } from '../helpers';
 
 export function checkAuthSession(): void {
-  const isLoggedIn = inMemoryAuth || (typeof getCookie === 'function' && getCookie('sdn_bobong_auth') === 'true');
+  const cookieAuth = typeof getCookie === 'function' && getCookie('sdn_bobong_auth') === 'true';
+  const isLoggedIn = authState.isLoggedIn || cookieAuth;
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
