@@ -132,7 +132,7 @@ function closeMobileSidebar() {
   }
 }
 
-// Teacher Info Render
+// Teacher Info Render & Form Auto-Populate
 function renderTeacherProfile() {
   const teacher = appData.teacher || {};
   if (document.getElementById('teacherNameSidebar')) document.getElementById('teacherNameSidebar').innerText = teacher.name || 'Husnita Usman, M.Pd.';
@@ -140,6 +140,17 @@ function renderTeacherProfile() {
   if (document.getElementById('teacherAvatarSidebar')) document.getElementById('teacherAvatarSidebar').src = teacher.avatar || 'logo-sdn-bobong.svg';
   if (document.getElementById('schoolNameHeader')) document.getElementById('schoolNameHeader').innerText = teacher.school || 'SD Negeri Bobong';
   if (document.getElementById('schoolKecamatanHeader')) document.getElementById('schoolKecamatanHeader').innerText = teacher.kecamatan || 'Kecamatan Taliabu Barat';
+  renderPengaturanForm();
+}
+
+function renderPengaturanForm() {
+  const teacher = appData.teacher || {};
+  if (document.getElementById('settingTeacherName')) document.getElementById('settingTeacherName').value = teacher.name || 'Husnita Usman, M.Pd.';
+  if (document.getElementById('settingTeacherNip')) document.getElementById('settingTeacherNip').value = teacher.nip || '199610272019032006';
+  if (document.getElementById('settingTeacherSubject')) document.getElementById('settingTeacherSubject').value = teacher.subject || 'Bahasa Inggris';
+  if (document.getElementById('settingSchoolName')) document.getElementById('settingSchoolName').value = teacher.school || 'SD Negeri Bobong';
+  if (document.getElementById('settingKecamatan')) document.getElementById('settingKecamatan').value = teacher.kecamatan || 'Kecamatan Taliabu Barat';
+  if (document.getElementById('settingAvatarPreview')) document.getElementById('settingAvatarPreview').src = teacher.avatar || 'logo-sdn-bobong.svg';
 }
 
 // Navigation & Tab Switcher
