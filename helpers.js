@@ -1,6 +1,14 @@
-// Helper Functions & Storage utilities for Perangkat Ajar SD Negeri Bobong
+// Supabase Configuration
+const SUPABASE_URL = "https://evslcvjucmnyxkqwfdye.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // Ganti dengan anon key dari Supabase Dashboard
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpXkZ1t6rKBb1hvZdEpmPKc-SRNV-41pRxw7Sr9TPz6WC65RdlFoI4ZI9p-FgEJxd30w/exec";
+let supabaseClient = null;
+function getSupabase() {
+  if (!supabaseClient && window.supabase && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  return supabaseClient;
+}
 
 let appData = { ...INITIAL_DATA };
 
