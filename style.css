@@ -2,26 +2,44 @@
    MOBILE-FIRST BASE STYLES (Default for Mobile Screens)
    ---------------------------------------------------- */
 
-/* Reset & Root Variables (Official SD Negeri Bobong Brand & Apple HIG Standard) */
+/* Reset & Root Variables (Official SD Negeri Bobong Design Tokens & Apple HIG Standard) */
 :root {
-  --primary: #216c7e;
-  --primary-hover: #164d57;
-  --primary-light: #eef6f8;
-  --primary-dark: #164d57;
-  --accent-gold: #A68849;
-  --accent-cyan: #00acc1;
-  --sidebar-bg: rgba(255, 255, 255, 0.92);
-  --sidebar-active: #eef6f8;
-  --sidebar-text: #475569;
-  --sidebar-active-text: #216c7e;
-  --bg-main: #f5f5f7;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
+  /* 1. Warna Utama (Primary) - Biru Toska Logo */
+  --primary: #12A5B8;
+  --primary-light: #48C4D3;
+  --primary-dark: #0A7E8D;
+  --primary-hover: #0A7E8D;
+
+  /* 2. Warna Sekunder (Secondary) - Kuning Emas Logo */
+  --secondary: #E5A900;
+  --secondary-light: #FFC83B;
+  --secondary-dark: #B28300;
+
+  /* 3. Warna Aksen (Accent) - Hijau Daun */
+  --accent: #2A9D5C;
+  --accent-bg: #EBF7F0;
+
+  /* 4. Warna Latar Belakang (Background) */
+  --bg-main: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --bg-footer: #122438;
+  --bg-footer-deep: #0A1624;
+
+  /* 5. Warna Teks (Typography) */
+  --text-main: #1D1D1F;
+  --text-muted: #515154;
+  --text-light: #86868B;
+
+  /* Layout & Utility Tokens */
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --sidebar-active: #E6F7F9;
+  --sidebar-text: #515154;
+  --sidebar-active-text: #0A7E8D;
   --border-color: rgba(0, 0, 0, 0.06);
-  --card-bg: #ffffff;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 16px rgba(33, 108, 126, 0.08);
-  --shadow-lg: 0 12px 32px rgba(33, 108, 126, 0.12);
+  --shadow-md: 0 4px 16px rgba(18, 165, 184, 0.12);
+  --shadow-lg: 0 12px 32px rgba(10, 126, 141, 0.18);
   --radius-lg: 18px;
   --radius-md: 14px;
   --radius-sm: 10px;
@@ -282,12 +300,12 @@ body {
 
 /* Banner Hero Mobile */
 .hero-banner {
-  background: linear-gradient(135deg, #216c7e 0%, #164d57 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   border-radius: var(--radius-md);
   padding: 20px 18px;
   margin-bottom: 20px;
-  box-shadow: 0 8px 24px rgba(33, 108, 126, 0.2);
+  box-shadow: 0 8px 24px rgba(18, 165, 184, 0.22);
 }
 
 .hero-text h1 {
@@ -717,7 +735,7 @@ td {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #164d57 50%, #216c7e 100%);
+  background: linear-gradient(135deg, var(--bg-footer-deep) 0%, var(--bg-footer) 50%, var(--primary-dark) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
