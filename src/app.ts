@@ -2,7 +2,7 @@
 import { 
   appData, loadStorage, saveStorage, syncFromSupabase, 
   saveStudentToSupabase, saveJournalToSupabase, saveTeacherToSupabase, deleteTeacherFromSupabase,
-  uploadAvatarToSupabaseStorage
+  uploadAvatarToSupabaseStorage, getCookie, setCookie, eraseCookie
 } from './helpers';
 import { renderModulAjar } from './views';
 import { Student, JournalEntry, Teacher } from './types';
