@@ -21,8 +21,13 @@ export function renderDaftarNilai(filterClass: string = 'ALL'): void {
     filtered = filtered.filter((s: any) => availIds.includes(s.classId));
   }
 
+  const countLabel = document.getElementById('nilaiCountLabel');
+  if (countLabel) {
+    countLabel.textContent = `Menampilkan ${filtered.length} siswa`;
+  }
+
   if (filtered.length === 0) {
-    container.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa untuk kelas yang dipilih.</td></tr>`;
+    container.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa untuk kelas yang dipilih.</td></tr>`;
     return;
   }
 
@@ -32,14 +37,29 @@ export function renderDaftarNilai(filterClass: string = 'ALL'): void {
     const sts = s.scoreSts ?? 80;
     const sas = s.scoreSas ?? 80;
     const akhir = Math.round((formatif * 0.4) + (sts * 0.3) + (sas * 0.3));
-    const predikat = akhir >= 85 ? 'A' : akhir >= 75 ? 'B' : akhir >= 65 ? 'C' : 'D';
-    const badgeCls = predikat === 'A' ? 'badge-success' : predikat === 'B' ? 'badge-info' : predikat === 'C' ? 'badge-warning' : 'badge-danger';
+
+    // Kriteria Ketercapaian Tujuan Pembelajaran (KKTP) Kurikulum Merdeka
+    let predikat = 'Sangat Baik';
+    let kktpBadgeCls = 'badge-success';
+    if (akhir >= 85) {
+      predikat = 'Sangat Baik (A)';
+      kktpBadgeCls = 'badge-success';
+    } else if (akhir >= 75) {
+      predikat = 'Tercapai (B)';
+      kktpBadgeCls = 'badge-info';
+    } else if (akhir >= 65) {
+      predikat = 'Perlu Bimbingan (C)';
+      kktpBadgeCls = 'badge-warning';
+    } else {
+      predikat = 'Perlu Intervensi (D)';
+      kktpBadgeCls = 'badge-danger';
+    }
 
     return `
       <tr>
-        <td>${idx + 1}</td>
+        <td style="text-align:center;">${idx + 1}</td>
         <td><strong>${s.name}</strong></td>
-        <td><span class="badge badge-info">${s.classId}</span></td>
+        <td style="text-align:center;"><span class="badge badge-info">${s.classId}</span></td>
         <td>
           <div class="grade-input-group">
             <button class="btn-grade-step" onclick="adjustGrade('${sId}', 'formatif', -5)">-</button>
@@ -61,11 +81,11 @@ export function renderDaftarNilai(filterClass: string = 'ALL'): void {
             <button class="btn-grade-step" onclick="adjustGrade('${sId}', 'sas', 5)">+</button>
           </div>
         </td>
-        <td>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <strong style="font-size:15px; color:var(--primary-dark);">${akhir}</strong>
-            <span class="badge ${badgeCls}">${predikat}</span>
-          </div>
+        <td style="text-align:center;">
+          <strong style="font-size:15px; color:var(--primary-dark);">${akhir}</strong>
+        </td>
+        <td style="text-align:center;">
+          <span class="kktp-badge ${kktpBadgeCls}">${predikat}</span>
         </td>
       </tr>`;
   }).join('');
