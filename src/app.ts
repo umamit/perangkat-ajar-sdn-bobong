@@ -1,7 +1,8 @@
 // Application Main Script for Perangkat Ajar Guru Bahasa Inggris SD Negeri Bobong
 import { 
   appData, loadStorage, saveStorage, syncFromSupabase, 
-  saveStudentToSupabase, saveJournalToSupabase, saveTeacherToSupabase, deleteTeacherFromSupabase 
+  saveStudentToSupabase, saveJournalToSupabase, saveTeacherToSupabase, deleteTeacherFromSupabase,
+  uploadAvatarToSupabaseStorage
 } from './helpers';
 import { renderModulAjar } from './views';
 import { Student, JournalEntry, Teacher } from './types';
@@ -565,7 +566,7 @@ export function previewTeacherAvatar(e: Event): void {
   }
 }
 
-export function saveTeacherProfileSettings(e: Event): void {
+export async function saveTeacherProfileSettings(e: Event): Promise<void> {
   e.preventDefault();
   const nameInput = (document.getElementById('settingTeacherName') as HTMLInputElement).value.trim();
   const nipInput = (document.getElementById('settingTeacherNip') as HTMLInputElement).value.trim();
@@ -573,6 +574,7 @@ export function saveTeacherProfileSettings(e: Event): void {
   const schoolInput = (document.getElementById('settingSchoolName') as HTMLInputElement).value.trim();
   const kecamatanInput = (document.getElementById('settingKecamatan') as HTMLInputElement).value.trim();
   const previewImg = document.getElementById('settingAvatarPreview') as HTMLImageElement | null;
+  const avatarFileInput = document.getElementById('settingAvatarFile') as HTMLInputElement | null;
 
   appData.teacher.name = nameInput;
   appData.teacher.nip = nipInput;
@@ -580,7 +582,14 @@ export function saveTeacherProfileSettings(e: Event): void {
   appData.teacher.school = schoolInput;
   appData.teacher.kecamatan = kecamatanInput;
 
-  if (previewImg && previewImg.src) {
+  if (avatarFileInput && avatarFileInput.files && avatarFileInput.files[0]) {
+    const uploadedUrl = await uploadAvatarToSupabaseStorage(avatarFileInput.files[0], nipInput);
+    if (uploadedUrl) {
+      appData.teacher.avatar = uploadedUrl;
+    } else if (previewImg && previewImg.src) {
+      appData.teacher.avatar = previewImg.src;
+    }
+  } else if (previewImg && previewImg.src) {
     appData.teacher.avatar = previewImg.src;
   }
 
@@ -591,10 +600,10 @@ export function saveTeacherProfileSettings(e: Event): void {
   }
 
   saveStorage();
-  saveTeacherToSupabase(appData.teacher);
+  await saveTeacherToSupabase(appData.teacher);
   renderTeacherProfile();
   renderDataGuru();
-  alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan!');
+  alert('Foto profil dan data akun guru berhasil diperbarui dan disinkronkan ke Supabase Storage!');
 }
 
 // Global Browser Window State Attachment

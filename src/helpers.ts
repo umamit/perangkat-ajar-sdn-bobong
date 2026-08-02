@@ -214,6 +214,34 @@ export async function deleteTeacherFromSupabase(nip: string): Promise<void> {
   }
 }
 
+export async function uploadAvatarToSupabaseStorage(file: File, nip: string): Promise<string | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    const ext = file.name.split('.').pop() || 'jpg';
+    const filePath = `teacher_${nip}_${Date.now()}.${ext}`;
+
+    const { data, error } = await client.storage
+      .from('avatars')
+      .upload(filePath, file, { cacheControl: '3600', upsert: true });
+
+    if (error) {
+      console.warn('[Supabase Storage Upload Error]', error);
+      return null;
+    }
+
+    const { data: publicUrlData } = client.storage
+      .from('avatars')
+      .getPublicUrl(filePath);
+
+    return publicUrlData ? publicUrlData.publicUrl : null;
+  } catch (err) {
+    console.warn('[Supabase Storage Exception]', err);
+    return null;
+  }
+}
+
 // Global Browser Window State Attachment
 if (typeof window !== 'undefined') {
   (window as any).getSupabase = getSupabase;
@@ -228,5 +256,6 @@ if (typeof window !== 'undefined') {
   (window as any).saveJournalToSupabase = saveJournalToSupabase;
   (window as any).saveTeacherToSupabase = saveTeacherToSupabase;
   (window as any).deleteTeacherFromSupabase = deleteTeacherFromSupabase;
+  (window as any).uploadAvatarToSupabaseStorage = uploadAvatarToSupabaseStorage;
   (window as any).appData = appData;
 }
