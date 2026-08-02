@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Outer Marble Circle Gradient -->
+    <radialGradient id="marbleGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </radialGradient>
+
+    <!-- Shield Blue Gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00bcd4"/>
+      <stop offset="100%" stop-color="#00acc1"/>
+    </linearGradient>
+
+    <!-- Gold Wing Gradient -->
+    <linearGradient id="goldWing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb74d"/>
+      <stop offset="50%" stop-color="#ffa726"/>
+      <stop offset="100%" stop-color="#e65100"/>
+    </linearGradient>
+
+    <!-- Flame Gradient -->
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff3d00"/>
+      <stop offset="50%" stop-color="#ff9100"/>
+      <stop offset="100%" stop-color="#ffea00"/>
+    </linearGradient>
+    
+    <!-- Curved Text Path for KECAMATAN TALIABU BARAT -->
+    <path id="topArcPath" d="M 85 250 A 165 165 0 1 1 415 250"/>
+  </defs>
+
+  <!-- Outer Marble Circular Ring -->
+  <circle cx="250" cy="250" r="238" fill="url(#marbleGrad)" stroke="#64748b" stroke-width="4"/>
+  <circle cx="250" cy="250" r="226" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <circle cx="250" cy="250" r="218" fill="none" stroke="#cbd5e1" stroke-dasharray="6,4" stroke-width="1.5"/>
+
+  <!-- Top Text: KECAMATAN TALIABU BARAT -->
+  <text font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="27" font-weight="900" fill="#0f2b46" letter-spacing="3" text-anchor="middle">
+    <textPath href="#topArcPath" startOffset="50%">KECAMATAN TALIABU BARAT</textPath>
+  </text>
+
+  <!-- Central Pentagon Shield -->
+  <polygon points="250,78 395,150 365,365 135,365 105,150" fill="url(#shieldGrad)" stroke="#00838f" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- Top Star -->
+  <polygon points="250,92 257,114 280,114 262,127 268,148 250,135 232,148 238,127 220,114 243,114" fill="#fbc02d" stroke="#f57f17" stroke-width="1.5"/>
+
+  <!-- Torch Flame -->
+  <path d="M 238 185 Q 250 140 262 185 Q 250 175 238 185 Z" fill="url(#flameGrad)"/>
+  <path d="M 243 182 Q 250 152 257 182 Q 250 174 243 182 Z" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Torch Pillar & Bowl -->
+  <polygon points="228,185 272,185 264,196 236,196" fill="#ffe082" stroke="#b78103" stroke-width="1.5"/>
+  <rect x="242" y="196" width="16" height="60" fill="#e0e0e0" stroke="#757575" stroke-width="2" rx="3"/>
+  <rect x="246" y="210" width="8" height="40" fill="#bdbdbd"/>
+
+  <!-- Golden Wings (Left & Right) -->
+  <!-- Left Wing -->
+  <path d="M 165 200 C 185 200, 235 230, 240 250 C 215 255, 175 240, 165 200 Z" fill="url(#goldWing)" stroke="#b78103" stroke-width="1.5"/>
+  <path d="M 170 215 C 190 215, 230 238, 238 252 C 215 255, 180 242, 170 215 Z" fill="url(#goldWing)"/>
+  <path d="M 178 230 C 195 230, 225 245, 234 254 C 215 255, 188 245, 178 230 Z" fill="url(#goldWing)"/>
+
+  <!-- Right Wing -->
+  <path d="M 335 200 C 315 200, 265 230, 260 250 C 285 255, 325 240, 335 200 Z" fill="url(#goldWing)" stroke="#b78103" stroke-width="1.5"/>
+  <path d="M 330 215 C 310 215, 270 238, 262 252 C 285 255, 320 242, 330 215 Z" fill="url(#goldWing)"/>
+  <path d="M 322 230 C 305 230, 275 245, 266 254 C 285 255, 312 245, 322 230 Z" fill="url(#goldWing)"/>
+
+  <!-- Open Book -->
+  <path d="M 180 255 Q 250 240 250 278 Q 250 240 320 255 L 315 295 Q 250 280 250 300 Q 250 280 185 295 Z" fill="#ffffff" stroke="#01579b" stroke-width="3"/>
+  <path d="M 250 250 L 250 300" stroke="#d32f2f" stroke-width="4"/>
+  <!-- Page Lines -->
+  <path d="M 195 268 Q 235 258 242 272 M 195 278 Q 235 268 242 282" fill="none" stroke="#90caf9" stroke-width="2"/>
+  <path d="M 305 268 Q 265 258 258 272 M 305 278 Q 265 268 258 282" fill="none" stroke="#90caf9" stroke-width="2"/>
+
+  <!-- Left Cotton Branch (Green/White) -->
+  <path d="M 140 270 Q 148 330 200 355" fill="none" stroke="#1b5e20" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="145" cy="275" r="9" fill="#ffffff" stroke="#2e7d32" stroke-width="2"/>
+  <circle cx="152" cy="295" r="9" fill="#ffffff" stroke="#2e7d32" stroke-width="2"/>
+  <circle cx="164" cy="315" r="9" fill="#ffffff" stroke="#2e7d32" stroke-width="2"/>
+  <circle cx="180" cy="335" r="9" fill="#ffffff" stroke="#2e7d32" stroke-width="2"/>
+
+  <!-- Right Rice Branch (Golden Grains) -->
+  <path d="M 360 270 Q 352 330 300 355" fill="none" stroke="#f57f17" stroke-width="6" stroke-linecap="round"/>
+  <ellipse cx="355" cy="275" rx="7" ry="11" fill="#fbc02d" transform="rotate(30 355 275)"/>
+  <ellipse cx="348" cy="295" rx="7" ry="11" fill="#fbc02d" transform="rotate(35 348 295)"/>
+  <ellipse cx="336" cy="315" rx="7" ry="11" fill="#fbc02d" transform="rotate(40 336 315)"/>
+  <ellipse cx="320" cy="335" rx="7" ry="11" fill="#fbc02d" transform="rotate(45 320 335)"/>
+
+  <!-- White Ribbon Banner with Blue Border -->
+  <!-- Banner Fold Background -->
+  <polygon points="75,370 105,345 105,395" fill="#0277bd"/>
+  <polygon points="425,370 395,345 395,395" fill="#0277bd"/>
+
+  <!-- Banner Tails -->
+  <polygon points="60,395 105,385 105,420 45,425" fill="#ffffff" stroke="#01579b" stroke-width="3"/>
+  <polygon points="440,395 395,385 395,420 455,425" fill="#ffffff" stroke="#01579b" stroke-width="3"/>
+
+  <!-- Main Banner Body -->
+  <path d="M 85 365 L 120 348 L 380 348 L 415 365 L 395 412 L 105 412 Z" fill="#ffffff" stroke="#01579b" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M 95 372 L 405 372" stroke="#0284c7" stroke-width="1.5"/>
+
+  <!-- Ribbon Text: SD NEGERI BOBONG & " 2008 " -->
+  <text x="250" y="388" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="28" font-weight="900" fill="#032b56" text-anchor="middle" letter-spacing="1">SD NEGERI BOBONG</text>
+  <text x="250" y="405" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="16" font-weight="800" fill="#0284c7" text-anchor="middle">“ 2008 ”</text>
+</svg>
