@@ -3,11 +3,12 @@
 Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan memelihara platform **Perangkat Ajar Online SD Negeri Bobong** berbasis **Vite, TypeScript, HTML5, Vanilla CSS, dan Supabase Cloud**.
 
 ## 1. Aturan Eksekusi Mandiri & Verifikasi Otonom (Autonomous Execution Rule)
-* **Wajib Verifikasi Mandiri Sebelum Melapor**: AI DILARANG KERAS melapor ke pengguna bahwa suatu pekerjaan telah "selesai" atau "berhasil" sebelum AI sendiri melakukan verifikasi empiris.
+* **Wajib Verifikasi Mandiri & Cek Keseluruhan Berkas Sebelum Melapor**: AI DILARANG KERAS melapor ke pengguna atau memberikan klaim/kesimpulan mengenai status sistem sebelum AI sendiri melakukan verifikasi empiris dan **memeriksa seluruh berkas kode terkait secara cermat (baca/grep/inspect)**. Dilarang berasumsi atau memberikan laporan spekulatif tanpa memeriksa kode sumber terlebih dahulu.
 * **Prosedur Verifikasi Wajib**:
-  1. Jalankan `npm run build` (`tsc --noEmit && vite build`) untuk memastikan tidak ada kesalahan kompilasi atau sintaksis.
-  2. Lakukan pengujian/verifikasi status secara otomatis (misal: verifikasi kode HTML, CSS, JavaScript, dan skema Supabase).
-  3. Apabila terjadi kegagalan/ketidaksesuaian, AI WAJIB memperbaikinya secara mandiri tanpa meminta pengguna mengulang perintah yang sama.
+  1. Periksa dan baca kode sumber asli menggunakan tool pencarian/pembaca file untuk memastikan fakta sebelum merespon.
+  2. Jalankan `npm run build` (`tsc --noEmit && vite build`) untuk memastikan tidak ada kesalahan kompilasi atau sintaksis.
+  3. Lakukan pengujian/verifikasi status secara otomatis (misal: verifikasi kode HTML, CSS, JavaScript, dan skema Supabase).
+  4. Apabila terjadi kegagalan/ketidaksesuaian, AI WAJIB memperbaikinya secara mandiri tanpa meminta pengguna mengulang perintah yang sama.
 
 ## 2. Batasan Arsitektur Proyek & Keamanan
 * **Teknologi Utama**: Vite, TypeScript (`/src`), HTML5 (`index.html`), Vanilla CSS (`style.css`, `style-components.css`, `style-responsive.css`), Supabase Cloud.
