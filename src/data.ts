@@ -39,7 +39,30 @@ export const INITIAL_DATA: AppData = {
     { id: "6A", name: "Kelas 6 - A", count: 25, room: "Ruang 06", phase: "Fase C" }
   ],
 
-  students: [],
+  students: [
+    { id: "S3A01", nis: "3182096289", name: "Farah Ayesha DG Lila", classId: "3A", gender: "P", scoreFormatif: 88, scoreSumatif: 90 },
+    { id: "S3A02", nis: "3A-002", name: "Wa Delia", classId: "3A", gender: "P", scoreFormatif: 82, scoreSumatif: 84 },
+    { id: "S3A03", nis: "3A-003", name: "Shilvi Darson", classId: "3A", gender: "P", scoreFormatif: 85, scoreSumatif: 86 },
+    { id: "S3A04", nis: "3A-004", name: "Abd Rajap Taudo", classId: "3A", gender: "L", scoreFormatif: 80, scoreSumatif: 82 },
+    { id: "S3A05", nis: "3181555901", name: "Addar Quthni Izzatul Ibrahim", classId: "3A", gender: "L", scoreFormatif: 90, scoreSumatif: 92 },
+    { id: "S3A06", nis: "3180570369", name: "Muhammad Athar Iskandar", classId: "3A", gender: "L", scoreFormatif: 92, scoreSumatif: 94 },
+    { id: "S3A07", nis: "3171690218", name: "Alisa", classId: "3A", gender: "P", scoreFormatif: 86, scoreSumatif: 88 },
+    { id: "S3A08", nis: "382311803", name: "Ayrin R. La rumi", classId: "3A", gender: "P", scoreFormatif: 89, scoreSumatif: 91 },
+    { id: "S3A09", nis: "3179033952", name: "Rowzana", classId: "3A", gender: "P", scoreFormatif: 87, scoreSumatif: 85 },
+    { id: "S3A10", nis: "3183594392", name: "Jabar Rahim La Kari", classId: "3A", gender: "L", scoreFormatif: 84, scoreSumatif: 86 },
+    { id: "S3A11", nis: "3173473056", name: "Herawati Rauf", classId: "3A", gender: "P", scoreFormatif: 91, scoreSumatif: 93 },
+    { id: "S3A12", nis: "3157180903", name: "Nur Inaya Sangadji", classId: "3A", gender: "P", scoreFormatif: 93, scoreSumatif: 95 },
+    { id: "S3A13", nis: "3170421285", name: "Eniarti", classId: "3A", gender: "P", scoreFormatif: 85, scoreSumatif: 87 },
+    { id: "S3A14", nis: "3189194080", name: "Muhamad Raden Dahlan", classId: "3A", gender: "P", scoreFormatif: 88, scoreSumatif: 89 },
+    { id: "S3A15", nis: "3180543497", name: "Nurasifa Azzahra Rusman", classId: "3A", gender: "P", scoreFormatif: 90, scoreSumatif: 92 },
+    { id: "S3A16", nis: "3186171311", name: "Fauzia Rafifa Ibrahim", classId: "3A", gender: "P", scoreFormatif: 94, scoreSumatif: 96 },
+    { id: "S3A17", nis: "318550673", name: "Ayra Kalestina", classId: "3A", gender: "P", scoreFormatif: 87, scoreSumatif: 88 },
+    { id: "S3A18", nis: "3186238565", name: "Faisal Adrin", classId: "3A", gender: "L", scoreFormatif: 83, scoreSumatif: 85 },
+    { id: "S3A19", nis: "3A-019", name: "Leon S.", classId: "3A", gender: "L", scoreFormatif: 81, scoreSumatif: 83 },
+    { id: "S3A20", nis: "3A-020", name: "Algifara", classId: "3A", gender: "L", scoreFormatif: 82, scoreSumatif: 84 },
+    { id: "S3A21", nis: "3175736336", name: "Rahmat Ramadan Sarto", classId: "3A", gender: "L", scoreFormatif: 89, scoreSumatif: 90 },
+    { id: "S3A22", nis: "3186832473", name: "Aditia Kamarudin", classId: "3A", gender: "L", scoreFormatif: 86, scoreSumatif: 88 }
+  ],
 
   journals: [
     {
