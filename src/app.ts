@@ -55,6 +55,9 @@ import { showAddModulModal } from './modules/showAddModulModal';
 import { saveModul } from './modules/saveModul';
 import { showAddTugasModal } from './modules/showAddTugasModal';
 import { saveTugas } from './modules/saveTugas';
+import { showAddFlashcardModal } from './modules/showAddFlashcardModal';
+import { saveFlashcard } from './modules/saveFlashcard';
+import { filterFlashcards } from './modules/filterFlashcards';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
@@ -131,6 +134,9 @@ if (typeof window !== 'undefined') {
   (window as any).saveModul = saveModul;
   (window as any).showAddTugasModal = showAddTugasModal;
   (window as any).saveTugas = saveTugas;
+  (window as any).showAddFlashcardModal = showAddFlashcardModal;
+  (window as any).saveFlashcard = saveFlashcard;
+  (window as any).filterFlashcards = filterFlashcards;
   (window as any).saveTeacherProfileSettings = saveTeacherProfileSettings;
   (window as any).previewTeacherAvatar = previewTeacherAvatar;
   (window as any).adjustGrade = adjustGrade;
