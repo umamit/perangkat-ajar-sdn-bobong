@@ -1,34 +1,26 @@
-import { openModal, closeModal } from './openModal';
+import { openModal } from './openModal';
 
 export function showAddTeacherModal(): void {
   const form = `
     <form onsubmit="saveTeacher(event)">
       <div class="form-group">
-        <label>NIP Guru</label>
-        <input type="text" id="teacherNip" placeholder="Contoh: 199105122018021001" required>
+        <label>Nama Lengkap</label>
+        <input type="text" id="teacherName" required>
       </div>
       <div class="form-group">
-        <label>Nama Lengkap Guru (dengan Gelar)</label>
-        <input type="text" id="teacherName" placeholder="Contoh: Nurhalisa, S.Pd." required>
+        <label>NIP</label>
+        <input type="text" id="teacherNip" required>
       </div>
       <div class="form-group">
-        <label>Mata Pelajaran / Jabatan</label>
-        <input type="text" id="teacherSubject" placeholder="Contoh: Guru Kelas 1A / Bahasa Inggris" required>
-      </div>
-      <div class="form-group">
-        <label>Peran / Role</label>
+        <label>Jabatan</label>
         <select id="teacherRole">
           <option value="Guru Mata Pelajaran">Guru Mata Pelajaran</option>
           <option value="Guru Kelas">Guru Kelas</option>
-          <option value="Kepala Sekolah / Admin">Kepala Sekolah / Admin</option>
+          <option value="Kepala Sekolah">Kepala Sekolah</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Password Awal</label>
-        <input type="text" id="teacherPassword" value="sdnbobong" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Tambah Akun Guru</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Simpan</button>
     </form>
   `;
-  openModal('Tambah Akun Guru Baru', form);
+  openModal('Tambah Data Guru', form);
 }

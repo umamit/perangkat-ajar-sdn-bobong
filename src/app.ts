@@ -1,6 +1,6 @@
 // Application Main Script for Perangkat Ajar Guru Bahasa Inggris SD Negeri Bobong
 import { 
-  appData, loadStorage, saveStorage, syncFromSupabase
+  appData, loadStorage, syncFromSupabase
 } from './helpers';
 
 import { checkAuthSession } from './modules/checkAuthSession';
@@ -8,34 +8,51 @@ import { handleLogin } from './modules/handleLogin';
 import { handleLogout } from './modules/handleLogout';
 import { renderTeacherProfile } from './modules/renderTeacherProfile';
 import { renderPengaturanForm } from './modules/renderPengaturanForm';
+import { saveTeacherProfileSettings } from './modules/saveTeacherProfileSettings';
+import { previewTeacherAvatar } from './modules/previewTeacherAvatar';
 import { getTeacherClasses } from './modules/getTeacherClasses';
 import { renderDataGuru } from './modules/renderDataGuru';
 import { deleteTeacher } from './modules/deleteTeacher';
 
 import { renderDataSiswa } from './modules/renderDataSiswa';
-import { filterSiswa, searchStudent } from './modules/searchStudent';
+import { filterSiswa } from './modules/filterSiswa';
+import { searchStudent } from './modules/searchStudent';
+import { showAddStudentModal } from './modules/showAddStudentModal';
+import { showEditStudentModal } from './modules/showEditStudentModal';
+import { saveStudent } from './modules/saveStudent';
+import { saveEditStudent } from './modules/saveEditStudent';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
-import { renderAbsensi, renderAbsensiForm, setAbsensiStatus, saveAbsensi } from './modules/renderAbsensi';
-import { renderDaftarNilai, adjustGrade, updateStudentGrade, filterNilaiByClass } from './modules/renderDaftarNilai';
-import { renderJurnal, showAddJournalModal, saveJournal } from './modules/renderJurnal';
+import { renderAbsensi } from './modules/renderAbsensi';
+import { renderAbsensiForm } from './modules/renderAbsensiForm';
+import { setAbsensiStatus } from './modules/setAbsensiStatus';
+import { saveAbsensi } from './modules/saveAbsensi';
+
+import { renderDaftarNilai } from './modules/renderDaftarNilai';
+import { filterNilaiByClass } from './modules/filterNilaiByClass';
+import { adjustGrade } from './modules/adjustGrade';
+import { updateStudentGrade } from './modules/updateStudentGrade';
+
+import { renderJurnal } from './modules/renderJurnal';
+import { showAddJournalModal } from './modules/showAddJournalModal';
+import { saveJournal } from './modules/saveJournal';
+
 import { renderTimetable } from './modules/renderTimetable';
 import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
 import { renderTugas } from './modules/renderTugas';
 import { renderLaporan } from './modules/renderLaporan';
 
-import { openModal, closeModal } from './modules/openModal';
+import { openModal } from './modules/openModal';
+import { closeModal } from './modules/closeModal';
 import { closeMobileSidebar } from './modules/closeMobileSidebar';
 import { setupNavigation } from './modules/setupNavigation';
 import { switchRoleMode } from './modules/switchRoleMode';
 
 import { showAddTeacherModal } from './modules/showAddTeacherModal';
 import { saveTeacher } from './modules/saveTeacher';
-import { showAddStudentModal, showEditStudentModal } from './modules/showAddStudentModal';
-import { saveStudent, saveEditStudent } from './modules/saveStudent';
-import { showAddModulModal, saveModul } from './modules/showAddModulModal';
-import { saveTeacherProfileSettings, previewTeacherAvatar } from './modules/renderPengaturanForm';
+import { showAddModulModal } from './modules/showAddModulModal';
+import { saveModul } from './modules/saveModul';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
@@ -129,5 +146,11 @@ if (typeof window !== 'undefined') {
   (window as any).renderAbsensiForm = renderAbsensiForm;
   (window as any).setAbsensiStatus = setAbsensiStatus;
   (window as any).saveAbsensi = saveAbsensi;
+  (window as any).printWorksheet = printWorksheet;
+  (window as any).startEnglishQuiz = startEnglishQuiz;
+  (window as any).renderQuizQuestion = renderQuizQuestion;
+  (window as any).checkQuizAnswer = checkQuizAnswer;
+  (window as any).exportSiswaToCSV = exportSiswaToCSV;
+  (window as any).exportNilaiToCSV = exportNilaiToCSV;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

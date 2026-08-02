@@ -1,9 +1,10 @@
 export function openModal(title: string, contentHtml: string): void {
-  if (document.getElementById('modalTitle')) document.getElementById('modalTitle')!.innerText = title;
-  if (document.getElementById('modalBody')) document.getElementById('modalBody')!.innerHTML = contentHtml;
-  if (document.getElementById('modalOverlay')) document.getElementById('modalOverlay')!.classList.add('active');
-}
-
-export function closeModal(): void {
-  if (document.getElementById('modalOverlay')) document.getElementById('modalOverlay')!.classList.remove('active');
+  const overlay = document.getElementById('modalOverlay');
+  const titleEl = document.getElementById('modalTitle');
+  const bodyEl = document.getElementById('modalBody');
+  if (overlay && titleEl && bodyEl) {
+    titleEl.textContent = title;
+    bodyEl.innerHTML = contentHtml;
+    overlay.classList.add('active');
+  }
 }

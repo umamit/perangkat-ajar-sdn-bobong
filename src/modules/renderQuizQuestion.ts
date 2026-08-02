@@ -1,17 +1,5 @@
-// English Quiz Game Logic
 import { appData } from '../helpers';
-
-export let quizState = { currentIndex: 0, score: 0 };
-
-export function startEnglishQuiz(): void {
-  quizState.currentIndex = 0;
-  quizState.score = 0;
-  const quizBox = document.getElementById('quizContainer');
-  if (quizBox) {
-    quizBox.style.display = 'block';
-    renderQuizQuestion();
-  }
-}
+import { quizState } from './startEnglishQuiz';
 
 export function renderQuizQuestion(): void {
   const quizBox = document.getElementById('quizContainer');
@@ -43,16 +31,4 @@ export function renderQuizQuestion(): void {
       `).join('')}
     </div>
   `;
-}
-
-export function checkQuizAnswer(selectedOption: string): void {
-  const q = appData.quizQuestions[quizState.currentIndex];
-  if (selectedOption === q.answer) {
-    quizState.score += 25;
-    alert('Benar Sekali! Great Job!');
-  } else {
-    alert(`Kurang Tepat. Jawaban yang benar: "${q.answer}"`);
-  }
-  quizState.currentIndex++;
-  renderQuizQuestion();
 }
