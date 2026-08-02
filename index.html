@@ -542,50 +542,97 @@
           </div>
         </section>
 
-        <!-- 12. PENGATURAN VIEW -->
+        <!-- 12. PENGATURAN VIEW (Apple HIG Redesign) -->
         <section id="view-pengaturan" class="view-section">
           <div class="section-header">
-            <h3>Pengaturan Akun Guru & Sekolah</h3>
+            <div>
+              <h3 style="font-size: 20px; font-weight: 700; color: var(--text-main);">Pengaturan Profil & Instansi</h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Kelola identitas akun guru, profil sekolah, dan otorisasi sesi secara terpadu.</p>
+            </div>
           </div>
-          <div class="card">
-            <form onsubmit="saveTeacherProfileSettings(event)">
-              <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding:16px; background:var(--bg-teal-50); border-radius:12px;">
-                <img id="settingAvatarPreview" src="assets/logo-sdn-bobong.png" alt="Foto Profil" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+            <!-- Kartu Profil Guru -->
+            <div class="card" style="padding: 24px; border-radius: var(--radius-lg); background: #ffffff; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(33, 108, 126, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-dark);">
+                  <i class="ri-user-settings-line" style="font-size: 20px;"></i>
+                </div>
                 <div>
-                  <label style="font-weight:600; font-size:13.5px; display:block; margin-bottom:4px;">Ganti Foto Profil Guru</label>
-                  <input type="file" id="settingAvatarFile" accept="image/*" onchange="previewTeacherAvatar(event)" style="font-size:12.5px;">
-                  <p style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">Format: PNG, JPG, JPEG (Maks. 2MB)</p>
+                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main);">Profil Pengajar</h4>
+                  <p style="font-size: 12px; color: var(--text-muted);">Informasi personal guru terdaftar</p>
                 </div>
               </div>
-              <div class="form-group">
-                <label>Nama Guru (dengan Gelar)</label>
-                <input type="text" id="settingTeacherName" value="Guru Bahasa Inggris SD" required>
-              </div>
-              <div class="form-group">
-                <label>NIP Guru</label>
-                <input type="text" id="settingTeacherNip" value="199610272019032006" required>
-              </div>
-              <div class="form-group">
-                <label>Mata Pelajaran / Jabatan</label>
-                <input type="text" id="settingTeacherSubject" value="Bahasa Inggris" required>
-              </div>
-              <div class="form-group">
-                <label>Nama Sekolah</label>
-                <input type="text" id="settingSchoolName" value="SD Negeri Bobong">
-              </div>
-              <div class="form-group">
-                <label>Kecamatan</label>
-                <input type="text" id="settingKecamatan" value="Kecamatan Taliabu Barat">
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-                <button type="submit" class="btn btn-primary">
+
+              <form onsubmit="saveTeacherProfileSettings(event)">
+                <!-- Foto Profil Header Avatar -->
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding: 14px; background: rgba(33, 108, 126, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(33, 108, 126, 0.12);">
+                  <img id="settingAvatarPreview" src="assets/logo-sdn-bobong.png" alt="Foto Profil" style="width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 3px solid var(--card-bg); box-shadow: var(--shadow-sm);">
+                  <div style="flex: 1;">
+                    <label style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 4px; color: var(--text-main);">Foto Foto Profil</label>
+                    <input type="file" id="settingAvatarFile" accept="image/*" onchange="previewTeacherAvatar(event)" style="font-size: 12px; width: 100%;">
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">PNG, JPG atau JPEG (Maks. 2MB)</p>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                  <label style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">Nama Lengkap Guru (dengan Gelar)</label>
+                  <input type="text" id="settingTeacherName" value="Husnita Usman, M.Pd." required style="width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; font-size: 13.5px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                  <label style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">NIP (Nomor Induk Pegawai)</label>
+                  <input type="text" id="settingTeacherNip" value="199610272019032006" required style="width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; font-size: 13.5px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                  <label style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">Mata Pelajaran / Jabatan</label>
+                  <input type="text" id="settingTeacherSubject" value="Bahasa Inggris" required style="width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; font-size: 13.5px;">
+                </div>
+            </div>
+
+            <!-- Kartu Profil Sekolah & Akses Sesi -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="card" style="padding: 24px; border-radius: var(--radius-lg); background: #ffffff; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+                  <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(166, 136, 73, 0.12); display: flex; align-items: center; justify-content: center; color: #A68849;">
+                    <i class="ri-government-line" style="font-size: 20px;"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main);">Identitas Satuan Pendidikan</h4>
+                    <p style="font-size: 12px; color: var(--text-muted);">Informasi instansi sekolah resmi</p>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 14px;">
+                  <label style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">Nama Sekolah / Instansi</label>
+                  <input type="text" id="settingSchoolName" value="SD Negeri Bobong" style="width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; font-size: 13.5px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                  <label style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">Kecamatan / Wilayah</label>
+                  <input type="text" id="settingKecamatan" value="Kecamatan Taliabu Barat" style="width: 100%; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; font-size: 13.5px;">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
                   <i class="ri-save-line"></i> Simpan Perubahan Profil
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="handleLogout()">
-                  <i class="ri-logout-box-line"></i> Logout Akun
-                </button>
+              </form>
               </div>
-            </form>
+
+              <!-- Kartu Keamanan & Logout -->
+              <div class="card" style="padding: 20px; border-radius: var(--radius-lg); background: #fff5f5; border: 1px solid #fecaca;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                  <div>
+                    <h5 style="font-size: 14px; font-weight: 700; color: #991b1b; margin-bottom: 2px;">Keluar dari Aplikasi</h5>
+                    <p style="font-size: 12px; color: #b91c1c;">Akhiri sesi aktif Anda di perangkat ini secara aman.</p>
+                  </div>
+                  <button type="button" class="btn btn-secondary" onclick="handleLogout()" style="background: #ffffff; border: 1px solid #fca5a5; color: #dc2626; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <i class="ri-logout-box-line"></i> Keluar (Logout)
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
