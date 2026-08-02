@@ -1,6 +1,7 @@
-// Supabase Configuration
+// Supabase & Google Apps Script Configuration
 const SUPABASE_URL = "https://evslcvjucmnyxkqwfdye.supabase.co";
 const SUPABASE_ANON_KEY = "[REDACTED_KEY]";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpXkZ1t6rKBb1hvZdEpmPKc-SRNV-41pRxw7Sr9TPz6WC65RdlFoI4ZI9p-FgEJxd30w/exec";
 
 let supabaseClient = null;
 function getSupabase() {

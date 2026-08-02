@@ -4,7 +4,7 @@ import { INITIAL_DATA } from './data';
 
 const SUPABASE_URL: string = "https://evslcvjucmnyxkqwfdye.supabase.co";
 const SUPABASE_ANON_KEY: string = "[REDACTED_KEY]";
-const GOOGLE_SCRIPT_URL: string = "";
+const GOOGLE_SCRIPT_URL: string = "https://script.google.com/macros/s/AKfycbwpXkZ1t6rKBb1hvZdEpmPKc-SRNV-41pRxw7Sr9TPz6WC65RdlFoI4ZI9p-FgEJxd30w/exec";
 
 let supabaseClient: any = null;
 
