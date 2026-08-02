@@ -932,3 +932,116 @@ td {
   color: #e11d48;
   border: 1px solid rgba(225, 29, 72, 0.3);
 }
+
+/* ----------------------------------------------------
+   MOBILE SMARTPHONE OPTIMIZATIONS (Max-Width 640px)
+   ---------------------------------------------------- */
+@media (max-width: 640px) {
+  .top-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-title h2 {
+    font-size: 15px;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 4px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 6px;
+  }
+
+  .role-switcher-container {
+    flex: 1;
+    padding: 3px 8px !important;
+  }
+
+  #roleModeSelect {
+    font-size: 11px !important;
+    max-width: 160px;
+    text-overflow: ellipsis;
+  }
+
+  .btn {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .hide-on-mobile {
+    display: none;
+  }
+
+  .content-area {
+    padding: 10px;
+  }
+
+  .hero-banner {
+    padding: 14px 12px;
+    margin-bottom: 12px;
+  }
+
+  .hero-text h1 {
+    font-size: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .stat-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .stat-info h4 {
+    font-size: 15px;
+  }
+
+  /* Compact Table for Mobile Screens */
+  .grade-table th, .grade-table td {
+    padding: 8px 6px;
+    font-size: 11.5px;
+  }
+
+  .grade-counter-pill {
+    padding: 2px 4px;
+    gap: 2px;
+  }
+
+  .grade-btn-step {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+
+  .grade-input-num {
+    width: 28px;
+    font-size: 12px;
+  }
+
+  .kktp-badge {
+    min-width: 100px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+
+  .modal-content {
+    width: 95vw;
+    margin: 10px auto;
+    padding: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
