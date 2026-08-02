@@ -448,6 +448,25 @@ function deleteScheduleRecord(idx) {
 
 // 5. Daftar Nilai View (Standar Asesmen Kurikulum Merdeka Kemendikbudristek)
 function renderDaftarNilai() {
+  const table = document.querySelector('#view-nilai table');
+  if (table) {
+    const thead = table.querySelector('thead');
+    if (thead) {
+      thead.innerHTML = `
+        <tr>
+          <th style="width:40px;">No</th>
+          <th style="min-width:180px;">Nama Lengkap Siswa</th>
+          <th style="min-width:70px;">Kelas</th>
+          <th style="min-width:130px; text-align:center;">Formatif (LM)</th>
+          <th style="min-width:130px; text-align:center;">Sumatif (STS)</th>
+          <th style="min-width:130px; text-align:center;">Sumatif (SAS)</th>
+          <th style="min-width:90px; text-align:center;">NA Rapor</th>
+          <th style="min-width:170px; text-align:center;">Predikat KKTP</th>
+        </tr>
+      `;
+    }
+  }
+
   const tbody = document.getElementById('nilaiTableBody');
   if (!tbody) return;
   tbody.innerHTML = appData.students.map((s, index) => {
