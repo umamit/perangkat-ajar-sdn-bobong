@@ -1,39 +1,5 @@
 // Application Main Script for Perangkat Ajar Guru Bahasa Inggris SD Negeri Bobong
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpXkZ1t6rKBb1hvZdEpmPKc-SRNV-41pRxw7Sr9TPz6WC65RdlFoI4ZI9p-FgEJxd30w/exec";
-
-let appData = { ...INITIAL_DATA };
-
-// Helper Kirim Data Real-Time ke Google Sheets
-function sendToGoogleSheets(targetSheet, payload) {
-  if (!GOOGLE_SCRIPT_URL) return;
-  fetch(`${GOOGLE_SCRIPT_URL}?targetSheet=${targetSheet}`, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).then(() => {
-    console.log(`[Google Sheets] Data tersimpan di sheet ${targetSheet}`);
-  }).catch(err => {
-    console.error(`[Google Sheets Error]`, err);
-  });
-}
-
-// Load data from LocalStorage if exists
-function loadStorage() {
-  const saved = localStorage.getItem('sdn_bobong_app_data');
-  if (saved) {
-    try {
-      appData = JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse localStorage appData:', e);
-    }
-  }
-}
-
-function saveStorage() {
-  localStorage.setItem('sdn_bobong_app_data', JSON.stringify(appData));
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   loadStorage();
@@ -379,7 +345,7 @@ function filterFlashcards(query) {
     <div class="flashcard" onclick="flipCard(this)">
       <div class="flashcard-inner">
         <div class="flashcard-front">
-          <div class="flashcard-emoji">${f.emoji}</div>
+          <div class="flashcard-emoji"><i class="${f.icon || 'ri-book-open-line'}"></i></div>
           <div class="flashcard-word">${f.word}</div>
           <span class="badge badge-info" style="margin-top:8px;">${f.category}</span>
           <button class="audio-btn" onclick="speakText(event, '${f.word}')" title="Dengarkan Pengucapan">
@@ -452,7 +418,7 @@ function renderQuizQuestion() {
   if (!q) {
     quizBox.innerHTML = `
       <div style="text-align:center; padding:20px;">
-        <h2 style="color:var(--primary-dark); font-size:22px; margin-bottom:8px;">🎉 Selamat! Kuis Selesai!</h2>
+        <h2 style="color:var(--primary-dark); font-size:22px; margin-bottom:8px;">Selamat! Kuis Selesai!</h2>
         <p style="font-size:16px; margin-bottom:16px;">Skor Akhir: <strong>${quizState.score} / ${appData.quizQuestions.length * 25} Point</strong></p>
         <button class="btn btn-primary" onclick="startEnglishQuiz()">Mainkan Lagi</button>
       </div>
@@ -480,9 +446,9 @@ function checkQuizAnswer(selectedOption) {
   const q = appData.quizQuestions[quizState.currentIndex];
   if (selectedOption === q.answer) {
     quizState.score += 25;
-    alert('✅ Benar Sekali! Great Job! 🎉');
+    alert('Benar Sekali! Great Job!');
   } else {
-    alert(`❌ Kurang Tepat. Jawaban yang benar: "${q.answer}"`);
+    alert(`Kurang Tepat. Jawaban yang benar: "${q.answer}"`);
   }
   quizState.currentIndex++;
   renderQuizQuestion();
@@ -658,7 +624,7 @@ function renderMateriFlashcards() {
     <div class="flashcard" onclick="flipCard(this)">
       <div class="flashcard-inner">
         <div class="flashcard-front">
-          <div class="flashcard-emoji">${f.emoji}</div>
+          <div class="flashcard-emoji"><i class="${f.icon || 'ri-book-open-line'}"></i></div>
           <div class="flashcard-word">${f.word}</div>
           <span class="badge badge-info" style="margin-top:8px;">${f.category}</span>
           <button class="audio-btn" onclick="speakText(event, '${f.word}')" title="Dengarkan Pengucapan">

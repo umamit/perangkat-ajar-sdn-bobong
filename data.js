@@ -126,14 +126,14 @@ const INITIAL_DATA = {
   ],
 
   flashcards: [
-    { word: "Reading", translate: "Membaca", category: "Action Verbs", emoji: "📚", example: "She is reading a book." },
-    { word: "Writing", translate: "Menulis", category: "Action Verbs", emoji: "✍️", example: "He is writing a letter." },
-    { word: "Eating", translate: "Makan", category: "Action Verbs", emoji: "🍕", example: "They are eating pizza." },
-    { word: "Drinking", translate: "Minum", category: "Action Verbs", emoji: "🥤", example: "I am drinking juice." },
-    { word: "Sleeping", translate: "Tidur", category: "Action Verbs", emoji: "😴", example: "The baby is sleeping." },
-    { word: "Happy", translate: "Senang / Bahagia", category: "Feelings", emoji: "😊", example: "I feel happy today." },
-    { word: "Elephant", translate: "Gajah", category: "Animals", emoji: "🐘", example: "The elephant is big." },
-    { word: "Teacher", translate: "Guru", category: "Professions", emoji: "👩‍🏫", example: "Welcome to SD Negeri Bobong!" }
+    { word: "Reading", translate: "Membaca", category: "Action Verbs", icon: "ri-book-open-line", example: "She is reading a book." },
+    { word: "Writing", translate: "Menulis", category: "Action Verbs", icon: "ri-pencil-line", example: "He is writing a letter." },
+    { word: "Eating", translate: "Makan", category: "Action Verbs", icon: "ri-restaurant-line", example: "They are eating pizza." },
+    { word: "Drinking", translate: "Minum", category: "Action Verbs", icon: "ri-cup-line", example: "I am drinking juice." },
+    { word: "Sleeping", translate: "Tidur", category: "Action Verbs", icon: "ri-moon-line", example: "The baby is sleeping." },
+    { word: "Happy", translate: "Senang / Bahagia", category: "Feelings", icon: "ri-emotion-happy-line", example: "I feel happy today." },
+    { word: "Elephant", translate: "Gajah", category: "Animals", icon: "ri-bear-smile-line", example: "The elephant is big." },
+    { word: "Teacher", translate: "Guru", category: "Professions", icon: "ri-user-voice-line", example: "Welcome to SD Negeri Bobong!" }
   ],
 
   quizQuestions: [

@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-components.css">
 </head>
 <body>
 
@@ -153,7 +154,7 @@
           <div class="hero-banner">
             <div class="hero-text">
               <span class="hero-badge">SD NEGERI BOBONG - KEC. TALIABU BARAT</span>
-              <h1>Selamat Datang! 👋</h1>
+              <h1>Selamat Datang!</h1>
               <p>Kelola Perangkat Ajar Bahasa Inggris SD, Modul Ajar Kurikulum Merdeka, Flashcards Interaktif, Presensi, dan Jurnal Mengajar Harian secara praktis.</p>
             </div>
           </div>
@@ -238,7 +239,7 @@
           <div class="section-header">
             <h3>Daftar Siswa SD Negeri Bobong</h3>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <input type="text" id="searchSiswaInput" oninput="filterSiswa()" placeholder="🔍 Cari Nama / NIS..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
+              <input type="text" id="searchSiswaInput" oninput="filterSiswa()" placeholder="Cari Nama / NIS..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
               <select id="filterClassSiswa" onchange="filterSiswa()" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;">
                 <option value="ALL">Semua Kelas</option>
                 <option value="1A">Kelas 1 - A</option>
@@ -395,9 +396,9 @@
           <div class="section-header">
             <div>
               <h3>Flashcards Kosakata Bahasa Inggris SD</h3>
-              <p style="font-size:12.5px; color:var(--text-muted);">Klik pada kartu untuk melihat arti, atau klik tombol 🔊 untuk audio pelafalan bahasa Inggris.</p>
+              <p style="font-size:12.5px; color:var(--text-muted);">Klik pada kartu untuk melihat arti, atau klik tombol audio pelafalan bahasa Inggris.</p>
             </div>
-            <input type="text" id="searchFlashcardInput" oninput="filterFlashcards(this.value)" placeholder="🔍 Cari Kosakata..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
+            <input type="text" id="searchFlashcardInput" oninput="filterFlashcards(this.value)" placeholder="Cari Kosakata..." style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; min-width:180px;">
           </div>
           <div class="flashcard-grid" id="flashcardsGrid"></div>
         </section>
@@ -489,6 +490,7 @@
 
   <!-- JS Dependencies -->
   <script src="data.js"></script>
+  <script src="helpers.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
