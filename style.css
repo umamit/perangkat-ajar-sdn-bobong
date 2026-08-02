@@ -802,3 +802,133 @@ td {
   box-shadow: 0 10px 24px rgba(18, 165, 184, 0.45) !important;
   transform: translateY(-2px);
 }
+
+/* Redesigned Premium Apple HIG Grade Table */
+.grade-table-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.grade-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.grade-table th {
+  background: #f8fafc;
+  padding: 12px 14px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.grade-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: var(--text-main);
+}
+
+.grade-table tr:hover {
+  background-color: rgba(18, 165, 184, 0.03);
+}
+
+.grade-counter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f8fafc;
+  padding: 3px 6px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+}
+
+.grade-btn-step {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-weight: 800;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.grade-btn-step:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.grade-input-num {
+  width: 36px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-weight: 800;
+  font-size: 13.5px;
+  color: var(--primary-dark);
+  outline: none;
+}
+
+.na-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(18, 165, 184, 0.12);
+  color: var(--primary-dark);
+  font-weight: 800;
+  font-size: 14.5px;
+}
+
+.kktp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.kktp-badge.badge-success {
+  background: #EBF7F0;
+  color: #2A9D5C;
+  border: 1px solid rgba(42, 157, 92, 0.3);
+}
+
+.kktp-badge.badge-info {
+  background: #eef6f8;
+  color: #0A7E8D;
+  border: 1px solid rgba(18, 165, 184, 0.3);
+}
+
+.kktp-badge.badge-warning {
+  background: #fffbeb;
+  color: #B28300;
+  border: 1px solid rgba(229, 169, 0, 0.3);
+}
+
+.kktp-badge.badge-danger {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+}
