@@ -56,6 +56,46 @@ export async function syncFromSupabase(): Promise<void> {
       }));
     }
 
+    const { data: attendance } = await client.from('attendance').select('*');
+    if (attendance && attendance.length > 0) {
+      const grouped: { [key: string]: any } = {};
+      attendance.forEach((a: any) => {
+        const key = `${a.date}_${a.class_id}`;
+        if (!grouped[key]) {
+          grouped[key] = { date: a.date, classId: a.class_id, hadir: 0, izin: 0, sakit: 0, alpa: 0 };
+        }
+        if (a.status === 'Hadir') grouped[key].hadir++;
+        else if (a.status === 'Izin') grouped[key].izin++;
+        else if (a.status === 'Sakit') grouped[key].sakit++;
+        else if (a.status === 'Alpa') grouped[key].alpa++;
+      });
+      appData.attendance = Object.values(grouped);
+    }
+
+    const { data: grades } = await client.from('grades').select('*');
+    if (grades && grades.length > 0) {
+      grades.forEach((g: any) => {
+        const st = appData.students.find(s => s.uuid === g.student_id || s.nis === g.student_id);
+        if (st) {
+          if (g.type === 'Formatif') st.scoreFormatif = Number(g.score);
+          else if (g.type === 'Sumatif') st.scoreSumatif = Number(g.score);
+        }
+      });
+    }
+
+    const { data: modules } = await client.from('modules').select('*');
+    if (modules && modules.length > 0) {
+      appData.modules = modules.map((m: any) => ({
+        id: m.id,
+        title: m.title,
+        grade: m.phase || 'Kelas 4 SD',
+        tp: m.tp || '',
+        atp: m.atp || '',
+        duration: m.duration || '2 x 35 Menit',
+        fileUrl: m.file_url || ''
+      }));
+    }
+
     const { data: teachers } = await client.from('teachers').select('id, nip, name, role, subject, password, avatar_url, is_active');
     if (teachers && teachers.length > 0) {
       appData.teachers = teachers.map((t: any) => ({
