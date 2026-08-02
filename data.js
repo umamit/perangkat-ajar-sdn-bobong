@@ -29,12 +29,14 @@ const INITIAL_DATA = {
   ],
 
   classes: [
-    { id: "1A", name: "Kelas 1 - A", count: 24, room: "Ruang 01", phase: "Fase A" },
-    { id: "2A", name: "Kelas 2 - A", count: 22, room: "Ruang 02", phase: "Fase A" },
-    { id: "3A", name: "Kelas 3 - A", count: 25, room: "Ruang 03", phase: "Fase B" },
-    { id: "4A", name: "Kelas 4 - A", count: 26, room: "Ruang 04", phase: "Fase B" },
-    { id: "5A", name: "Kelas 5 - A", count: 28, room: "Ruang 05", phase: "Fase C" },
-    { id: "6A", name: "Kelas 6 - A", count: 25, room: "Ruang 06", phase: "Fase C" }
+    { id: "3A", name: "Kelas 3 - A", count: 22, room: "Ruang 03A", phase: "Fase B" },
+    { id: "3B", name: "Kelas 3 - B", count: 22, room: "Ruang 03B", phase: "Fase B" },
+    { id: "4A", name: "Kelas 4 - A", count: 25, room: "Ruang 04A", phase: "Fase B" },
+    { id: "4B", name: "Kelas 4 - B", count: 25, room: "Ruang 04B", phase: "Fase B" },
+    { id: "5A", name: "Kelas 5 - A", count: 26, room: "Ruang 05A", phase: "Fase C" },
+    { id: "5B", name: "Kelas 5 - B", count: 26, room: "Ruang 05B", phase: "Fase C" },
+    { id: "6A", name: "Kelas 6 - A", count: 25, room: "Ruang 06A", phase: "Fase C" },
+    { id: "6B", name: "Kelas 6 - B", count: 25, room: "Ruang 06B", phase: "Fase C" }
   ],
 
   students: [
