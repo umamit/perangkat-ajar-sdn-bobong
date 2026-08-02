@@ -188,13 +188,39 @@ export function renderDashboard(): void {
   }
 }
 
+// // Helper: Get classes available for logged-in teacher's role/subject
+export function getTeacherClasses(): any[] {
+  const currentSubject = (appData.teacher && appData.teacher.subject) ? appData.teacher.subject.toLowerCase() : '';
+  const currentRole = (appData.teacher && appData.teacher.role) ? appData.teacher.role.toLowerCase() : '';
+  
+  const isEnglishTeacher = currentSubject.includes('inggris') || currentRole.includes('inggris');
+  
+  if (isEnglishTeacher) {
+    return appData.classes.filter(c => !c.id.startsWith('1') && !c.id.startsWith('2'));
+  }
+  return appData.classes;
+}
+
 // 2. Data Siswa View
-export function renderDataSiswa(filterClass = 'ALL'): void {
+export function renderDataSiswa(filterClass: string = 'ALL'): void {
   const container = document.getElementById('siswaTableBody');
   if (!container) return;
+
+  const selectElem = document.getElementById('filterClassSelect') as HTMLSelectElement | null;
+  if (selectElem) {
+    const availClasses = getTeacherClasses();
+    const currentVal = selectElem.value;
+    selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` + 
+      availClasses.map(c => `<option value="${c.id}" ${c.id === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
+  }
+
   let filtered = appData.students;
   if (filterClass !== 'ALL') {
     filtered = filtered.filter(s => s.classId === filterClass);
+  } else {
+    const availClasses = getTeacherClasses();
+    const availIds = availClasses.map(c => c.id);
+    filtered = filtered.filter(s => availIds.includes(s.classId));
   }
 
   container.innerHTML = filtered.map((s, index) => `
@@ -219,7 +245,8 @@ export function renderDataSiswa(filterClass = 'ALL'): void {
 export function renderDataKelas(): void {
   const grid = document.getElementById('kelasGrid');
   if (!grid) return;
-  grid.innerHTML = appData.classes.map(c => {
+  const targetClasses = getTeacherClasses();
+  grid.innerHTML = targetClasses.map(c => {
     const studentCount = appData.students.filter(s => s.classId === c.id).length;
     const countDisplay = studentCount > 0 ? studentCount : (c.count || 0);
     return `

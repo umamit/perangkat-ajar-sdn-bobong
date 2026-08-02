@@ -205,12 +205,41 @@ function renderDashboard() {
   }
 }
 
+// Helper: Get classes available for logged-in teacher's role/subject
+function getTeacherClasses() {
+  const currentSubject = (appData.teacher && appData.teacher.subject) ? appData.teacher.subject.toLowerCase() : '';
+  const currentRole = (appData.teacher && appData.teacher.role) ? appData.teacher.role.toLowerCase() : '';
+  
+  const isEnglishTeacher = currentSubject.includes('inggris') || currentRole.includes('inggris');
+  
+  if (isEnglishTeacher) {
+    return appData.classes.filter(c => !c.id.startsWith('1') && !c.id.startsWith('2'));
+  }
+  return appData.classes;
+}
+
 // 2. Data Siswa View
 function renderDataSiswa(filterClass = 'ALL') {
   const container = document.getElementById('siswaTableBody');
+  if (!container) return;
+
+  // Dynamically update class filter options based on teacher role
+  const selectElem = document.getElementById('filterClassSelect');
+  if (selectElem) {
+    const availClasses = getTeacherClasses();
+    const currentVal = selectElem.value;
+    selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` + 
+      availClasses.map(c => `<option value="${c.id}" ${c.id === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
+  }
+
   let filtered = appData.students;
   if (filterClass !== 'ALL') {
     filtered = filtered.filter(s => s.classId === filterClass);
+  } else {
+    // If English teacher, filter students list to only Class 3+
+    const availClasses = getTeacherClasses();
+    const availIds = availClasses.map(c => c.id);
+    filtered = filtered.filter(s => availIds.includes(s.classId));
   }
 
   container.innerHTML = filtered.map((s, index) => `
@@ -238,7 +267,9 @@ function filterSiswaByClass(classId) {
 // 3. Data Kelas View
 function renderDataKelas() {
   const grid = document.getElementById('kelasGrid');
-  grid.innerHTML = appData.classes.map(c => {
+  if (!grid) return;
+  const targetClasses = getTeacherClasses();
+  grid.innerHTML = targetClasses.map(c => {
     const studentCount = appData.students.filter(s => s.classId === c.id).length;
     const countDisplay = studentCount > 0 ? studentCount : (c.count || 0);
     return `
@@ -284,7 +315,7 @@ function renderAbsensi() {
 
 function showAddAttendanceModal() {
   const today = new Date().toISOString().split('T')[0];
-  const classOptions = appData.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  const classOptions = getTeacherClasses().map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const form = `
     <form onsubmit="saveAttendanceRecord(event)">
       <div class="form-group">
@@ -322,7 +353,7 @@ function showAddAttendanceModal() {
 function editAttendanceRecord(date, classId) {
   const item = appData.attendance.find(a => a.date === date && a.classId === classId);
   if (!item) return;
-  const classOptions = appData.classes.map(c => `<option value="${c.id}" ${c.id === classId ? 'selected' : ''}>${c.name}</option>`).join('');
+  const classOptions = getTeacherClasses().map(c => `<option value="${c.id}" ${c.id === classId ? 'selected' : ''}>${c.name}</option>`).join('');
   const form = `
     <form onsubmit="saveAttendanceRecord(event)">
       <div class="form-group">
@@ -390,7 +421,7 @@ function deleteAttendanceRecord(date, classId) {
 }
 
 function showAddScheduleModal() {
-  const classOptions = appData.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  const classOptions = getTeacherClasses().map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const form = `
     <form onsubmit="saveScheduleRecord(event)">
       <div class="form-group">
