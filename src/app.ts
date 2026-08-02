@@ -107,5 +107,10 @@ if (typeof window !== 'undefined') {
   (window as any).renderAllViews = initApp;
   (window as any).renderTeacherProfile = renderTeacherProfile;
   (window as any).renderDataGuru = renderDataGuru;
+  (window as any).renderDashboard = renderDashboard;
+  (window as any).renderDataSiswa = renderDataSiswa;
+  (window as any).renderDaftarNilai = renderDaftarNilai;
+  (window as any).renderJurnal = renderJurnal;
+  (window as any).renderAbsensi = renderAbsensi;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

@@ -114,17 +114,33 @@ export async function syncFromSupabase(): Promise<void> {
       if (matched) {
         appData.teacher = { ...appData.teacher, ...matched };
       }
+    } else {
+      // Fallback ke data lokal jika Supabase belum terisi
+      appData.teachers = [...(INITIAL_DATA as any).teachers];
     }
 
     saveStorage();
+    // Re-render hanya komponen yang perlu diperbarui setelah sync (bukan initApp() penuh)
     if (typeof (window as any).renderTeacherProfile === 'function') {
       (window as any).renderTeacherProfile();
     }
     if (typeof (window as any).renderDataGuru === 'function') {
       (window as any).renderDataGuru();
     }
-    if (typeof (window as any).renderAllViews === 'function') {
-      (window as any).renderAllViews();
+    if (typeof (window as any).renderDashboard === 'function') {
+      (window as any).renderDashboard();
+    }
+    if (typeof (window as any).renderDataSiswa === 'function') {
+      (window as any).renderDataSiswa();
+    }
+    if (typeof (window as any).renderDaftarNilai === 'function') {
+      (window as any).renderDaftarNilai();
+    }
+    if (typeof (window as any).renderJurnal === 'function') {
+      (window as any).renderJurnal();
+    }
+    if (typeof (window as any).renderAbsensi === 'function') {
+      (window as any).renderAbsensi();
     }
   } catch (err) {
     console.warn('[Supabase Sync Warning]', err);
