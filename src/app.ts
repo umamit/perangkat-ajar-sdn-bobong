@@ -30,6 +30,9 @@ import { closeMobileSidebar } from './modules/closeMobileSidebar';
 import { setupNavigation } from './modules/setupNavigation';
 import { switchRoleMode } from './modules/switchRoleMode';
 
+import { showAddTeacherModal } from './modules/showAddTeacherModal';
+import { saveTeacher } from './modules/saveTeacher';
+
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet } from './views';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -94,6 +97,8 @@ if (typeof window !== 'undefined') {
   (window as any).handleLogout = handleLogout;
   (window as any).showAddJournalModal = showAddJournalModal;
   (window as any).saveJournal = saveJournal;
+  (window as any).showAddTeacherModal = showAddTeacherModal;
+  (window as any).saveTeacher = saveTeacher;
   (window as any).deleteTeacher = deleteTeacher;
   (window as any).adjustGrade = adjustGrade;
   (window as any).updateStudentGrade = updateStudentGrade;

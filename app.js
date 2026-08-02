@@ -1156,6 +1156,8 @@ if (typeof window !== 'undefined') {
   window.deleteTugas = deleteTugas;
   window.searchStudent = searchStudent;
   window.filterSiswa = filterSiswa;
+  window.showAddTeacherModal = showAddTeacherModal;
+  window.renderDataGuru = renderDataGuru;
 }
 
 // 13. CRUD Modul Ajar, Flashcard, & Tugas Interaktif
