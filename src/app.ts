@@ -167,5 +167,6 @@ if (typeof window !== 'undefined') {
   (window as any).checkQuizAnswer = checkQuizAnswer;
   (window as any).exportSiswaToCSV = exportSiswaToCSV;
   (window as any).exportNilaiToCSV = exportNilaiToCSV;
+  (window as any).closeModal = closeModal;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }
