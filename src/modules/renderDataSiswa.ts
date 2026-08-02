@@ -5,11 +5,11 @@ export function renderDataSiswa(filterClass: string = 'ALL'): void {
   const container = document.getElementById('siswaTableBody');
   if (!container) return;
 
-  const selectElem = document.getElementById('filterClassSelect') as HTMLSelectElement | null;
+  const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
   if (selectElem) {
     const availClasses = getTeacherClasses();
     const currentVal = selectElem.value;
-    selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` + 
+    selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` +
       availClasses.map(c => `<option value="${c.id}" ${c.id === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
   }
 

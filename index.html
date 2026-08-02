@@ -274,22 +274,10 @@
                 <i class="ri-search-line"></i>
                 <input type="text" placeholder="Cari siswa berdasarkan nama/NISN..." onkeyup="searchStudent(this.value)">
               </div>
-              <div style="display:flex; gap:10px; align-items:center;">
-                <label style="font-size:13px; font-weight:600;">Filter Kelas:</label>
-                <select id="filterClassSelect" onchange="filterSiswaByClass(this.value)" style="padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <label style="font-size:13px; font-weight:600; color:var(--text-main);">Filter Kelas:</label>
+                <select id="siswaClassSelect" onchange="filterSiswaByClass(this.value)" style="padding:7px 12px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13px; background:white; min-width:130px;">
                   <option value="ALL">Semua Kelas</option>
-                  <option value="1A">Kelas 1A</option>
-                  <option value="1B">Kelas 1B</option>
-                  <option value="2A">Kelas 2A</option>
-                  <option value="2B">Kelas 2B</option>
-                  <option value="3A">Kelas 3A</option>
-                  <option value="3B">Kelas 3B</option>
-                  <option value="4A">Kelas 4A</option>
-                  <option value="4B">Kelas 4B</option>
-                  <option value="5A">Kelas 5A</option>
-                  <option value="5B">Kelas 5B</option>
-                  <option value="6A">Kelas 6A</option>
-                  <option value="6B">Kelas 6B</option>
                 </select>
               </div>
             </div>
@@ -424,12 +412,24 @@
         <!-- 5. DAFTAR NILAI VIEW -->
         <section id="view-nilai" class="view-section">
           <div class="section-header">
-            <h3>Daftar Nilai Bahasa Inggris (Formatif & Sumatif)</h3>
+            <div>
+              <h3>Daftar Nilai Bahasa Inggris (Formatif & Sumatif)</h3>
+              <p style="font-size:12.5px; color:var(--text-muted);">Filter per kelas untuk melihat dan mengedit nilai siswa.</p>
+            </div>
             <button class="btn btn-secondary" onclick="exportNilaiToCSV()">
               <i class="ri-file-excel-line"></i> Ekspor Rekap Nilai CSV
             </button>
           </div>
           <div class="grade-table-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <label style="font-size:13px; font-weight:600; color:var(--text-main);">Filter Kelas:</label>
+                <select id="nilaiClassSelect" onchange="filterNilaiByClass(this.value)" style="padding:7px 12px; border-radius:var(--radius-sm); border:1px solid #cbd5e1; font-size:13px; background:white; min-width:130px;">
+                  <option value="ALL">Semua Kelas</option>
+                </select>
+              </div>
+              <span id="nilaiCountLabel" style="font-size:12.5px; color:var(--text-muted);"></span>
+            </div>
             <div class="table-wrapper">
               <table class="grade-table">
                 <thead>

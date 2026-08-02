@@ -3,7 +3,7 @@ import { getTeacherClasses } from './getTeacherClasses';
 
 export function filterSiswa(queryVal?: string): void {
   const query = (queryVal !== undefined ? queryVal : ((document.getElementById('searchSiswaInput') as HTMLInputElement)?.value || '')).toLowerCase().trim();
-  const selectElem = document.getElementById('filterClassSelect') as HTMLSelectElement | null;
+  const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
   const classFilter = selectElem ? selectElem.value : 'ALL';
 
   let filtered = appData.students || [];

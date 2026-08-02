@@ -18,7 +18,7 @@ import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
 import { renderAbsensi, renderAbsensiForm, setAbsensiStatus, saveAbsensi } from './modules/renderAbsensi';
-import { renderDaftarNilai, adjustGrade, updateStudentGrade } from './modules/renderDaftarNilai';
+import { renderDaftarNilai, adjustGrade, updateStudentGrade, filterNilaiByClass } from './modules/renderDaftarNilai';
 import { renderJurnal, showAddJournalModal, saveJournal } from './modules/renderJurnal';
 import { renderTimetable } from './modules/renderTimetable';
 import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
@@ -104,6 +104,8 @@ if (typeof window !== 'undefined') {
   (window as any).updateStudentGrade = updateStudentGrade;
   (window as any).searchStudent = searchStudent;
   (window as any).filterSiswa = filterSiswa;
+  (window as any).filterSiswaByClass = (val: string) => { renderDataSiswa(val); };
+  (window as any).filterNilaiByClass = filterNilaiByClass;
   (window as any).renderAllViews = initApp;
   (window as any).renderTeacherProfile = renderTeacherProfile;
   (window as any).renderDataGuru = renderDataGuru;
