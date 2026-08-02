@@ -449,21 +449,85 @@ function deleteScheduleRecord(idx) {
 // 5. Daftar Nilai View
 function renderDaftarNilai() {
   const tbody = document.getElementById('nilaiTableBody');
+  if (!tbody) return;
   tbody.innerHTML = appData.students.map((s, index) => {
-    const finalScore = Math.round((s.scoreFormatif * 0.4) + (s.scoreSumatif * 0.6));
-    const grade = finalScore >= 90 ? 'A (Sangat Baik)' : finalScore >= 80 ? 'B (Baik)' : 'C (Cukup)';
+    const formatif = s.scoreFormatif || 80;
+    const sumatif = s.scoreSumatif || 80;
+    const finalScore = Math.round((formatif * 0.4) + (sumatif * 0.6));
+    
+    let gradeLabel = 'C (Cukup)';
+    let badgeClass = 'badge-warning';
+    if (finalScore >= 90) {
+      gradeLabel = 'A (Sangat Baik)';
+      badgeClass = 'badge-success';
+    } else if (finalScore >= 80) {
+      gradeLabel = 'B (Baik)';
+      badgeClass = 'badge-info';
+    } else if (finalScore >= 70) {
+      gradeLabel = 'C (Cukup)';
+      badgeClass = 'badge-warning';
+    } else {
+      gradeLabel = 'D (Perlu Bimbingan)';
+      badgeClass = 'badge-danger';
+    }
+
     return `
       <tr>
         <td>${index + 1}</td>
-        <td>${s.name}</td>
+        <td><strong>${s.name}</strong></td>
         <td><span class="badge badge-info">${s.classId}</span></td>
-        <td>${s.scoreFormatif}</td>
-        <td>${s.scoreSumatif}</td>
-        <td><strong>${finalScore}</strong></td>
-        <td><span class="badge ${finalScore >= 80 ? 'badge-success' : 'badge-warning'}">${grade}</span></td>
+        <td>
+          <div style="display:inline-flex; align-items:center; gap:4px;">
+            <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'formatif', -1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Kurangi 1">-</button>
+            <input type="number" min="0" max="100" value="${formatif}" onchange="updateStudentGrade('${s.id}', 'formatif', this.value)" style="width:55px; text-align:center; padding:4px 2px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
+            <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'formatif', 1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Tambah 1">+</button>
+          </div>
+        </td>
+        <td>
+          <div style="display:inline-flex; align-items:center; gap:4px;">
+            <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sumatif', -1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Kurangi 1">-</button>
+            <input type="number" min="0" max="100" value="${sumatif}" onchange="updateStudentGrade('${s.id}', 'sumatif', this.value)" style="width:55px; text-align:center; padding:4px 2px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;">
+            <button class="btn btn-secondary" onclick="adjustGrade('${s.id}', 'sumatif', 1)" style="padding:2px 7px; font-weight:bold; font-size:12px;" title="Tambah 1">+</button>
+          </div>
+        </td>
+        <td><strong style="font-size:15px; color:var(--primary-dark);">${finalScore}</strong></td>
+        <td><span class="badge ${badgeClass}">${gradeLabel}</span></td>
       </tr>
     `;
   }).join('');
+}
+
+function adjustGrade(studentId, type, delta) {
+  const s = appData.students.find(st => st.id === studentId || st.nis === studentId);
+  if (!s) return;
+  if (type === 'formatif') {
+    s.scoreFormatif = Math.min(100, Math.max(0, (s.scoreFormatif || 80) + delta));
+  } else {
+    s.scoreSumatif = Math.min(100, Math.max(0, (s.scoreSumatif || 80) + delta));
+  }
+  saveStorage();
+  if (typeof saveStudentToSupabase === 'function') {
+    saveStudentToSupabase(s);
+  }
+  renderDaftarNilai();
+  renderDataSiswa();
+}
+
+function updateStudentGrade(studentId, type, val) {
+  const num = Math.min(100, Math.max(0, parseInt(val, 10) || 0));
+  const s = appData.students.find(st => st.id === studentId || st.nis === studentId);
+  if (!s) return;
+  if (type === 'formatif') {
+    s.scoreFormatif = num;
+  } else {
+    s.scoreSumatif = num;
+  }
+  saveStorage();
+  if (typeof saveStudentToSupabase === 'function') {
+    saveStudentToSupabase(s);
+  }
+  renderDaftarNilai();
+  renderDataSiswa();
 }
 
 // 6. Jurnal Mengajar View
@@ -904,4 +968,6 @@ if (typeof window !== 'undefined') {
   window.showAddScheduleModal = showAddScheduleModal;
   window.saveScheduleRecord = saveScheduleRecord;
   window.deleteScheduleRecord = deleteScheduleRecord;
+  window.adjustGrade = adjustGrade;
+  window.updateStudentGrade = updateStudentGrade;
 }
