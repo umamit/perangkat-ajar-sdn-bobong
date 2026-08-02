@@ -9,13 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let inMemoryAuth = false;
 
 function checkAuthSession() {
-  let isLoggedIn = false;
-  try {
-    isLoggedIn = sessionStorage.getItem('sdn_bobong_auth') === 'true' || inMemoryAuth;
-  } catch (e) {
-    isLoggedIn = inMemoryAuth;
-  }
-
+  const isLoggedIn = inMemoryAuth;
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
@@ -42,11 +36,6 @@ function handleLogin(e) {
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
     inMemoryAuth = true;
-    try {
-      sessionStorage.setItem('sdn_bobong_auth', 'true');
-    } catch (err) {
-      console.warn('[Incognito Mode] sessionStorage restricted:', err);
-    }
     checkAuthSession();
     renderTeacherProfile();
   } else {
@@ -59,11 +48,6 @@ function handleLogin(e) {
 
 function handleLogout() {
   inMemoryAuth = false;
-  try {
-    sessionStorage.removeItem('sdn_bobong_auth');
-  } catch (err) {
-    console.warn('[Incognito Mode] sessionStorage removal restricted:', err);
-  }
   checkAuthSession();
   if (document.getElementById('loginNip')) document.getElementById('loginNip').value = '';
   if (document.getElementById('loginPassword')) document.getElementById('loginPassword').value = '';

@@ -14,8 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   syncFromSupabase();
 });
 
+let inMemoryAuth = false;
+
 export function checkAuthSession(): void {
-  const isLoggedIn = sessionStorage.getItem('sdn_bobong_auth') === 'true';
+  const isLoggedIn = inMemoryAuth;
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
@@ -41,7 +43,7 @@ export function handleLogin(e: Event): void {
     if (matched) appData.teacher = matched;
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
-    sessionStorage.setItem('sdn_bobong_auth', 'true');
+    inMemoryAuth = true;
     checkAuthSession();
     renderTeacherProfile();
   } else {
@@ -53,7 +55,7 @@ export function handleLogin(e: Event): void {
 }
 
 export function handleLogout(): void {
-  sessionStorage.removeItem('sdn_bobong_auth');
+  inMemoryAuth = false;
   checkAuthSession();
   const nipEl = document.getElementById('loginNip') as HTMLInputElement | null;
   const passEl = document.getElementById('loginPassword') as HTMLInputElement | null;

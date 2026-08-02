@@ -81,7 +81,7 @@ function sendToGoogleSheets(targetSheet, payload) {
   });
 }
 
-// LocalStorage Handlers
+// In-Memory Storage Handlers (Storage API completely removed)
 function safeMerge(defaults, saved) {
   const result = { ...defaults };
   if (!saved || typeof saved !== 'object') return result;
@@ -94,27 +94,14 @@ function safeMerge(defaults, saved) {
 }
 
 function loadStorage() {
-  try {
-    const saved = localStorage.getItem('sdn_bobong_app_data');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      appData = {
-        ...safeMerge(INITIAL_DATA, parsed),
-        teacher: safeMerge(INITIAL_DATA.teacher, parsed.teacher)
-      };
-    }
-  } catch (e) {
-    console.warn('[Incognito Mode] localStorage access restricted, using in-memory state:', e);
+  // No localStorage - Rely purely on Supabase & Initial State
+  if (!appData) {
     appData = { ...INITIAL_DATA };
   }
 }
 
 function saveStorage() {
-  try {
-    localStorage.setItem('sdn_bobong_app_data', JSON.stringify(appData));
-  } catch (e) {
-    console.warn('[Incognito Mode] localStorage save restricted:', e);
-  }
+  // No localStorage - Data state is held in memory and synced live with Supabase
 }
 
 // Password Visibility Toggle

@@ -86,20 +86,16 @@ export function sendToGoogleSheets(targetSheet: string, payload: any): void {
   });
 }
 
-// LocalStorage Handlers
+// In-Memory Storage Handlers (Storage API completely removed)
 export function loadStorage(): void {
-  const saved = localStorage.getItem('sdn_bobong_app_data');
-  if (saved) {
-    try {
-      appData = JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to parse localStorage appData:', e);
-    }
+  // No localStorage - Rely purely on Supabase & Initial State
+  if (!appData) {
+    appData = { ...INITIAL_DATA };
   }
 }
 
 export function saveStorage(): void {
-  localStorage.setItem('sdn_bobong_app_data', JSON.stringify(appData));
+  // No localStorage - Data state is held in memory and synced live with Supabase
 }
 
 // Password Visibility Toggle
