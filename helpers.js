@@ -94,23 +94,27 @@ function safeMerge(defaults, saved) {
 }
 
 function loadStorage() {
-  const saved = localStorage.getItem('sdn_bobong_app_data');
-  if (saved) {
-    try {
+  try {
+    const saved = localStorage.getItem('sdn_bobong_app_data');
+    if (saved) {
       const parsed = JSON.parse(saved);
       appData = {
         ...safeMerge(INITIAL_DATA, parsed),
         teacher: safeMerge(INITIAL_DATA.teacher, parsed.teacher)
       };
-    } catch (e) {
-      console.error('Failed to parse localStorage appData:', e);
-      appData = { ...INITIAL_DATA };
     }
+  } catch (e) {
+    console.warn('[Incognito Mode] localStorage access restricted, using in-memory state:', e);
+    appData = { ...INITIAL_DATA };
   }
 }
 
 function saveStorage() {
-  localStorage.setItem('sdn_bobong_app_data', JSON.stringify(appData));
+  try {
+    localStorage.setItem('sdn_bobong_app_data', JSON.stringify(appData));
+  } catch (e) {
+    console.warn('[Incognito Mode] localStorage save restricted:', e);
+  }
 }
 
 // Password Visibility Toggle

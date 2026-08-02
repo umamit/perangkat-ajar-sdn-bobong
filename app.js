@@ -6,8 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
   syncFromSupabase();
 });
 
+let inMemoryAuth = false;
+
 function checkAuthSession() {
-  const isLoggedIn = sessionStorage.getItem('sdn_bobong_auth') === 'true';
+  let isLoggedIn = false;
+  try {
+    isLoggedIn = sessionStorage.getItem('sdn_bobong_auth') === 'true' || inMemoryAuth;
+  } catch (e) {
+    isLoggedIn = inMemoryAuth;
+  }
+
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
@@ -33,7 +41,12 @@ function handleLogin(e) {
     if (matched) appData.teacher = matched;
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
-    sessionStorage.setItem('sdn_bobong_auth', 'true');
+    inMemoryAuth = true;
+    try {
+      sessionStorage.setItem('sdn_bobong_auth', 'true');
+    } catch (err) {
+      console.warn('[Incognito Mode] sessionStorage restricted:', err);
+    }
     checkAuthSession();
     renderTeacherProfile();
   } else {
@@ -45,10 +58,15 @@ function handleLogin(e) {
 }
 
 function handleLogout() {
-  sessionStorage.removeItem('sdn_bobong_auth');
+  inMemoryAuth = false;
+  try {
+    sessionStorage.removeItem('sdn_bobong_auth');
+  } catch (err) {
+    console.warn('[Incognito Mode] sessionStorage removal restricted:', err);
+  }
   checkAuthSession();
-  document.getElementById('loginNip').value = '';
-  document.getElementById('loginPassword').value = '';
+  if (document.getElementById('loginNip')) document.getElementById('loginNip').value = '';
+  if (document.getElementById('loginPassword')) document.getElementById('loginPassword').value = '';
 }
 
 function togglePasswordVisibility() {
