@@ -7,3 +7,5 @@ dashboard_preview.png
 # TypeScript build output (noEmit:true is enforced in tsconfig.json)
 src/*.js
 dist/
+.env
+.env.*
