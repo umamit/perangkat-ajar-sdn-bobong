@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Metallic Ring Gradient -->
+    <linearGradient id="metalOuter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="25%" stop-color="#f8fafc"/>
+      <stop offset="50%" stop-color="#cbd5e1"/>
+      <stop offset="75%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+
+    <radialGradient id="metalBezel" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#cbd5e1"/>
+      <stop offset="80%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </radialGradient>
+
+    <!-- Inner Background Gradient -->
+    <radialGradient id="innerBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="75%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </radialGradient>
+
+    <!-- Shield Blue Gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38b6ff"/>
+      <stop offset="60%" stop-color="#0096c7"/>
+      <stop offset="100%" stop-color="#0077b6"/>
+    </linearGradient>
+
+    <!-- Gold Wings Gradient -->
+    <linearGradient id="goldFeather" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="30%" stop-color="#f59e0b"/>
+      <stop offset="70%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+
+    <linearGradient id="goldStar" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+
+    <!-- Torch Flame Gradient -->
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="40%" stop-color="#ea580c"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fef08a"/>
+    </linearGradient>
+
+    <!-- Metallic Ribbon Gradient -->
+    <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Curved Text Path for Top Header -->
+    <path id="topArcPath" d="M 72 250 A 178 178 0 1 1 428 250"/>
+  </defs>
+
+  <!-- Outer Metallic Badge Ring -->
+  <circle cx="250" cy="250" r="242" fill="url(#metalOuter)" filter="url(#shadow)"/>
+  <circle cx="250" cy="250" r="236" fill="url(#metalBezel)"/>
+  <circle cx="250" cy="250" r="226" fill="url(#metalOuter)"/>
+  <circle cx="250" cy="250" r="222" fill="url(#innerBg)" stroke="#94a3b8" stroke-width="1.5"/>
+  <circle cx="250" cy="250" r="218" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Top Text: KECAMATAN TALIABU BARAT -->
+  <text font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="25" font-weight="800" fill="#1e3a8a" letter-spacing="2" text-anchor="middle">
+    <textPath href="#topArcPath" startOffset="50%">KECAMATAN TALIABU BARAT</textPath>
+  </text>
+
+  <!-- Central Pentagon Shield -->
+  <g filter="url(#shadow)">
+    <polygon points="250,90 388,155 360,370 140,370 112,155" fill="url(#shieldGrad)" stroke="#0284c7" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Top Star -->
+  <g filter="url(#shadow)">
+    <polygon points="250,98 256,115 274,115 260,125 265,142 250,132 235,142 240,125 226,115 244,115" fill="url(#goldStar)" stroke="#b45309" stroke-width="1"/>
+  </g>
+
+  <!-- Golden Wings (Left & Right detailed wings) -->
+  <g id="goldenWings" filter="url(#shadow)">
+    <!-- Left Wing Feathers -->
+    <path d="M 235 240 C 200 200, 160 170, 140 185 C 130 195, 145 220, 170 232 C 150 215, 145 228, 165 245 C 145 235, 140 248, 165 260 C 150 255, 148 268, 175 275 C 160 273, 165 285, 190 288 C 210 290, 230 265, 235 240 Z" fill="url(#goldFeather)" stroke="#78350f" stroke-width="1"/>
+    <path d="M 235 235 C 205 195, 175 180, 155 192 C 170 210, 195 230, 235 235 Z" fill="#fde047" opacity="0.4"/>
+    <path d="M 225 245 C 190 220, 165 220, 158 232 C 175 242, 198 250, 225 245 Z" fill="#fde047" opacity="0.4"/>
+    <path d="M 225 258 C 195 242, 170 248, 165 256 C 180 262, 202 265, 225 258 Z" fill="#fde047" opacity="0.4"/>
+
+    <!-- Right Wing Feathers (Symmetrical) -->
+    <path d="M 265 240 C 300 200, 340 170, 360 185 C 370 195, 355 220, 330 232 C 350 215, 355 228, 335 245 C 355 235, 360 248, 335 260 C 350 255, 352 268, 325 275 C 340 273, 335 285, 310 288 C 290 290, 270 265, 265 240 Z" fill="url(#goldFeather)" stroke="#78350f" stroke-width="1"/>
+    <path d="M 265 235 C 295 195, 325 180, 345 192 C 330 210, 305 230, 265 235 Z" fill="#fde047" opacity="0.4"/>
+    <path d="M 275 245 C 310 220, 335 220, 342 232 C 325 242, 302 250, 275 245 Z" fill="#fde047" opacity="0.4"/>
+    <path d="M 275 258 C 305 242, 330 248, 335 256 C 320 262, 298 265, 275 258 Z" fill="#fde047" opacity="0.4"/>
+  </g>
+
+  <!-- Torch Pillar & Bowl -->
+  <g id="torch" filter="url(#shadow)">
+    <!-- Flame -->
+    <path d="M 250 135 C 265 155, 268 175, 250 190 C 232 175, 235 155, 250 135 Z" fill="url(#flameGrad)" stroke="#ea580c" stroke-width="1"/>
+    <path d="M 245 145 C 255 160, 258 172, 248 185 C 238 172, 240 160, 245 145 Z" fill="#fef08a" opacity="0.9"/>
+    <path d="M 252 140 C 262 155, 264 168, 255 180 C 248 168, 250 155, 252 140 Z" fill="#ffffff" opacity="0.8"/>
+
+    <!-- Bowl Capital -->
+    <path d="M 230 190 L 270 190 L 265 200 L 235 200 Z" fill="#e2e8f0" stroke="#475569" stroke-width="1.5"/>
+    <rect x="233" y="196" width="34" height="6" fill="#cbd5e1" stroke="#475569" stroke-width="1"/>
+    
+    <!-- Torch Pillars -->
+    <rect x="240" y="202" width="7" height="52" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+    <rect x="253" y="202" width="7" height="52" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+    <rect x="236" y="222" width="28" height="6" fill="#e2e8f0" stroke="#475569" stroke-width="1"/>
+    
+    <!-- Pillar Base -->
+    <path d="M 232 254 L 268 254 L 272 262 L 228 262 Z" fill="#e2e8f0" stroke="#475569" stroke-width="1.5"/>
+  </g>
+
+  <!-- Open Book at Base -->
+  <g id="openBook" filter="url(#shadow)">
+    <!-- Book Cover Spine & Backing -->
+    <path d="M 185 272 Q 250 258 250 292 Q 250 258 315 272 L 310 298 Q 250 284 250 306 Q 250 284 190 298 Z" fill="#991b1b" stroke="#450a0a" stroke-width="1.5"/>
+    
+    <!-- Pages Left & Right -->
+    <path d="M 188 270 Q 248 255 249 288 Q 215 284 192 294 Z" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+    <path d="M 312 270 Q 252 255 251 288 Q 285 284 308 294 Z" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+    
+    <!-- Page Folds -->
+    <path d="M 194 266 Q 248 252 249 284 Q 218 280 197 290 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+    <path d="M 306 266 Q 252 252 251 284 Q 282 280 303 290 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+    
+    <path d="M 250 255 L 250 302" stroke="#dc2626" stroke-width="2.5"/>
+  </g>
+
+  <!-- Left Cotton Branch -->
+  <g id="cottonBranch">
+    <path d="M 148 285 Q 155 330 195 355" fill="none" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+    <!-- Cotton Bolls -->
+    <g transform="translate(150, 290)">
+      <circle cx="0" cy="0" r="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <path d="M -5 2 Q 0 -5 5 2 Q 0 7 -5 2 Z" fill="#b45309" opacity="0.7"/>
+    </g>
+    <g transform="translate(158, 308)">
+      <circle cx="0" cy="0" r="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <path d="M -5 2 Q 0 -5 5 2 Q 0 7 -5 2 Z" fill="#b45309" opacity="0.7"/>
+    </g>
+    <g transform="translate(170, 326)">
+      <circle cx="0" cy="0" r="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <path d="M -5 2 Q 0 -5 5 2 Q 0 7 -5 2 Z" fill="#b45309" opacity="0.7"/>
+    </g>
+    <g transform="translate(185, 342)">
+      <circle cx="0" cy="0" r="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <path d="M -5 2 Q 0 -5 5 2 Q 0 7 -5 2 Z" fill="#b45309" opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- Right Rice/Paddy Branch -->
+  <g id="riceBranch">
+    <path d="M 352 285 Q 345 330 305 355" fill="none" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+    <!-- Rice Grains -->
+    <ellipse cx="350" cy="290" rx="5" ry="9" fill="#facc15" stroke="#a16207" stroke-width="1" transform="rotate(25 350 290)"/>
+    <ellipse cx="342" cy="308" rx="5" ry="9" fill="#facc15" stroke="#a16207" stroke-width="1" transform="rotate(30 342 308)"/>
+    <ellipse cx="330" cy="326" rx="5" ry="9" fill="#facc15" stroke="#a16207" stroke-width="1" transform="rotate(35 330 326)"/>
+    <ellipse cx="315" cy="342" rx="5" ry="9" fill="#facc15" stroke="#a16207" stroke-width="1" transform="rotate(40 315 342)"/>
+  </g>
+
+  <!-- White Ribbon Banner with Silver 3D Effect -->
+  <g id="ribbonBanner" filter="url(#shadow)">
+    <!-- Ribbon Tails Behind -->
+    <path d="M 105 345 L 80 340 L 95 365 L 75 385 L 115 375 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="1.5"/>
+    <path d="M 395 345 L 420 340 L 405 365 L 425 385 L 385 375 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="1.5"/>
+
+    <!-- Main Ribbon Body -->
+    <path d="M 108 348 Q 250 332 392 348 L 408 380 Q 250 365 92 380 Z" fill="url(#ribbonGrad)" stroke="#475569" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 115 354 Q 250 340 385 354" stroke="#94a3b8" stroke-width="1" fill="none"/>
+    <path d="M 102 374 Q 250 359 398 374" stroke="#94a3b8" stroke-width="1" fill="none"/>
+
+    <!-- Ribbon Text -->
+    <text x="250" y="369" font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#1e3a8a" text-anchor="middle" letter-spacing="1.5">SD NEGERI BOBONG</text>
+  </g>
+
+  <!-- Year Text on Shield Base -->
+  <text x="250" y="394" font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="2">* 2008 *</text>
+</svg>
