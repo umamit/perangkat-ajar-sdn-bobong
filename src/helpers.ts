@@ -227,18 +227,25 @@ export function registerPwaServiceWorker(): void {
 registerPwaServiceWorker();
 
 // Supabase Real-time Mutations
-export async function saveStudentToSupabase(s: Student): Promise<void> {
+export async function saveStudentToSupabase(s: Student): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return;
+  if (!client) return false;
   try {
-    await client.from('students').upsert({
+    const { error } = await client.from('students').upsert({
       nis: s.nis || s.id,
       name: s.name,
       class_id: s.classId,
       gender: s.gender || 'L'
     }, { onConflict: 'nis' });
+
+    if (error) {
+      console.error('[Supabase Student Save Error]', error.message, error);
+      return false;
+    }
+    return true;
   } catch (err) {
-    console.warn('[Supabase Student Save Warning]', err);
+    console.warn('[Supabase Student Save Exception]', err);
+    return false;
   }
 }
 

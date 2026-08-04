@@ -4,7 +4,7 @@ import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
 import { showToast } from './showToast';
 
-export function saveStudent(e: Event): void {
+export async function saveStudent(e: Event): Promise<void> {
   e.preventDefault();
   const nis = (document.getElementById('studentNis') as HTMLInputElement).value.trim();
   const name = (document.getElementById('studentName') as HTMLInputElement).value.trim();
@@ -34,7 +34,7 @@ export function saveStudent(e: Event): void {
   }
 
   saveStorage();
-  saveStudentToSupabase(newStudent);
+  await saveStudentToSupabase(newStudent);
   
   const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
   if (selectElem) selectElem.value = classId;
