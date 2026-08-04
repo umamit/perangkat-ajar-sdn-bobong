@@ -7,19 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { INITIAL_DATA } from '@/data';
 
 export function SiswaView() {
   const { students, classes, showToast, setStudents } = useApp();
   const [search, setSearch] = useState('');
   const [selectedClass, setSelectedClass] = useState('ALL');
 
-  const activeClasses = (classes && classes.length > 0) ? classes : INITIAL_DATA.classes;
-  const activeStudents = (students && students.length > 0) ? students : INITIAL_DATA.students;
-
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 
-  const filteredStudents = activeStudents.filter(s => {
+  const filteredStudents = students.filter(s => {
     const matchesName = s.name.toLowerCase().includes(search.toLowerCase()) || (s.nis && s.nis.includes(search));
     const studentClassNorm = normalizeClass(s.classId);
     const selectedClassNorm = normalizeClass(selectedClass);
@@ -72,7 +68,7 @@ export function SiswaView() {
                 className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
               >
                 <option value="ALL">Semua Kelas</option>
-                {activeClasses.map(c => (
+                {classes.map(c => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>

@@ -1,142 +1,78 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { INITIAL_DATA } from '@/data';
 
 export function MateriFlashcardView() {
-  const { showToast } = useApp();
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [quizActive, setQuizActive] = useState(false);
-  const [quizIdx, setQuizIdx] = useState(0);
-  const [quizScore, setQuizScore] = useState(0);
-  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
-
-  const flashcards = INITIAL_DATA.flashcards || [
-    { english: 'Good Morning', indonesia: 'Selamat Pagi', category: 'Greetings' },
-    { english: 'Thank You', indonesia: 'Terima Kasih', category: 'Greetings' },
-    { english: 'Father & Mother', indonesia: 'Ayah & Ibu', category: 'Family' },
-    { english: 'Pencil & Book', indonesia: 'Pensil & Buku', category: 'School' },
-    { english: 'Cat & Dog', indonesia: 'Kucing & Anjing', category: 'Animals' },
+  const flashcards = [
+    { id: '1', title: 'Greetings & Introduction', word: 'Hello / Good Morning', meaning: 'Halo / Selamat Pagi', phase: 'Fase A' },
+    { id: '2', title: 'Classroom Objects', word: 'Pencil & Book', meaning: 'Pensil & Buku', phase: 'Fase A' },
+    { id: '3', title: 'Numbers 1-20', word: 'One, Two, Three...', meaning: 'Satu, Dua, Tiga...', phase: 'Fase B' }
   ];
 
-  const quizQuestions = [
-    { question: 'Apa arti dari "Good Morning"?', options: ['Selamat Pagi', 'Selamat Malam', 'Selamat Tinggal'], answer: 'Selamat Pagi' },
-    { question: 'Apa Bahasa Inggrisnya "Pensil"?', options: ['Book', 'Pencil', 'Ruler'], answer: 'Pencil' },
-    { question: 'Apa arti dari "Thank You"?', options: ['Maaf', 'Terima Kasih', 'Sama-sama'], answer: 'Terima Kasih' },
-  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
 
-  const filteredCards = flashcards.filter(
-    c => selectedCategory === 'ALL' || c.category === selectedCategory
-  );
+  const currentCard = flashcards[currentIndex] || flashcards[0];
 
-  const toggleFlip = (idx: number) => {
-    setFlippedCards(prev => ({ ...prev, [idx]: !prev[idx] }));
+  const handleNext = () => {
+    setFlipped(false);
+    setCurrentIndex(prev => (prev + 1) % flashcards.length);
   };
 
-  const handleQuizAnswer = (option: string) => {
-    const q = quizQuestions[quizIdx];
-    if (option === q.answer) {
-      setQuizScore(prev => prev + 1);
-      showToast('Jawaban Benar! 🎉', 'success');
-    } else {
-      showToast(`Jawaban Kurang Tepat. Yang benar: ${q.answer}`, 'error');
-    }
-
-    if (quizIdx + 1 < quizQuestions.length) {
-      setQuizIdx(prev => prev + 1);
-    } else {
-      showToast(`Kuis Selesai! Skor Anda: ${quizScore + (option === q.answer ? 1 : 0)} / ${quizQuestions.length}`, 'info');
-      setQuizActive(false);
-    }
+  const handlePrev = () => {
+    setFlipped(false);
+    setCurrentIndex(prev => (prev - 1 + flashcards.length) % flashcards.length);
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Materi & Flashcards Interaktif Bahasa Inggris</h3>
-          <p className="text-xs text-slate-500">Media kartu kosa kata interaktif & kuis Bahasa Inggris siswa SD</p>
+          <h3 className="text-xl font-bold text-slate-800">Media Pembelajaran Interaktif (Flashcard)</h3>
+          <p className="text-xs text-slate-500">Kartu kosakata interaktif Bahasa Inggris SD</p>
         </div>
-        <div className="flex gap-2">
-          <Button size="sm" onClick={() => (window as any).showAddFlashcardModal()}>
-            <i className="ri-add-line" /> Tambah Flashcard
-          </Button>
-          <Button variant="accent" size="sm" onClick={() => { setQuizActive(true); setQuizIdx(0); setQuizScore(0); }}>
-            <i className="ri-gamepad-line" /> Kuis Interaktif
-          </Button>
-        </div>
+        <Button size="sm" onClick={() => (window as any).showAddFlashcardModal()}>
+          <i className="ri-add-line" /> Tambah Flashcard
+        </Button>
       </div>
 
-      {quizActive && (
-        <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
-          <CardHeader className="flex flex-row justify-between items-center pb-2 border-b border-emerald-100">
-            <CardTitle className="text-base font-bold text-emerald-800 flex items-center gap-2">
-              <i className="ri-gamepad-line" /> Kuis Bahasa Inggris (Soal {quizIdx + 1}/{quizQuestions.length})
-            </CardTitle>
-            <Button variant="ghost" size="sm" onClick={() => setQuizActive(false)}>Tutup</Button>
-          </CardHeader>
-          <CardContent className="pt-4 space-y-4">
-            <h4 className="text-lg font-bold text-slate-800">{quizQuestions[quizIdx].question}</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {quizQuestions[quizIdx].options.map((opt, i) => (
-                <Button key={i} variant="outline" onClick={() => handleQuizAnswer(opt)} className="h-12 text-sm font-semibold justify-start px-4">
-                  {opt}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="flex items-center gap-2">
-        <label className="text-xs font-semibold text-slate-600">Filter Kategori:</label>
-        <select
-          value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}
-          className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-medium outline-none"
+      <div className="max-w-md mx-auto">
+        <Card
+          onClick={() => setFlipped(!flipped)}
+          className="cursor-pointer min-h-[260px] flex flex-col justify-between items-center text-center p-8 bg-gradient-to-br from-white to-slate-50 shadow-xl border border-slate-200/80 rounded-2xl hover:border-primary transition-all duration-300"
         >
-          <option value="ALL">Semua Topik</option>
-          <option value="Greetings">Greetings & Introductions</option>
-          <option value="Family">My Family</option>
-          <option value="School">School Objects</option>
-          <option value="Animals">Animals & Pets</option>
-        </select>
-      </div>
+          <div className="w-full flex justify-between items-center">
+            <Badge variant="default">{currentCard.phase}</Badge>
+            <span className="text-xs text-slate-400 font-bold">
+              {currentIndex + 1} / {flashcards.length}
+            </span>
+          </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredCards.map((c, idx) => {
-          const isFlipped = !!flippedCards[idx];
+          <div className="my-6 space-y-2">
+            <h2 className="text-2xl font-black text-slate-800">
+              {flipped ? currentCard.meaning : currentCard.word}
+            </h2>
+            <p className="text-xs text-slate-400 font-medium">
+              {flipped ? 'Arti dalam Bahasa Indonesia' : 'Klik kartu untuk melihat terjemahan'}
+            </p>
+          </div>
 
-          return (
-            <Card
-              key={idx}
-              onClick={() => toggleFlip(idx)}
-              className={`cursor-pointer transition-all duration-300 min-h-[160px] flex flex-col justify-between p-5 text-center border-2 ${
-                isFlipped ? 'bg-cyan-50 border-primary' : 'bg-white border-slate-200/80 hover:border-slate-300'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <Badge variant="secondary">{c.category}</Badge>
-                <i className="ri-pulse-line text-slate-400 text-sm" />
-              </div>
-              <div className="my-auto">
-                <h3 className="text-xl font-extrabold text-slate-800">
-                  {isFlipped ? ((c as any).indonesia || c.translate) : ((c as any).english || c.word)}
-                </h3>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  {isFlipped ? '(Bahasa Indonesia)' : '(Bahasa Inggris)'}
-                </p>
-              </div>
-              <p className="text-[10px] text-primary-dark font-bold mt-2">
-                Klik kartu untuk balik
-              </p>
-            </Card>
-          );
-        })}
+          <div className="text-xs font-bold text-primary flex items-center gap-1">
+            <i className="ri-refresh-line" /> {flipped ? 'Kembali ke Bahasa Inggris' : 'Lihat Terjemahan'}
+          </div>
+        </Card>
+
+        <div className="flex justify-between items-center mt-6">
+          <Button variant="outline" size="sm" onClick={handlePrev}>
+            <i className="ri-arrow-left-s-line" /> Sebelumnya
+          </Button>
+          <Button size="sm" onClick={handleNext}>
+            Berikutnya <i className="ri-arrow-right-s-line" />
+          </Button>
+        </div>
       </div>
     </div>
   );

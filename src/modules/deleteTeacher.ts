@@ -1,22 +1,15 @@
-import { showToast } from './showToast';
-import { appData, saveStorage, deleteTeacherFromSupabase } from '../helpers';
-import { INITIAL_DATA } from '../data';
+import { appData } from '../helpers';
 import { renderDataGuru } from './renderDataGuru';
+import { showToast } from './showToast';
 
-export function deleteTeacher(nip: string): void {
-  const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '';
-  if (nip === activeNip) {
-    alert(`Akun ${appData.teacher.name || 'Anda'} yang sedang aktif tidak dapat dihapus demi keamanan sistem.`);
-    return;
-  }
+export function deleteTeacher(nip: string) {
+  if (!nip) return;
+  const teacher = appData.teachers.find(t => t.nip === nip);
+  const teacherName = teacher ? teacher.name : nip;
 
-  if (confirm(`Apakah Anda yakin ingin menghapus akun guru NIP ${nip}?`)) {
-    appData.teachers = (appData.teachers || []).filter(t => t.nip !== nip);
-    if (appData.teachers.length === 0) {
-      appData.teachers = [...(INITIAL_DATA as any).teachers];
-    }
-    saveStorage();
-    deleteTeacherFromSupabase(nip);
+  if (confirm(`Apakah Anda yakin ingin menghapus data guru: ${teacherName}?`)) {
+    appData.teachers = appData.teachers.filter(t => t.nip !== nip);
+    showToast(`Data guru ${teacherName} berhasil dihapus.`, 'info');
     renderDataGuru();
   }
 }

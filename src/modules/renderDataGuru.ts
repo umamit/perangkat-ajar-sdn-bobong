@@ -1,23 +1,23 @@
 import { appData } from '../helpers';
-import { INITIAL_DATA } from '../data';
 
-export function renderDataGuru(): void {
-  const tbody = document.getElementById('teacherTableBody');
-  if (!tbody) return;
+export function renderDataGuru() {
+  const container = document.getElementById('guruListContainer');
+  if (!container) return;
 
-  const teachers = (appData.teachers && appData.teachers.length > 0) ? appData.teachers : [...(INITIAL_DATA as any).teachers];
-  tbody.innerHTML = teachers.map((t: any) => `
+  const teachers = appData.teachers || [];
+  if (teachers.length === 0) {
+    container.innerHTML = `<tr><td colspan="6" className="text-center py-6 text-slate-400">Belum ada data guru</td></tr>`;
+    return;
+  }
+
+  container.innerHTML = teachers.map((t, idx) => `
     <tr>
-      <td><strong>${t.nip}</strong></td>
+      <td><img src="${t.avatar || '/assets/logo-sdn-bobong.png'}" className="w-8 h-8 rounded-full" /></td>
+      <td>${t.nip}</td>
       <td>${t.name}</td>
-      <td>${t.subject || 'Guru Mata Pelajaran'}</td>
-      <td><span class="badge badge-info">${t.role || 'Guru'}</span></td>
-      <td><span class="badge badge-success">Aktif</span></td>
-      <td>
-        <button class="btn btn-secondary btn-sm" onclick="deleteTeacher('${t.nip}')" style="padding:4px 8px; font-size:12px; color:#dc2626;" title="Hapus Guru">
-          <i class="ri-delete-bin-line"></i> Hapus
-        </button>
-      </td>
+      <td>${t.role || 'Guru'}</td>
+      <td>${t.subject || '-'}</td>
+      <td><button onclick="deleteTeacher('${t.nip}')" className="text-rose-500">Hapus</button></td>
     </tr>
   `).join('');
 }

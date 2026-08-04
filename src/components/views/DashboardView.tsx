@@ -6,15 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { INITIAL_DATA } from '@/data';
 
 export function DashboardView() {
   const { students, classes, modules, journals, setActiveView } = useApp();
 
-  const totalStudents = students.length > 0 ? students.length : (INITIAL_DATA.students?.length || 0);
-  const totalClasses = classes.length > 0 ? classes.length : (INITIAL_DATA.classes?.length || 0);
-  const totalModules = modules.length > 0 ? modules.length : (INITIAL_DATA.modules?.length || 0);
-  const totalJournals = journals.length > 0 ? journals.length : (INITIAL_DATA.journals?.length || 0);
+  const totalStudents = students.length;
+  const totalClasses = classes.length;
+  const totalModules = modules.length;
+  const totalJournals = journals.length;
 
   const timetable = [
     { day: 'Senin', time: '07.30 - 08.40', classId: '1A', topic: 'Unit 1: Greetings & Expressions' },
@@ -100,7 +99,7 @@ export function DashboardView() {
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
             <span>Fase A, B &amp; C</span>
-            <span className="text-emerald-600">12 Rombel</span>
+            <span className="text-emerald-600">{totalClasses} Rombel</span>
           </div>
         </div>
 
@@ -198,13 +197,20 @@ export function DashboardView() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(journals.length > 0 ? journals : (INITIAL_DATA.journals || [])).slice(0, 5).map((j, idx) => (
+                {journals.slice(0, 5).map((j, idx) => (
                   <TableRow key={idx} className="hover:bg-slate-50/80">
                     <TableCell className="font-bold text-xs text-slate-800">{j.date}</TableCell>
                     <TableCell><Badge variant="secondary" className="font-extrabold">{j.classId}</Badge></TableCell>
                     <TableCell className="text-xs font-semibold text-slate-700">{j.topic}</TableCell>
                   </TableRow>
                 ))}
+                {journals.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center text-slate-400 py-6 text-xs font-medium">
+                      Belum ada entri jurnal tersimpan di Supabase
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>

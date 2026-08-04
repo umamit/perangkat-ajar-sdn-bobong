@@ -1,7 +1,9 @@
 import { appData } from '../helpers';
-import { INITIAL_DATA } from '../data';
 
-export function getTeacherClasses(): any[] {
-  const classes = (appData.classes && appData.classes.length > 0) ? appData.classes : INITIAL_DATA.classes;
-  return classes;
+export function getTeacherClasses() {
+  const classes = appData.classes || [];
+  if ((appData as any).activeRoleMode === 'guru_inggris') {
+    return classes;
+  }
+  return classes.filter(c => c.id === '1A' || c.id === '4A');
 }
