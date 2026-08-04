@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------
+   1. DESIGN TOKENS & ROOT VARIABLES (SD Negeri Bobong)
+   ---------------------------------------------------- */
+:root {
+  /* 1. Warna Utama (Primary) - Biru Toska Logo */
+  --primary: #12A5B8;
+  --primary-light: #48C4D3;
+  --primary-dark: #0A7E8D;
+  --primary-hover: #0A7E8D;
+
+  /* 2. Warna Sekunder (Secondary) - Kuning Emas Logo */
+  --secondary: #E5A900;
+  --secondary-light: #FFC83B;
+  --secondary-dark: #B28300;
+
+  /* 3. Warna Aksen (Accent) - Hijau Daun */
+  --accent: #2A9D5C;
+  --accent-bg: #EBF7F0;
+
+  /* 4. Warna Latar Belakang Liquid Glass */
+  --bg-main: #F4F6F9;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --bg-footer: #122438;
+  --bg-footer-deep: #0A1624;
+
+  /* 5. Warna Teks (Typography) */
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+
+  /* Layout & Utility Tokens */
+  --sidebar-bg: rgba(15, 23, 42, 0.92);
+  --sidebar-active: rgba(18, 165, 184, 0.2);
+  --sidebar-text: #94A3B8;
+  --sidebar-active-text: #38BDF8;
+  --border-color: rgba(255, 255, 255, 0.4);
+  --shadow-sm: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 32px 0 rgba(18, 165, 184, 0.12);
+  --shadow-lg: 0 16px 48px 0 rgba(10, 126, 141, 0.2);
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --radius-full: 9999px;
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: radial-gradient(circle at 10% 20%, rgba(18, 165, 184, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(229, 169, 0, 0.06) 0%, transparent 40%),
+              linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}

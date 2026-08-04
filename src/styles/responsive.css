@@ -1,0 +1,114 @@
+/* ----------------------------------------------------
+   6. RESPONSIVE MEDIA QUERIES (Mobile & Desktop)
+   ---------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .top-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-title h2 {
+    font-size: 15px;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 4px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 6px;
+  }
+
+  .btn {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .content-area {
+    padding: 10px;
+  }
+
+  .hero-banner {
+    padding: 14px 12px;
+    margin-bottom: 12px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .grade-table th, .grade-table td {
+    padding: 8px 6px;
+    font-size: 11.5px;
+  }
+
+  .modal-content {
+    width: 95vw;
+    margin: 10px auto;
+    padding: 16px 16px 24px 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    position: static;
+    transform: none;
+    width: 280px;
+    box-shadow: none;
+  }
+
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .top-bar {
+    padding: 16px 28px;
+  }
+
+  .top-title h2 {
+    font-size: 20px;
+  }
+
+  .top-title p {
+    display: block;
+    font-size: 13px;
+  }
+
+  .content-area {
+    padding: 28px;
+  }
+
+  .hero-banner {
+    padding: 28px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .flashcard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .modal-content {
+    border-radius: var(--radius-lg);
+    animation: fadeIn 0.2s ease;
+  }
+}
