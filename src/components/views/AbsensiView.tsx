@@ -13,7 +13,25 @@ export function AbsensiView() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentStatuses, setCurrentStatuses] = useState<Record<string, string>>({});
 
-  const classStudents = students.filter(s => s.classId === selectedClass);
+  const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
+
+  const classStudents = students.filter(
+    s => normalizeClass(s.classId) === normalizeClass(selectedClass) || s.classId === selectedClass
+  );
+
+  const totalClassStudents = classStudents.length;
+
+  const getStatusKey = (s: any) => (s.id || s.nis || '');
+
+  const currentHadir = classStudents.filter(s => (currentStatuses[getStatusKey(s)] || 'Hadir') === 'Hadir').length;
+  const currentIzin = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Izin').length;
+  const currentSakit = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Sakit').length;
+  const currentAlpa = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Alpa').length;
+
+  const pctHadir = totalClassStudents > 0 ? Math.round((currentHadir / totalClassStudents) * 100) : 0;
+  const pctIzin = totalClassStudents > 0 ? Math.round((currentIzin / totalClassStudents) * 100) : 0;
+  const pctSakit = totalClassStudents > 0 ? Math.round((currentSakit / totalClassStudents) * 100) : 0;
+  const pctAlpa = totalClassStudents > 0 ? Math.round((currentAlpa / totalClassStudents) * 100) : 0;
 
   const handleStatusChange = (studentId: string, status: string) => {
     setCurrentStatuses(prev => ({ ...prev, [studentId]: status }));
@@ -25,30 +43,56 @@ export function AbsensiView() {
       return;
     }
 
-    const counts = { Hadir: 0, Izin: 0, Sakit: 0, Alpa: 0 };
-    classStudents.forEach(s => {
-      const st = currentStatuses[s.id] || 'Hadir';
-      counts[st as keyof typeof counts] = (counts[st as keyof typeof counts] || 0) + 1;
-    });
-
     const newEntry = {
       date,
       classId: selectedClass,
-      hadir: counts.Hadir,
-      izin: counts.Izin,
-      sakit: counts.Sakit,
-      alpa: counts.Alpa
+      hadir: currentHadir,
+      izin: currentIzin,
+      sakit: currentSakit,
+      alpa: currentAlpa
     };
 
     setAttendance(prev => [newEntry, ...prev]);
-    showToast(`Presensi kelas ${selectedClass} tanggal ${date} berhasil disimpan!`, 'success');
+    showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${pctHadir}% Kehadiran) berhasil disimpan!`, 'success');
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h3 className="text-xl font-bold text-slate-800">Presensi & Absensi Siswa Harian</h3>
-        <p className="text-xs text-slate-500">Pencatatan presensi siswa harian per kelas dan riwayat absensi</p>
+        <h3 className="text-xl font-bold text-slate-800">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
+        <p className="text-xs text-slate-500">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
+      </div>
+
+      {/* Attendance Summary Stat Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+          <span className="text-[11px] font-bold text-emerald-700 uppercase block">Hadir</span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-2xl font-black text-emerald-900">{currentHadir}</span>
+            <span className="text-xs font-bold text-emerald-700">({pctHadir}%)</span>
+          </div>
+        </div>
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
+          <span className="text-[11px] font-bold text-amber-700 uppercase block">Izin</span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-2xl font-black text-amber-900">{currentIzin}</span>
+            <span className="text-xs font-bold text-amber-700">({pctIzin}%)</span>
+          </div>
+        </div>
+        <div className="p-4 rounded-xl bg-orange-50 border border-orange-200">
+          <span className="text-[11px] font-bold text-orange-700 uppercase block">Sakit</span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-2xl font-black text-orange-900">{currentSakit}</span>
+            <span className="text-xs font-bold text-orange-700">({pctSakit}%)</span>
+          </div>
+        </div>
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200">
+          <span className="text-[11px] font-bold text-rose-700 uppercase block">Alpa</span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-2xl font-black text-rose-900">{currentAlpa}</span>
+            <span className="text-xs font-bold text-rose-700">({pctAlpa}%)</span>
+          </div>
+        </div>
       </div>
 
       <Card>
@@ -62,7 +106,7 @@ export function AbsensiView() {
               <select
                 value={selectedClass}
                 onChange={e => setSelectedClass(e.target.value)}
-                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-medium outline-none"
+                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
               >
                 {classes.map(c => (
                   <option key={c.id} value={c.id}>
@@ -77,11 +121,11 @@ export function AbsensiView() {
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-medium outline-none"
+                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs">
+              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs font-bold">
                 <i className="ri-save-line" /> Simpan Presensi Hari Ini
               </Button>
             </div>
@@ -98,11 +142,15 @@ export function AbsensiView() {
             </TableHeader>
             <TableBody>
               {classStudents.map((s, idx) => {
-                const currentSt = currentStatuses[s.id] || 'Hadir';
+                const sKey = getStatusKey(s);
+                const currentSt = currentStatuses[sKey] || 'Hadir';
                 return (
-                  <TableRow key={s.id || idx}>
+                  <TableRow key={s.id || idx} className="hover:bg-slate-50/80">
                     <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
-                    <TableCell className="font-bold text-slate-800 text-xs">{s.name}</TableCell>
+                    <TableCell className="font-bold text-slate-800 text-xs">
+                      {s.name}
+                      <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
+                    </TableCell>
                     <TableCell className="text-center">
                       <div className="flex justify-center items-center gap-1.5">
                         {['Hadir', 'Izin', 'Sakit', 'Alpa'].map(status => {
@@ -119,7 +167,7 @@ export function AbsensiView() {
                           return (
                             <button
                               key={status}
-                              onClick={() => handleStatusChange(s.id, status)}
+                              onClick={() => handleStatusChange(sKey, status)}
                               className={`px-3 py-1 rounded-apple-sm text-xs font-bold transition-all ${
                                 active ? activeClass : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                               }`}
@@ -135,7 +183,7 @@ export function AbsensiView() {
               })}
               {classStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs">
+                  <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs font-medium">
                     Belum ada siswa di kelas ini
                   </TableCell>
                 </TableRow>
@@ -163,9 +211,9 @@ export function AbsensiView() {
             </TableHeader>
             <TableBody>
               {attendance.map((r, idx) => (
-                <TableRow key={idx}>
+                <TableRow key={idx} className="hover:bg-slate-50/80">
                   <TableCell className="font-bold text-xs">{r.date}</TableCell>
-                  <TableCell><Badge variant="default">{r.classId}</Badge></TableCell>
+                  <TableCell><Badge variant="default" className="font-extrabold">{r.classId}</Badge></TableCell>
                   <TableCell className="text-center"><Badge variant="success">{r.hadir || 0}</Badge></TableCell>
                   <TableCell className="text-center"><Badge variant="warning">{r.izin || 0}</Badge></TableCell>
                   <TableCell className="text-center"><Badge variant="secondary">{r.sakit || 0}</Badge></TableCell>
@@ -174,7 +222,7 @@ export function AbsensiView() {
               ))}
               {attendance.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-slate-400 py-6 text-xs">
+                  <TableCell colSpan={6} className="text-center text-slate-400 py-6 text-xs font-medium">
                     Belum ada riwayat presensi tersimpan
                   </TableCell>
                 </TableRow>

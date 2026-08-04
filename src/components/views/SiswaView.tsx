@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { deleteStudentFromSupabase } from '@/lib/supabase';
 
 export function SiswaView() {
-  const { students, classes, showToast, setStudents } = useApp();
+  const { students, classes, showToast, setStudents, syncData } = useApp();
   const [search, setSearch] = useState('');
   const [selectedClass, setSelectedClass] = useState('ALL');
 
@@ -23,10 +24,12 @@ export function SiswaView() {
     return matchesName && matchesClass;
   });
 
-  const handleDelete = (id: string, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (confirm(`Apakah Anda yakin ingin menghapus data siswa ${name}?`)) {
       setStudents(prev => prev.filter(s => s.id !== id && s.nis !== id));
-      showToast(`Siswa ${name} berhasil dihapus`, 'info');
+      await deleteStudentFromSupabase(id);
+      await syncData();
+      showToast(`Siswa ${name} berhasil dihapus permanen`, 'info');
     }
   };
 
@@ -67,12 +70,15 @@ export function SiswaView() {
                 onChange={e => setSelectedClass(e.target.value)}
                 className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
               >
-                <option value="ALL">Semua Kelas</option>
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
+                <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
+                {classes.map(c => {
+                  const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
+                  return (
+                    <option key={c.id} value={c.id}>
+                      {c.name} ({count} Siswa)
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
