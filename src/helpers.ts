@@ -115,8 +115,10 @@ export async function syncFromSupabase(): Promise<void> {
     }
 
     const { data: teachers } = await client.from('teachers').select('id, nip, name, role, subject, password, avatar_url, is_active');
+    // Merge: mulai dari data lokal lalu timpa/tambah dengan data Supabase
+    const localTeachers = [...((INITIAL_DATA as any).teachers || [])];
     if (teachers && teachers.length > 0) {
-      appData.teachers = teachers.map((t: any) => ({
+      const supabaseTeachers = teachers.map((t: any) => ({
         id: t.id,
         nip: t.nip,
         name: t.name,
@@ -126,6 +128,11 @@ export async function syncFromSupabase(): Promise<void> {
         avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
         isActive: t.is_active !== false
       }));
+      // Merge: data Supabase override data lokal berdasarkan NIP
+      const mergedMap = new Map<string, any>();
+      localTeachers.forEach((t: any) => mergedMap.set(t.nip, t));
+      supabaseTeachers.forEach((t: any) => mergedMap.set(t.nip, t));
+      appData.teachers = Array.from(mergedMap.values());
 
       const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '199610272019032006';
       const matched = appData.teachers.find((t: any) => t.nip === activeNip);
@@ -134,7 +141,7 @@ export async function syncFromSupabase(): Promise<void> {
       }
     } else {
       // Fallback ke data lokal jika Supabase belum terisi
-      appData.teachers = [...(INITIAL_DATA as any).teachers];
+      appData.teachers = localTeachers;
     }
 
     saveStorage();

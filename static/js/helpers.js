@@ -107,8 +107,9 @@ export async function syncFromSupabase() {
             }));
         }
 
+        const localTeachers = [...(INITIAL_DATA.teachers || [])];
         if (data.teachers && data.teachers.length > 0) {
-            appData.teachers = data.teachers.map((t) => ({
+            const supabaseTeachers = data.teachers.map((t) => ({
                 id: t.id,
                 nip: t.nip,
                 name: t.name,
@@ -118,13 +119,18 @@ export async function syncFromSupabase() {
                 avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
                 isActive: t.is_active !== false
             }));
+            // Merge: data Supabase override data lokal berdasarkan NIP
+            const mergedMap = new Map();
+            localTeachers.forEach((t) => mergedMap.set(t.nip, t));
+            supabaseTeachers.forEach((t) => mergedMap.set(t.nip, t));
+            appData.teachers = Array.from(mergedMap.values());
             const activeNip = (appData.teacher && appData.teacher.nip) ? appData.teacher.nip : '199610272019032006';
             const matched = appData.teachers.find((t) => t.nip === activeNip);
             if (matched) {
                 appData.teacher = { ...appData.teacher, ...matched };
             }
         } else {
-            appData.teachers = [...INITIAL_DATA.teachers];
+            appData.teachers = localTeachers;
         }
 
         saveStorage();
