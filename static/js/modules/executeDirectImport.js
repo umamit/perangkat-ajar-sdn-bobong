@@ -68,8 +68,8 @@ export async function executeDirectImport(input) {
           name: name,
           classId: classId,
           gender: gender,
-          scoreFormatif: 80,
-          scoreSumatif: 80
+          scoreFormatif: 0,
+          scoreSumatif: 0
         };
 
         appData.students.push(newStudent);

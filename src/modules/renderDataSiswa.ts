@@ -30,8 +30,8 @@ export function renderDataSiswa(filterClass?: string): void {
       <td>${s.name}</td>
       <td><span class="badge badge-info">${s.classId}</span></td>
       <td>${s.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
-      <td>${s.scoreFormatif || 80}</td>
-      <td>${s.scoreSumatif || 80}</td>
+      <td>${s.scoreFormatif ?? 0}</td>
+      <td>${s.scoreSumatif ?? 0}</td>
       <td>
         <div style="display:flex; gap:6px;">
           <button class="btn btn-secondary" onclick="showEditStudentModal('${s.id}')" style="padding: 4px 8px; font-size:12px;">

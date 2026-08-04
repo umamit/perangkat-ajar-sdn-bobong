@@ -54,8 +54,8 @@ export async function syncFromSupabase(): Promise<void> {
         name: s.name,
         classId: s.class_id,
         gender: s.gender || 'L',
-        scoreFormatif: 80,
-        scoreSumatif: 80
+        scoreFormatif: 0,
+        scoreSumatif: 0
       }));
     } else {
       appData.students = [];
@@ -194,8 +194,8 @@ export function setupSupabaseRealtime(): void {
               name: newS.name,
               classId: newS.class_id,
               gender: newS.gender || 'L',
-              scoreFormatif: 80,
-              scoreSumatif: 80
+              scoreFormatif: 0,
+              scoreSumatif: 0
             };
             if (existingIdx >= 0) {
               appData.students[existingIdx] = {

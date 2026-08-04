@@ -3,8 +3,8 @@ import { appData } from '../helpers.js';
 export function exportNilaiToCSV() {
     let csv = 'No,Nama Siswa,Kelas,Rata-rata Formatif,Nilai Sumatif,Nilai Akhir,Predikat\n';
     appData.students.forEach((s, idx) => {
-        const formatif = s.scoreFormatif || 80;
-        const sumatif = s.scoreSumatif || 80;
+        const formatif = s.scoreFormatif ?? 0;
+        const sumatif = s.scoreSumatif ?? 0;
         const finalScore = Math.round((formatif * 0.4) + (sumatif * 0.6));
         const grade = finalScore >= 90 ? 'A (Sangat Baik)' : finalScore >= 80 ? 'B (Baik)' : 'C (Cukup)';
         csv += `${idx + 1},"${s.name}","${s.classId}",${formatif},${sumatif},${finalScore},"${grade}"\n`;

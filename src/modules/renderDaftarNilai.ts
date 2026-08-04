@@ -33,9 +33,9 @@ export function renderDaftarNilai(filterClass: string = 'ALL'): void {
 
   container.innerHTML = filtered.map((s: any, idx: number) => {
     const sId = s.id;
-    const formatif = s.scoreFormatif ?? 80;
-    const sts = s.scoreSts ?? 80;
-    const sas = s.scoreSas ?? 80;
+    const formatif = s.scoreFormatif ?? 0;
+    const sts = s.scoreSts ?? 0;
+    const sas = s.scoreSas ?? 0;
     const akhir = Math.round((formatif * 0.4) + (sts * 0.3) + (sas * 0.3));
 
     // Kriteria Ketercapaian Tujuan Pembelajaran (KKTP) Kurikulum Merdeka

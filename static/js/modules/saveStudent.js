@@ -25,8 +25,8 @@ export function saveStudent(e) {
         name: name,
         classId: classId,
         gender: gender,
-        scoreFormatif: 80,
-        scoreSumatif: 80
+        scoreFormatif: 0,
+        scoreSumatif: 0
     };
     // 1. OPTIMISTIC UPDATE (Instan 0ms pada UI)
     appData.students.push(newStudent);

@@ -5,7 +5,7 @@ export function adjustGrade(studentId, field, delta) {
     if (!s)
         return;
     const currentKey = field === 'formatif' ? 'scoreFormatif' : field === 'sts' ? 'scoreSts' : 'scoreSas';
-    const currentVal = s[currentKey] ?? 80;
+    const currentVal = s[currentKey] ?? 0;
     const newVal = Math.min(100, Math.max(0, currentVal + delta));
     updateStudentGrade(studentId, field, newVal.toString());
 }
