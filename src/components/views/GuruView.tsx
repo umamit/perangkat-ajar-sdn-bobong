@@ -6,9 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { INITIAL_DATA } from '@/data';
 
 export function GuruView() {
   const { teachers, setTeachers, showToast } = useApp();
+
+  const teachersToRender = (teachers && teachers.length > 0) ? teachers : (INITIAL_DATA.teachers || []);
 
   const handleDelete = (nip: string, name: string) => {
     if (confirm(`Hapus data guru ${name}?`)) {
@@ -43,7 +46,7 @@ export function GuruView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {teachers.map((t, idx) => (
+              {teachersToRender.map((t, idx) => (
                 <TableRow key={t.nip || idx}>
                   <TableCell>
                     <img
@@ -67,7 +70,7 @@ export function GuruView() {
                   </TableCell>
                 </TableRow>
               ))}
-              {teachers.length === 0 && (
+              {teachersToRender.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-slate-400 py-8 text-xs">
                     Belum ada data guru terdaftar

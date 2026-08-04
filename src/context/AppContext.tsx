@@ -69,18 +69,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch('/api/sync');
       const data = await res.json();
       if (data.success) {
-        if (data.teachers && data.teachers.length > 0) {
+        if (data.teachers) {
           const map = new Map<string, Teacher>();
           (INITIAL_DATA.teachers || []).forEach(t => map.set(t.nip, t));
           data.teachers.forEach((t: any) => {
-            map.set(t.nip, {
-              nip: t.nip,
-              name: t.name,
-              role: t.role || 'Guru Mata Pelajaran',
-              subject: t.subject || 'Bahasa Inggris',
-              password: t.password || 'sdnbobong',
-              avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
-            });
+            if (t && t.nip) {
+              map.set(t.nip, {
+                nip: t.nip,
+                name: t.name,
+                role: t.role || 'Guru Mata Pelajaran',
+                subject: t.subject || 'Bahasa Inggris',
+                password: t.password || 'sdnbobong',
+                avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
+              });
+            }
           });
           setTeachers(Array.from(map.values()));
         }
