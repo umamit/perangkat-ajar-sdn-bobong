@@ -1,4 +1,5 @@
 // Supabase Configuration & Helpers for Perangkat Ajar SD Negeri Bobong
+import { createClient } from '@supabase/supabase-js';
 import { Student, JournalEntry, Teacher, AppData } from './types';
 import { INITIAL_DATA } from './data';
 
@@ -8,15 +9,15 @@ const SUPABASE_URL: string = (metaEnv && metaEnv.VITE_SUPABASE_URL)
   ? metaEnv.VITE_SUPABASE_URL
   : "https://evslcvjucmnyxkqwfdye.supabase.co";
 
-const SUPABASE_ANON_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_ANON_KEY)
+const SUPABASE_SERVICE_ROLE_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_ANON_KEY)
   ? metaEnv.VITE_SUPABASE_ANON_KEY
   : "[REDACTED_KEY]";
 
 let supabaseClient: any = null;
 
 export function getSupabase(): any {
-  if (!supabaseClient && typeof window !== 'undefined' && (window as any).supabase && SUPABASE_ANON_KEY) {
-    supabaseClient = (window as any).supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if (!supabaseClient) {
+    supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
   }
   return supabaseClient;
 }
