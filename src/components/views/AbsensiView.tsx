@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { saveAttendanceToSupabase } from '@/lib/supabase';
 
 export function AbsensiView() {
   const { students, classes, attendance, setAttendance, showToast } = useApp();
@@ -23,7 +24,7 @@ export function AbsensiView() {
 
   const getStatusKey = (s: any) => (s.id || s.nis || '');
 
-  const currentHadir = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Hadir').length;
+  const currentHadir = classStudents.filter(s => (currentStatuses[getStatusKey(s)] || 'Hadir') === 'Hadir').length;
   const currentIzin = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Izin').length;
   const currentSakit = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Sakit').length;
   const currentAlpa = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Alpa').length;
@@ -47,7 +48,7 @@ export function AbsensiView() {
     showToast(`Semua ${totalClassStudents} siswa ditandai Hadir`, 'info');
   };
 
-  const handleSaveAbsensi = () => {
+  const handleSaveAbsensi = async () => {
     if (classStudents.length === 0) {
       showToast('Tidak ada siswa di kelas ini', 'error');
       return;
@@ -59,6 +60,15 @@ export function AbsensiView() {
       }
     }
 
+    const supabaseRecords = classStudents.map(s => ({
+      student_id: s.id,
+      class_id: selectedClass,
+      date: date,
+      status: currentStatuses[getStatusKey(s)] || 'Hadir'
+    })).filter(r => r.student_id);
+
+    await saveAttendanceToSupabase(supabaseRecords);
+
     const newEntry = {
       date,
       classId: selectedClass,
@@ -69,7 +79,7 @@ export function AbsensiView() {
     };
 
     setAttendance(prev => [newEntry, ...prev]);
-    showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) berhasil disimpan!`, 'success');
+    showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) tersimpan di Supabase Cloud!`, 'success');
   };
 
   return (

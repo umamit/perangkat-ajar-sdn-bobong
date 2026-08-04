@@ -17,19 +17,21 @@ export function getSupabase(): SupabaseClient {
 export async function syncFromSupabase() {
   try {
     const supabase = getSupabase();
-    const [tRes, cRes, sRes] = await Promise.all([
+    const [tRes, cRes, sRes, aRes] = await Promise.all([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
-      supabase.from('students').select('*')
+      supabase.from('students').select('*'),
+      supabase.from('attendance').select('*')
     ]);
     return {
       teachers: tRes.data || [],
       classes: cRes.data || [],
-      students: sRes.data || []
+      students: sRes.data || [],
+      attendance: aRes.data || []
     };
   } catch (e) {
     console.warn('[Supabase Sync Error]', e);
-    return { teachers: [], classes: [], students: [] };
+    return { teachers: [], classes: [], students: [], attendance: [] };
   }
 }
 
@@ -90,6 +92,17 @@ export async function saveGradeToSupabase(studentIdOrGrade: any, type?: string, 
     return !error;
   } catch (e) {
     console.warn('[Save Grade Error]', e);
+    return false;
+  }
+}
+
+export async function saveAttendanceToSupabase(records: any[]) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('attendance').upsert(records, { onConflict: 'student_id,date' });
+    return !error;
+  } catch (e) {
+    console.warn('[Save Attendance Error]', e);
     return false;
   }
 }
