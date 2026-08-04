@@ -118,6 +118,12 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
     }
 
     closeModal();
+    if (importedCount === 0) {
+      alert('⚠️ Gagal Membaca Data: File Excel yang diunggah tidak memiliki kolom "Nama Lengkap" atau baris data siswa yang terbaca. Silakan unduh "Contoh Template Excel" di tombol atas modal impor untuk format resmi!');
+      showToast('Gagal mengimpor: Tidak ada nama siswa yang terbaca dari file.', 'error');
+      return;
+    }
+
     showToast(`🎉 Sukses mengimpor ${importedCount} data siswa ke Kelas ${targetClass}!`, 'success');
 
     if (selectElem) {
