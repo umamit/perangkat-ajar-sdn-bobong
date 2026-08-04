@@ -11,7 +11,7 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
   4. Apabila terjadi kegagalan/ketidaksesuaian, AI WAJIB memperbaikinya secara mandiri tanpa meminta pengguna mengulang perintah yang sama.
 
 ## 2. Batasan Arsitektur Proyek & Keamanan
-* **Teknologi Utama**: Vite, TypeScript (`/src`), HTML5 (`index.html`), Vanilla CSS (`style.css`, `style-components.css`, `style-responsive.css`), Supabase Cloud.
+* **Teknologi Utama**: Vite, TypeScript (`/src`), HTML5 (`index.html`), Vanilla CSS & Tailwind CSS v3 (`tailwind.config.js`), Shadcn UI Design System, Supabase Cloud.
 * **Prinsip Strict Single Responsibility (1 Berkas 1 Fungsi Kode)**: Seluruh fungsi logika JavaScript/TypeScript WAJIB disimpan secara terpisah dalam 1 berkas tersendiri di bawah folder `src/modules/` (1 file *.ts HANYA boleh berisi tepat 1 `export function` / `export async function`, maksimal 800 baris). Dilarang keras menggabungkan beberapa fungsi logika/view dalam satu file.
 * **Supabase Client**: Gunakan `getSupabase()` dari `src/helpers.ts` dengan fallback otomatis ke `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`.
 * **Deployment Vercel**: `vercel.json` wajib mengarah ke folder `"outputDirectory": "dist"`.
