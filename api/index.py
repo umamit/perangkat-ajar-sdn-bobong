@@ -52,12 +52,39 @@ def db_url(table, query=""):
 def index():
     return render_template('index.html')
 
+@app.route('/api/debug', methods=['GET'])
+def debug_supabase():
+    """Debug endpoint — cek koneksi Supabase dari server"""
+    try:
+        url = db_url('students', '?select=id,name,class_id&limit=3')
+        r = req.get(url, headers=db_headers(), timeout=10)
+        return jsonify({
+            'supabase_url': SUPABASE_URL,
+            'key_prefix': SUPABASE_KEY[:20] + '...',
+            'status_code': r.status_code,
+            'ok': r.ok,
+            'response': r.text[:500]
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/sync', methods=['GET'])
 def sync_data():
     try:
         def fetch(table, select):
-            r = req.get(db_url(table, f"?select={select}"), headers=db_headers())
-            return r.json() if r.ok else []
+            try:
+                url = db_url(table, f"?select={select}")
+                r = req.get(url, headers=db_headers(), timeout=15)
+                if r.ok:
+                    result = r.json()
+                    print(f'[Sync] {table}: {len(result)} rows')
+                    return result
+                else:
+                    print(f'[Sync ERROR] {table}: HTTP {r.status_code} - {r.text[:200]}')
+                    return []
+            except Exception as fe:
+                print(f'[Sync EXCEPTION] {table}: {fe}')
+                return []
 
         classes    = fetch('classes',   'id,name,room,phase')
         students   = fetch('students',  'id,nis,name,class_id,gender')
@@ -67,6 +94,7 @@ def sync_data():
         modules    = fetch('modules',   '*')
         teachers   = fetch('teachers',  'id,nip,name,role,subject,password,avatar_url,is_active')
 
+        print(f'[Sync] DONE: classes={len(classes)}, students={len(students)}, teachers={len(teachers)}')
         return jsonify({'success': True, 'classes': classes, 'students': students,
                         'journals': journals, 'attendance': attendance, 'grades': grades,
                         'modules': modules, 'teachers': teachers})
