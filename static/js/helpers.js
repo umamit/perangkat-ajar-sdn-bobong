@@ -3,10 +3,9 @@ const metaEnv = typeof import.meta !== 'undefined' ? import.meta.env : null;
 const SUPABASE_URL = (metaEnv && metaEnv.VITE_SUPABASE_URL)
     ? metaEnv.VITE_SUPABASE_URL
     : "https://evslcvjucmnyxkqwfdye.supabase.co";
-const HARDCODED_SERVICE_ROLE_KEY = "[REDACTED_KEY]";
 const SUPABASE_SERVICE_ROLE_KEY = (metaEnv && metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY)
     ? metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY
-    : HARDCODED_SERVICE_ROLE_KEY;
+    : '';
 let supabaseClient = null;
 export function getSupabase() {
     if (!supabaseClient && typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {

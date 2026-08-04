@@ -9,11 +9,9 @@ const SUPABASE_URL: string = (metaEnv && metaEnv.VITE_SUPABASE_URL)
   ? metaEnv.VITE_SUPABASE_URL
   : "https://evslcvjucmnyxkqwfdye.supabase.co";
 
-const HARDCODED_SERVICE_ROLE_KEY: string = "[REDACTED_KEY]";
-
 const SUPABASE_SERVICE_ROLE_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY)
   ? metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY
-  : HARDCODED_SERVICE_ROLE_KEY;
+  : (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
 
 let supabaseClient: any = null;
 
