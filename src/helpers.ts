@@ -310,11 +310,17 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
 
     if (error) {
       console.error('[Supabase Student Save Error]', error.message, error);
+      if (typeof (window as any).showToast === 'function') {
+        (window as any).showToast(`⚠️ Supabase Error: ${error.message}`, 'error');
+      }
       return false;
     }
     return true;
-  } catch (err) {
+  } catch (err: any) {
     console.warn('[Supabase Student Save Exception]', err);
+    if (typeof (window as any).showToast === 'function') {
+      (window as any).showToast(`⚠️ Kendala Koneksi Supabase: ${err?.message || err}`, 'error');
+    }
     return false;
   }
 }
