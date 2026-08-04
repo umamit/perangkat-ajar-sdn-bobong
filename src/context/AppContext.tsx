@@ -55,11 +55,33 @@ const defaultTeacher: Teacher = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isInitializing, setIsInitializing] = useState<boolean>(true);
+  // Synchronous lazy state initialization to prevent initial flash glitch
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const localAuth = localStorage.getItem('sdn_bobong_auth');
+        const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
+        return localAuth === 'true' || (cookieAuth ? cookieAuth.split('=')[1] === 'true' : false);
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('sdn_bobong_teacher');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return defaultTeacher;
+  });
+
+  const [isInitializing, setIsInitializing] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<string>('dashboard');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
-  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [classes, setClasses] = useState<any[]>([]);
@@ -178,27 +200,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    try {
-      const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
-      const localAuth = localStorage.getItem('sdn_bobong_auth');
-      const savedTeacherStr = localStorage.getItem('sdn_bobong_teacher');
-
-      const isAuthed = (cookieAuth && cookieAuth.split('=')[1] === 'true') || localAuth === 'true';
-
-      if (isAuthed) {
-        setIsLoggedIn(true);
-        if (savedTeacherStr) {
-          try {
-            setCurrentTeacher(JSON.parse(savedTeacherStr));
-          } catch (e) {}
-        }
-      }
-    } catch (e) {
-      console.warn('[Auth Check Exception]', e);
-    } finally {
-      setIsInitializing(false);
-    }
-
     syncData();
   }, [syncData]);
 
