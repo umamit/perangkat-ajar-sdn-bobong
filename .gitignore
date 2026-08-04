@@ -1,11 +1,18 @@
-# Logs
+# Next.js build output
+.next/
+out/
+
+# Environment variables
+.env
+.env.*
+
+# Logs & Dependencies
 *.log
 node_modules/
 .DS_Store
 dashboard_preview.png
 
-# TypeScript build output (noEmit:true is enforced in tsconfig.json)
+# TypeScript build output
 src/*.js
 dist/
-.env
-.env.*
+venv/
