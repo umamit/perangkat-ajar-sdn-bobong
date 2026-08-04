@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Student, Teacher, JournalEntry } from '@/types';
+import { INITIAL_DATA } from '@/data';
 
 interface ToastMessage {
   id: string;
@@ -54,8 +55,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
   const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
-  const [classes, setClasses] = useState<any[]>([]);
+  const [students, setStudents] = useState<Student[]>(INITIAL_DATA.students || []);
+  const [classes, setClasses] = useState<any[]>(INITIAL_DATA.classes || []);
   const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [attendance, setAttendance] = useState<any[]>([]);
   const [modules, setModules] = useState<any[]>([]);
@@ -100,13 +101,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             scoreSas: s.score_sas || 0
           })));
         }
-        if (data.classes) {
+        if (data.classes && data.classes.length > 0) {
           setClasses(data.classes.map((c: any) => ({
             id: c.id,
             name: c.name,
             phase: c.phase || 'Fase A',
             room: c.room || 'Ruang Kelas'
           })));
+        } else {
+          setClasses(INITIAL_DATA.classes);
         }
         if (data.journals) {
           setJournals(data.journals.map((j: any) => ({

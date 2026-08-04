@@ -7,15 +7,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { INITIAL_DATA } from '@/data';
 
 export function SiswaView() {
   const { students, classes, showToast, setStudents } = useApp();
   const [search, setSearch] = useState('');
   const [selectedClass, setSelectedClass] = useState('ALL');
 
-  const filteredStudents = students.filter(s => {
+  const activeClasses = (classes && classes.length > 0) ? classes : INITIAL_DATA.classes;
+  const activeStudents = (students && students.length > 0) ? students : INITIAL_DATA.students;
+
+  const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
+
+  const filteredStudents = activeStudents.filter(s => {
     const matchesName = s.name.toLowerCase().includes(search.toLowerCase()) || (s.nis && s.nis.includes(search));
-    const matchesClass = selectedClass === 'ALL' || s.classId === selectedClass;
+    const studentClassNorm = normalizeClass(s.classId);
+    const selectedClassNorm = normalizeClass(selectedClass);
+    const matchesClass = selectedClass === 'ALL' || studentClassNorm === selectedClassNorm || s.classId === selectedClass;
     return matchesName && matchesClass;
   });
 
@@ -61,10 +69,10 @@ export function SiswaView() {
               <select
                 value={selectedClass}
                 onChange={e => setSelectedClass(e.target.value)}
-                className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-medium outline-none"
+                className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
               >
                 <option value="ALL">Semua Kelas</option>
-                {classes.map(c => (
+                {activeClasses.map(c => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -88,20 +96,20 @@ export function SiswaView() {
             </TableHeader>
             <TableBody>
               {filteredStudents.map((s, idx) => (
-                <TableRow key={s.id || idx}>
+                <TableRow key={s.id || idx} className="hover:bg-slate-50/80">
                   <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
                   <TableCell className="font-bold text-slate-800 text-xs">
                     {s.name}
                     <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="default">{s.classId}</Badge>
+                    <Badge variant="default" className="font-extrabold">{s.classId}</Badge>
                   </TableCell>
                   <TableCell className="text-xs font-semibold">
                     {s.gender === 'L' ? (
-                      <span className="text-cyan-700">Laki-Laki</span>
+                      <span className="text-cyan-700 font-bold">Laki-Laki</span>
                     ) : (
-                      <span className="text-rose-600">Perempuan</span>
+                      <span className="text-rose-600 font-bold">Perempuan</span>
                     )}
                   </TableCell>
                   <TableCell className="text-center text-xs font-bold text-slate-700">
@@ -132,8 +140,8 @@ export function SiswaView() {
               ))}
               {filteredStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs">
-                    Tidak ada data siswa ditemukan
+                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs font-medium">
+                    Tidak ada data siswa ditemukan untuk filter ini
                   </TableCell>
                 </TableRow>
               )}
