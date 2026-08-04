@@ -227,11 +227,18 @@ export function confirmImportMapping(): void {
     const rawClass = mapClass ? String(row[mapClass] || '').trim() : '';
     const rawGender = mapGender ? String(row[mapGender] || '').trim() : '';
 
-    let classId = rawClass.toUpperCase().trim()
-      .replace('KELAS', '')
-      .replace('III', '3').replace('II', '2').replace('IV', '4')
-      .replace('VI', '6').replace('V', '5').replace('I', '1')
-      .replace(/[^0-9A-Z]/g, '');
+    let rawClassUpper = rawClass.toUpperCase().trim();
+    let classId = '';
+
+    if (rawClassUpper.includes('3B') || rawClassUpper.includes('3-B') || rawClassUpper.includes('3 B') || rawClassUpper.includes('III B') || rawClassUpper.includes('III-B')) {
+      classId = '3B';
+    } else {
+      classId = rawClassUpper
+        .replace('KELAS', '')
+        .replace('III', '3').replace('II', '2').replace('IV', '4')
+        .replace('VI', '6').replace('V', '5').replace('I', '1')
+        .replace(/[^0-9A-Z]/g, '');
+    }
 
     if (!classId) classId = currentSelectedClass;
 
