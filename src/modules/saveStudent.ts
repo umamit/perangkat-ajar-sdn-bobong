@@ -2,6 +2,7 @@ import { appData, saveStorage, saveStudentToSupabase } from '../helpers';
 import { closeModal } from './closeModal';
 import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
+import { showToast } from './showToast';
 
 export function saveStudent(e: Event): void {
   e.preventDefault();
@@ -11,7 +12,7 @@ export function saveStudent(e: Event): void {
   const gender = (document.getElementById('studentGender') as HTMLSelectElement).value as 'L' | 'P';
 
   if (!nis || !name) {
-    alert('Harap isi NISN dan Nama Lengkap!');
+    showToast('Harap isi NISN dan Nama Lengkap!', 'error');
     return;
   }
 
@@ -40,5 +41,5 @@ export function saveStudent(e: Event): void {
   renderDataSiswa(currentFilter);
   filterSiswa();
   closeModal();
-  alert(`✅ Siswa "${name}" berhasil disimpan!`);
+  showToast(`Siswa "${name}" berhasil disimpan!`, 'success');
 }

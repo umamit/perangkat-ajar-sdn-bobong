@@ -1,5 +1,6 @@
 import { appData, saveStorage } from '../helpers';
 import { renderModulAjar } from './modulAjarView';
+import { showToast } from './showToast';
 
 export function deleteModul(id: string): void {
   const modul = (appData.modules || []).find((m: any) => m.id === id);
@@ -13,5 +14,5 @@ export function deleteModul(id: string): void {
   saveStorage();
 
   renderModulAjar();
-  alert(`✅ Modul ajar "${title}" berhasil dihapus.`);
+  showToast(`Modul ajar "${title}" berhasil dihapus.`, 'info');
 }

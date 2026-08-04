@@ -40,6 +40,7 @@ import { showAddJournalModal } from './modules/showAddJournalModal';
 import { saveJournal } from './modules/saveJournal';
 import { deleteJournal } from './modules/deleteJournal';
 import { deleteModul } from './modules/deleteModul';
+import { showToast } from './modules/showToast';
 
 import { renderTimetable } from './modules/renderTimetable';
 import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
@@ -173,6 +174,7 @@ if (typeof window !== 'undefined') {
   (window as any).deleteStudent = deleteStudent;
   (window as any).deleteJournal = deleteJournal;
   (window as any).deleteModul = deleteModul;
+  (window as any).showToast = showToast;
   (window as any).closeModal = closeModal;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

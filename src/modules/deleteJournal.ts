@@ -1,5 +1,6 @@
 import { appData, saveStorage, getSupabase } from '../helpers';
 import { renderJurnal } from './renderJurnal';
+import { showToast } from './showToast';
 
 export async function deleteJournal(id: string): Promise<void> {
   const journal = (appData.journals || []).find((j: any) => j.id === id);
@@ -22,5 +23,5 @@ export async function deleteJournal(id: string): Promise<void> {
   }
 
   renderJurnal();
-  alert(`✅ Jurnal mengajar "${topic}" berhasil dihapus.`);
+  showToast(`Jurnal mengajar "${topic}" berhasil dihapus.`, 'info');
 }

@@ -1,6 +1,7 @@
 import { appData, saveStorage, deleteStudentFromSupabase } from '../helpers';
 import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
+import { showToast } from './showToast';
 
 export function deleteStudent(nis: string): void {
   const student = (appData.students || []).find((s: any) => (s.nis === nis || s.id === nis));
@@ -19,5 +20,5 @@ export function deleteStudent(nis: string): void {
   renderDataSiswa(currentFilter);
   filterSiswa();
 
-  alert(`✅ Data siswa "${studentName}" berhasil dihapus.`);
+  showToast(`Data siswa "${studentName}" berhasil dihapus.`, 'info');
 }
