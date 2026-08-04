@@ -142,32 +142,36 @@ export function DashboardView() {
 
       {/* Timetable & Recent Journals Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glass-panel overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/40 border-b border-slate-200/50">
-            <CardTitle className="text-base font-bold flex items-center gap-2.5 text-slate-800">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+        <Card className="glass-panel overflow-hidden border border-white/80">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/50 border-b border-slate-200/40">
+            <CardTitle className="text-base font-extrabold flex items-center gap-3 text-slate-800">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shadow-inner">
                 <i className="ri-calendar-check-line text-lg" />
               </div>
               <span>Jadwal Mengajar Harian</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <Table>
+          <CardContent className="p-0 overflow-x-auto">
+            <Table className="w-full">
               <TableHeader>
-                <TableRow>
-                  <TableHead>Hari</TableHead>
-                  <TableHead>Waktu</TableHead>
-                  <TableHead>Kelas</TableHead>
-                  <TableHead>Materi Utama</TableHead>
+                <TableRow className="bg-slate-50/50">
+                  <TableHead className="w-20 font-bold text-xs">Hari</TableHead>
+                  <TableHead className="w-32 font-bold text-xs">Waktu</TableHead>
+                  <TableHead className="w-20 font-bold text-xs text-center">Kelas</TableHead>
+                  <TableHead className="font-bold text-xs">Materi Utama</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {timetable.map((row, idx) => (
-                  <TableRow key={idx} className="hover:bg-white/60 transition-colors">
-                    <TableCell className="font-bold text-xs text-slate-800">{row.day}</TableCell>
-                    <TableCell className="text-xs text-slate-500 font-medium">{row.time}</TableCell>
-                    <TableCell><Badge variant="default" className="font-extrabold">{row.classId}</Badge></TableCell>
-                    <TableCell className="text-xs font-semibold text-slate-700">{row.topic}</TableCell>
+                  <TableRow key={idx} className="hover:bg-white/70 transition-colors">
+                    <TableCell className="font-extrabold text-xs text-slate-800">{row.day}</TableCell>
+                    <TableCell className="text-xs text-slate-500 font-medium whitespace-nowrap">{row.time}</TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="default" className="font-extrabold px-2.5 py-0.5">{row.classId}</Badge>
+                    </TableCell>
+                    <TableCell className="text-xs font-semibold text-slate-700 min-w-[220px] whitespace-normal leading-snug">
+                      {row.topic}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -175,38 +179,42 @@ export function DashboardView() {
           </CardContent>
         </Card>
 
-        <Card className="glass-panel overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/40 border-b border-slate-200/50">
-            <CardTitle className="text-base font-bold flex items-center gap-2.5 text-slate-800">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+        <Card className="glass-panel overflow-hidden border border-white/80">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/50 border-b border-slate-200/40">
+            <CardTitle className="text-base font-extrabold flex items-center gap-3 text-slate-800">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shadow-inner">
                 <i className="ri-book-read-line text-lg" />
               </div>
               <span>Jurnal Mengajar Terbaru</span>
             </CardTitle>
-            <Button variant="ghost" size="sm" onClick={() => setActiveView('jurnal')} className="text-xs font-bold text-primary">
+            <Button variant="ghost" size="sm" onClick={() => setActiveView('jurnal')} className="text-xs font-extrabold text-primary hover:bg-cyan-50">
               Lihat Semua
             </Button>
           </CardHeader>
-          <CardContent className="p-0">
-            <Table>
+          <CardContent className="p-0 overflow-x-auto">
+            <Table className="w-full">
               <TableHeader>
-                <TableRow>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead>Kelas</TableHead>
-                  <TableHead>Topik / Pembelajaran</TableHead>
+                <TableRow className="bg-slate-50/50">
+                  <TableHead className="w-28 font-bold text-xs">Tanggal</TableHead>
+                  <TableHead className="w-20 font-bold text-xs text-center">Kelas</TableHead>
+                  <TableHead className="font-bold text-xs">Topik / Pembelajaran</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {journals.slice(0, 5).map((j, idx) => (
-                  <TableRow key={idx} className="hover:bg-white/60 transition-colors">
-                    <TableCell className="font-bold text-xs text-slate-800">{j.date}</TableCell>
-                    <TableCell><Badge variant="secondary" className="font-extrabold">{j.classId}</Badge></TableCell>
-                    <TableCell className="text-xs font-semibold text-slate-700">{j.topic}</TableCell>
+                  <TableRow key={idx} className="hover:bg-white/70 transition-colors">
+                    <TableCell className="font-extrabold text-xs text-slate-800 whitespace-nowrap">{j.date}</TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="secondary" className="font-extrabold px-2.5 py-0.5">{j.classId}</Badge>
+                    </TableCell>
+                    <TableCell className="text-xs font-semibold text-slate-700 min-w-[220px] whitespace-normal leading-snug">
+                      {j.topic}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {journals.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center text-slate-400 py-6 text-xs font-medium">
+                    <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs font-medium">
                       Belum ada entri jurnal tersimpan di Supabase
                     </TableCell>
                   </TableRow>
