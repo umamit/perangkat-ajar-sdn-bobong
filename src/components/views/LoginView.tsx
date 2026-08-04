@@ -41,6 +41,10 @@ export function LoginView() {
     if (matched) {
       setCurrentTeacher(matched);
       document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
+      try {
+        localStorage.setItem('sdn_bobong_auth', 'true');
+        localStorage.setItem('sdn_bobong_teacher', JSON.stringify(matched));
+      } catch (err) {}
       setIsLoggedIn(true);
       showToast(`Selamat datang, ${matched.name}!`, 'success');
     } else {

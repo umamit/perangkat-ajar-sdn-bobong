@@ -36,8 +36,10 @@ interface AppContextType {
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   syncData: () => Promise<void>;
   isLoading: boolean;
+  isInitializing: boolean;
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  logout: () => void;
 }
 
 const defaultTeacher: Teacher = {
@@ -54,6 +56,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
   const [activeView, setActiveView] = useState<string>('dashboard');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
   const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
@@ -83,6 +86,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 4000);
   }, []);
+
+  const logout = useCallback(() => {
+    document.cookie = 'sdn_bobong_auth=; path=/; max-age=0';
+    try {
+      localStorage.removeItem('sdn_bobong_auth');
+      localStorage.removeItem('sdn_bobong_teacher');
+    } catch (e) {}
+    setIsLoggedIn(false);
+    showToast('Anda telah keluar dari aplikasi', 'info');
+  }, [showToast]);
 
   const syncData = useCallback(async () => {
     setIsLoading(true);
@@ -165,10 +178,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const cookie = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
-    if (cookie && cookie.split('=')[1] === 'true') {
-      setIsLoggedIn(true);
+    try {
+      const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
+      const localAuth = localStorage.getItem('sdn_bobong_auth');
+      const savedTeacherStr = localStorage.getItem('sdn_bobong_teacher');
+
+      const isAuthed = (cookieAuth && cookieAuth.split('=')[1] === 'true') || localAuth === 'true';
+
+      if (isAuthed) {
+        setIsLoggedIn(true);
+        if (savedTeacherStr) {
+          try {
+            setCurrentTeacher(JSON.parse(savedTeacherStr));
+          } catch (e) {}
+        }
+      }
+    } catch (e) {
+      console.warn('[Auth Check Exception]', e);
+    } finally {
+      setIsInitializing(false);
     }
+
     syncData();
   }, [syncData]);
 
@@ -201,8 +231,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         showToast,
         syncData,
         isLoading,
+        isInitializing,
         sidebarOpen,
-        setSidebarOpen
+        setSidebarOpen,
+        logout
       }}
     >
       {children}

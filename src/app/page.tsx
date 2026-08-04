@@ -21,7 +21,18 @@ import { GuruView } from '@/components/views/GuruView';
 import { PengaturanView } from '@/components/views/PengaturanView';
 
 function AppContent() {
-  const { isLoggedIn, activeView } = useApp();
+  const { isLoggedIn, isInitializing, activeView } = useApp();
+
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-semibold text-slate-300">Memuat Perangkat Ajar SD Negeri Bobong...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return <LoginView />;
