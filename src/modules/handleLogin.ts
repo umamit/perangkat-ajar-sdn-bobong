@@ -1,4 +1,5 @@
 import { appData, saveStorage, setCookie, syncFromSupabase } from '../helpers';
+import { INITIAL_DATA } from '../data';
 import { checkAuthSession } from './checkAuthSession';
 import { renderTeacherProfile } from './renderTeacherProfile';
 import { setAuthState } from './authState';
@@ -9,11 +10,25 @@ export function handleLogin(e: Event): void {
   const inputPassword = (document.getElementById('loginPassword') as HTMLInputElement).value.trim();
   const alertEl = document.getElementById('loginErrorAlert');
 
-  const teacherList = appData.teachers || [appData.teacher];
-  const matched = teacherList.find(t => t.nip === inputNip && (t.password === inputPassword || inputPassword === 'kepseksdnbobong' || inputPassword === 'sdnbobong'));
+  const teacherMap = new Map<string, any>();
+  ((INITIAL_DATA as any).teachers || []).forEach((t: any) => teacherMap.set(t.nip, t));
+  if (INITIAL_DATA.teacher) teacherMap.set(INITIAL_DATA.teacher.nip, INITIAL_DATA.teacher);
+  if (appData.teacher) teacherMap.set(appData.teacher.nip, appData.teacher);
+  if (appData.teachers && appData.teachers.length > 0) {
+    appData.teachers.forEach((t: any) => teacherMap.set(t.nip, t));
+  }
 
-  if (matched || (inputNip === appData.teacher.nip && inputPassword === appData.teacher.password)) {
-    if (matched) appData.teacher = matched;
+  const allTeachers = Array.from(teacherMap.values());
+  const matched = allTeachers.find(t => 
+    t.nip === inputNip && (
+      t.password === inputPassword || 
+      inputPassword === 'sdnbobong' || 
+      inputPassword === 'kepseksdnbobong'
+    )
+  );
+
+  if (matched) {
+    appData.teacher = matched;
     saveStorage();
     if (alertEl) alertEl.style.display = 'none';
     setAuthState(true);
