@@ -155,8 +155,8 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
     const reader = new FileReader();
     reader.onload = async (e: ProgressEvent<FileReader>) => {
       try {
-        const data = e.target?.result;
-        const workbook = XLSX.read(data, { type: 'binary' });
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[firstSheetName];
         const rawData = XLSX.utils.sheet_to_json(sheet);
@@ -166,7 +166,7 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
         showToast('Gagal membaca file Excel!', 'error');
       }
     };
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file);
   }
 }
 
