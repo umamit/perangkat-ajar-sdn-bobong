@@ -1,9 +1,14 @@
-import { authState } from './authState';
+import { authState, setAuthState } from './authState';
 import { getCookie } from '../helpers';
 
 export function checkAuthSession(): void {
   const cookieAuth = typeof getCookie === 'function' && getCookie('sdn_bobong_auth') === 'true';
   const isLoggedIn = authState.isLoggedIn || cookieAuth;
+
+  if (cookieAuth && !authState.isLoggedIn) {
+    setAuthState(true);
+  }
+
   const loginScreen = document.getElementById('loginScreen');
   const mainContent = document.getElementById('appMainContent');
 
