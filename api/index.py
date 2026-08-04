@@ -34,7 +34,8 @@ def handle_options(path):
     return make_response('', 204)
 
 SUPABASE_URL = os.getenv("VITE_SUPABASE_URL", "https://evslcvjucmnyxkqwfdye.supabase.co")
-SUPABASE_KEY = os.getenv("VITE_SUPABASE_SERVICE_ROLE_KEY") or os.getenv("VITE_SUPABASE_ANON_KEY", "")
+HARDCODED_SERVICE_ROLE_KEY = "[REDACTED_KEY]"
+SUPABASE_KEY = os.getenv("VITE_SUPABASE_SERVICE_ROLE_KEY") or os.getenv("VITE_SUPABASE_ANON_KEY") or HARDCODED_SERVICE_ROLE_KEY
 
 def db_headers():
     return {
