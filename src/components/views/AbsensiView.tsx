@@ -24,7 +24,7 @@ export function AbsensiView() {
 
   const getStatusKey = (s: any) => (s.id || s.nis || '');
 
-  const currentHadir = classStudents.filter(s => (currentStatuses[getStatusKey(s)] || 'Hadir') === 'Hadir').length;
+  const currentHadir = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Hadir').length;
   const currentIzin = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Izin').length;
   const currentSakit = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Sakit').length;
   const currentAlpa = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Alpa').length;
@@ -60,12 +60,15 @@ export function AbsensiView() {
       }
     }
 
-    const supabaseRecords = classStudents.map(s => ({
-      student_id: s.id,
-      class_id: selectedClass,
-      date: date,
-      status: currentStatuses[getStatusKey(s)] || 'Hadir'
-    })).filter(r => r.student_id);
+    const supabaseRecords = classStudents
+      .filter(s => currentStatuses[getStatusKey(s)])
+      .map(s => ({
+        student_id: s.id,
+        class_id: selectedClass,
+        date: date,
+        status: currentStatuses[getStatusKey(s)]
+      }))
+      .filter(r => r.student_id);
 
     await saveAttendanceToSupabase(supabaseRecords);
 
