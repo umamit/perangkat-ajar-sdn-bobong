@@ -21,6 +21,7 @@ import { showAddStudentModal } from './modules/showAddStudentModal';
 import { showEditStudentModal } from './modules/showEditStudentModal';
 import { saveStudent } from './modules/saveStudent';
 import { saveEditStudent } from './modules/saveEditStudent';
+import { deleteStudent } from './modules/deleteStudent';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
@@ -37,6 +38,8 @@ import { updateStudentGrade } from './modules/updateStudentGrade';
 import { renderJurnal } from './modules/renderJurnal';
 import { showAddJournalModal } from './modules/showAddJournalModal';
 import { saveJournal } from './modules/saveJournal';
+import { deleteJournal } from './modules/deleteJournal';
+import { deleteModul } from './modules/deleteModul';
 
 import { renderTimetable } from './modules/renderTimetable';
 import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
@@ -167,6 +170,9 @@ if (typeof window !== 'undefined') {
   (window as any).checkQuizAnswer = checkQuizAnswer;
   (window as any).exportSiswaToCSV = exportSiswaToCSV;
   (window as any).exportNilaiToCSV = exportNilaiToCSV;
+  (window as any).deleteStudent = deleteStudent;
+  (window as any).deleteJournal = deleteJournal;
+  (window as any).deleteModul = deleteModul;
   (window as any).closeModal = closeModal;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

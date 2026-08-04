@@ -18,6 +18,9 @@ export function renderModulAjar(): void {
           <button class="btn btn-primary" onclick="printModule('${m.id}')">
             <i class="ri-printer-line"></i> Cetak Modul Ajar
           </button>
+          <button class="btn btn-secondary" onclick="deleteModul('${m.id}')" style="color:#dc2626; border-color:#fca5a5;" title="Hapus Modul">
+            <i class="ri-delete-bin-line"></i> Hapus
+          </button>
         </div>
       </div>
       <hr style="margin: 12px 0; border:0; border-top:1px solid #e2e8f0;">

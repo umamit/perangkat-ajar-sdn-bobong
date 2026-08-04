@@ -10,7 +10,7 @@ export function renderDataKelas(): void {
     const realStudents = (appData.students || []).filter(s => s.classId === c.id);
     const studentCount = realStudents.length;
     return `
-    <div class="card" style="padding: 20px;">
+    <div class="card" style="padding: 20px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="filterSiswaByClass('${c.id}'); document.querySelector('[data-view=siswa]')?.click();" title="Klik untuk lihat data siswa ${c.name}">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <span class="badge badge-info">${c.phase}</span>
         <i class="ri-building-line" style="font-size:24px; color:var(--primary);"></i>

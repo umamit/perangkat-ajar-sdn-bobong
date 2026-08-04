@@ -32,9 +32,14 @@ export function renderDataSiswa(filterClass: string = 'ALL'): void {
       <td>${s.scoreFormatif || 80}</td>
       <td>${s.scoreSumatif || 80}</td>
       <td>
-        <button class="btn btn-secondary" onclick="showEditStudentModal('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px;">
-          <i class="ri-edit-line"></i> Edit
-        </button>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-secondary" onclick="showEditStudentModal('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px;">
+            <i class="ri-edit-line"></i> Edit
+          </button>
+          <button class="btn btn-secondary" onclick="deleteStudent('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px; color:#dc2626; border-color:#fca5a5;" title="Hapus Siswa">
+            <i class="ri-delete-bin-line"></i> Hapus
+          </button>
+        </div>
       </td>
     </tr>
   `).join('');
