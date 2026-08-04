@@ -8,6 +8,14 @@ import { Badge } from '@/components/ui/badge';
 export function KelasView() {
   const { classes, students, setActiveView } = useApp();
 
+  const classMap = new Map<string, any>();
+  (classes || []).forEach(c => {
+    if (c && c.id && !classMap.has(c.id)) {
+      classMap.set(c.id, c);
+    }
+  });
+  const uniqueClasses = Array.from(classMap.values());
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
@@ -16,8 +24,12 @@ export function KelasView() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {classes.map(c => {
-          const studentCount = students.filter(s => s.classId === c.id).length;
+        {uniqueClasses.map(c => {
+          const studentCount = students.filter(s => {
+            const studentClassNorm = (s.classId || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            const classNorm = (c.id || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            return studentClassNorm === classNorm || s.classId === c.id;
+          }).length;
 
           return (
             <Card

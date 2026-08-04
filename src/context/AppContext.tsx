@@ -100,13 +100,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             scoreSas: s.score_sas || 0
           })));
         }
-        if (data.classes) {
-          setClasses(data.classes.map((c: any) => ({
-            id: c.id,
-            name: c.name,
-            phase: c.phase || 'Fase A',
-            room: c.room || 'Ruang Kelas'
-          })));
+        if (data.classes && data.classes.length > 0) {
+          const classMap = new Map<string, any>();
+          data.classes.forEach((c: any) => {
+            if (c && c.id && !classMap.has(c.id)) {
+              classMap.set(c.id, {
+                id: c.id,
+                name: c.name,
+                phase: c.phase || 'Fase A',
+                room: c.room || 'Ruang Kelas'
+              });
+            }
+          });
+          setClasses(Array.from(classMap.values()));
         }
         if (data.journals) {
           setJournals(data.journals.map((j: any) => ({
