@@ -1,6 +1,6 @@
 import { appData, saveStorage, getSupabase } from '../helpers.js';
 import { closeModal } from './closeModal.js';
-import { renderJurnal } from './renderJurnal';
+import { renderJurnal } from './renderJurnal.js';
 import { renderDashboard } from './renderDashboard.js';
 import { showToast } from './showToast.js';
 
