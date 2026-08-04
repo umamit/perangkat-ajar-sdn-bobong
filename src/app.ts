@@ -72,11 +72,13 @@ import { saveSchedule } from './modules/saveSchedule';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet, printModule } from './views';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   loadStorage();
   checkAuthSession();
+  // Sync data dari Supabase TERLEBIH DAHULU sebelum render,
+  // agar halaman tidak tampil kosong saat refresh
+  await syncFromSupabase();
   initApp();
-  syncFromSupabase();
 });
 
 export function initApp(): void {

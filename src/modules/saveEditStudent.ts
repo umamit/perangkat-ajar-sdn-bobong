@@ -12,10 +12,11 @@ export function saveEditStudent(e: Event, originalNis: string): void {
 
   const idx = (appData.students || []).findIndex((st: any) => st.nis === originalNis || st.id === originalNis);
   if (idx !== -1) {
+    const finalNis = nis || '';
+
     appData.students[idx] = {
       ...appData.students[idx],
-      nis,
-      id: nis,
+      nis: finalNis,
       name,
       classId,
       gender

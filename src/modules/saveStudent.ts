@@ -11,15 +11,17 @@ export function saveStudent(e: Event): void {
   const classId = (document.getElementById('studentClass') as HTMLSelectElement).value;
   const gender = (document.getElementById('studentGender') as HTMLSelectElement).value as 'L' | 'P';
 
-  if (!nis || !name) {
-    showToast('Harap isi NISN dan Nama Lengkap!', 'error');
+  if (!name) {
+    showToast('Harap isi Nama Lengkap siswa!', 'error');
     return;
   }
 
-  const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === nis || s.id === nis);
+  const finalNis = nis || '';
+
+  const existingIdx = (appData.students || []).findIndex((s: any) => (finalNis && (s.nis === finalNis || s.id === finalNis)));
   const newStudent: any = {
-    id: nis,
-    nis: nis,
+    id: finalNis || `LOCAL-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+    nis: finalNis,
     name: name,
     classId: classId,
     gender: gender,

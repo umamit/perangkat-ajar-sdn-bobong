@@ -21,16 +21,15 @@ export function renderDataSiswa(filterClass?: string): void {
   let filtered = appData.students || [];
   if (activeFilter !== 'ALL') {
     filtered = filtered.filter(s => s.classId === activeFilter);
-  } else {
-    const availClasses = getTeacherClasses();
-    const availIds = availClasses.map(c => c.id);
-    filtered = filtered.filter(s => availIds.includes(s.classId));
   }
 
-  container.innerHTML = filtered.map((s, index) => `
+  container.innerHTML = filtered.map((s, index) => {
+    const hasNis = s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-') && !s.nis.startsWith('SISWA-');
+    const displayNis = hasNis ? s.nis : '<span style="color:#94a3b8; font-style:italic;">-</span>';
+    return `
     <tr>
       <td>${index + 1}</td>
-      <td><strong>${s.nis}</strong></td>
+      <td><strong>${displayNis}</strong></td>
       <td>${s.name}</td>
       <td><span class="badge badge-info">${s.classId}</span></td>
       <td>${s.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
@@ -46,6 +45,6 @@ export function renderDataSiswa(filterClass?: string): void {
           </button>
         </div>
       </td>
-    </tr>
-  `).join('');
+    </tr>`;
+  }).join('');
 }

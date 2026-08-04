@@ -37,27 +37,39 @@ export async function syncFromSupabase(): Promise<void> {
   if (!client) return;
 
   try {
+    const { data: dbClasses } = await client.from('classes').select('id, name, room, phase');
+    if (dbClasses && dbClasses.length > 0) {
+      const classMap = new Map();
+      INITIAL_DATA.classes.forEach(c => classMap.set(c.id, c));
+      dbClasses.forEach((c: any) => classMap.set(c.id, { id: c.id, name: c.name, room: c.room || '', phase: c.phase || '' }));
+      appData.classes = Array.from(classMap.values());
+    }
+
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
-      const fetchedStudents = students.map((s: any) => ({
-        id: s.nis,
-        uuid: s.id,
-        nis: s.nis,
-        name: s.name,
-        classId: s.class_id,
-        gender: s.gender || 'L',
-        scoreFormatif: 80,
-        scoreSumatif: 80
-      }));
+      const currentMap = new Map();
+      (appData.students || []).forEach(s => currentMap.set(s.nis || s.id, s));
 
-      // Combine fetched students with initial / local students without wiping
+      const fetchedStudents = students.map((s: any) => {
+        const existing = currentMap.get(s.nis);
+        return {
+          id: s.nis,
+          uuid: s.id,
+          nis: s.nis,
+          name: s.name,
+          classId: s.class_id,
+          gender: s.gender || 'L',
+          scoreFormatif: existing ? (existing.scoreFormatif || 80) : 80,
+          scoreSumatif: existing ? (existing.scoreSumatif || 80) : 80
+        };
+      });
+
       const studentMap = new Map();
       INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
       (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
       fetchedStudents.forEach(s => studentMap.set(s.nis || s.id, s));
       appData.students = Array.from(studentMap.values());
     } else {
-      // Retain current appData.students (including imported or added ones) + initial data
       const studentMap = new Map();
       INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
       (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
@@ -308,26 +320,61 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
   try {
-    const { error } = await client.from('students').upsert({
-      nis: s.nis || s.id,
+    const dbNis = (s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-'))
+      ? s.nis.trim()
+      : `ID-${s.classId || 'ST'}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+    const payload: any = {
+      nis: dbNis,
       name: s.name,
       class_id: s.classId,
       gender: s.gender || 'L'
-    }, { onConflict: 'nis' });
+    };
+    if (s.uuid) payload.id = s.uuid;
+
+    const { data, error } = await client.from('students').upsert(payload, { onConflict: 'nis' }).select();
 
     if (error) {
       console.error('[Supabase Student Save Error]', error.message, error);
-      if (typeof (window as any).showToast === 'function') {
-        (window as any).showToast(`⚠️ Supabase Error: ${error.message}`, 'error');
-      }
       return false;
+    }
+    if (data && data.length > 0) {
+      s.uuid = data[0].id;
     }
     return true;
   } catch (err: any) {
     console.warn('[Supabase Student Save Exception]', err);
-    if (typeof (window as any).showToast === 'function') {
-      (window as any).showToast(`⚠️ Kendala Koneksi Supabase: ${err?.message || err}`, 'error');
+    return false;
+  }
+}
+
+export async function saveStudentsBatchToSupabase(students: Student[]): Promise<boolean> {
+  const client = getSupabase();
+  if (!client || !students || students.length === 0) return false;
+  try {
+    const payload = students.map((s, idx) => {
+      const dbNis = (s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-'))
+        ? s.nis.trim()
+        : `ID-${s.classId || 'ST'}-${Date.now()}-${idx + 1}-${Math.floor(Math.random() * 1000)}`;
+
+      const item: any = {
+        nis: dbNis,
+        name: s.name,
+        class_id: s.classId,
+        gender: s.gender || 'L'
+      };
+      if (s.uuid) item.id = s.uuid;
+      return item;
+    });
+
+    const { error } = await client.from('students').upsert(payload, { onConflict: 'nis' });
+    if (error) {
+      console.error('[Supabase Students Batch Save Error]', error.message, error);
+      return false;
     }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Students Batch Save Exception]', err);
     return false;
   }
 }

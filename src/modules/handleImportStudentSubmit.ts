@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { appData, saveStudentToSupabase } from '../helpers';
+import { appData, saveStudentsBatchToSupabase } from '../helpers';
 import { closeModal } from './closeModal';
 import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
@@ -31,9 +31,10 @@ export function handleImportStudentSubmit(e: Event): void {
 
       let importedCount = 0;
       let targetClass = 'ALL';
+      const importedStudentsList: any[] = [];
 
-      for (const row of rawData) {
-        // Cari nilai berdasarkan kunci header secara fleksibel (case-insensitive & trimmed)
+      for (let i = 0; i < rawData.length; i++) {
+        const row = rawData[i];
         const keys = Object.keys(row);
         const findVal = (...possibleNames: string[]) => {
           const matchedKey = keys.find(k => possibleNames.some(p => k.toLowerCase().trim() === p.toLowerCase().trim()));
@@ -45,7 +46,6 @@ export function handleImportStudentSubmit(e: Event): void {
         let classIdRaw = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
         let genderRaw = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
 
-        // Normalisasi Kode Kelas Pintar (misal: "Kelas 3B", "3-B", "III B", "3 B")
         let classId = classIdRaw.toUpperCase().trim()
           .replace('KELAS', '')
           .replace('III', '3')
@@ -57,14 +57,13 @@ export function handleImportStudentSubmit(e: Event): void {
           .replace(/[^0-9A-Z]/g, '');
 
         if (!classId) {
-          // Ambil dari dropdown filter yang sedang terpilih di UI jika di excel kosong
           const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
           classId = (selectElem && selectElem.value !== 'ALL') ? selectElem.value : '3B';
         }
         let gender = (genderRaw.toUpperCase().startsWith('P') || genderRaw.toUpperCase().startsWith('W')) ? 'P' : 'L';
 
         if (nis || name) {
-          const finalNis = nis || `SISWA-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+          const finalNis = nis || `${classId}-${Date.now()}-${i + 1}`;
           targetClass = classId;
           const newStudent: any = {
             id: finalNis,
@@ -84,8 +83,12 @@ export function handleImportStudentSubmit(e: Event): void {
           }
 
           importedCount++;
-          saveStudentToSupabase(newStudent);
+          importedStudentsList.push(newStudent);
         }
+      }
+
+      if (importedStudentsList.length > 0) {
+        await saveStudentsBatchToSupabase(importedStudentsList);
       }
 
       closeModal();
