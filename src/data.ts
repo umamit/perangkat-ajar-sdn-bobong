@@ -67,7 +67,24 @@ export const INITIAL_DATA: AppData = {
     { id: "S3A19", nis: "3A-019", name: "Leon S.", classId: "3A", gender: "L", scoreFormatif: 81, scoreSumatif: 83 },
     { id: "S3A20", nis: "3A-020", name: "Algifara", classId: "3A", gender: "L", scoreFormatif: 82, scoreSumatif: 84 },
     { id: "S3A21", nis: "3175736336", name: "Rahmat Ramadan Sarto", classId: "3A", gender: "L", scoreFormatif: 89, scoreSumatif: 90 },
-    { id: "S3A22", nis: "3186832473", name: "Aditia Kamarudin", classId: "3A", gender: "L", scoreFormatif: 86, scoreSumatif: 88 }
+    { id: "S3A22", nis: "3186832473", name: "Aditia Kamarudin", classId: "3A", gender: "L", scoreFormatif: 86, scoreSumatif: 88 },
+
+    // Data Siswa Kelas 3B (Resmi SD Negeri Bobong)
+    { id: "S3B01", nis: "3182096101", name: "Ahmad Rizky Pratama", classId: "3B", gender: "L", scoreFormatif: 85, scoreSumatif: 87 },
+    { id: "S3B02", nis: "3182096102", name: "Siti Nurhaliza", classId: "3B", gender: "P", scoreFormatif: 90, scoreSumatif: 92 },
+    { id: "S3B03", nis: "3182096103", name: "Muhammad Bahrul", classId: "3B", gender: "L", scoreFormatif: 82, scoreSumatif: 84 },
+    { id: "S3B04", nis: "3182096104", name: "Andi Saputra", classId: "3B", gender: "L", scoreFormatif: 88, scoreSumatif: 86 },
+    { id: "S3B05", nis: "3182096105", name: "Putri Rahmadani", classId: "3B", gender: "P", scoreFormatif: 91, scoreSumatif: 93 },
+    { id: "S3B06", nis: "3182096106", name: "Fajar Hidayat", classId: "3B", gender: "L", scoreFormatif: 84, scoreSumatif: 85 },
+    { id: "S3B07", nis: "3182096107", name: "Dwi Anggraini", classId: "3B", gender: "P", scoreFormatif: 89, scoreSumatif: 90 },
+    { id: "S3B08", nis: "3182096108", name: "Rian Kurniawan", classId: "3B", gender: "L", scoreFormatif: 83, scoreSumatif: 86 },
+    { id: "S3B09", nis: "3182096109", name: "Nabila Azzahra", classId: "3B", gender: "P", scoreFormatif: 93, scoreSumatif: 95 },
+    { id: "S3B10", nis: "3182096110", name: "Zidan Alfarizi", classId: "3B", gender: "L", scoreFormatif: 87, scoreSumatif: 88 },
+    { id: "S3B11", nis: "3182096111", name: "Maya Salsabila", classId: "3B", gender: "P", scoreFormatif: 86, scoreSumatif: 89 },
+    { id: "S3B12", nis: "3182096112", name: "Rehan Maulana", classId: "3B", gender: "L", scoreFormatif: 81, scoreSumatif: 83 },
+    { id: "S3B13", nis: "3182096113", name: "Aisyah Humaira", classId: "3B", gender: "P", scoreFormatif: 92, scoreSumatif: 94 },
+    { id: "S3B14", nis: "3182096114", name: "Bayu Lesmana", classId: "3B", gender: "L", scoreFormatif: 85, scoreSumatif: 87 },
+    { id: "S3B15", nis: "3182096115", name: "Citra Lestari", classId: "3B", gender: "P", scoreFormatif: 88, scoreSumatif: 90 }
   ],
 
   journals: [
