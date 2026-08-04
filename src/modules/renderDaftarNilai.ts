@@ -32,7 +32,7 @@ export function renderDaftarNilai(filterClass: string = 'ALL'): void {
   }
 
   container.innerHTML = filtered.map((s: any, idx: number) => {
-    const sId = s.nis || s.id;
+    const sId = s.id;
     const formatif = s.scoreFormatif ?? 80;
     const sts = s.scoreSts ?? 80;
     const sas = s.scoreSas ?? 80;

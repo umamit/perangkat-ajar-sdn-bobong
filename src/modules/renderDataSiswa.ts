@@ -24,12 +24,9 @@ export function renderDataSiswa(filterClass?: string): void {
   }
 
   container.innerHTML = filtered.map((s, index) => {
-    const hasNis = s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-') && !s.nis.startsWith('SISWA-');
-    const displayNis = hasNis ? s.nis : '<span style="color:#94a3b8; font-style:italic;">-</span>';
     return `
     <tr>
       <td>${index + 1}</td>
-      <td><strong>${displayNis}</strong></td>
       <td>${s.name}</td>
       <td><span class="badge badge-info">${s.classId}</span></td>
       <td>${s.gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
@@ -37,10 +34,10 @@ export function renderDataSiswa(filterClass?: string): void {
       <td>${s.scoreSumatif || 80}</td>
       <td>
         <div style="display:flex; gap:6px;">
-          <button class="btn btn-secondary" onclick="showEditStudentModal('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px;">
+          <button class="btn btn-secondary" onclick="showEditStudentModal('${s.id}')" style="padding: 4px 8px; font-size:12px;">
             <i class="ri-edit-line"></i> Edit
           </button>
-          <button class="btn btn-secondary" onclick="deleteStudent('${s.nis || s.id}')" style="padding: 4px 8px; font-size:12px; color:#dc2626; border-color:#fca5a5;" title="Hapus Siswa">
+          <button class="btn btn-secondary" onclick="deleteStudent('${s.id}')" style="padding: 4px 8px; font-size:12px; color:#dc2626; border-color:#fca5a5;" title="Hapus Siswa">
             <i class="ri-delete-bin-line"></i> Hapus
           </button>
         </div>

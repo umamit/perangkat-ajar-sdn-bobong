@@ -12,10 +12,6 @@ export function showAddStudentModal(): void {
   const form = `
     <form onsubmit="saveStudent(event)">
       <div class="form-group">
-        <label>NISN / NIS Siswa (Opsional)</label>
-        <input type="text" id="studentNis" placeholder="Kosongkan jika belum ada NISN">
-      </div>
-      <div class="form-group">
         <label>Nama Lengkap Siswa</label>
         <input type="text" id="studentName" placeholder="Masukkan nama siswa" required>
       </div>

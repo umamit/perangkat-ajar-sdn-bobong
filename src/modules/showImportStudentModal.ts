@@ -93,11 +93,10 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
         targetClass = classId;
 
         let gender = (rawGender.toUpperCase().startsWith('P') || rawGender.toUpperCase().startsWith('W')) ? 'P' : 'L';
-        const finalNis = nis || `31820${1000 + i}`;
-
+        const generatedId = crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`;
         const newStudent: any = {
-          id: finalNis,
-          nis: finalNis,
+          id: generatedId,
+          nis: generatedId,
           name: name,
           classId: classId,
           gender: gender,
@@ -105,12 +104,7 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
           scoreSumatif: 80
         };
 
-        const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === finalNis || s.id === finalNis);
-        if (existingIdx >= 0) {
-          appData.students[existingIdx] = newStudent;
-        } else {
-          appData.students.push(newStudent);
-        }
+        appData.students.push(newStudent);
 
         importedCount++;
         await saveStudentToSupabase(newStudent);
@@ -172,8 +166,8 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
 
 export function downloadStudentTemplate(): void {
   const templateData = [
-    { NISN: "3182096101", "Nama Lengkap": "Ahmad Rizky Pratama", Kelas: "3B", "Jenis Kelamin": "L" },
-    { NISN: "3182096102", "Nama Lengkap": "Siti Nurhaliza", Kelas: "3B", "Jenis Kelamin": "P" }
+    { "Nama Lengkap": "Ahmad Rizky Pratama", Kelas: "3B", "Jenis Kelamin": "L" },
+    { "Nama Lengkap": "Siti Nurhaliza", Kelas: "3B", "Jenis Kelamin": "P" }
   ];
   const worksheet = XLSX.utils.json_to_sheet(templateData);
   const workbook = XLSX.utils.book_new();

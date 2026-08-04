@@ -25,7 +25,7 @@ export interface ClassInfo {
 export interface Student {
   id: string;
   uuid?: string;
-  nis: string;
+  nis?: string;
   name: string;
   classId: string;
   gender: string;

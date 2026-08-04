@@ -9,14 +9,8 @@ export function showEditStudentModal(nis: string): void {
     .map((c: any) => `<option value="${c.id}" ${c.id === s.classId ? 'selected' : ''}>${c.name}</option>`)
     .join('');
 
-  const displayNisInput = (s.nis && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('SISWA-')) ? s.nis : '';
-
   const form = `
     <form onsubmit="saveEditStudent(event, '${nis}')">
-      <div class="form-group">
-        <label>NISN / NIS Siswa (Opsional)</label>
-        <input type="text" id="editStudentNis" value="${displayNisInput}" placeholder="Kosongkan jika belum ada NISN">
-      </div>
       <div class="form-group">
         <label>Nama Lengkap Siswa</label>
         <input type="text" id="editStudentName" value="${s.name}" required>

@@ -2,9 +2,9 @@
 import { appData } from '../helpers';
 
 export function exportSiswaToCSV(): void {
-  let csv = 'No,NIS,Nama Siswa,Kelas,Jenis Kelamin,Nilai Formatif,Nilai Sumatif\n';
+  let csv = 'No,Nama Siswa,Kelas,Jenis Kelamin,Nilai Formatif,Nilai Sumatif\n';
   appData.students.forEach((s, idx) => {
-    csv += `${idx + 1},"${s.nis}","${s.name}","${s.classId}","${s.gender}",${s.scoreFormatif || 80},${s.scoreSumatif || 80}\n`;
+    csv += `${idx + 1},"${s.name}","${s.classId}","${s.gender}",${s.scoreFormatif || 80},${s.scoreSumatif || 80}\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

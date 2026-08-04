@@ -48,14 +48,14 @@ export async function syncFromSupabase(): Promise<void> {
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
       const currentMap = new Map();
-      (appData.students || []).forEach(s => currentMap.set(s.nis || s.id, s));
+      (appData.students || []).forEach(s => currentMap.set(s.id || s.nis, s));
 
       const fetchedStudents = students.map((s: any) => {
-        const existing = currentMap.get(s.nis);
+        const existing = currentMap.get(s.id) || currentMap.get(s.nis);
         return {
-          id: s.nis,
+          id: s.id,
           uuid: s.id,
-          nis: s.nis,
+          nis: s.nis || s.id,
           name: s.name,
           classId: s.class_id,
           gender: s.gender || 'L',
@@ -201,11 +201,11 @@ export function setupSupabaseRealtime(): void {
           console.log('[Supabase Realtime Student Event]', payload);
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const newS = payload.new;
-            const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === newS.nis);
+            const existingIdx = (appData.students || []).findIndex((s: any) => s.id === newS.id || s.nis === newS.nis);
             const mapped = {
-              id: newS.nis,
+              id: newS.id,
               uuid: newS.id,
-              nis: newS.nis,
+              nis: newS.nis || newS.id,
               name: newS.name,
               classId: newS.class_id,
               gender: newS.gender || 'L',
@@ -213,13 +213,16 @@ export function setupSupabaseRealtime(): void {
               scoreSumatif: 80
             };
             if (existingIdx >= 0) {
-              appData.students[existingIdx] = mapped;
+              appData.students[existingIdx] = {
+                ...appData.students[existingIdx],
+                ...mapped
+              };
             } else {
               appData.students.push(mapped);
             }
           } else if (payload.eventType === 'DELETE') {
             const oldS = payload.old;
-            appData.students = (appData.students || []).filter((s: any) => s.nis !== oldS.nis && s.id !== oldS.nis);
+            appData.students = (appData.students || []).filter((s: any) => s.id !== oldS.id && s.nis !== oldS.nis);
           }
 
           if (typeof (window as any).renderDataSiswa === 'function') {
@@ -320,19 +323,16 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
   try {
-    const dbNis = (s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-'))
-      ? s.nis.trim()
-      : `ID-${s.classId || 'ST'}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-
+    const dbId = s.uuid || s.id || (crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${Math.floor(Math.random() * 10000)}`);
     const payload: any = {
-      nis: dbNis,
+      id: dbId,
+      nis: dbId,
       name: s.name,
       class_id: s.classId,
       gender: s.gender || 'L'
     };
-    if (s.uuid) payload.id = s.uuid;
 
-    const { data, error } = await client.from('students').upsert(payload, { onConflict: 'nis' }).select();
+    const { data, error } = await client.from('students').upsert(payload, { onConflict: 'id' }).select();
 
     if (error) {
       console.error('[Supabase Student Save Error]', error.message, error);
@@ -340,6 +340,8 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
     }
     if (data && data.length > 0) {
       s.uuid = data[0].id;
+      s.id = data[0].id;
+      s.nis = data[0].id;
     }
     return true;
   } catch (err: any) {
@@ -353,21 +355,18 @@ export async function saveStudentsBatchToSupabase(students: Student[]): Promise<
   if (!client || !students || students.length === 0) return false;
   try {
     const payload = students.map((s, idx) => {
-      const dbNis = (s.nis && s.nis.trim() !== '' && !s.nis.startsWith('AUTO-') && !s.nis.startsWith('ID-'))
-        ? s.nis.trim()
-        : `ID-${s.classId || 'ST'}-${Date.now()}-${idx + 1}-${Math.floor(Math.random() * 1000)}`;
-
+      const dbId = s.uuid || s.id || (crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${idx + 1}-${Math.floor(Math.random() * 1000)}`);
       const item: any = {
-        nis: dbNis,
+        id: dbId,
+        nis: dbId,
         name: s.name,
         class_id: s.classId,
         gender: s.gender || 'L'
       };
-      if (s.uuid) item.id = s.uuid;
       return item;
     });
 
-    const { error } = await client.from('students').upsert(payload, { onConflict: 'nis' });
+    const { error } = await client.from('students').upsert(payload, { onConflict: 'id' });
     if (error) {
       console.error('[Supabase Students Batch Save Error]', error.message, error);
       return false;
@@ -379,11 +378,11 @@ export async function saveStudentsBatchToSupabase(students: Student[]): Promise<
   }
 }
 
-export async function deleteStudentFromSupabase(nis: string): Promise<boolean> {
+export async function deleteStudentFromSupabase(id: string): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
   try {
-    const { error } = await client.from('students').delete().eq('nis', nis);
+    const { error } = await client.from('students').delete().or(`id.eq.${id},nis.eq.${id}`);
     if (error) {
       console.error('[Supabase Student Delete Error]', error.message, error);
       if (typeof (window as any).showToast === 'function') {

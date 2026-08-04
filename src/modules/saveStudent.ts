@@ -6,7 +6,6 @@ import { showToast } from './showToast';
 
 export function saveStudent(e: Event): void {
   e.preventDefault();
-  const nis = (document.getElementById('studentNis') as HTMLInputElement).value.trim();
   const name = (document.getElementById('studentName') as HTMLInputElement).value.trim();
   const classId = (document.getElementById('studentClass') as HTMLSelectElement).value;
   const gender = (document.getElementById('studentGender') as HTMLSelectElement).value as 'L' | 'P';
@@ -16,12 +15,10 @@ export function saveStudent(e: Event): void {
     return;
   }
 
-  const finalNis = nis || '';
-
-  const existingIdx = (appData.students || []).findIndex((s: any) => (finalNis && (s.nis === finalNis || s.id === finalNis)));
+  const generatedId = crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   const newStudent: any = {
-    id: finalNis || `LOCAL-${Date.now()}-${Math.floor(Math.random()*1000)}`,
-    nis: finalNis,
+    id: generatedId,
+    nis: generatedId,
     name: name,
     classId: classId,
     gender: gender,
@@ -30,11 +27,7 @@ export function saveStudent(e: Event): void {
   };
 
   // 1. OPTIMISTIC UPDATE (Instan 0ms pada UI)
-  if (existingIdx >= 0) {
-    appData.students[existingIdx] = newStudent;
-  } else {
-    appData.students.push(newStudent);
-  }
+  appData.students.push(newStudent);
 
   const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
   if (selectElem) selectElem.value = classId;

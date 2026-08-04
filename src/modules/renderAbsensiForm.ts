@@ -20,13 +20,13 @@ export function renderAbsensiForm(): void {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
   } else {
     tbody.innerHTML = students.map((s: any, idx: number) => {
-      const sId = s.nis || s.id;
+      const sId = s.id;
       if (!statusMap[sId]) statusMap[sId] = 'Hadir';
 
       return `
         <tr>
           <td>${idx + 1}</td>
-          <td><strong>${s.name}</strong> (${sId})</td>
+          <td><strong>${s.name}</strong></td>
           <td>
             <div class="btn-group-status" data-student="${sId}">
               <button class="btn-status ${statusMap[sId] === 'Hadir' ? 'active-hadir' : ''}" onclick="setAbsensiStatus('${sId}', 'Hadir')">Hadir</button>

@@ -7,7 +7,7 @@ export function deleteStudent(nis: string): void {
   const student = (appData.students || []).find((s: any) => (s.nis === nis || s.id === nis));
   const studentName = student ? student.name : nis;
 
-  if (!confirm(`Apakah Anda yakin ingin menghapus data siswa "${studentName}" (NISN: ${nis})?`)) {
+  if (!confirm(`Apakah Anda yakin ingin menghapus data siswa "${studentName}"?`)) {
     return;
   }
 

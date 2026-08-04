@@ -62,12 +62,12 @@ export function handleImportStudentSubmit(e: Event): void {
         }
         let gender = (genderRaw.toUpperCase().startsWith('P') || genderRaw.toUpperCase().startsWith('W')) ? 'P' : 'L';
 
-        if (nis || name) {
-          const finalNis = nis || `${classId}-${Date.now()}-${i + 1}`;
+        if (name) {
+          const generatedId = crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`;
           targetClass = classId;
           const newStudent: any = {
-            id: finalNis,
-            nis: finalNis,
+            id: generatedId,
+            nis: generatedId,
             name: name || 'Siswa Tanpa Nama',
             classId: classId,
             gender: gender,
@@ -75,12 +75,7 @@ export function handleImportStudentSubmit(e: Event): void {
             scoreSumatif: 80
           };
 
-          const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === finalNis || s.id === finalNis);
-          if (existingIdx >= 0) {
-            appData.students[existingIdx] = newStudent;
-          } else {
-            appData.students.push(newStudent);
-          }
+          appData.students.push(newStudent);
 
           importedCount++;
           importedStudentsList.push(newStudent);

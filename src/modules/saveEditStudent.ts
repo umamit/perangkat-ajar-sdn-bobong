@@ -5,18 +5,14 @@ import { filterSiswa } from './filterSiswa';
 
 export function saveEditStudent(e: Event, originalNis: string): void {
   e.preventDefault();
-  const nis = (document.getElementById('editStudentNis') as HTMLInputElement).value.trim();
   const name = (document.getElementById('editStudentName') as HTMLInputElement).value.trim();
   const classId = (document.getElementById('editStudentClass') as HTMLSelectElement).value;
   const gender = (document.getElementById('editStudentGender') as HTMLSelectElement).value as 'L' | 'P';
 
   const idx = (appData.students || []).findIndex((st: any) => st.nis === originalNis || st.id === originalNis);
   if (idx !== -1) {
-    const finalNis = nis || '';
-
     appData.students[idx] = {
       ...appData.students[idx],
-      nis: finalNis,
       name,
       classId,
       gender
