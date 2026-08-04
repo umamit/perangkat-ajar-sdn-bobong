@@ -244,12 +244,75 @@ export function eraseCookie(name: string): void {
   }
 }
 
+// Local Persistent Storage Backup (IndexedDB / LocalFallback)
+const DB_NAME = 'SDNBobongDB';
+const STORE_NAME = 'appDataStore';
+
+export function saveToLocalPersistentStorage(): void {
+  try {
+    if (typeof window !== 'undefined' && window.indexedDB) {
+      const request = indexedDB.open(DB_NAME, 1);
+      request.onupgradeneeded = (e: any) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME);
+        }
+      };
+      request.onsuccess = (e: any) => {
+        const db = e.target.result;
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put(appData.students, 'students');
+      };
+    }
+  } catch (err) {
+    console.warn('[IndexedDB Save Error]', err);
+  }
+}
+
+export function loadFromLocalPersistentStorage(): void {
+  try {
+    if (typeof window !== 'undefined' && window.indexedDB) {
+      const request = indexedDB.open(DB_NAME, 1);
+      request.onupgradeneeded = (e: any) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME);
+        }
+      };
+      request.onsuccess = (e: any) => {
+        const db = e.target.result;
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const getReq = store.get('students');
+        getReq.onsuccess = () => {
+          if (getReq.result && Array.isArray(getReq.result) && getReq.result.length > 0) {
+            const studentMap = new Map();
+            INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
+            (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
+            getReq.result.forEach((s: any) => studentMap.set(s.nis || s.id, s));
+            appData.students = Array.from(studentMap.values());
+
+            if (typeof (window as any).renderDataSiswa === 'function') {
+              const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+              const currentFilter = selectElem ? selectElem.value : 'ALL';
+              (window as any).renderDataSiswa(currentFilter);
+            }
+          }
+        };
+      };
+    }
+  } catch (err) {
+    console.warn('[IndexedDB Load Error]', err);
+  }
+}
+
 export function loadStorage(): void {
-  // Pure live Supabase sync on login, no LocalStorage caching
+  loadFromLocalPersistentStorage();
 }
 
 export function saveStorage(): void {
-  // Pure live Supabase sync, no LocalStorage caching
+  saveToLocalPersistentStorage();
 }
 
 // Password Visibility Toggle
