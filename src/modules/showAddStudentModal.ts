@@ -2,8 +2,11 @@ import { openModal } from './openModal';
 import { appData } from '../helpers';
 
 export function showAddStudentModal(): void {
+  const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+  const currentClass = (selectElem && selectElem.value !== 'ALL') ? selectElem.value : '3B';
+
   const classOptions = (appData.classes || [])
-    .map((c: any) => `<option value="${c.id}">${c.name}</option>`)
+    .map((c: any) => `<option value="${c.id}" ${c.id === currentClass ? 'selected' : ''}>${c.name}</option>`)
     .join('');
 
   const form = `
