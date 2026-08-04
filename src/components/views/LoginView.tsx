@@ -54,9 +54,9 @@ export function LoginView() {
 
   return (
     <div className="login-wrapper min-h-screen flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-      <Card className="login-card w-full max-w-md shadow-2xl border-white/20 bg-white/95">
-        <CardHeader className="text-center pb-2 border-none">
-          <div className="school-logo-container flex justify-center mb-2">
+      <Card className="login-card w-full max-w-md shadow-2xl border-white/80 glass-panel">
+        <CardHeader className="text-center pb-2 border-none bg-transparent p-0">
+          <div className="school-logo-container flex justify-center mb-3">
             <img
               src="/assets/logo-sdn-bobong.png"
               alt="Logo SD Negeri Bobong"
