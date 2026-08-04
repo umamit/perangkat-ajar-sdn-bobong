@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import { openModal } from './openModal';
 import { closeModal } from './closeModal';
-import { appData, saveStudentToSupabase, saveToLocalPersistentStorage } from '../helpers';
+import { appData, saveStudentToSupabase } from '../helpers';
 import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
 import { showToast } from './showToast';
@@ -288,8 +288,6 @@ export function executeFinalImport(): void {
     }
     saveStudentToSupabase(newStudent);
   });
-
-  saveToLocalPersistentStorage();
 
   closeModal();
   showToast(`🎉 Berhasil mengimpor ${finalImportData.length} data siswa ke Kelas ${targetClass}!`, 'success');
