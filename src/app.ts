@@ -152,7 +152,11 @@ if (typeof window !== 'undefined') {
   (window as any).updateStudentGrade = updateStudentGrade;
   (window as any).searchStudent = searchStudent;
   (window as any).filterSiswa = filterSiswa;
-  (window as any).filterSiswaByClass = (val: string) => { renderDataSiswa(val); };
+  (window as any).filterSiswaByClass = (val: string) => { 
+    const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+    if (selectElem) selectElem.value = val;
+    renderDataSiswa(val); 
+  };
   (window as any).filterNilaiByClass = filterNilaiByClass;
   (window as any).renderAllViews = initApp;
   (window as any).renderTeacherProfile = renderTeacherProfile;
