@@ -22,8 +22,15 @@ import { showEditStudentModal } from './modules/showEditStudentModal';
 import { saveStudent } from './modules/saveStudent';
 import { saveEditStudent } from './modules/saveEditStudent';
 import { deleteStudent } from './modules/deleteStudent';
-import { showImportStudentModal, downloadStudentTemplate } from './modules/showImportStudentModal';
-import { handleImportStudentSubmit } from './modules/handleImportStudentSubmit';
+import { 
+  showImportStudentModal, 
+  downloadStudentTemplate, 
+  processImportFile, 
+  showStep2, 
+  resetImportWizard, 
+  confirmImportMapping, 
+  executeFinalImport 
+} from './modules/showImportStudentModal';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
@@ -180,7 +187,11 @@ if (typeof window !== 'undefined') {
   (window as any).deleteStudent = deleteStudent;
   (window as any).showImportStudentModal = showImportStudentModal;
   (window as any).downloadStudentTemplate = downloadStudentTemplate;
-  (window as any).handleImportStudentSubmit = handleImportStudentSubmit;
+  (window as any).processImportFile = processImportFile;
+  (window as any).showStep2 = showStep2;
+  (window as any).resetImportWizard = resetImportWizard;
+  (window as any).confirmImportMapping = confirmImportMapping;
+  (window as any).executeFinalImport = executeFinalImport;
   (window as any).deleteJournal = deleteJournal;
   (window as any).deleteModul = deleteModul;
   (window as any).showToast = showToast;

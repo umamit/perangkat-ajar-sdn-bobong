@@ -1,6 +1,6 @@
 {
   "name": "perangkat-ajar-sdn-bobong",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "Perangkat Ajar Online - SD Negeri Bobong (TypeScript)",
   "main": "app.js",
   "scripts": {
@@ -19,6 +19,8 @@
   "author": "SD Negeri Bobong",
   "license": "MIT",
   "dependencies": {
+    "@types/papaparse": "^5.5.2",
+    "papaparse": "^5.5.4",
     "typescript": "^5.3.3",
     "xlsx": "^0.18.5"
   },
