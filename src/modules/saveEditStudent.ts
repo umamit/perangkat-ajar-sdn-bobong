@@ -23,7 +23,10 @@ export function saveEditStudent(e: Event, originalNis: string): void {
 
     saveStorage();
     saveStudentToSupabase(appData.students[idx]);
-    renderDataSiswa();
+    
+    const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+    const currentFilter = selectElem ? selectElem.value : 'ALL';
+    renderDataSiswa(currentFilter);
     filterSiswa();
     closeModal();
     alert(`✅ Data siswa ${name} berhasil diperbarui!`);

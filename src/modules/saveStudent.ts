@@ -34,7 +34,10 @@ export function saveStudent(e: Event): void {
 
   saveStorage();
   saveStudentToSupabase(newStudent);
-  renderDataSiswa();
+  
+  const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+  const currentFilter = selectElem ? selectElem.value : 'ALL';
+  renderDataSiswa(currentFilter);
   filterSiswa();
   closeModal();
   alert(`✅ Siswa "${name}" berhasil disimpan!`);
