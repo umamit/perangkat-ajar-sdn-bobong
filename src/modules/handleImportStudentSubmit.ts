@@ -75,13 +75,13 @@ export function handleImportStudentSubmit(e: Event): void {
       }
 
       closeModal();
-      showToast(`🎉 Sukses mengimpor ${importedCount} siswa massal ke database!`, 'success');
+      showToast(`🎉 Sukses mengimpor ${importedCount} data siswa ke kelas ${targetClass}!`, 'success');
 
-      const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
-      if (selectElem && targetClass !== 'ALL') {
-        selectElem.value = targetClass;
+      if (typeof (window as any).filterSiswaByClass === 'function') {
+        (window as any).filterSiswaByClass(targetClass !== 'ALL' ? targetClass : 'ALL');
+      } else {
+        renderDataSiswa(targetClass !== 'ALL' ? targetClass : 'ALL');
       }
-      renderDataSiswa(targetClass !== 'ALL' ? targetClass : 'ALL');
       filterSiswa();
 
     } catch (err) {
