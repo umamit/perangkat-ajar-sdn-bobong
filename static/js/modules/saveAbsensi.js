@@ -18,6 +18,7 @@ export async function saveAbsensi() {
         date,
         class_id: classId,
         student_id: s.id,
+        student_name: s.name,
         status: statusMap[s.id] || 'Hadir'
     }));
     try {

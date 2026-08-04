@@ -22,8 +22,7 @@ export function renderAbsensiForm(): void {
   } else {
     tbody.innerHTML = students.map((s: any, idx: number) => {
       const sId = s.id;
-      if (!statusMap[sId]) statusMap[sId] = 'Hadir';
-      const cur = statusMap[sId];
+      const cur = statusMap[sId] || '';
       return `
         <tr data-student="${sId}">
           <td style="text-align:center;">${idx + 1}</td>

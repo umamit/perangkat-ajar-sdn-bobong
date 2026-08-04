@@ -27,9 +27,9 @@ export async function saveAbsensi(): Promise<void> {
   const rows = students.map((s: any) => ({
     date,
     class_id:     classId,
-    student_id:   s.nis || s.id,
+    student_id:   s.id,
     student_name: s.name,
-    status:       statusMap[s.nis || s.id] || 'Hadir'
+    status:       statusMap[s.id] || 'Hadir'
   }));
 
   try {
