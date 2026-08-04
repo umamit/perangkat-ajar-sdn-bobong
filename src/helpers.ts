@@ -23,7 +23,7 @@ export function getSupabase(): any {
 
 export let appData: AppData = { ...INITIAL_DATA };
 
-// Fetch & Sync Data from Supabase
+// Fetch & Sync Data Fresh from Supabase
 export async function syncFromSupabase(): Promise<void> {
   const client = getSupabase();
   if (!client) return;
@@ -31,21 +31,16 @@ export async function syncFromSupabase(): Promise<void> {
   try {
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
-      const fetchedStudents = students.map((s: any) => ({
+      appData.students = students.map((s: any) => ({
         id: s.nis,
         uuid: s.id,
         nis: s.nis,
         name: s.name,
         classId: s.class_id,
-        gender: s.gender || 'L'
+        gender: s.gender || 'L',
+        scoreFormatif: 80,
+        scoreSumatif: 80
       }));
-
-      // Merge Supabase data with existing local data (preserve newly added local students)
-      const mergedMap = new Map();
-      (appData.students || []).forEach((s: any) => mergedMap.set(s.nis || s.id, s));
-      fetchedStudents.forEach((s: any) => mergedMap.set(s.nis || s.id, s));
-      appData.students = Array.from(mergedMap.values());
-      saveStorage();
     }
 
     const { data: journals } = await client.from('journals').select('id, date, time_slot, class_id, topic, notes, attendance_summary');
@@ -182,35 +177,11 @@ export function eraseCookie(name: string): void {
 }
 
 export function loadStorage(): void {
-  try {
-    const saved = localStorage.getItem('sdn_bobong_app_data');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed && parsed.students) {
-        appData.students = parsed.students;
-      }
-      if (parsed && parsed.journals) {
-        appData.journals = parsed.journals;
-      }
-      if (parsed && parsed.modules) {
-        appData.modules = parsed.modules;
-      }
-    }
-  } catch (e) {
-    console.warn('[LocalStorage Load Error]', e);
-  }
+  // Pure live Supabase sync on login, no LocalStorage caching
 }
 
 export function saveStorage(): void {
-  try {
-    localStorage.setItem('sdn_bobong_app_data', JSON.stringify({
-      students: appData.students,
-      journals: appData.journals,
-      modules: appData.modules
-    }));
-  } catch (e) {
-    console.warn('[LocalStorage Save Error]', e);
-  }
+  // Pure live Supabase sync, no LocalStorage caching
 }
 
 // Password Visibility Toggle

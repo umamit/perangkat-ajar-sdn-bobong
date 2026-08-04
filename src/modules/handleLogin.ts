@@ -1,4 +1,4 @@
-import { appData, saveStorage, setCookie } from '../helpers';
+import { appData, saveStorage, setCookie, syncFromSupabase } from '../helpers';
 import { checkAuthSession } from './checkAuthSession';
 import { renderTeacherProfile } from './renderTeacherProfile';
 import { setAuthState } from './authState';
@@ -22,6 +22,7 @@ export function handleLogin(e: Event): void {
     }
     checkAuthSession();
     renderTeacherProfile();
+    syncFromSupabase();
   } else {
     if (alertEl) {
       alertEl.style.display = 'flex';
