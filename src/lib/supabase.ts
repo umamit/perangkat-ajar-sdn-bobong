@@ -46,6 +46,28 @@ export async function deleteStudentFromSupabase(id: string) {
   }
 }
 
+export async function deleteTeacherFromSupabase(nip: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('teachers').delete().eq('nip', nip);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Teacher Error]', e);
+    return false;
+  }
+}
+
+export async function deleteJournalFromSupabase(id: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('journals').delete().eq('id', id);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Journal Error]', e);
+    return false;
+  }
+}
+
 export async function saveStudentToSupabase(student: any) {
   try {
     const supabase = getSupabase();

@@ -6,14 +6,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { deleteTeacherFromSupabase } from '@/lib/supabase';
 
 export function GuruView() {
-  const { teachers, setTeachers, showToast } = useApp();
+  const { teachers, setTeachers, showToast, syncData } = useApp();
 
-  const handleDelete = (nip: string, name: string) => {
+  const handleDelete = async (nip: string, name: string) => {
     if (confirm(`Hapus data guru ${name}?`)) {
       setTeachers(prev => prev.filter(t => t.nip !== nip));
-      showToast(`Data guru ${name} berhasil dihapus`, 'info');
+      await deleteTeacherFromSupabase(nip);
+      await syncData();
+      showToast(`Data guru ${name} berhasil dihapus permanen dari Supabase Cloud`, 'info');
     }
   };
 
@@ -21,7 +24,7 @@ export function GuruView() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Kelola Data Guru & Tenaga Pendidik</h3>
+          <h3 className="text-xl font-bold text-slate-800">Kelola Data Guru &amp; Tenaga Pendidik</h3>
           <p className="text-xs text-slate-500">Daftar tenaga pendidik terdaftar di Supabase Cloud</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddTeacherModal()}>
@@ -44,7 +47,7 @@ export function GuruView() {
             </TableHeader>
             <TableBody>
               {teachers.map((t, idx) => (
-                <TableRow key={t.nip || idx}>
+                <TableRow key={t.nip || idx} className="hover:bg-slate-50/80">
                   <TableCell>
                     <img
                       src={t.avatar || '/assets/logo-sdn-bobong.png'}
@@ -54,8 +57,8 @@ export function GuruView() {
                   </TableCell>
                   <TableCell className="font-bold text-xs">{t.nip}</TableCell>
                   <TableCell className="font-bold text-slate-800 text-xs">{t.name}</TableCell>
-                  <TableCell><Badge variant="default">{t.role || 'Guru'}</Badge></TableCell>
-                  <TableCell className="text-xs text-slate-600">{t.subject || '-'}</TableCell>
+                  <TableCell><Badge variant="default" className="font-extrabold">{t.role || 'Guru'}</Badge></TableCell>
+                  <TableCell className="text-xs text-slate-600 font-medium">{t.subject || '-'}</TableCell>
                   <TableCell className="text-center">
                     <button
                       onClick={() => handleDelete(t.nip, t.name)}
@@ -69,7 +72,7 @@ export function GuruView() {
               ))}
               {teachers.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-slate-400 py-8 text-xs">
+                  <TableCell colSpan={6} className="text-center text-slate-400 py-8 text-xs font-medium">
                     Belum ada data guru di Supabase Cloud
                   </TableCell>
                 </TableRow>
