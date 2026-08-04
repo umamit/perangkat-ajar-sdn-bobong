@@ -142,8 +142,63 @@ export async function syncFromSupabase(): Promise<void> {
     if (typeof (window as any).renderAbsensi === 'function') {
       (window as any).renderAbsensi();
     }
+    if (typeof (window as any).renderAllViews === 'function') {
+      (window as any).renderAllViews();
+    }
+
+    setupSupabaseRealtime();
   } catch (err) {
     console.warn('[Supabase Sync Warning]', err);
+  }
+}
+
+// Supabase Real-time WebSockets Subscription (Gratis)
+let realtimeChannel: any = null;
+export function setupSupabaseRealtime(): void {
+  const client = getSupabase();
+  if (!client || realtimeChannel) return;
+
+  try {
+    realtimeChannel = client
+      .channel('sdn-bobong-realtime-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'students' },
+        (payload: any) => {
+          console.log('[Supabase Realtime Student Event]', payload);
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            const newS = payload.new;
+            const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === newS.nis);
+            const mapped = {
+              id: newS.nis,
+              uuid: newS.id,
+              nis: newS.nis,
+              name: newS.name,
+              classId: newS.class_id,
+              gender: newS.gender || 'L',
+              scoreFormatif: 80,
+              scoreSumatif: 80
+            };
+            if (existingIdx >= 0) {
+              appData.students[existingIdx] = mapped;
+            } else {
+              appData.students.push(mapped);
+            }
+          } else if (payload.eventType === 'DELETE') {
+            const oldS = payload.old;
+            appData.students = (appData.students || []).filter((s: any) => s.nis !== oldS.nis && s.id !== oldS.nis);
+          }
+
+          if (typeof (window as any).renderDataSiswa === 'function') {
+            const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+            const filterVal = selectElem ? selectElem.value : 'ALL';
+            (window as any).renderDataSiswa(filterVal);
+          }
+        }
+      )
+      .subscribe();
+  } catch (e) {
+    console.warn('[Supabase Realtime Subscription Warning]', e);
   }
 }
 

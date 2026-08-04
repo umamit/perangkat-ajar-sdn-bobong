@@ -4,7 +4,7 @@ import { renderDataSiswa } from './renderDataSiswa';
 import { filterSiswa } from './filterSiswa';
 import { showToast } from './showToast';
 
-export async function saveStudent(e: Event): Promise<void> {
+export function saveStudent(e: Event): void {
   e.preventDefault();
   const nis = (document.getElementById('studentNis') as HTMLInputElement).value.trim();
   const name = (document.getElementById('studentName') as HTMLInputElement).value.trim();
@@ -27,19 +27,24 @@ export async function saveStudent(e: Event): Promise<void> {
     scoreSumatif: 80
   };
 
+  // 1. OPTIMISTIC UPDATE (Instan 0ms pada UI)
   if (existingIdx >= 0) {
     appData.students[existingIdx] = newStudent;
   } else {
     appData.students.push(newStudent);
   }
 
-  saveStorage();
-  await saveStudentToSupabase(newStudent);
-  
   const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
   if (selectElem) selectElem.value = classId;
   renderDataSiswa(classId);
   filterSiswa();
   closeModal();
-  showToast(`Siswa "${name}" berhasil disimpan ke ${classId}!`, 'success');
+  showToast(`⚡ Siswa "${name}" berhasil disimpan ke ${classId}!`, 'success');
+
+  // 2. BACKGROUND ASYNC SYNC (Jalan di belakang layar)
+  saveStudentToSupabase(newStudent).then(success => {
+    if (!success) {
+      showToast(`⚠️ Kendala koneksi Supabase, namun data siswa tetap tersimpan di memori.`, 'info');
+    }
+  });
 }
