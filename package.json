@@ -1,33 +1,39 @@
 {
   "name": "perangkat-ajar-sdn-bobong",
-  "version": "1.0.79",
-  "description": "Perangkat Ajar Online - SD Negeri Bobong (TypeScript)",
-  "main": "app.js",
+  "version": "2.0.0",
+  "description": "Perangkat Ajar Online - SD Negeri Bobong (Next.js & Supabase)",
   "scripts": {
-    "dev": "python api/index.py",
-    "build": "tailwindcss -i style.css -o static/css/style.css --minify && cp style-components.css static/css/style-components.css && cp style-responsive.css static/css/style-responsive.css",
-    "start": "gunicorn api.index:app"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "keywords": [
+    "nextjs",
+    "react",
     "typescript",
     "perangkat-ajar",
     "sdn-bobong",
-    "supabase",
-    "pwa"
+    "supabase"
   ],
   "author": "SD Negeri Bobong",
   "license": "MIT",
   "dependencies": {
-    "@supabase/supabase-js": "^2.112.0",
-    "@types/papaparse": "^5.5.2",
+    "@supabase/supabase-js": "^2.48.0",
+    "next": "^15.1.7",
     "papaparse": "^5.5.4",
-    "typescript": "^5.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "autoprefixer": "^10.5.4",
-    "postcss": "^8.5.25",
+    "@types/node": "^22.13.4",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",
-    "vite": "^8.2.0"
+    "typescript": "^5.7.3"
   }
 }

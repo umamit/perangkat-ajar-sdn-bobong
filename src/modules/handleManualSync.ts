@@ -1,5 +1,5 @@
-import { syncFromSupabase } from '../helpers.js';
-import { showToast } from './showToast.js';
+import { syncFromSupabase } from '../helpers';
+import { showToast } from './showToast';
 
 export async function handleManualSync(btnEl?: HTMLElement): Promise<void> {
   const icon = btnEl ? btnEl.querySelector('i') : document.getElementById('syncBtnIcon');
