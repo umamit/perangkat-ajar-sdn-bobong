@@ -65,12 +65,25 @@ export async function executeDirectImport(input: HTMLInputElement): Promise<void
         return matchedKey ? String(row[matchedKey]).trim() : '';
       };
 
-      const name = findVal('Nama Lengkap', 'Nama', 'name', 'Nama Siswa', 'siswa');
-      const nis = findVal('NISN', 'NIS', 'id', 'No Induk', 'Nomor Induk');
-      const rawClass = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
-      const rawGender = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
+      // Ambil nilai nama dari kolom manapun jika pencocokan nama gagal
+      let name = findVal('Nama Lengkap', 'Nama', 'name', 'Nama Siswa', 'siswa', 'Nama_Siswa');
+      let nis = findVal('NISN', 'NIS', 'id', 'No Induk', 'Nomor Induk', 'Nis/Nisn');
+      let rawClass = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
+      let rawGender = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
 
-      if (name && name.toLowerCase() !== 'nama lengkap' && name.toLowerCase() !== 'nama') {
+      // Fallback jika header tidak cocok: ambil kolom ke-2 sebagai nama, kolom ke-1 sebagai NIS
+      if (!name && keys.length >= 2) {
+        const val1 = String(row[keys[0]] || '').trim();
+        const val2 = String(row[keys[1]] || '').trim();
+        if (isNaN(Number(val2)) && val2.length > 2) {
+          name = val2;
+          nis = val1;
+        } else if (isNaN(Number(val1)) && val1.length > 2) {
+          name = val1;
+        }
+      }
+
+      if (name && name.toLowerCase() !== 'nama lengkap' && name.toLowerCase() !== 'nama' && name.toLowerCase() !== 'name') {
         let classId = rawClass.toUpperCase().trim()
           .replace('KELAS', '').replace('III', '3').replace('II', '2').replace('IV', '4')
           .replace('VI', '6').replace('V', '5').replace('I', '1')
