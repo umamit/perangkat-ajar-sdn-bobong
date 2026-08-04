@@ -2,16 +2,18 @@ import { statusMap } from './statusMap';
 
 export function setAbsensiStatus(studentId: string, status: string): void {
   statusMap[studentId] = status;
-  const group = document.querySelector(`.btn-group-status[data-student="${studentId}"]`);
-  if (!group) return;
+  const tr = document.querySelector(`tr[data-student="${studentId}"]`);
+  if (!tr) return;
 
-  const buttons = group.querySelectorAll('.btn-status');
+  const buttons = tr.querySelectorAll('.btn-status');
   buttons.forEach(btn => {
     btn.classList.remove('active-hadir', 'active-izin', 'active-sakit', 'active-alpa');
     if (btn.textContent?.trim() === status) {
       const clsMap: Record<string, string> = {
-        'Hadir': 'active-hadir', 'Izin': 'active-izin',
-        'Sakit': 'active-sakit', 'Alpa': 'active-alpa'
+        'Hadir': 'active-hadir',
+        'Izin': 'active-izin',
+        'Sakit': 'active-sakit',
+        'Alpa': 'active-alpa'
       };
       btn.classList.add(clsMap[status]);
     }

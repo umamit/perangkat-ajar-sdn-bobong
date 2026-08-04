@@ -25,20 +25,20 @@ export function renderAbsensiForm(): void {
       if (!statusMap[sId]) statusMap[sId] = 'Hadir';
       const cur = statusMap[sId];
       return `
-        <tr>
+        <tr data-student="${sId}">
           <td style="text-align:center;">${idx + 1}</td>
           <td><strong>${s.name}</strong></td>
           <td style="text-align:center;">
-            <button class="btn-status ${cur === 'Hadir' ? 'active-hadir' : ''}" onclick="setAbsensiStatus('${sId}', 'Hadir')">Hadir</button>
+            <button type="button" class="btn-status ${cur === 'Hadir' ? 'active-hadir' : ''}" onclick="setAbsensiStatus('${sId}', 'Hadir')">Hadir</button>
           </td>
           <td style="text-align:center;">
-            <button class="btn-status ${cur === 'Izin' ? 'active-izin' : ''}" onclick="setAbsensiStatus('${sId}', 'Izin')">Izin</button>
+            <button type="button" class="btn-status ${cur === 'Izin' ? 'active-izin' : ''}" onclick="setAbsensiStatus('${sId}', 'Izin')">Izin</button>
           </td>
           <td style="text-align:center;">
-            <button class="btn-status ${cur === 'Sakit' ? 'active-sakit' : ''}" onclick="setAbsensiStatus('${sId}', 'Sakit')">Sakit</button>
+            <button type="button" class="btn-status ${cur === 'Sakit' ? 'active-sakit' : ''}" onclick="setAbsensiStatus('${sId}', 'Sakit')">Sakit</button>
           </td>
           <td style="text-align:center;">
-            <button class="btn-status ${cur === 'Alpa' ? 'active-alpa' : ''}" onclick="setAbsensiStatus('${sId}', 'Alpa')">Alpa</button>
+            <button type="button" class="btn-status ${cur === 'Alpa' ? 'active-alpa' : ''}" onclick="setAbsensiStatus('${sId}', 'Alpa')">Alpa</button>
           </td>
         </tr>`;
     }).join('');

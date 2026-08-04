@@ -469,3 +469,53 @@
     justify-content: center !important;
   }
 }
+
+/* ----------------------------------------------------
+   ABSENSI STATUS BUTTONS
+   ---------------------------------------------------- */
+.btn-status {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-status:hover {
+  border-color: #94a3b8;
+  color: #334155;
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
+}
+.btn-status.active-hadir {
+  background-color: #2a9d5c !important;
+  color: #ffffff !important;
+  border-color: #2a9d5c !important;
+  box-shadow: 0 3px 8px rgba(42, 157, 92, 0.3);
+}
+.btn-status.active-izin {
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
+}
+.btn-status.active-sakit {
+  background-color: #e5a900 !important;
+  color: #ffffff !important;
+  border-color: #e5a900 !important;
+  box-shadow: 0 3px 8px rgba(229, 169, 0, 0.3);
+}
+.btn-status.active-alpa {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #dc2626 !important;
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.3);
+}
+
