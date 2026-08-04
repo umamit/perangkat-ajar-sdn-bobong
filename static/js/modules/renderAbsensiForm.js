@@ -18,22 +18,27 @@ export function renderAbsensiForm() {
   if (!tbody || !card) return;
 
   if (students.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
   } else {
     tbody.innerHTML = students.map((s, idx) => {
       const sId = s.id;
       if (!statusMap[sId]) statusMap[sId] = 'Hadir';
+      const cur = statusMap[sId];
       return `
         <tr>
-          <td>${idx + 1}</td>
+          <td style="text-align:center;">${idx + 1}</td>
           <td><strong>${s.name}</strong></td>
-          <td>
-            <div class="btn-group-status" data-student="${sId}">
-              <button class="btn-status ${statusMap[sId] === 'Hadir' ? 'active-hadir' : ''}" onclick="setAbsensiStatus('${sId}', 'Hadir')">Hadir</button>
-              <button class="btn-status ${statusMap[sId] === 'Izin' ? 'active-izin' : ''}" onclick="setAbsensiStatus('${sId}', 'Izin')">Izin</button>
-              <button class="btn-status ${statusMap[sId] === 'Sakit' ? 'active-sakit' : ''}" onclick="setAbsensiStatus('${sId}', 'Sakit')">Sakit</button>
-              <button class="btn-status ${statusMap[sId] === 'Alpa' ? 'active-alpa' : ''}" onclick="setAbsensiStatus('${sId}', 'Alpa')">Alpa</button>
-            </div>
+          <td style="text-align:center;">
+            <button class="btn-status ${cur === 'Hadir' ? 'active-hadir' : ''}" onclick="setAbsensiStatus('${sId}', 'Hadir')">Hadir</button>
+          </td>
+          <td style="text-align:center;">
+            <button class="btn-status ${cur === 'Izin' ? 'active-izin' : ''}" onclick="setAbsensiStatus('${sId}', 'Izin')">Izin</button>
+          </td>
+          <td style="text-align:center;">
+            <button class="btn-status ${cur === 'Sakit' ? 'active-sakit' : ''}" onclick="setAbsensiStatus('${sId}', 'Sakit')">Sakit</button>
+          </td>
+          <td style="text-align:center;">
+            <button class="btn-status ${cur === 'Alpa' ? 'active-alpa' : ''}" onclick="setAbsensiStatus('${sId}', 'Alpa')">Alpa</button>
           </td>
         </tr>`;
     }).join('');
