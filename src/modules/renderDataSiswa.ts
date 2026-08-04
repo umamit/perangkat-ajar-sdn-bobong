@@ -1,21 +1,26 @@
 import { appData } from '../helpers';
 import { getTeacherClasses } from './getTeacherClasses';
 
-export function renderDataSiswa(filterClass: string = 'ALL'): void {
+export function renderDataSiswa(filterClass?: string): void {
   const container = document.getElementById('siswaTableBody');
   if (!container) return;
 
   const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+  let activeFilter = filterClass;
+
   if (selectElem) {
     const availClasses = getTeacherClasses();
-    const currentVal = selectElem.value;
+    const currentVal = activeFilter !== undefined ? activeFilter : selectElem.value;
     selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` +
       availClasses.map(c => `<option value="${c.id}" ${c.id === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
+    activeFilter = selectElem.value;
   }
 
-  let filtered = appData.students;
-  if (filterClass !== 'ALL') {
-    filtered = filtered.filter(s => s.classId === filterClass);
+  if (activeFilter === undefined) activeFilter = 'ALL';
+
+  let filtered = appData.students || [];
+  if (activeFilter !== 'ALL') {
+    filtered = filtered.filter(s => s.classId === activeFilter);
   } else {
     const availClasses = getTeacherClasses();
     const availIds = availClasses.map(c => c.id);
