@@ -4,10 +4,9 @@
   "description": "Perangkat Ajar Online - SD Negeri Bobong (TypeScript)",
   "main": "app.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "watch": "tsc -w"
+    "dev": "python api/index.py",
+    "build": "tailwindcss -i style.css -o static/css/style.css --minify && cp style-components.css static/css/style-components.css && cp style-responsive.css static/css/style-responsive.css",
+    "start": "gunicorn api.index:app"
   },
   "keywords": [
     "typescript",
