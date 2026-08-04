@@ -45,8 +45,8 @@ interface AppContextType {
 const defaultTeacher: Teacher = {
   nip: '199610272019032006',
   name: 'Husnita Usman, M.Pd',
-  role: 'Guru Mata Pelajaran',
-  subject: 'Bahasa Inggris',
+  role: 'Kepala Sekolah / Executive Admin',
+  subject: 'Bahasa Inggris & Manajemen Sekolah',
   school: 'SD Negeri Bobong',
   kecamatan: 'Kabupaten Pulau Taliabu',
   avatar: '/assets/logo-sdn-bobong.png'

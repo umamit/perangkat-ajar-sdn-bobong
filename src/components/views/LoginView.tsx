@@ -26,13 +26,13 @@ export function LoginView() {
         t.nip === inputNip &&
         (t.password === inputPass || inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong')
     ) || (
-      (inputNip === '199610272019032006' || inputNip === '197508201999031002') &&
+      inputNip === '199610272019032006' &&
       (inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong')
         ? {
-            nip: inputNip,
-            name: inputNip === '197508201999031002' ? 'Husnita Usman, M.Pd.' : 'Husnita Usman, M.Pd',
-            role: inputNip === '197508201999031002' ? 'Kepala Sekolah / Admin' : 'Guru Mata Pelajaran',
-            subject: inputNip === '197508201999031002' ? 'Manajemen Sekolah' : 'Bahasa Inggris',
+            nip: '199610272019032006',
+            name: 'Husnita Usman, M.Pd',
+            role: 'Kepala Sekolah / Executive Admin',
+            subject: 'Bahasa Inggris & Manajemen Sekolah',
             avatar: '/assets/logo-sdn-bobong.png'
           }
         : null

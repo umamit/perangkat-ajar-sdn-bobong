@@ -20,7 +20,7 @@ export function handleLogin(event?: Event) {
     (appData as any).currentTeacher = matched;
     document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
     showToast(`Selamat datang, ${matched.name}!`, 'success');
-  } else if ((nipInput === '199610272019032006' || nipInput === '197508201999031002') && (passInput === 'sdnbobong' || passInput === 'kepseksdnbobong')) {
+  } else if (nipInput === '199610272019032006' && (passInput === 'sdnbobong' || passInput === 'kepseksdnbobong')) {
     document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
     showToast('Login berhasil', 'success');
   } else {

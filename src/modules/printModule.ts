@@ -67,7 +67,7 @@ export function printModule(moduleId: string): void {
           <div>
             <p>Mengetahui,<br>Kepala SD Negeri Bobong</p>
             <br><br><br>
-            <p><strong>Kepala Sekolah SDN Bobong</strong><br>NIP. 197508201999031002</p>
+            <p><strong>Husnita Usman, M.Pd</strong><br>NIP. 199610272019032006</p>
           </div>
           <div>
             <p>Bobong, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Guru Mata Pelajaran</p>
