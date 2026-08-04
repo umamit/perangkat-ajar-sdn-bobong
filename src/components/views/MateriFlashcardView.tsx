@@ -1,30 +1,32 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export function MateriFlashcardView() {
-  const flashcards = [
+  const { flashcards } = useApp();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+
+  const cardList = flashcards && flashcards.length > 0 ? flashcards : [
     { id: '1', title: 'Greetings & Introduction', word: 'Hello / Good Morning', meaning: 'Halo / Selamat Pagi', phase: 'Fase A' },
     { id: '2', title: 'Classroom Objects', word: 'Pencil & Book', meaning: 'Pensil & Buku', phase: 'Fase A' },
     { id: '3', title: 'Numbers 1-20', word: 'One, Two, Three...', meaning: 'Satu, Dua, Tiga...', phase: 'Fase B' }
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-
-  const currentCard = flashcards[currentIndex] || flashcards[0];
+  const currentCard = cardList[currentIndex] || cardList[0];
 
   const handleNext = () => {
     setFlipped(false);
-    setCurrentIndex(prev => (prev + 1) % flashcards.length);
+    setCurrentIndex(prev => (prev + 1) % cardList.length);
   };
 
   const handlePrev = () => {
     setFlipped(false);
-    setCurrentIndex(prev => (prev - 1 + flashcards.length) % flashcards.length);
+    setCurrentIndex(prev => (prev - 1 + cardList.length) % cardList.length);
   };
 
   return (
@@ -32,7 +34,7 @@ export function MateriFlashcardView() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Media Pembelajaran Interaktif (Flashcard)</h3>
-          <p className="text-xs text-slate-500">Kartu kosakata interaktif Bahasa Inggris SD</p>
+          <p className="text-xs text-slate-500">Kartu kosakata interaktif Bahasa Inggris SD (Terhubung Supabase Cloud)</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddFlashcardModal()}>
           <i className="ri-add-line" /> Tambah Flashcard
@@ -45,9 +47,9 @@ export function MateriFlashcardView() {
           className="cursor-pointer min-h-[260px] flex flex-col justify-between items-center text-center p-8 bg-gradient-to-br from-white to-slate-50 shadow-xl border border-slate-200/80 rounded-2xl hover:border-primary transition-all duration-300"
         >
           <div className="w-full flex justify-between items-center">
-            <Badge variant="default">{currentCard.phase}</Badge>
+            <Badge variant="default">{currentCard.phase || 'Fase A'}</Badge>
             <span className="text-xs text-slate-400 font-bold">
-              {currentIndex + 1} / {flashcards.length}
+              {currentIndex + 1} / {cardList.length}
             </span>
           </div>
 

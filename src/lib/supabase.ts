@@ -17,21 +17,33 @@ export function getSupabase(): SupabaseClient {
 export async function syncFromSupabase() {
   try {
     const supabase = getSupabase();
-    const [tRes, cRes, sRes, aRes] = await Promise.all([
+    const [tRes, cRes, sRes, aRes, jRes, mRes, fRes, assRes] = await Promise.allSettled([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
       supabase.from('students').select('*'),
-      supabase.from('attendance').select('*')
+      supabase.from('attendance').select('*'),
+      supabase.from('journals').select('*'),
+      supabase.from('modules').select('*'),
+      supabase.from('flashcards').select('*'),
+      supabase.from('assignments').select('*')
     ]);
+
+    const getValue = (res: PromiseSettledResult<any>) =>
+      res.status === 'fulfilled' && res.value && !res.value.error ? res.value.data : [];
+
     return {
-      teachers: tRes.data || [],
-      classes: cRes.data || [],
-      students: sRes.data || [],
-      attendance: aRes.data || []
+      teachers: getValue(tRes),
+      classes: getValue(cRes),
+      students: getValue(sRes),
+      attendance: getValue(aRes),
+      journals: getValue(jRes),
+      modules: getValue(mRes),
+      flashcards: getValue(fRes),
+      assignments: getValue(assRes)
     };
   } catch (e) {
     console.warn('[Supabase Sync Error]', e);
-    return { teachers: [], classes: [], students: [], attendance: [] };
+    return { teachers: [], classes: [], students: [], attendance: [], journals: [], modules: [], flashcards: [], assignments: [] };
   }
 }
 
@@ -68,6 +80,28 @@ export async function deleteJournalFromSupabase(id: string) {
   }
 }
 
+export async function deleteFlashcardFromSupabase(id: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('flashcards').delete().eq('id', id);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Flashcard Error]', e);
+    return false;
+  }
+}
+
+export async function deleteAssignmentFromSupabase(id: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('assignments').delete().eq('id', id);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Assignment Error]', e);
+    return false;
+  }
+}
+
 export async function saveStudentToSupabase(student: any) {
   try {
     const supabase = getSupabase();
@@ -97,6 +131,28 @@ export async function saveJournalToSupabase(journal: any) {
     return !error;
   } catch (e) {
     console.warn('[Save Journal Error]', e);
+    return false;
+  }
+}
+
+export async function saveFlashcardToSupabase(flashcard: any) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('flashcards').upsert(flashcard);
+    return !error;
+  } catch (e) {
+    console.warn('[Save Flashcard Error]', e);
+    return false;
+  }
+}
+
+export async function saveAssignmentToSupabase(assignment: any) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('assignments').upsert(assignment);
+    return !error;
+  } catch (e) {
+    console.warn('[Save Assignment Error]', e);
     return false;
   }
 }

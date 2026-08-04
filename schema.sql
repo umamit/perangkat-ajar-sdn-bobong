@@ -14,11 +14,17 @@ CREATE TABLE IF NOT EXISTS public.classes (
 -- Seed Data Kelas SD Negeri Bobong
 INSERT INTO public.classes (id, name, count, room, phase) VALUES
 ('1A', 'Kelas 1 - A', 24, 'Ruang 01', 'Fase A'),
+('1B', 'Kelas 1 - B', 24, 'Ruang 01B', 'Fase A'),
 ('2A', 'Kelas 2 - A', 22, 'Ruang 02', 'Fase A'),
+('2B', 'Kelas 2 - B', 22, 'Ruang 02B', 'Fase A'),
 ('3A', 'Kelas 3 - A', 25, 'Ruang 03', 'Fase B'),
+('3B', 'Kelas 3 - B', 25, 'Ruang 03B', 'Fase B'),
 ('4A', 'Kelas 4 - A', 26, 'Ruang 04', 'Fase B'),
+('4B', 'Kelas 4 - B', 26, 'Ruang 04B', 'Fase B'),
 ('5A', 'Kelas 5 - A', 28, 'Ruang 05', 'Fase C'),
-('6A', 'Kelas 6 - A', 25, 'Ruang 06', 'Fase C')
+('5B', 'Kelas 5 - B', 28, 'Ruang 05B', 'Fase C'),
+('6A', 'Kelas 6 - A', 25, 'Ruang 06', 'Fase C'),
+('6B', 'Kelas 6 - B', 25, 'Ruang 06B', 'Fase C')
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Tabel Siswa (Students)
@@ -30,18 +36,6 @@ CREATE TABLE IF NOT EXISTS public.students (
     gender TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
--- Seed Data Siswa
-INSERT INTO public.students (nis, name, class_id, gender) VALUES
-('20250101', 'Ahmad Dani', '4A', 'L'),
-('20250102', 'Anisa Rahma', '4A', 'P'),
-('20250103', 'Budi Santoso', '4A', 'L'),
-('20250104', 'Citra Kirana', '4A', 'P'),
-('20250105', 'Doni Pratama', '4A', 'L'),
-('20250106', 'Eka Putri', '1A', 'P'),
-('20250107', 'Fajar Nugraha', '1A', 'L'),
-('20250108', 'Gita Gutawa', '5A', 'P')
-ON CONFLICT (nis) DO NOTHING;
 
 -- 3. Tabel Absensi (Attendance)
 CREATE TABLE IF NOT EXISTS public.attendance (
@@ -61,7 +55,7 @@ CREATE TABLE IF NOT EXISTS public.grades (
     student_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
     class_id TEXT REFERENCES public.classes(id),
     subject TEXT DEFAULT 'Bahasa Inggris',
-    type TEXT CHECK (type IN ('Formatif', 'Sumatif')),
+    type TEXT CHECK (type IN ('Formatif', 'Sumatif', 'STS', 'SAS')),
     score NUMERIC CHECK (score >= 0 AND score <= 100),
     topic TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -105,13 +99,25 @@ CREATE TABLE IF NOT EXISTS public.teachers (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Seed Data Guru SD Negeri Bobong
-INSERT INTO public.teachers (nip, name, role, subject, password, avatar_url) VALUES
-('199610272019032006', 'Guru Bahasa Inggris', 'Guru Mata Pelajaran', 'Bahasa Inggris', 'kepseksdnbobong', 'assets/logo-sdn-bobong.png'),
-('197508201999031002', 'Kepala Sekolah SDN Bobong', 'Kepala Sekolah / Admin', 'Manajemen Sekolah', 'kepseksdnbobong', 'assets/logo-sdn-bobong.png'),
-('199105122018021001', 'Nurhalisa, S.Pd.', 'Guru Kelas', 'Guru Kelas 1A', 'sdnbobong', 'assets/logo-sdn-bobong.png'),
-('198803152014032003', 'Rahmat Hidayat, S.Pd.', 'Guru Kelas', 'Guru Kelas 4A', 'sdnbobong', 'assets/logo-sdn-bobong.png')
-ON CONFLICT (nip) DO NOTHING;
+-- 8. Tabel Flashcard (Flashcards)
+CREATE TABLE IF NOT EXISTS public.flashcards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    word TEXT NOT NULL,
+    meaning TEXT NOT NULL,
+    phase TEXT DEFAULT 'Fase A',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 9. Tabel Tugas & Evaluasi (Assignments)
+CREATE TABLE IF NOT EXISTS public.assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    class_id TEXT REFERENCES public.classes(id),
+    due_date DATE,
+    status TEXT DEFAULT 'Aktif',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 -- Aktifkan Row Level Security (RLS) & Kebijakan Akses Publik Read/Write
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
@@ -121,6 +127,8 @@ ALTER TABLE public.grades ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.journals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.teachers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.flashcards ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow public read classes" ON public.classes FOR SELECT USING (true);
 CREATE POLICY "Allow public read/write students" ON public.students FOR ALL USING (true);
@@ -129,3 +137,5 @@ CREATE POLICY "Allow public read/write grades" ON public.grades FOR ALL USING (t
 CREATE POLICY "Allow public read/write journals" ON public.journals FOR ALL USING (true);
 CREATE POLICY "Allow public read/write modules" ON public.modules FOR ALL USING (true);
 CREATE POLICY "Allow public read/write teachers" ON public.teachers FOR ALL USING (true);
+CREATE POLICY "Allow public read/write flashcards" ON public.flashcards FOR ALL USING (true);
+CREATE POLICY "Allow public read/write assignments" ON public.assignments FOR ALL USING (true);

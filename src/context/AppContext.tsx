@@ -28,6 +28,10 @@ interface AppContextType {
   attendance: any[];
   setAttendance: React.Dispatch<React.SetStateAction<any[]>>;
   modules: any[];
+  flashcards: any[];
+  setFlashcards: React.Dispatch<React.SetStateAction<any[]>>;
+  assignments: any[];
+  setAssignments: React.Dispatch<React.SetStateAction<any[]>>;
   toasts: ToastMessage[];
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   syncData: () => Promise<void>;
@@ -59,6 +63,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [attendance, setAttendance] = useState<any[]>([]);
   const [modules, setModules] = useState<any[]>([]);
+  const [flashcards, setFlashcards] = useState<any[]>([
+    { id: '1', title: 'Greetings & Introduction', word: 'Hello / Good Morning', meaning: 'Halo / Selamat Pagi', phase: 'Fase A' },
+    { id: '2', title: 'Classroom Objects', word: 'Pencil & Book', meaning: 'Pensil & Buku', phase: 'Fase A' },
+    { id: '3', title: 'Numbers 1-20', word: 'One, Two, Three...', meaning: 'Satu, Dua, Tiga...', phase: 'Fase B' }
+  ]);
+  const [assignments, setAssignments] = useState<any[]>([
+    { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', status: 'Aktif' },
+    { id: '2', title: 'Tugas 2: Listening & Repeating', classId: '4A', dueDate: '2026-08-12', status: 'Aktif' }
+  ]);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -131,6 +144,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (data.modules) {
           setModules(data.modules);
         }
+        if (data.flashcards && data.flashcards.length > 0) {
+          setFlashcards(data.flashcards);
+        }
+        if (data.assignments && data.assignments.length > 0) {
+          setAssignments(data.assignments.map((a: any) => ({
+            id: a.id,
+            title: a.title,
+            classId: a.class_id,
+            dueDate: a.due_date,
+            status: a.status || 'Aktif'
+          })));
+        }
       }
     } catch (err) {
       console.warn('[Supabase Sync Error]', err);
@@ -168,6 +193,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         attendance,
         setAttendance,
         modules,
+        flashcards,
+        setFlashcards,
+        assignments,
+        setAssignments,
         toasts,
         showToast,
         syncData,
