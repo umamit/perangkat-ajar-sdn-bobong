@@ -33,26 +33,36 @@ export function handleImportStudentSubmit(e: Event): void {
       let targetClass = 'ALL';
 
       for (const row of rawData) {
-        const nis = String(row.NISN || row.nis || row.NIS || row.id || '').trim();
-        const name = String(row['Nama Lengkap'] || row.nama || row.name || row.Nama || '').trim();
-        let classIdRaw = String(row.Kelas || row.kelas || row.classId || '3A').trim().toUpperCase();
-        let classId = classIdRaw.replace(/[^0-9A-Z]/g, ''); // contoh "KELAS 3-B" -> "3B", "3 - B" -> "3B"
-        let genderRaw = String(row['Jenis Kelamin'] || row.gender || row.JK || 'L').trim().toUpperCase();
-        let gender = (genderRaw.startsWith('P') || genderRaw.startsWith('W')) ? 'P' : 'L';
+        // Cari nilai berdasarkan kunci header secara fleksibel (case-insensitive & trimmed)
+        const keys = Object.keys(row);
+        const findVal = (...possibleNames: string[]) => {
+          const matchedKey = keys.find(k => possibleNames.some(p => k.toLowerCase().trim() === p.toLowerCase().trim()));
+          return matchedKey ? String(row[matchedKey]).trim() : '';
+        };
 
-        if (nis && name) {
+        const nis = findVal('NISN', 'NIS', 'id', 'No Induk', 'Nomor Induk');
+        const name = findVal('Nama Lengkap', 'Nama', 'name', 'Nama Siswa');
+        let classIdRaw = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
+        let genderRaw = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
+
+        let classId = classIdRaw.replace(/[^0-9A-Z]/g, '').toUpperCase();
+        if (!classId) classId = '3B';
+        let gender = (genderRaw.toUpperCase().startsWith('P') || genderRaw.toUpperCase().startsWith('W')) ? 'P' : 'L';
+
+        if (nis || name) {
+          const finalNis = nis || `SISWA-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
           targetClass = classId;
           const newStudent: any = {
-            id: nis,
-            nis: nis,
-            name: name,
+            id: finalNis,
+            nis: finalNis,
+            name: name || 'Siswa Tanpa Nama',
             classId: classId,
             gender: gender,
             scoreFormatif: 80,
             scoreSumatif: 80
           };
 
-          const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === nis || s.id === nis);
+          const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === finalNis || s.id === finalNis);
           if (existingIdx >= 0) {
             appData.students[existingIdx] = newStudent;
           } else {
@@ -60,7 +70,6 @@ export function handleImportStudentSubmit(e: Event): void {
           }
 
           importedCount++;
-          // Fire and forget / background save to Supabase
           saveStudentToSupabase(newStudent);
         }
       }
