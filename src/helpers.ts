@@ -31,7 +31,7 @@ export async function syncFromSupabase(): Promise<void> {
   try {
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
-      appData.students = students.map((s: any) => ({
+      const fetchedStudents = students.map((s: any) => ({
         id: s.nis,
         uuid: s.id,
         nis: s.nis,
@@ -39,8 +39,13 @@ export async function syncFromSupabase(): Promise<void> {
         classId: s.class_id,
         gender: s.gender || 'L'
       }));
-    } else {
-      appData.students = [...INITIAL_DATA.students];
+
+      // Merge Supabase data with existing local data (preserve newly added local students)
+      const mergedMap = new Map();
+      (appData.students || []).forEach((s: any) => mergedMap.set(s.nis || s.id, s));
+      fetchedStudents.forEach((s: any) => mergedMap.set(s.nis || s.id, s));
+      appData.students = Array.from(mergedMap.values());
+      saveStorage();
     }
 
     const { data: journals } = await client.from('journals').select('id, date, time_slot, class_id, topic, notes, attendance_summary');
@@ -177,13 +182,35 @@ export function eraseCookie(name: string): void {
 }
 
 export function loadStorage(): void {
-  if (!appData) {
-    appData = { ...INITIAL_DATA };
+  try {
+    const saved = localStorage.getItem('sdn_bobong_app_data');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.students) {
+        appData.students = parsed.students;
+      }
+      if (parsed && parsed.journals) {
+        appData.journals = parsed.journals;
+      }
+      if (parsed && parsed.modules) {
+        appData.modules = parsed.modules;
+      }
+    }
+  } catch (e) {
+    console.warn('[LocalStorage Load Error]', e);
   }
 }
 
 export function saveStorage(): void {
-  // Data state is held in memory and synced live with Supabase
+  try {
+    localStorage.setItem('sdn_bobong_app_data', JSON.stringify({
+      students: appData.students,
+      journals: appData.journals,
+      modules: appData.modules
+    }));
+  } catch (e) {
+    console.warn('[LocalStorage Save Error]', e);
+  }
 }
 
 // Password Visibility Toggle
