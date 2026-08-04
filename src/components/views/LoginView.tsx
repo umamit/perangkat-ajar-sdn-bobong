@@ -122,6 +122,22 @@ export function LoginView() {
           </form>
         </CardContent>
       </Card>
+
+      <div className="mt-6 text-center">
+        <a
+          href="https://digital.ibraglobalenglish.uk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-cyan-300 transition-colors duration-200"
+        >
+          <span>Developed by IBRA Digital Engineering</span>
+          <img
+            src="/assets/logo-ide.png"
+            alt="IBRA Digital Engineering Logo"
+            className="w-4 h-4 rounded-full object-contain inline-block"
+          />
+        </a>
+      </div>
     </div>
   );
 }
