@@ -2,16 +2,13 @@
 
 import React from 'react';
 import { useApp } from '@/context/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { INITIAL_DATA } from '@/data';
 
 export function GuruView() {
   const { teachers, setTeachers, showToast } = useApp();
-
-  const teachersToRender = (teachers && teachers.length > 0) ? teachers : (INITIAL_DATA.teachers || []);
 
   const handleDelete = (nip: string, name: string) => {
     if (confirm(`Hapus data guru ${name}?`)) {
@@ -25,7 +22,7 @@ export function GuruView() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Kelola Data Guru & Tenaga Pendidik</h3>
-          <p className="text-xs text-slate-500">Daftar tenaga pendidik terdaftar di SD Negeri Bobong</p>
+          <p className="text-xs text-slate-500">Daftar tenaga pendidik terdaftar di Supabase Cloud</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddTeacherModal()}>
           <i className="ri-user-add-line" /> Tambah Data Guru
@@ -46,7 +43,7 @@ export function GuruView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {teachersToRender.map((t, idx) => (
+              {teachers.map((t, idx) => (
                 <TableRow key={t.nip || idx}>
                   <TableCell>
                     <img
@@ -70,10 +67,10 @@ export function GuruView() {
                   </TableCell>
                 </TableRow>
               ))}
-              {teachersToRender.length === 0 && (
+              {teachers.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-slate-400 py-8 text-xs">
-                    Belum ada data guru terdaftar
+                    Belum ada data guru di Supabase Cloud
                   </TableCell>
                 </TableRow>
               )}

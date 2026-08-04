@@ -1,9 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getSupabase } from '@/lib/supabase';
-import { INITIAL_DATA } from '@/data';
-import { Student, Teacher, JournalEntry, AppData } from '@/types';
+import { Student, Teacher, JournalEntry } from '@/types';
 
 interface ToastMessage {
   id: string;
@@ -38,19 +36,29 @@ interface AppContextType {
   setSidebarOpen: (open: boolean) => void;
 }
 
+const defaultTeacher: Teacher = {
+  nip: '199610272019032006',
+  name: 'Husnita Usman, M.Pd',
+  role: 'Guru Mata Pelajaran',
+  subject: 'Bahasa Inggris',
+  school: 'SD Negeri Bobong',
+  kecamatan: 'Kabupaten Pulau Taliabu',
+  avatar: '/assets/logo-sdn-bobong.png'
+};
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<string>('dashboard');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
-  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(INITIAL_DATA.teacher);
-  const [teachers, setTeachers] = useState<Teacher[]>(INITIAL_DATA.teachers || []);
-  const [students, setStudents] = useState<Student[]>(INITIAL_DATA.students || []);
-  const [classes, setClasses] = useState<any[]>(INITIAL_DATA.classes || []);
-  const [journals, setJournals] = useState<JournalEntry[]>(INITIAL_DATA.journals || []);
+  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [classes, setClasses] = useState<any[]>([]);
+  const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [attendance, setAttendance] = useState<any[]>([]);
-  const [modules, setModules] = useState<any[]>(INITIAL_DATA.modules || []);
+  const [modules, setModules] = useState<any[]>([]);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -69,24 +77,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch('/api/sync');
       const data = await res.json();
       if (data.success) {
-        if (data.teachers) {
-          const map = new Map<string, Teacher>();
-          (INITIAL_DATA.teachers || []).forEach(t => map.set(t.nip, t));
-          data.teachers.forEach((t: any) => {
-            if (t && t.nip) {
-              map.set(t.nip, {
-                nip: t.nip,
-                name: t.name,
-                role: t.role || 'Guru Mata Pelajaran',
-                subject: t.subject || 'Bahasa Inggris',
-                password: t.password || 'sdnbobong',
-                avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
-              });
-            }
-          });
-          setTeachers(Array.from(map.values()));
+        if (data.teachers && data.teachers.length > 0) {
+          setTeachers(data.teachers.map((t: any) => ({
+            nip: t.nip,
+            name: t.name,
+            role: t.role || 'Guru Mata Pelajaran',
+            subject: t.subject || 'Bahasa Inggris',
+            password: t.password || 'sdnbobong',
+            avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
+          })));
         }
-        if (data.students && data.students.length > 0) {
+        if (data.students) {
           setStudents(data.students.map((s: any) => ({
             id: s.id,
             nis: s.nis || s.id,
@@ -99,7 +100,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             scoreSas: s.score_sas || 0
           })));
         }
-        if (data.classes && data.classes.length > 0) {
+        if (data.classes) {
           setClasses(data.classes.map((c: any) => ({
             id: c.id,
             name: c.name,
@@ -107,7 +108,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             room: c.room || 'Ruang Kelas'
           })));
         }
-        if (data.journals && data.journals.length > 0) {
+        if (data.journals) {
           setJournals(data.journals.map((j: any) => ({
             id: j.id,
             date: j.date,
@@ -118,22 +119,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             attendance: j.attendance_summary || ''
           })));
         }
-        if (data.attendance && data.attendance.length > 0) {
+        if (data.attendance) {
           setAttendance(data.attendance);
         }
-        if (data.modules && data.modules.length > 0) {
+        if (data.modules) {
           setModules(data.modules);
         }
       }
     } catch (err) {
-      console.warn('[Sync Error]', err);
+      console.warn('[Supabase Sync Error]', err);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // Check cookie / auth state
     const cookie = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
     if (cookie && cookie.split('=')[1] === 'true') {
       setIsLoggedIn(true);
