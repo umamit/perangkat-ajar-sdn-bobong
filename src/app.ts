@@ -52,10 +52,10 @@ import { renderMateriFlashcards } from './modules/renderMateriFlashcards';
 import { renderTugas } from './modules/renderTugas';
 import { renderLaporan } from './modules/renderLaporan';
 
-import { openModal } from './modules/openModal';
 import { closeModal } from './modules/closeModal';
 import { closeMobileSidebar } from './modules/closeMobileSidebar';
 import { setupNavigation } from './modules/setupNavigation';
+import { switchView } from './modules/switchView';
 import { switchRoleMode } from './modules/switchRoleMode';
 
 import { showAddTeacherModal } from './modules/showAddTeacherModal';
@@ -188,5 +188,6 @@ if (typeof window !== 'undefined') {
   (window as any).deleteModul = deleteModul;
   (window as any).showToast = showToast;
   (window as any).closeModal = closeModal;
+  (window as any).switchView = switchView;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }
