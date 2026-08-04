@@ -22,6 +22,8 @@ import { showEditStudentModal } from './modules/showEditStudentModal';
 import { saveStudent } from './modules/saveStudent';
 import { saveEditStudent } from './modules/saveEditStudent';
 import { deleteStudent } from './modules/deleteStudent';
+import { showImportStudentModal, downloadStudentTemplate } from './modules/showImportStudentModal';
+import { handleImportStudentSubmit } from './modules/handleImportStudentSubmit';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
@@ -176,6 +178,9 @@ if (typeof window !== 'undefined') {
   (window as any).exportSiswaToCSV = exportSiswaToCSV;
   (window as any).exportNilaiToCSV = exportNilaiToCSV;
   (window as any).deleteStudent = deleteStudent;
+  (window as any).showImportStudentModal = showImportStudentModal;
+  (window as any).downloadStudentTemplate = downloadStudentTemplate;
+  (window as any).handleImportStudentSubmit = handleImportStudentSubmit;
   (window as any).deleteJournal = deleteJournal;
   (window as any).deleteModul = deleteModul;
   (window as any).showToast = showToast;
