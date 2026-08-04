@@ -332,21 +332,30 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
   }
 }
 
-export async function deleteStudentFromSupabase(nis: string): Promise<void> {
+export async function deleteStudentFromSupabase(nis: string): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return;
+  if (!client) return false;
   try {
-    await client.from('students').delete().eq('nis', nis);
-  } catch (err) {
-    console.warn('[Supabase Student Delete Warning]', err);
+    const { error } = await client.from('students').delete().eq('nis', nis);
+    if (error) {
+      console.error('[Supabase Student Delete Error]', error.message, error);
+      if (typeof (window as any).showToast === 'function') {
+        (window as any).showToast(`⚠️ Gagal Menghapus Siswa di Supabase: ${error.message}`, 'error');
+      }
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Student Delete Exception]', err);
+    return false;
   }
 }
 
-export async function saveJournalToSupabase(j: JournalEntry): Promise<void> {
+export async function saveJournalToSupabase(j: JournalEntry): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return;
+  if (!client) return false;
   try {
-    await client.from('journals').insert({
+    const { error } = await client.from('journals').insert({
       date: j.date,
       time_slot: j.time || '',
       class_id: j.classId,
@@ -354,16 +363,26 @@ export async function saveJournalToSupabase(j: JournalEntry): Promise<void> {
       notes: j.notes || '',
       attendance_summary: j.attendance || ''
     });
-  } catch (err) {
-    console.warn('[Supabase Journal Save Warning]', err);
+
+    if (error) {
+      console.error('[Supabase Journal Save Error]', error.message, error);
+      if (typeof (window as any).showToast === 'function') {
+        (window as any).showToast(`⚠️ Supabase Error Jurnal: ${error.message}`, 'error');
+      }
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Journal Save Exception]', err);
+    return false;
   }
 }
 
-export async function saveTeacherToSupabase(t: Teacher): Promise<void> {
+export async function saveTeacherToSupabase(t: Teacher): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return;
+  if (!client) return false;
   try {
-    await client.from('teachers').upsert({
+    const { error } = await client.from('teachers').upsert({
       nip: t.nip,
       name: t.name,
       role: t.role || 'Guru Mata Pelajaran',
@@ -371,18 +390,37 @@ export async function saveTeacherToSupabase(t: Teacher): Promise<void> {
       password: t.password || 'sdnbobong',
       avatar_url: t.avatar || 'assets/logo-sdn-bobong.png'
     }, { onConflict: 'nip' });
-  } catch (err) {
-    console.warn('[Supabase Teacher Save Warning]', err);
+
+    if (error) {
+      console.error('[Supabase Teacher Save Error]', error.message, error);
+      if (typeof (window as any).showToast === 'function') {
+        (window as any).showToast(`⚠️ Supabase Error Guru: ${error.message}`, 'error');
+      }
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Teacher Save Exception]', err);
+    return false;
   }
 }
 
-export async function deleteTeacherFromSupabase(nip: string): Promise<void> {
+export async function deleteTeacherFromSupabase(nip: string): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return;
+  if (!client) return false;
   try {
-    await client.from('teachers').delete().eq('nip', nip);
-  } catch (err) {
-    console.warn('[Supabase Teacher Delete Warning]', err);
+    const { error } = await client.from('teachers').delete().eq('nip', nip);
+    if (error) {
+      console.error('[Supabase Teacher Delete Error]', error.message, error);
+      if (typeof (window as any).showToast === 'function') {
+        (window as any).showToast(`⚠️ Gagal Menghapus Guru di Supabase: ${error.message}`, 'error');
+      }
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Teacher Delete Exception]', err);
+    return false;
   }
 }
 
