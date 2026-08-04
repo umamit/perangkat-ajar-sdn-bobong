@@ -1,8 +1,6 @@
 import os
-import json
 import requests as req
-from flask import Flask, jsonify, request, render_template
-
+from flask import Flask, jsonify, request, render_template, make_response
 from dotenv import load_dotenv
 
 # Load env variables from root folder
@@ -15,6 +13,25 @@ app = Flask(
     static_folder=os.path.join(parent_dir, 'static'),
     static_url_path='/static'
 )
+
+ALLOWED_ORIGINS = [
+    'https://ajar.sdnegeribobong.sch.id',
+    'http://127.0.0.1:5000',
+    'http://localhost:5000'
+]
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get('Origin', '')
+    if origin in ALLOWED_ORIGINS:
+        response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+def handle_options(path):
+    return make_response('', 204)
 
 SUPABASE_URL = os.getenv("VITE_SUPABASE_URL", "https://evslcvjucmnyxkqwfdye.supabase.co")
 SUPABASE_KEY = os.getenv("VITE_SUPABASE_SERVICE_ROLE_KEY") or os.getenv("VITE_SUPABASE_ANON_KEY", "")

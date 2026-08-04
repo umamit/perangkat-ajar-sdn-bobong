@@ -1,11 +1,28 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.12"
+      }
     }
   ],
   "routes": [
+    {
+      "src": "/static/css/(.*)",
+      "dest": "/static/css/$1"
+    },
+    {
+      "src": "/static/js/(.*)",
+      "dest": "/static/js/$1"
+    },
+    {
+      "src": "/static/assets/(.*)",
+      "dest": "/static/assets/$1"
+    },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
@@ -13,6 +30,34 @@
     {
       "src": "/(.*)",
       "dest": "api/index.py"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://ajar.sdnegeribobong.sch.id"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type"
+        }
+      ]
     }
   ]
 }
