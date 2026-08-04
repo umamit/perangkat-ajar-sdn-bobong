@@ -1,5 +1,6 @@
+import { showToast } from './showToast';
 import { appData, getSupabase } from '../helpers';
-import { statusMap } from './renderAbsensiForm';
+import { statusMap } from './statusMap';
 import { loadAbsensiHistory } from './loadAbsensiHistory';
 
 export async function saveAbsensi(): Promise<void> {
@@ -7,19 +8,19 @@ export async function saveAbsensi(): Promise<void> {
   const date = (document.getElementById('absensiDate') as HTMLInputElement)?.value;
 
   if (!classId || !date) {
-    alert('Pilih kelas dan tanggal terlebih dahulu!');
+    showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
     return;
   }
 
   const students = (appData.students || []).filter((s: any) => s.classId === classId);
   if (students.length === 0) {
-    alert('Tidak ada siswa di kelas ini.');
+    showToast('Tidak ada siswa di kelas ini.', 'error');
     return;
   }
 
   const client = getSupabase();
   if (!client) {
-    alert('Koneksi Supabase tidak tersedia.');
+    showToast('Koneksi Supabase tidak tersedia.', 'info');
     return;
   }
 
@@ -36,7 +37,7 @@ export async function saveAbsensi(): Promise<void> {
     const { error } = await client.from('attendance').insert(rows);
     if (error) throw error;
 
-    alert(`✅ Presensi ${classId} tanggal ${date} berhasil disimpan (${rows.length} siswa).`);
+    showToast(`Presensi ${classId} tanggal ${date} berhasil disimpan (${rows.length} siswa).`, 'success');
     loadAbsensiHistory();
   } catch (err: any) {
     console.error('[Absensi Save Error]', err);

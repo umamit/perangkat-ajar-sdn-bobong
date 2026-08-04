@@ -16,7 +16,9 @@ import { showEditStudentModal } from './modules/showEditStudentModal.js';
 import { saveStudent } from './modules/saveStudent.js';
 import { saveEditStudent } from './modules/saveEditStudent.js';
 import { deleteStudent } from './modules/deleteStudent.js';
-import { showImportStudentModal, downloadStudentTemplate, executeDirectImport } from './modules/showImportStudentModal.js';
+import { showImportStudentModal } from './modules/showImportStudentModal.js';
+import { downloadStudentTemplate } from './modules/downloadStudentTemplate.js';
+import { executeDirectImport } from './modules/executeDirectImport.js';
 import { renderDataKelas } from './modules/renderDataKelas.js';
 import { renderDashboard } from './modules/renderDashboard.js';
 import { renderAbsensi } from './modules/renderAbsensi.js';
@@ -29,7 +31,9 @@ import { adjustGrade } from './modules/adjustGrade.js';
 import { updateStudentGrade } from './modules/updateStudentGrade.js';
 import { renderJurnal } from './modules/renderJurnal.js';
 import { showAddJournalModal } from './modules/showAddJournalModal.js';
+import { showEditJournalModal } from './modules/showEditJournalModal.js';
 import { saveJournal } from './modules/saveJournal.js';
+import { saveEditJournal } from './modules/saveEditJournal.js';
 import { deleteJournal } from './modules/deleteJournal.js';
 import { deleteModul } from './modules/deleteModul.js';
 import { showToast } from './modules/showToast.js';
@@ -53,6 +57,7 @@ import { saveFlashcard } from './modules/saveFlashcard.js';
 import { filterFlashcards } from './modules/filterFlashcards.js';
 import { showAddScheduleModal } from './modules/showAddScheduleModal.js';
 import { saveSchedule } from './modules/saveSchedule.js';
+import { handleManualSync } from './modules/handleManualSync.js';
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet, printModule } from './views.js';
 document.addEventListener('DOMContentLoaded', async () => {
     loadStorage();
@@ -112,7 +117,9 @@ if (typeof window !== 'undefined') {
     window.handleLogin = handleLogin;
     window.handleLogout = handleLogout;
     window.showAddJournalModal = showAddJournalModal;
+    window.showEditJournalModal = showEditJournalModal;
     window.saveJournal = saveJournal;
+    window.saveEditJournal = saveEditJournal;
     window.showAddTeacherModal = showAddTeacherModal;
     window.saveTeacher = saveTeacher;
     window.deleteTeacher = deleteTeacher;
@@ -169,5 +176,6 @@ if (typeof window !== 'undefined') {
     window.showToast = showToast;
     window.closeModal = closeModal;
     window.switchView = switchView;
+    window.handleManualSync = handleManualSync;
     window.switchRoleMode = (mode) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

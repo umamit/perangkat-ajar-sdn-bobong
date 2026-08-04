@@ -1,9 +1,10 @@
+import { showToast } from './showToast.js';
 import { openModal } from './openModal.js';
 import { appData } from '../helpers.js';
 export function showEditStudentModal(nis) {
     const s = (appData.students || []).find((st) => st.nis === nis || st.id === nis);
     if (!s) {
-        alert('Data siswa tidak ditemukan.');
+        showToast('Data siswa tidak ditemukan.', 'info');
         return;
     }
     const classOptions = (appData.classes || [])

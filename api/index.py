@@ -81,8 +81,13 @@ def save_student():
         if not data:
             return jsonify({'success': False, 'error': 'No data provided'}), 400
         import uuid
-        db_id = data.get('uuid') or data.get('id') or str(uuid.uuid4())
-        payload = {'id': db_id, 'nis': db_id, 'name': data.get('name'),
+        db_id = data.get('uuid') or data.get('id')
+        try:
+            uuid.UUID(str(db_id))
+        except Exception:
+            db_id = str(uuid.uuid4())
+        nis = data.get('nis') or db_id
+        payload = {'id': db_id, 'nis': nis, 'name': data.get('name'),
                    'class_id': data.get('classId'), 'gender': data.get('gender', 'L')}
         r = req.post(db_url('students', '?on_conflict=id'),
                      headers={**db_headers(), 'Prefer': 'resolution=merge-duplicates,return=representation'},

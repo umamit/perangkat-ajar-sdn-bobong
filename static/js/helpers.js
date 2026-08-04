@@ -38,31 +38,18 @@ export async function syncFromSupabase() {
         }
 
         if (data.students && data.students.length > 0) {
-            const currentMap = new Map();
-            (appData.students || []).forEach(s => currentMap.set(s.id || s.nis, s));
-            const fetchedStudents = data.students.map((s) => {
-                const existing = currentMap.get(s.id) || currentMap.get(s.nis);
-                return {
-                    id: s.id,
-                    uuid: s.id,
-                    nis: s.nis || s.id,
-                    name: s.name,
-                    classId: s.class_id,
-                    gender: s.gender || 'L',
-                    scoreFormatif: existing ? (existing.scoreFormatif || 80) : 80,
-                    scoreSumatif: existing ? (existing.scoreSumatif || 80) : 80
-                };
-            });
-            const studentMap = new Map();
-            INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
-            (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
-            fetchedStudents.forEach(s => studentMap.set(s.nis || s.id, s));
-            appData.students = Array.from(studentMap.values());
+            appData.students = data.students.map((s) => ({
+                id: s.id,
+                uuid: s.id,
+                nis: s.nis || s.id,
+                name: s.name,
+                classId: s.class_id,
+                gender: s.gender || 'L',
+                scoreFormatif: 80,
+                scoreSumatif: 80
+            }));
         } else {
-            const studentMap = new Map();
-            INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
-            (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
-            appData.students = Array.from(studentMap.values());
+            appData.students = [];
         }
 
         if (data.journals && data.journals.length > 0) {

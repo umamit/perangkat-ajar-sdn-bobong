@@ -12,9 +12,15 @@ export function saveStudent(e) {
         showToast('Harap isi Nama Lengkap siswa!', 'error');
         return;
     }
-    const generatedId = crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    const generatedId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
     const newStudent = {
         id: generatedId,
+        uuid: generatedId,
         nis: generatedId,
         name: name,
         classId: classId,
@@ -30,11 +36,11 @@ export function saveStudent(e) {
     renderDataSiswa(classId);
     filterSiswa();
     closeModal();
-    showToast(`⚡ Siswa "${name}" berhasil disimpan ke ${classId}!`, 'success');
+    showToast(`Siswa "${name}" berhasil disimpan ke ${classId}!`, 'success');
     // 2. BACKGROUND ASYNC SYNC (Jalan di belakang layar)
     saveStudentToSupabase(newStudent).then(success => {
         if (!success) {
-            showToast(`⚠️ Kendala koneksi Supabase, namun data siswa tetap tersimpan di memori.`, 'info');
+            showToast(`Kendala koneksi Supabase, namun data siswa tetap tersimpan di memori.`, 'info');
         }
     });
 }

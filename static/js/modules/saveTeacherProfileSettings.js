@@ -1,3 +1,4 @@
+import { showToast } from './showToast.js';
 import { appData, saveTeacherToSupabase } from '../helpers.js';
 import { renderTeacherProfile } from './renderTeacherProfile.js';
 export function saveTeacherProfileSettings(e) {
@@ -13,5 +14,5 @@ export function saveTeacherProfileSettings(e) {
     };
     saveTeacherToSupabase(appData.teacher);
     renderTeacherProfile();
-    alert('✅ Profil berhasil disimpan dan disinkronkan!');
+    showToast('Profil berhasil disimpan dan disinkronkan!', 'success');
 }

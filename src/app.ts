@@ -22,11 +22,9 @@ import { showEditStudentModal } from './modules/showEditStudentModal';
 import { saveStudent } from './modules/saveStudent';
 import { saveEditStudent } from './modules/saveEditStudent';
 import { deleteStudent } from './modules/deleteStudent';
-import { 
-  showImportStudentModal, 
-  downloadStudentTemplate, 
-  executeDirectImport 
-} from './modules/showImportStudentModal';
+import { showImportStudentModal } from './modules/showImportStudentModal';
+import { downloadStudentTemplate } from './modules/downloadStudentTemplate';
+import { executeDirectImport } from './modules/executeDirectImport';
 import { renderDataKelas } from './modules/renderDataKelas';
 
 import { renderDashboard } from './modules/renderDashboard';
@@ -42,7 +40,9 @@ import { updateStudentGrade } from './modules/updateStudentGrade';
 
 import { renderJurnal } from './modules/renderJurnal';
 import { showAddJournalModal } from './modules/showAddJournalModal';
+import { showEditJournalModal } from './modules/showEditJournalModal';
 import { saveJournal } from './modules/saveJournal';
+import { saveEditJournal } from './modules/saveEditJournal';
 import { deleteJournal } from './modules/deleteJournal';
 import { deleteModul } from './modules/deleteModul';
 import { showToast } from './modules/showToast';
@@ -69,6 +69,7 @@ import { saveFlashcard } from './modules/saveFlashcard';
 import { filterFlashcards } from './modules/filterFlashcards';
 import { showAddScheduleModal } from './modules/showAddScheduleModal';
 import { saveSchedule } from './modules/saveSchedule';
+import { handleManualSync } from './modules/handleManualSync';
 
 import { renderModulAjar, exportSiswaToCSV, exportNilaiToCSV, startEnglishQuiz, renderQuizQuestion, checkQuizAnswer, printWorksheet, printModule } from './views';
 
@@ -135,7 +136,9 @@ if (typeof window !== 'undefined') {
   (window as any).handleLogin = handleLogin;
   (window as any).handleLogout = handleLogout;
   (window as any).showAddJournalModal = showAddJournalModal;
+  (window as any).showEditJournalModal = showEditJournalModal;
   (window as any).saveJournal = saveJournal;
+  (window as any).saveEditJournal = saveEditJournal;
   (window as any).showAddTeacherModal = showAddTeacherModal;
   (window as any).saveTeacher = saveTeacher;
   (window as any).deleteTeacher = deleteTeacher;
@@ -191,5 +194,6 @@ if (typeof window !== 'undefined') {
   (window as any).showToast = showToast;
   (window as any).closeModal = closeModal;
   (window as any).switchView = switchView;
+  (window as any).handleManualSync = handleManualSync;
   (window as any).switchRoleMode = (mode: string) => switchRoleMode(mode, [renderDataKelas, renderDataSiswa, renderDaftarNilai, renderDashboard]);
 }

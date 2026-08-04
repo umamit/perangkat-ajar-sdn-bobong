@@ -1,6 +1,6 @@
+import { showToast } from './showToast';
 import { appData } from '../helpers';
-
-export const statusMap: Record<string, string> = {};
+import { statusMap } from './statusMap';
 
 export function renderAbsensiForm(): void {
   const classId = (document.getElementById('absensiClassSelect') as HTMLSelectElement)?.value;
@@ -9,7 +9,7 @@ export function renderAbsensiForm(): void {
   const card = document.getElementById('absensiInputCard');
 
   if (!classId || !date) {
-    alert('Pilih kelas dan tanggal terlebih dahulu!');
+    showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
     return;
   }
 
@@ -22,7 +22,6 @@ export function renderAbsensiForm(): void {
     tbody.innerHTML = students.map((s: any, idx: number) => {
       const sId = s.id;
       if (!statusMap[sId]) statusMap[sId] = 'Hadir';
-
       return `
         <tr>
           <td>${idx + 1}</td>

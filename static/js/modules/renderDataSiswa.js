@@ -7,10 +7,14 @@ export function renderDataSiswa(filterClass) {
     const selectElem = document.getElementById('siswaClassSelect');
     let activeFilter = filterClass;
     if (selectElem) {
-        const availClasses = getTeacherClasses();
-        const currentVal = activeFilter !== undefined ? activeFilter : selectElem.value;
-        selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` +
-            availClasses.map(c => `<option value="${c.id}" ${c.id === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
+        if (selectElem.options.length <= 1) {
+            const availClasses = getTeacherClasses();
+            selectElem.innerHTML = `<option value="ALL">Semua Kelas</option>` +
+                availClasses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+        if (activeFilter !== undefined) {
+            selectElem.value = activeFilter;
+        }
         activeFilter = selectElem.value;
     }
     if (activeFilter === undefined)

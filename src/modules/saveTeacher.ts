@@ -9,8 +9,16 @@ export function saveTeacher(e: Event): void {
   const nip = (document.getElementById('teacherNip') as HTMLInputElement).value;
   const role = (document.getElementById('teacherRole') as HTMLSelectElement).value;
 
+  const generatedId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+
   const newTeacher: any = {
-    id: `G0${appData.teachers.length + 1}`,
+    id: generatedId,
+    uuid: generatedId,
     name,
     nip,
     role,

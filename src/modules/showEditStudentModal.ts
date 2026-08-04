@@ -1,9 +1,10 @@
+import { showToast } from './showToast';
 import { openModal } from './openModal';
 import { appData } from '../helpers';
 
 export function showEditStudentModal(nis: string): void {
   const s = (appData.students || []).find((st: any) => st.nis === nis || st.id === nis);
-  if (!s) { alert('Data siswa tidak ditemukan.'); return; }
+  if (!s) { showToast('Data siswa tidak ditemukan.', 'info'); return; }
 
   const classOptions = (appData.classes || [])
     .map((c: any) => `<option value="${c.id}" ${c.id === s.classId ? 'selected' : ''}>${c.name}</option>`)

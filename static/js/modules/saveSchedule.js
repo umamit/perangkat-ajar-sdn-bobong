@@ -1,3 +1,4 @@
+import { showToast } from './showToast.js';
 import { appData, saveStorage } from '../helpers.js';
 import { closeModal } from './closeModal.js';
 import { renderTimetable } from './renderTimetable.js';
@@ -14,5 +15,5 @@ export function saveSchedule(e) {
     saveStorage();
     renderTimetable();
     closeModal();
-    alert(`✅ Jadwal ${day} kelas ${classId} berhasil ditambahkan!`);
+    showToast(`Jadwal ${day} kelas ${classId} berhasil ditambahkan!`, 'success');
 }

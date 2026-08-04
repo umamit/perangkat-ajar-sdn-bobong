@@ -47,33 +47,18 @@ export async function syncFromSupabase(): Promise<void> {
 
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
-      const currentMap = new Map();
-      (appData.students || []).forEach(s => currentMap.set(s.id || s.nis, s));
-
-      const fetchedStudents = students.map((s: any) => {
-        const existing = currentMap.get(s.id) || currentMap.get(s.nis);
-        return {
-          id: s.id,
-          uuid: s.id,
-          nis: s.nis || s.id,
-          name: s.name,
-          classId: s.class_id,
-          gender: s.gender || 'L',
-          scoreFormatif: existing ? (existing.scoreFormatif || 80) : 80,
-          scoreSumatif: existing ? (existing.scoreSumatif || 80) : 80
-        };
-      });
-
-      const studentMap = new Map();
-      INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
-      (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
-      fetchedStudents.forEach(s => studentMap.set(s.nis || s.id, s));
-      appData.students = Array.from(studentMap.values());
+      appData.students = students.map((s: any) => ({
+        id: s.id,
+        uuid: s.id,
+        nis: s.nis || s.id,
+        name: s.name,
+        classId: s.class_id,
+        gender: s.gender || 'L',
+        scoreFormatif: 80,
+        scoreSumatif: 80
+      }));
     } else {
-      const studentMap = new Map();
-      INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
-      (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
-      appData.students = Array.from(studentMap.values());
+      appData.students = [];
     }
 
     const { data: journals } = await client.from('journals').select('id, date, time_slot, class_id, topic, notes, attendance_summary');
@@ -323,10 +308,11 @@ export async function saveStudentToSupabase(s: Student): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
   try {
-    const dbId = s.uuid || s.id || (crypto.randomUUID ? crypto.randomUUID() : `st-${Date.now()}-${Math.floor(Math.random() * 10000)}`);
+    const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+    const dbId = (s.uuid && isUuid(s.uuid)) ? s.uuid : (s.id && isUuid(s.id)) ? s.id : ((typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }));
     const payload: any = {
       id: dbId,
-      nis: dbId,
+      nis: s.nis || dbId,
       name: s.name,
       class_id: s.classId,
       gender: s.gender || 'L'

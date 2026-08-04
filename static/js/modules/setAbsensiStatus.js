@@ -1,4 +1,4 @@
-import { statusMap } from './renderAbsensiForm.js';
+import { statusMap } from './statusMap.js';
 export function setAbsensiStatus(studentId, status) {
     statusMap[studentId] = status;
     const group = document.querySelector(`.btn-group-status[data-student="${studentId}"]`);

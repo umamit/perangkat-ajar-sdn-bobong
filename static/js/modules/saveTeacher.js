@@ -6,8 +6,15 @@ export function saveTeacher(e) {
     const name = document.getElementById('teacherName').value;
     const nip = document.getElementById('teacherNip').value;
     const role = document.getElementById('teacherRole').value;
+    const generatedId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
     const newTeacher = {
-        id: `G0${appData.teachers.length + 1}`,
+        id: generatedId,
+        uuid: generatedId,
         name,
         nip,
         role,

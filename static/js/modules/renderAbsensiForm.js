@@ -1,25 +1,24 @@
+import { showToast } from './showToast.js';
 import { appData } from '../helpers.js';
-export const statusMap = {};
+import { statusMap } from './statusMap.js';
+
 export function renderAbsensiForm() {
     const classId = document.getElementById('absensiClassSelect')?.value;
     const date = document.getElementById('absensiDate')?.value;
     const tbody = document.getElementById('absensiInputTableBody');
     const card = document.getElementById('absensiInputCard');
     if (!classId || !date) {
-        alert('Pilih kelas dan tanggal terlebih dahulu!');
+        showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
         return;
     }
     const students = (appData.students || []).filter((s) => s.classId === classId);
-    if (!tbody || !card)
-        return;
+    if (!tbody || !card) return;
     if (students.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
-    }
-    else {
+    } else {
         tbody.innerHTML = students.map((s, idx) => {
             const sId = s.id;
-            if (!statusMap[sId])
-                statusMap[sId] = 'Hadir';
+            if (!statusMap[sId]) statusMap[sId] = 'Hadir';
             return `
         <tr>
           <td>${idx + 1}</td>

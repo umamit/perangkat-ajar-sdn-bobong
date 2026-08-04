@@ -1,4 +1,4 @@
-import { statusMap } from './renderAbsensiForm';
+import { statusMap } from './statusMap';
 
 export function setAbsensiStatus(studentId: string, status: string): void {
   statusMap[studentId] = status;

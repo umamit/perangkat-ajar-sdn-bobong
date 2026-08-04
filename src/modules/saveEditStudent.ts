@@ -1,3 +1,4 @@
+import { showToast } from './showToast';
 import { appData, saveStorage, saveStudentToSupabase } from '../helpers';
 import { closeModal } from './closeModal';
 import { renderDataSiswa } from './renderDataSiswa';
@@ -26,6 +27,6 @@ export function saveEditStudent(e: Event, originalNis: string): void {
     renderDataSiswa(currentFilter);
     filterSiswa();
     closeModal();
-    alert(`✅ Data siswa ${name} berhasil diperbarui!`);
+    showToast(`Data siswa ${name} berhasil diperbarui!`, 'success');
   }
 }

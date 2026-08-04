@@ -275,6 +275,9 @@
               <button class="btn btn-secondary" onclick="exportSiswaToCSV()">
                 <i class="ri-download-line"></i> Ekspor Data CSV
               </button>
+              <button class="btn btn-secondary" onclick="handleManualSync(this)" style="border-color:var(--primary); color:var(--primary-dark);" title="Sinkronkan data terbaru dari Supabase Cloud">
+                <i class="ri-refresh-line" id="syncBtnIcon"></i> Sinkronkan Data
+              </button>
             </div>
           </div>
           <div class="card">
