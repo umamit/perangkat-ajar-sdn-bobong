@@ -10,15 +10,15 @@ export const INITIAL_DATA: AppData = {
     nip: "199610272019032006",
     password: "kepseksdnbobong",
     semester: "Ganjil 2025/2026",
-    avatar: "assets/logo-sdn-bobong.png",
+    avatar: "/assets/logo-sdn-bobong.png",
     subject: "Bahasa Inggris"
   },
 
   teachers: [
-    { nip: "199610272019032006", name: "Guru Bahasa Inggris", role: "Guru Mata Pelajaran", subject: "Bahasa Inggris", password: "kepseksdnbobong", avatar: "assets/logo-sdn-bobong.png" },
-    { nip: "197508201999031002", name: "Kepala Sekolah SDN Bobong", role: "Kepala Sekolah / Admin", subject: "Manajemen Sekolah", password: "kepseksdnbobong", avatar: "assets/logo-sdn-bobong.png" },
-    { nip: "199105122018021001", name: "Nurhalisa, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 1A", password: "sdnbobong", avatar: "assets/logo-sdn-bobong.png" },
-    { nip: "198803152014032003", name: "Rahmat Hidayat, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 4A", password: "sdnbobong", avatar: "assets/logo-sdn-bobong.png" }
+    { nip: "199610272019032006", name: "Guru Bahasa Inggris", role: "Guru Mata Pelajaran", subject: "Bahasa Inggris", password: "kepseksdnbobong", avatar: "/assets/logo-sdn-bobong.png" },
+    { nip: "197508201999031002", name: "Kepala Sekolah SDN Bobong", role: "Kepala Sekolah / Admin", subject: "Manajemen Sekolah", password: "kepseksdnbobong", avatar: "/assets/logo-sdn-bobong.png" },
+    { nip: "199105122018021001", name: "Nurhalisa, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 1A", password: "sdnbobong", avatar: "/assets/logo-sdn-bobong.png" },
+    { nip: "198803152014032003", name: "Rahmat Hidayat, S.Pd.", role: "Guru Kelas", subject: "Guru Kelas 4A", password: "sdnbobong", avatar: "/assets/logo-sdn-bobong.png" }
   ],
 
   timetable: [

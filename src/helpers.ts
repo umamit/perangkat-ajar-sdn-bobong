@@ -125,7 +125,7 @@ export async function syncFromSupabase(): Promise<void> {
         role: t.role || 'Guru Mata Pelajaran',
         subject: t.subject || 'Bahasa Inggris',
         password: t.password || 'sdnbobong',
-        avatar: t.avatar_url || 'assets/logo-sdn-bobong.png',
+        avatar: t.avatar_url || '/assets/logo-sdn-bobong.png',
         isActive: t.is_active !== false
       }));
       // Merge: data Supabase override data lokal berdasarkan NIP
@@ -453,7 +453,7 @@ export async function saveTeacherToSupabase(t: Teacher): Promise<boolean> {
       role: t.role || 'Guru Mata Pelajaran',
       subject: t.subject || 'Bahasa Inggris',
       password: t.password || 'sdnbobong',
-      avatar_url: t.avatar || 'assets/logo-sdn-bobong.png'
+      avatar_url: t.avatar || '/assets/logo-sdn-bobong.png'
     }, { onConflict: 'nip' });
 
     if (error) {

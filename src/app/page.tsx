@@ -215,7 +215,7 @@ export default function Page() {
         <div className="login-card">
           <div className="school-logo-container">
             <img
-              src="assets/logo-sdn-bobong.png"
+              src="/assets/logo-sdn-bobong.png"
               alt="Logo SD Negeri Bobong"
               className="sd-logo-img"
               style={{ width: '120px', height: '120px', objectFit: 'contain', filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.15))' }}
@@ -259,7 +259,7 @@ export default function Page() {
         <aside className="sidebar" id="sidebar">
           <div>
             <div className="sidebar-header">
-              <img src="assets/logo-sdn-bobong.png" alt="Logo SD Negeri Bobong" style={{ width: '42px', height: '42px', objectFit: 'contain' }} />
+              <img src="/assets/logo-sdn-bobong.png" alt="Logo SD Negeri Bobong" style={{ width: '42px', height: '42px', objectFit: 'contain' }} />
               <div className="school-info">
                 <h3 id="schoolNameHeader">SD Negeri Bobong</h3>
                 <p id="schoolKecamatanHeader">Kab. Pulau Taliabu</p>

@@ -13,5 +13,5 @@ export function renderPengaturanForm(): void {
   set('settingKecamatan',      teacher.kecamatan || 'Kabupaten Pulau Taliabu');
 
   const avatar = document.getElementById('settingAvatarPreview') as HTMLImageElement | null;
-  if (avatar) avatar.src = teacher.avatar || 'assets/logo-sdn-bobong.png';
+  if (avatar) avatar.src = teacher.avatar || '/assets/logo-sdn-bobong.png';
 }
