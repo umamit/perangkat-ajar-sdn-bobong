@@ -9,15 +9,22 @@ const SUPABASE_URL: string = (metaEnv && metaEnv.VITE_SUPABASE_URL)
   ? metaEnv.VITE_SUPABASE_URL
   : "https://evslcvjucmnyxkqwfdye.supabase.co";
 
-const SUPABASE_SERVICE_ROLE_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_ANON_KEY)
-  ? metaEnv.VITE_SUPABASE_ANON_KEY
-  : "[REDACTED_KEY]";
+const HARDCODED_SERVICE_ROLE_KEY: string = "[REDACTED_KEY]";
+
+const SUPABASE_SERVICE_ROLE_KEY: string = (metaEnv && metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY)
+  ? metaEnv.VITE_SUPABASE_SERVICE_ROLE_KEY
+  : HARDCODED_SERVICE_ROLE_KEY;
 
 let supabaseClient: any = null;
 
 export function getSupabase(): any {
   if (!supabaseClient) {
-    supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
+    });
   }
   return supabaseClient;
 }
