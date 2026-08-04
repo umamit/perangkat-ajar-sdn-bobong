@@ -1,4 +1,4 @@
-import { appData, saveStorage, saveStudentToSupabase } from '../helpers';
+import { appData, saveStorage, saveGradeToSupabase } from '../helpers';
 import { renderDaftarNilai } from './renderDaftarNilai';
 
 export function updateStudentGrade(studentId: string, field: 'formatif' | 'sts' | 'sas', value: string): void {
@@ -10,7 +10,7 @@ export function updateStudentGrade(studentId: string, field: 'formatif' | 'sts' 
     if (field === 'sas') s.scoreSas = numVal;
 
     saveStorage();
-    saveStudentToSupabase(s);
+    saveGradeToSupabase(s.id, field.toUpperCase(), numVal, s.classId);
     const selectElem = document.getElementById('nilaiClassSelect') as HTMLSelectElement | null;
     renderDaftarNilai(selectElem ? selectElem.value : 'ALL');
   }

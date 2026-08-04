@@ -364,6 +364,32 @@ export async function saveStudentsBatchToSupabase(students: Student[]): Promise<
   }
 }
 
+export async function saveGradeToSupabase(studentId: string, type: string, score: number, classId?: string): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+  try {
+    const payload = {
+      student_id: studentId,
+      class_id: classId || '',
+      type: type,
+      score: score
+    };
+    const { error } = await client.from('grades').upsert(payload, { onConflict: 'student_id,type' });
+    if (error) {
+      console.warn('[Supabase Grade Save Error]', error.message);
+      await fetch('/api/grades', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, type, score, classId })
+      });
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase Grade Save Exception]', err);
+    return false;
+  }
+}
+
 export async function deleteStudentFromSupabase(id: string): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
@@ -499,5 +525,6 @@ if (typeof window !== 'undefined') {
   (window as any).saveTeacherToSupabase = saveTeacherToSupabase;
   (window as any).deleteTeacherFromSupabase = deleteTeacherFromSupabase;
   (window as any).uploadAvatarToSupabaseStorage = uploadAvatarToSupabaseStorage;
+  (window as any).saveGradeToSupabase = saveGradeToSupabase;
   (window as any).appData = appData;
 }
