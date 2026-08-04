@@ -1,0 +1,79 @@
+'use client';
+
+import React from 'react';
+import { useApp } from '@/context/AppContext';
+
+const navItems = [
+  { id: 'dashboard', label: 'Dashboard', icon: 'ri-grid-fill' },
+  { id: 'siswa', label: 'Data Siswa', icon: 'ri-group-line' },
+  { id: 'kelas', label: 'Data Kelas', icon: 'ri-community-line' },
+  { id: 'absensi', label: 'Absensi', icon: 'ri-checkbox-line' },
+  { id: 'nilai', label: 'Daftar Nilai', icon: 'ri-graduation-cap-line' },
+  { id: 'jurnal', label: 'Jurnal Mengajar', icon: 'ri-book-read-line' },
+  { id: 'modul', label: 'Modul Ajar', icon: 'ri-file-list-3-line' },
+  { id: 'materi', label: 'Materi & Flashcards', icon: 'ri-folder-open-line' },
+  { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
+  { id: 'laporan', label: 'Laporan', icon: 'ri-bar-chart-box-line' },
+  { id: 'guru', label: 'Kelola Data Guru', icon: 'ri-user-star-line' },
+  { id: 'pengaturan', label: 'Pengaturan', icon: 'ri-settings-4-line' },
+];
+
+export function Sidebar() {
+  const { activeView, setActiveView, currentTeacher, sidebarOpen, setSidebarOpen } = useApp();
+
+  return (
+    <>
+      <aside className={`sidebar ${sidebarOpen ? 'active' : ''}`} id="sidebar">
+        <div>
+          <div className="sidebar-header">
+            <img
+              src="/assets/logo-sdn-bobong.png"
+              alt="Logo SD Negeri Bobong"
+              style={{ width: '42px', height: '42px', objectFit: 'contain' }}
+            />
+            <div className="school-info">
+              <h3 id="schoolNameHeader">SD Negeri Bobong</h3>
+              <p id="schoolKecamatanHeader">Kab. Pulau Taliabu</p>
+            </div>
+          </div>
+
+          <nav className="sidebar-nav">
+            {navItems.map(item => (
+              <a
+                key={item.id}
+                className={`nav-item ${activeView === item.id ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveView(item.id);
+                  setSidebarOpen(false);
+                }}
+              >
+                <i className={item.icon}></i> {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        <div className="teacher-profile-card">
+          <img
+            id="teacherAvatarSidebar"
+            src={currentTeacher.avatar || '/assets/logo-sdn-bobong.png'}
+            alt="Guru"
+            className="teacher-avatar"
+          />
+          <div className="teacher-details">
+            <h4 id="teacherNameSidebar">{currentTeacher.name || 'Guru Bahasa Inggris'}</h4>
+            <p id="teacherNipSidebar">NIP: {currentTeacher.nip || '199610272019032006'}</p>
+          </div>
+        </div>
+      </aside>
+
+      {sidebarOpen && (
+        <div
+          className="sidebar-backdrop active"
+          id="sidebarBackdrop"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+    </>
+  );
+}

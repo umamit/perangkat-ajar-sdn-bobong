@@ -1,0 +1,146 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useApp } from '@/context/AppContext';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+export function SiswaView() {
+  const { students, classes, showToast, setStudents } = useApp();
+  const [search, setSearch] = useState('');
+  const [selectedClass, setSelectedClass] = useState('ALL');
+
+  const filteredStudents = students.filter(s => {
+    const matchesName = s.name.toLowerCase().includes(search.toLowerCase()) || (s.nis && s.nis.includes(search));
+    const matchesClass = selectedClass === 'ALL' || s.classId === selectedClass;
+    return matchesName && matchesClass;
+  });
+
+  const handleDelete = (id: string, name: string) => {
+    if (confirm(`Apakah Anda yakin ingin menghapus data siswa ${name}?`)) {
+      setStudents(prev => prev.filter(s => s.id !== id && s.nis !== id));
+      showToast(`Siswa ${name} berhasil dihapus`, 'info');
+    }
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-slate-800">Daftar Siswa SD Negeri Bobong</h3>
+          <p className="text-xs text-slate-500">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" onClick={() => (window as any).showAddStudentModal()}>
+            <i className="ri-user-add-line" /> Tambah Siswa Baru
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => (window as any).showImportStudentModal()}>
+            <i className="ri-file-excel-2-line" /> Impor Excel / CSV
+          </Button>
+        </div>
+      </div>
+
+      <Card>
+        <CardHeader className="pb-3 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="relative w-full sm:w-72">
+              <i className="ri-search-line absolute left-3 top-2.5 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Cari nama atau NIS siswa..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-9 text-xs"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-600">Filter Kelas:</label>
+              <select
+                value={selectedClass}
+                onChange={e => setSelectedClass(e.target.value)}
+                className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-medium outline-none"
+              >
+                <option value="ALL">Semua Kelas</option>
+                {classes.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">No</TableHead>
+                <TableHead>Nama Lengkap</TableHead>
+                <TableHead>Kelas</TableHead>
+                <TableHead>Gender</TableHead>
+                <TableHead className="text-center">Formatif</TableHead>
+                <TableHead className="text-center">Sumatif</TableHead>
+                <TableHead className="text-center w-24">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredStudents.map((s, idx) => (
+                <TableRow key={s.id || idx}>
+                  <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
+                  <TableCell className="font-bold text-slate-800 text-xs">
+                    {s.name}
+                    <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="default">{s.classId}</Badge>
+                  </TableCell>
+                  <TableCell className="text-xs font-semibold">
+                    {s.gender === 'L' ? (
+                      <span className="text-cyan-700">Laki-Laki</span>
+                    ) : (
+                      <span className="text-rose-600">Perempuan</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center text-xs font-bold text-slate-700">
+                    {s.scoreFormatif || 0}
+                  </TableCell>
+                  <TableCell className="text-center text-xs font-bold text-slate-700">
+                    {s.scoreSumatif || 0}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <button
+                        onClick={() => (window as any).showEditStudentModal(s.id || s.nis)}
+                        className="p-1.5 rounded-apple-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                        title="Edit Siswa"
+                      >
+                        <i className="ri-edit-line" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(s.id || s.nis || '', s.name)}
+                        className="p-1.5 rounded-apple-sm text-rose-500 hover:bg-rose-50 hover:text-rose-700"
+                        title="Hapus Siswa"
+                      >
+                        <i className="ri-delete-bin-line" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {filteredStudents.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs">
+                    Tidak ada data siswa ditemukan
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
