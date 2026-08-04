@@ -4,6 +4,16 @@ import path from 'path';
 const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(process.cwd()),
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
   async headers() {
     return [
       {
