@@ -45,8 +45,22 @@ export function handleImportStudentSubmit(e: Event): void {
         let classIdRaw = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
         let genderRaw = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
 
-        let classId = classIdRaw.replace(/[^0-9A-Z]/g, '').toUpperCase();
-        if (!classId) classId = '3B';
+        // Normalisasi Kode Kelas Pintar (misal: "Kelas 3B", "3-B", "III B", "3 B")
+        let classId = classIdRaw.toUpperCase().trim()
+          .replace('KELAS', '')
+          .replace('III', '3')
+          .replace('II', '2')
+          .replace('IV', '4')
+          .replace('VI', '6')
+          .replace('V', '5')
+          .replace('I', '1')
+          .replace(/[^0-9A-Z]/g, '');
+
+        if (!classId) {
+          // Ambil dari dropdown filter yang sedang terpilih di UI jika di excel kosong
+          const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+          classId = (selectElem && selectElem.value !== 'ALL') ? selectElem.value : '3B';
+        }
         let gender = (genderRaw.toUpperCase().startsWith('P') || genderRaw.toUpperCase().startsWith('W')) ? 'P' : 'L';
 
         if (nis || name) {
