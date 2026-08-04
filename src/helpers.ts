@@ -31,7 +31,7 @@ export async function syncFromSupabase(): Promise<void> {
   try {
     const { data: students } = await client.from('students').select('id, nis, name, class_id, gender');
     if (students && students.length > 0) {
-      appData.students = students.map((s: any) => ({
+      const fetchedStudents = students.map((s: any) => ({
         id: s.nis,
         uuid: s.id,
         nis: s.nis,
@@ -41,6 +41,19 @@ export async function syncFromSupabase(): Promise<void> {
         scoreFormatif: 80,
         scoreSumatif: 80
       }));
+
+      // Combine fetched students with initial / local students without wiping
+      const studentMap = new Map();
+      INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
+      (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
+      fetchedStudents.forEach(s => studentMap.set(s.nis || s.id, s));
+      appData.students = Array.from(studentMap.values());
+    } else {
+      // Retain current appData.students (including imported or added ones) + initial data
+      const studentMap = new Map();
+      INITIAL_DATA.students.forEach(s => studentMap.set(s.nis || s.id, s));
+      (appData.students || []).forEach(s => studentMap.set(s.nis || s.id, s));
+      appData.students = Array.from(studentMap.values());
     }
 
     const { data: journals } = await client.from('journals').select('id, date, time_slot, class_id, topic, notes, attendance_summary');
