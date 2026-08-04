@@ -5,8 +5,9 @@ import { statusMap } from './statusMap';
 export function renderAbsensiForm(): void {
   const classId = (document.getElementById('absensiClassSelect') as HTMLSelectElement)?.value;
   const date = (document.getElementById('absensiDate') as HTMLInputElement)?.value;
-  const tbody = document.getElementById('absensiInputTableBody');
-  const card = document.getElementById('absensiInputCard');
+  const tbody = document.getElementById('absensiInputBody');
+  const card = document.getElementById('absensiFormContainer');
+  const placeholder = document.getElementById('absensiFormPlaceholder');
 
   if (!classId || !date) {
     showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
@@ -39,5 +40,6 @@ export function renderAbsensiForm(): void {
   }
 
   card.style.display = 'block';
+  if (placeholder) placeholder.style.display = 'none';
   card.scrollIntoView({ behavior: 'smooth' });
 }

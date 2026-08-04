@@ -3,23 +3,27 @@ import { appData } from '../helpers.js';
 import { statusMap } from './statusMap.js';
 
 export function renderAbsensiForm() {
-    const classId = document.getElementById('absensiClassSelect')?.value;
-    const date = document.getElementById('absensiDate')?.value;
-    const tbody = document.getElementById('absensiInputTableBody');
-    const card = document.getElementById('absensiInputCard');
-    if (!classId || !date) {
-        showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
-        return;
-    }
-    const students = (appData.students || []).filter((s) => s.classId === classId);
-    if (!tbody || !card) return;
-    if (students.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
-    } else {
-        tbody.innerHTML = students.map((s, idx) => {
-            const sId = s.id;
-            if (!statusMap[sId]) statusMap[sId] = 'Hadir';
-            return `
+  const classId = document.getElementById('absensiClassSelect')?.value;
+  const date = document.getElementById('absensiDate')?.value;
+  const tbody = document.getElementById('absensiInputBody');
+  const card = document.getElementById('absensiFormContainer');
+  const placeholder = document.getElementById('absensiFormPlaceholder');
+
+  if (!classId || !date) {
+    showToast('Pilih kelas dan tanggal terlebih dahulu!', 'info');
+    return;
+  }
+
+  const students = (appData.students || []).filter((s) => s.classId === classId);
+  if (!tbody || !card) return;
+
+  if (students.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">Tidak ada data siswa di kelas ${classId}.</td></tr>`;
+  } else {
+    tbody.innerHTML = students.map((s, idx) => {
+      const sId = s.id;
+      if (!statusMap[sId]) statusMap[sId] = 'Hadir';
+      return `
         <tr>
           <td>${idx + 1}</td>
           <td><strong>${s.name}</strong></td>
@@ -32,8 +36,10 @@ export function renderAbsensiForm() {
             </div>
           </td>
         </tr>`;
-        }).join('');
-    }
-    card.style.display = 'block';
-    card.scrollIntoView({ behavior: 'smooth' });
+    }).join('');
+  }
+
+  card.style.display = 'block';
+  if (placeholder) placeholder.style.display = 'none';
+  card.scrollIntoView({ behavior: 'smooth' });
 }
