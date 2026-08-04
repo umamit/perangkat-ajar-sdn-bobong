@@ -276,9 +276,9 @@ export function confirmImportMapping(): void {
   if (step3) step3.style.display = 'block';
 }
 
-export function executeFinalImport(): void {
+export async function executeFinalImport(): Promise<void> {
   let targetClass = '3B';
-  finalImportData.forEach(newStudent => {
+  for (const newStudent of finalImportData) {
     targetClass = newStudent.classId;
     const existingIdx = (appData.students || []).findIndex((s: any) => s.nis === newStudent.nis || s.id === newStudent.id);
     if (existingIdx >= 0) {
@@ -286,11 +286,16 @@ export function executeFinalImport(): void {
     } else {
       appData.students.push(newStudent);
     }
-    saveStudentToSupabase(newStudent);
-  });
+    await saveStudentToSupabase(newStudent);
+  }
 
   closeModal();
   showToast(`🎉 Berhasil mengimpor ${finalImportData.length} data siswa ke Kelas ${targetClass}!`, 'success');
+
+  const selectElem = document.getElementById('siswaClassSelect') as HTMLSelectElement | null;
+  if (selectElem) {
+    selectElem.value = targetClass;
+  }
 
   if (typeof (window as any).filterSiswaByClass === 'function') {
     (window as any).filterSiswaByClass(targetClass);
