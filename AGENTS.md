@@ -42,3 +42,8 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 * **WAJIB MENGGUNAKAN VARIABEL LINGKUNGAN (.ENV)**: Seluruh rahasia wajib bersumber dari `process.env.NEXT_PUBLIC_SUPABASE_URL`, `process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY`, atau `process.env.SUPABASE_SERVICE_ROLE_KEY`.
 * **PERIKSAAN OTOMATIS SEBELUM GIT PUSH**: AI WAJIB menjalankan fungsi audit/grep kredensial secara mandiri sebelum melakukan `git commit` dan `git push` ke GitHub repository.
 * **PERSIAPAN PROTEKSI .GITIGNORE**: Berkas `.env`, `.env.local`, `.env.production`, dan kredensial rahasia WAJIB terdaftar dalam `.gitignore` agar tidak pernah terkirim ke publik.
+
+## 8. ATURAN ARSITEKTUR KODE MODULAR & BATAS MAKSIMAL BARIS (MODULAR CODE & MAX LINE RULE)
+* **BATAS MAKSIMAL 300 BARIS PER BERKAS**: Setiap berkas kode sumber (`.ts`, `.tsx`, `.css`) WAJIB dibatasi secara ketat MAKSIMAL 300 BARIS PER FILE.
+* **WET VS DRY & MODULAR REFACTORING**: Apabila sebuah berkas kode atau stylesheet mendekati/melebihi 300 baris, AI WAJIB memecahnya menjadi modul-modul terpisah di bawah folder yang sesuai (`src/modules/`, `src/styles/`, `src/components/views/`).
+* **PRINSIP 1 BERKAS 1 TANGGUNG JAWAB**: Menjaga arsitektur kode tetap bersih, ringan, dan mudah dipelihara (*maintainable*).
