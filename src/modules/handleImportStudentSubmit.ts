@@ -35,18 +35,10 @@ export function handleImportStudentSubmit(e: Event): void {
       for (const row of rawData) {
         const nis = String(row.NISN || row.nis || row.NIS || row.id || '').trim();
         const name = String(row['Nama Lengkap'] || row.nama || row.name || row.Nama || '').trim();
-        let classId = String(row.Kelas || row.kelas || row.classId || '3A').trim().toUpperCase();
-        let gender = String(row['Jenis Kelamin'] || row.gender || row.JK || 'L').trim().toUpperCase();
-
-        if (gender.startsWith('P') || gender.startsWith('W')) {
-          gender = 'P';
-        } else {
-          gender = 'L';
-        }
-
-        if (classId.includes('-')) {
-          classId = classId.replace(/[^0-9A-B]/g, '');
-        }
+        let classIdRaw = String(row.Kelas || row.kelas || row.classId || '3A').trim().toUpperCase();
+        let classId = classIdRaw.replace(/[^0-9A-Z]/g, ''); // contoh "KELAS 3-B" -> "3B", "3 - B" -> "3B"
+        let genderRaw = String(row['Jenis Kelamin'] || row.gender || row.JK || 'L').trim().toUpperCase();
+        let gender = (genderRaw.startsWith('P') || genderRaw.startsWith('W')) ? 'P' : 'L';
 
         if (nis && name) {
           targetClass = classId;
