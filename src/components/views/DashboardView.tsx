@@ -56,7 +56,7 @@ export function DashboardView() {
               onClick={() => setActiveView('ai_assistant')}
               className="bg-cyan-500 hover:bg-cyan-600 text-white font-extrabold px-5 h-11 shadow-lg shadow-cyan-500/25 text-sm rounded-xl transition-all duration-300 hover:scale-105"
             >
-              <i className="ri-sparkles-line text-lg" /> AI Asisten Guru
+              <i className="ri-magic-line text-lg" /> AI Asisten Guru
             </Button>
             <Button
               variant="outline"
