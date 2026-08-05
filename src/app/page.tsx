@@ -14,6 +14,7 @@ import { AbsensiView } from '@/components/views/AbsensiView';
 import { NilaiView } from '@/components/views/NilaiView';
 import { JurnalView } from '@/components/views/JurnalView';
 import { ModulView } from '@/components/views/ModulView';
+import { AiAssistantView } from '@/components/views/AiAssistantView';
 import { MateriFlashcardView } from '@/components/views/MateriFlashcardView';
 import { TugasView } from '@/components/views/TugasView';
 import { LaporanView } from '@/components/views/LaporanView';
@@ -51,6 +52,7 @@ function AppContent() {
           {activeView === 'nilai' && <NilaiView />}
           {activeView === 'jurnal' && <JurnalView />}
           {activeView === 'modul' && <ModulView />}
+          {activeView === 'ai_assistant' && <AiAssistantView />}
           {activeView === 'materi' && <MateriFlashcardView />}
           {activeView === 'tugas' && <TugasView />}
           {activeView === 'laporan' && <LaporanView />}

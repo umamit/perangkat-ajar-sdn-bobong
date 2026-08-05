@@ -53,6 +53,12 @@ export function DashboardView() {
               <i className="ri-group-line text-lg" /> Kelola Data Siswa
             </Button>
             <Button
+              onClick={() => setActiveView('ai_assistant')}
+              className="bg-cyan-500 hover:bg-cyan-600 text-white font-extrabold px-5 h-11 shadow-lg shadow-cyan-500/25 text-sm rounded-xl transition-all duration-300 hover:scale-105"
+            >
+              <i className="ri-sparkles-line text-lg" /> AI Asisten Guru
+            </Button>
+            <Button
               variant="outline"
               onClick={() => setActiveView('absensi')}
               className="bg-white/15 hover:bg-white/25 border-white/30 text-white font-bold px-5 h-11 backdrop-blur-md text-sm rounded-xl transition-all duration-300"
