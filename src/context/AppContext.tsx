@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Student, Teacher, JournalEntry } from '@/types';
-import { SISWA_6B_LIST, seedSiswa6BToSupabase } from '@/lib/seedSiswa6B';
+import { SISWA_6B_LIST, REAL_6B_NAMES, seedSiswa6BToSupabase } from '@/lib/seedSiswa6B';
 
 interface ToastMessage {
   id: string;
@@ -175,7 +175,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           }]);
         }
         if (data.students) {
-          const loadedStudents = data.students.map((s: any) => ({
+          const rawStudents = data.students.map((s: any) => ({
             id: s.id,
             nis: s.nis || s.id,
             name: s.name,
@@ -187,11 +187,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             scoreSas: s.score_sas || 0
           }));
 
-          // Merge 6B students if missing
+          // Purge dummy 6B students that don't match official list
+          const loadedStudents = rawStudents.filter((s: any) => {
+            if (s.classId === '6B' || s.classId === '6b') {
+              return REAL_6B_NAMES.has((s.name || '').toUpperCase());
+            }
+            return true;
+          });
+
+          // Merge official 6B students if missing
           const existingIds = new Set(loadedStudents.map((s: any) => s.id));
           const missing6B = SISWA_6B_LIST.filter(s => !existingIds.has(s.id));
 
-          if (missing6B.length > 0) {
+          if (missing6B.length > 0 || rawStudents.length !== loadedStudents.length) {
             seedSiswa6BToSupabase();
             const merged = [...loadedStudents, ...missing6B.map(s => ({
               id: s.id,

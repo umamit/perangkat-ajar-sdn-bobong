@@ -1,4 +1,4 @@
-import { saveStudentToSupabase } from '@/lib/supabase';
+import { saveStudentToSupabase, getSupabase } from '@/lib/supabase';
 
 export const SISWA_6B_LIST = [
   { id: '6B-01', nis: '20266B01', name: 'ARBAIN ASLUN', class_id: '6B', classId: '6B', gender: 'L' },
@@ -25,7 +25,22 @@ export const SISWA_6B_LIST = [
   { id: '6B-22', nis: '20266B22', name: 'JUMRI', class_id: '6B', classId: '6B', gender: 'L' },
 ];
 
+export const REAL_6B_NAMES = new Set(SISWA_6B_LIST.map(s => s.name.toUpperCase()));
+
 export async function seedSiswa6BToSupabase() {
+  try {
+    const supabase = getSupabase();
+    // Delete dummy 6B students that are not in official list
+    const { data: current6B } = await supabase.from('students').select('*').eq('class_id', '6B');
+    if (current6B) {
+      for (const s of current6B) {
+        if (!REAL_6B_NAMES.has((s.name || '').toUpperCase())) {
+          await supabase.from('students').delete().eq('id', s.id);
+        }
+      }
+    }
+  } catch (e) {}
+
   for (const s of SISWA_6B_LIST) {
     await saveStudentToSupabase({
       id: s.id,
