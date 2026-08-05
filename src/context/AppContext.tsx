@@ -126,14 +126,52 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (data.success) {
         if (data.teachers && data.teachers.length > 0) {
-          setTeachers(data.teachers.map((t: any) => ({
-            nip: t.nip,
-            name: t.name,
-            role: t.role || 'Guru Mata Pelajaran',
-            subject: t.subject || 'Bahasa Inggris',
-            password: t.password || 'sdnbobong',
-            avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
-          })));
+          const filtered = data.teachers
+            .filter((t: any) => t.nip !== '197508201999031002')
+            .map((t: any) => {
+              if (t.nip === '199610272019032006') {
+                return {
+                  nip: '199610272019032006',
+                  name: 'Husnita Usman, M.Pd',
+                  role: 'Kepala Sekolah / Executive Admin',
+                  subject: 'Bahasa Inggris & Manajemen Sekolah',
+                  password: t.password || 'kepseksdnbobong',
+                  avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
+                };
+              }
+              return {
+                nip: t.nip,
+                name: t.name,
+                role: t.role || 'Guru Mata Pelajaran',
+                subject: t.subject || 'Bahasa Inggris',
+                password: t.password || 'sdnbobong',
+                avatar: t.avatar_url || '/assets/logo-sdn-bobong.png'
+              };
+            });
+
+          // Ensure 199610272019032006 is present as sole Executive Admin
+          const hasAdmin = filtered.some((t: any) => t.nip === '199610272019032006');
+          if (!hasAdmin) {
+            filtered.unshift({
+              nip: '199610272019032006',
+              name: 'Husnita Usman, M.Pd',
+              role: 'Kepala Sekolah / Executive Admin',
+              subject: 'Bahasa Inggris & Manajemen Sekolah',
+              password: 'kepseksdnbobong',
+              avatar: '/assets/logo-sdn-bobong.png'
+            });
+          }
+
+          setTeachers(filtered);
+        } else {
+          setTeachers([{
+            nip: '199610272019032006',
+            name: 'Husnita Usman, M.Pd',
+            role: 'Kepala Sekolah / Executive Admin',
+            subject: 'Bahasa Inggris & Manajemen Sekolah',
+            password: 'kepseksdnbobong',
+            avatar: '/assets/logo-sdn-bobong.png'
+          }]);
         }
         if (data.students) {
           setStudents(data.students.map((s: any) => ({

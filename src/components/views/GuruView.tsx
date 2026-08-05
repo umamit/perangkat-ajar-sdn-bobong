@@ -11,6 +11,12 @@ import { deleteTeacherFromSupabase } from '@/lib/supabase';
 export function GuruView() {
   const { teachers, setTeachers, showToast, syncData } = useApp();
 
+  React.useEffect(() => {
+    deleteTeacherFromSupabase('197508201999031002');
+  }, []);
+
+  const activeTeachers = teachers.filter(t => t.nip !== '197508201999031002');
+
   const handleDelete = async (nip: string, name: string) => {
     if (confirm(`Hapus data guru ${name}?`)) {
       setTeachers(prev => prev.filter(t => t.nip !== nip));
@@ -46,7 +52,7 @@ export function GuruView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {teachers.map((t, idx) => (
+              {activeTeachers.map((t, idx) => (
                 <TableRow key={t.nip || idx} className="hover:bg-slate-50/80">
                   <TableCell>
                     <img
