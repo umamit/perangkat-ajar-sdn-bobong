@@ -7,8 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
+import { downloadJurnalPDF } from '@/modules/generateJurnalPDF';
+import { exportJurnalExcel } from '@/modules/exportJurnalExcel';
+
 export function JurnalView() {
-  const { journals, setJournals, showToast } = useApp();
+  const { journals, setJournals, currentTeacher, showToast } = useApp();
 
   const handleDelete = (id: string) => {
     if (confirm('Hapus entry jurnal mengajar ini?')) {
@@ -17,16 +20,56 @@ export function JurnalView() {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (journals.length === 0) {
+      showToast('Belum ada jurnal mengajar untuk dicetak', 'error');
+      return;
+    }
+    try {
+      showToast('Memproses Berkas PDF Jurnal...', 'info');
+      await downloadJurnalPDF({
+        journals,
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+      });
+      showToast('PDF Jurnal Mengajar Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mencetak PDF Jurnal', 'error');
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (journals.length === 0) {
+      showToast('Belum ada jurnal mengajar untuk diekspor', 'error');
+      return;
+    }
+    try {
+      showToast('Mengunduh File Excel Jurnal...', 'info');
+      exportJurnalExcel(journals);
+      showToast('Excel Jurnal Mengajar Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mengekspor file Excel Jurnal', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Jurnal Mengajar Guru Bahasa Inggris</h3>
           <p className="text-xs text-slate-500">Catatan pelaksanaan pembelajaran harian dan topik per kelas</p>
         </div>
-        <Button size="sm" onClick={() => (window as any).showAddJournalModal()}>
-          <i className="ri-add-line" /> Isi Jurnal Hari Ini
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Jurnal
+          </Button>
+          <Button size="sm" onClick={() => (window as any).showAddJournalModal()} className="gap-1">
+            <i className="ri-add-line" /> Isi Jurnal Hari Ini
+          </Button>
+        </div>
       </div>
 
       <Card>

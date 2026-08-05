@@ -8,9 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { saveGradeToSupabase } from '@/lib/supabase';
+import { downloadNilaiPDF } from '@/modules/generateNilaiPDF';
+import { exportNilaiExcel } from '@/modules/exportNilaiExcel';
 
 export function NilaiView() {
-  const { students, setStudents, classes, showToast } = useApp();
+  const { students, setStudents, classes, currentTeacher, showToast } = useApp();
   const [selectedClass, setSelectedClass] = useState('ALL');
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
@@ -43,6 +45,39 @@ export function NilaiView() {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (filteredStudents.length === 0) {
+      showToast('Tidak ada data nilai untuk dicetak', 'error');
+      return;
+    }
+    try {
+      showToast('Memproses Berkas PDF Daftar Nilai...', 'info');
+      await downloadNilaiPDF({
+        className: selectedClass,
+        students: filteredStudents,
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+      });
+      showToast('PDF Daftar Nilai Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mencetak PDF Daftar Nilai', 'error');
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (filteredStudents.length === 0) {
+      showToast('Tidak ada data nilai untuk diekspor', 'error');
+      return;
+    }
+    try {
+      showToast('Mengunduh File Excel Daftar Nilai...', 'info');
+      exportNilaiExcel(filteredStudents, selectedClass);
+      showToast('Excel Daftar Nilai Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mengekspor file Excel', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -50,9 +85,14 @@ export function NilaiView() {
           <h3 className="text-xl font-bold text-slate-800">Daftar Nilai Asesmen Kurikulum Merdeka</h3>
           <p className="text-xs text-slate-500">Penilaian Formatif (40%), STS (30%), dan SAS (30%) dengan kalkulasi otomatis</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => (window as any).exportNilaiToCSV()}>
-          <i className="ri-download-line" /> Ekspor CSV Nilai
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Nilai
+          </Button>
+        </div>
       </div>
 
       <Card>
