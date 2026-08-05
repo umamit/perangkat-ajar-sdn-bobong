@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { saveAttendanceToSupabase } from '@/lib/supabase';
+import { downloadAbsensiPDF } from '@/modules/generateAbsensiPDF';
 
 export function AbsensiView() {
-  const { students, classes, attendance, setAttendance, showToast } = useApp();
+  const { students, classes, attendance, setAttendance, currentTeacher, showToast } = useApp();
   const [selectedClass, setSelectedClass] = useState('1A');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentStatuses, setCurrentStatuses] = useState<Record<string, string>>({});
@@ -85,6 +86,34 @@ export function AbsensiView() {
     showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) tersimpan di Supabase Cloud!`, 'success');
   };
 
+  const handleDownloadPDF = async () => {
+    if (classStudents.length === 0) {
+      showToast('Tidak ada siswa di kelas ini untuk dicetak', 'error');
+      return;
+    }
+    try {
+      showToast('Memproses & Mengunduh Berkas PDF Absensi...', 'info');
+      await downloadAbsensiPDF({
+        className: selectedClass,
+        date,
+        students: classStudents.map(s => ({
+          name: s.name,
+          nis: s.nis,
+          status: currentStatuses[getStatusKey(s)] || 'Alpa',
+        })),
+        hadir: currentHadir,
+        izin: currentIzin,
+        sakit: currentSakit,
+        alpa: currentAlpa,
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+      });
+      showToast('PDF Rekap Presensi Berhasil Diunduh!', 'success');
+    } catch (err) {
+      showToast('Gagal mencetak PDF Absensi', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -92,9 +121,14 @@ export function AbsensiView() {
           <h3 className="text-xl font-bold text-slate-800">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
           <p className="text-xs text-slate-500">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50">
-          <i className="ri-checkbox-multiple-line" /> Tandai Semua Hadir
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Absensi
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+            <i className="ri-checkbox-multiple-line text-sm" /> Tandai Semua Hadir
+          </Button>
+        </div>
       </div>
 
       {/* Attendance Summary Stat Cards */}
