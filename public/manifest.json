@@ -1,24 +1,36 @@
 {
   "name": "Perangkat Ajar Online - SD Negeri Bobong",
-  "short_name": "Perangkat Ajar",
-  "description": "Portal Perangkat Ajar Guru Bahasa Inggris SD Negeri Bobong - Kec. Taliabu Barat",
-  "start_url": "./index.html",
+  "short_name": "Ajar SDN Bobong",
+  "description": "Aplikasi Internal Perangkat Ajar Guru SD Negeri Bobong, Kabupaten Pulau Taliabu",
+  "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#f8fafc",
-  "theme_color": "#00bcd4",
+  "background_color": "#0A7E8D",
+  "theme_color": "#12A5B8",
+  "scope": "/",
+  "lang": "id",
+  "categories": ["education", "productivity"],
   "icons": [
     {
-      "src": "assets/logo-sdn-bobong.png",
+      "src": "/assets/logo-sdn-bobong.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "assets/logo-sdn-bobong.png",
+      "src": "/assets/logo-sdn-bobong.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/logo-sdn-bobong.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }

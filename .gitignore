@@ -2,6 +2,10 @@
 .next/
 out/
 
+# PWA generated files (auto-generated on build)
+public/sw.js
+public/workbox-*.js
+
 # Environment variables
 .env
 .env.*
