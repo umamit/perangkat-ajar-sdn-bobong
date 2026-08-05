@@ -59,11 +59,11 @@ export function Sidebar() {
             id="teacherAvatarSidebar"
             src={currentTeacher.avatar || '/assets/logo-sdn-bobong.png'}
             alt="Guru"
-            className="teacher-avatar"
+            className="teacher-avatar shrink-0"
           />
-          <div className="teacher-details">
-            <h4 id="teacherNameSidebar">{currentTeacher.name || 'Guru Bahasa Inggris'}</h4>
-            <p id="teacherNipSidebar">NIP: {currentTeacher.nip || '199610272019032006'}</p>
+          <div className="teacher-details min-w-0 flex-1 overflow-hidden">
+            <h4 id="teacherNameSidebar" className="truncate leading-tight" title={currentTeacher.name}>{currentTeacher.name || 'Guru Bahasa Inggris'}</h4>
+            <p id="teacherNipSidebar" className="truncate text-slate-300">NIP: {currentTeacher.nip || '199610272019032006'}</p>
           </div>
         </div>
       </aside>
