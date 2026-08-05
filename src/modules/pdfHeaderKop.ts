@@ -71,23 +71,15 @@ export async function drawOfficialKopSurat(
     color: rgb(0, 0, 0),
   });
 
-  // Line 2: DINAS PENDIDIKAN (Underlined)
+  // Line 2: DINAS PENDIDIKAN
   curY -= 15;
   const line2 = 'DINAS PENDIDIKAN';
   const line2Width = fontBold.widthOfTextAtSize(line2, 13);
-  const line2X = centerX - line2Width / 2;
   page.drawText(line2, {
-    x: line2X,
+    x: centerX - line2Width / 2,
     y: curY,
     size: 13,
     font: fontBold,
-    color: rgb(0, 0, 0),
-  });
-  // Underline for DINAS PENDIDIKAN
-  page.drawLine({
-    start: { x: line2X, y: curY - 2 },
-    end: { x: line2X + line2Width, y: curY - 2 },
-    thickness: 1,
     color: rgb(0, 0, 0),
   });
 
