@@ -102,6 +102,30 @@ export async function deleteAssignmentFromSupabase(id: string) {
   }
 }
 
+export async function deleteGradeFromSupabase(studentId: string, type?: string) {
+  try {
+    const supabase = getSupabase();
+    let query = supabase.from('grades').delete().eq('student_id', studentId);
+    if (type) query = query.eq('type', type);
+    const { error } = await query;
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Grade Error]', e);
+    return false;
+  }
+}
+
+export async function deleteAttendanceFromSupabase(studentId: string, date: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('attendance').delete().eq('student_id', studentId).eq('date', date);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Attendance Error]', e);
+    return false;
+  }
+}
+
 export async function saveStudentToSupabase(student: any) {
   try {
     const supabase = getSupabase();
