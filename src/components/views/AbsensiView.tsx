@@ -8,6 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { saveAttendanceToSupabase } from '@/lib/supabase';
 import { downloadAbsensiPDF } from '@/modules/generateAbsensiPDF';
+import { exportAbsensiExcel } from '@/modules/exportAbsensiExcel';
+import { RiwayatPresensiCard } from './absensi/RiwayatPresensiCard';
+import { StatCards } from './absensi/StatCards';
 
 export function AbsensiView() {
   const { students, classes, attendance, setAttendance, currentTeacher, showToast } = useApp();
@@ -114,6 +117,32 @@ export function AbsensiView() {
     }
   };
 
+  const handleExportExcel = () => {
+    if (classStudents.length === 0) {
+      showToast('Tidak ada siswa di kelas ini untuk diekspor', 'error');
+      return;
+    }
+    try {
+      showToast('Mengunduh File Excel Absensi...', 'info');
+      exportAbsensiExcel({
+        className: selectedClass,
+        date,
+        students: classStudents.map(s => ({
+          name: s.name,
+          nis: s.nis,
+          status: currentStatuses[getStatusKey(s)] || 'Belum Diisi',
+        })),
+        hadir: currentHadir,
+        izin: currentIzin,
+        sakit: currentSakit,
+        alpa: currentAlpa,
+      });
+      showToast('File Excel Rekap Presensi Berhasil Diunduh!', 'success');
+    } catch (err) {
+      showToast('Gagal mengekspor file Excel', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -121,54 +150,27 @@ export function AbsensiView() {
           <h3 className="text-xl font-bold text-slate-800">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
           <p className="text-xs text-slate-500">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
+          </Button>
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Absensi
           </Button>
-          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-bold text-teal-700 border-teal-300 hover:bg-teal-50 gap-1.5">
             <i className="ri-checkbox-multiple-line text-sm" /> Tandai Semua Hadir
           </Button>
         </div>
       </div>
 
       {/* Attendance Summary Stat Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
-          <span className="text-[11px] font-bold text-emerald-700 uppercase block">Hadir</span>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-xl font-black text-emerald-900">{currentHadir}</span>
-            <span className="text-xs font-bold text-emerald-700">({pctHadir}%)</span>
-          </div>
-        </div>
-        <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200">
-          <span className="text-[11px] font-bold text-amber-700 uppercase block">Izin</span>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-xl font-black text-amber-900">{currentIzin}</span>
-            <span className="text-xs font-bold text-amber-700">({pctIzin}%)</span>
-          </div>
-        </div>
-        <div className="p-3.5 rounded-xl bg-orange-50 border border-orange-200">
-          <span className="text-[11px] font-bold text-orange-700 uppercase block">Sakit</span>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-xl font-black text-orange-900">{currentSakit}</span>
-            <span className="text-xs font-bold text-orange-700">({pctSakit}%)</span>
-          </div>
-        </div>
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
-          <span className="text-[11px] font-bold text-rose-700 uppercase block">Alpa</span>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-xl font-black text-rose-900">{currentAlpa}</span>
-            <span className="text-xs font-bold text-rose-700">({pctAlpa}%)</span>
-          </div>
-        </div>
-        <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 col-span-2 sm:col-span-1">
-          <span className="text-[11px] font-bold text-slate-500 uppercase block">Belum Diisi</span>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-xl font-black text-slate-700">{currentUnselected}</span>
-            <span className="text-xs font-bold text-slate-500">Siswa</span>
-          </div>
-        </div>
-      </div>
+      <StatCards
+        currentHadir={currentHadir} pctHadir={pctHadir}
+        currentIzin={currentIzin} pctIzin={pctIzin}
+        currentSakit={currentSakit} pctSakit={pctSakit}
+        currentAlpa={currentAlpa} pctAlpa={pctAlpa}
+        currentUnselected={currentUnselected}
+      />
 
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100">
@@ -276,44 +278,7 @@ export function AbsensiView() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-bold">Riwayat Presensi Harian</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Tanggal</TableHead>
-                <TableHead>Kelas</TableHead>
-                <TableHead className="text-center">Hadir</TableHead>
-                <TableHead className="text-center">Izin</TableHead>
-                <TableHead className="text-center">Sakit</TableHead>
-                <TableHead className="text-center">Alpa</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {attendance.map((r, idx) => (
-                <TableRow key={idx} className="hover:bg-slate-50/80">
-                  <TableCell className="font-bold text-xs">{r.date}</TableCell>
-                  <TableCell><Badge variant="default" className="font-extrabold">{r.classId}</Badge></TableCell>
-                  <TableCell className="text-center"><Badge variant="success">{r.hadir || 0}</Badge></TableCell>
-                  <TableCell className="text-center"><Badge variant="warning">{r.izin || 0}</Badge></TableCell>
-                  <TableCell className="text-center"><Badge variant="secondary">{r.sakit || 0}</Badge></TableCell>
-                  <TableCell className="text-center"><Badge variant="danger">{r.alpa || 0}</Badge></TableCell>
-                </TableRow>
-              ))}
-              {attendance.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-slate-400 py-6 text-xs font-medium">
-                    Belum ada riwayat presensi tersimpan
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <RiwayatPresensiCard attendance={attendance} />
     </div>
   );
 }
