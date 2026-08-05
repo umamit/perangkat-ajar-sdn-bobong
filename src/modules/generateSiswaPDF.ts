@@ -1,5 +1,6 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { Student } from '@/types';
+import { drawOfficialKopSurat } from './pdfHeaderKop';
 
 export interface SiswaPDFData {
   className: string;
@@ -24,29 +25,8 @@ export async function downloadSiswaPDF(data: SiswaPDFData): Promise<void> {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
-  // Kop Sekolah
-  page.drawText('PEMERINTAH KABUPATEN PULAU TALIABU', {
-    x: MARGIN, y: curY, size: 11, font: fontBold, color: rgb(0.06, 0.09, 0.16),
-  });
-  curY -= 14;
-  page.drawText('DINAS PENDIDIKAN – SD NEGERI BOBONG', {
-    x: MARGIN, y: curY, size: 10, font: fontBold, color: rgb(0.07, 0.65, 0.72),
-  });
-  curY -= 12;
-  page.drawText('Desa Bobong, Kec. Taliabu Barat, Kab. Pulau Taliabu', {
-    x: MARGIN, y: curY, size: 8, font: fontRegular, color: rgb(0.45, 0.50, 0.58),
-  });
-  curY -= 10;
-  page.drawLine({
-    start: { x: MARGIN, y: curY }, end: { x: PAGE_W - MARGIN, y: curY },
-    thickness: 2, color: rgb(0.07, 0.65, 0.72),
-  });
-  curY -= 4;
-  page.drawLine({
-    start: { x: MARGIN, y: curY }, end: { x: PAGE_W - MARGIN, y: curY },
-    thickness: 0.5, color: rgb(0.07, 0.65, 0.72),
-  });
-  curY -= 16;
+  // Official Header Kop Surat
+  curY = await drawOfficialKopSurat(pdfDoc, page, PAGE_W, curY, MARGIN);
 
   // Title
   page.drawText('DAFTAR INDUK INDIVIDUAL SISWA PER KELAS', {

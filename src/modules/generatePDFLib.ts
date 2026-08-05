@@ -1,4 +1,5 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { drawOfficialKopSurat } from './pdfHeaderKop';
 
 export async function downloadLaporanPDFWithPdfLib(data: {
   totalStudents: number;
@@ -15,38 +16,9 @@ export async function downloadLaporanPDFWithPdfLib(data: {
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-  // Header Title
-  page.drawText('PEMERINTAH KABUPATEN PULAU TALIABU', {
-    x: 110,
-    y: height - 50,
-    size: 13,
-    font: fontBold,
-    color: rgb(0.06, 0.09, 0.16),
-  });
-
-  page.drawText('DINAS PENDIDIKAN - SD NEGERI BOBONG', {
-    x: 125,
-    y: height - 68,
-    size: 12,
-    font: fontBold,
-    color: rgb(0.07, 0.65, 0.72),
-  });
-
-  page.drawText('Alamat: Desa Bobong, Kecamatan Taliabu Barat, Kabupaten Pulau Taliabu', {
-    x: 85,
-    y: height - 84,
-    size: 9,
-    font: fontRegular,
-    color: rgb(0.39, 0.45, 0.55),
-  });
-
-  // Double Line Separator
-  page.drawLine({
-    start: { x: 40, y: height - 95 },
-    end: { x: width - 40, y: height - 95 },
-    thickness: 2,
-    color: rgb(0.06, 0.09, 0.16),
-  });
+  // Official Header Kop Surat
+  let curY = height - 40;
+  curY = await drawOfficialKopSurat(pdfDoc, page, width, curY, 40);
 
   // Report Title
   page.drawText('LAPORAN REKAPITULASI ADMINISTRASI PERANGKAT AJAR', {
