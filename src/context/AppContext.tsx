@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Student, Teacher, JournalEntry } from '@/types';
+import { SISWA_6B_LIST, seedSiswa6BToSupabase } from '@/lib/seedSiswa6B';
 
 interface ToastMessage {
   id: string;
@@ -174,7 +175,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           }]);
         }
         if (data.students) {
-          setStudents(data.students.map((s: any) => ({
+          const loadedStudents = data.students.map((s: any) => ({
             id: s.id,
             nis: s.nis || s.id,
             name: s.name,
@@ -184,7 +185,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             scoreSumatif: s.score_sumatif || 0,
             scoreSts: s.score_sts || 0,
             scoreSas: s.score_sas || 0
-          })));
+          }));
+
+          // Merge 6B students if missing
+          const existingIds = new Set(loadedStudents.map((s: any) => s.id));
+          const missing6B = SISWA_6B_LIST.filter(s => !existingIds.has(s.id));
+
+          if (missing6B.length > 0) {
+            seedSiswa6BToSupabase();
+            const merged = [...loadedStudents, ...missing6B.map(s => ({
+              id: s.id,
+              nis: s.nis,
+              name: s.name,
+              classId: s.classId,
+              gender: s.gender,
+              scoreFormatif: 0,
+              scoreSumatif: 0,
+              scoreSts: 0,
+              scoreSas: 0
+            }))];
+            setStudents(merged);
+          } else {
+            setStudents(loadedStudents);
+          }
         }
         if (data.classes && data.classes.length > 0) {
           const classMap = new Map<string, any>();
