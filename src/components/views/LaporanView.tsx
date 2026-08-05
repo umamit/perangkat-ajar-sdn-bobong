@@ -5,17 +5,30 @@ import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+import { printLaporanPDF } from '@/modules/printLaporanPDF';
+
 export function LaporanView() {
-  const { students, classes, journals, attendance, showToast } = useApp();
+  const { students, classes, journals, attendance, currentTeacher } = useApp();
+
+  const handlePrintPDF = () => {
+    printLaporanPDF({
+      totalStudents: students.length,
+      totalClasses: classes.length,
+      totalJournals: journals.length,
+      totalAttendance: attendance.length,
+      headmasterName: currentTeacher?.name,
+      headmasterNip: currentTeacher?.nip
+    });
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Laporan Rekapitulasi Perangkat Ajar & Presensi</h3>
+          <h3 className="text-xl font-bold text-slate-800">Laporan Rekapitulasi Perangkat Ajar &amp; Presensi</h3>
           <p className="text-xs text-slate-500">Ringkasan administrasi pembelajaran SD Negeri Bobong</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => showToast('Mencetak Laporan Rekapitulasi PDF...', 'info')}>
+        <Button variant="outline" size="sm" onClick={handlePrintPDF} className="font-bold">
           <i className="ri-printer-line" /> Cetak Laporan PDF
         </Button>
       </div>
