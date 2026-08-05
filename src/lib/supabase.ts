@@ -181,6 +181,50 @@ export async function saveAssignmentToSupabase(assignment: any) {
   }
 }
 
+export async function saveModuleToSupabase(moduleData: any) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('modules').upsert(moduleData);
+    return !error;
+  } catch (e) {
+    console.warn('[Save Module Error]', e);
+    return false;
+  }
+}
+
+export async function deleteModuleFromSupabase(id: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('modules').delete().eq('id', id);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Module Error]', e);
+    return false;
+  }
+}
+
+export async function saveClassToSupabase(classData: any) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('classes').upsert(classData);
+    return !error;
+  } catch (e) {
+    console.warn('[Save Class Error]', e);
+    return false;
+  }
+}
+
+export async function deleteClassFromSupabase(id: string) {
+  try {
+    const supabase = getSupabase();
+    const { error } = await supabase.from('classes').delete().eq('id', id);
+    return !error;
+  } catch (e) {
+    console.warn('[Delete Class Error]', e);
+    return false;
+  }
+}
+
 export async function saveGradeToSupabase(studentIdOrGrade: any, type?: string, score?: number, classId?: string) {
   try {
     const supabase = getSupabase();

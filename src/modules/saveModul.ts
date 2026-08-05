@@ -1,9 +1,10 @@
 import { showToast } from './showToast';
-import { appData, saveStorage, saveJournalToSupabase } from '../helpers';
+import { appData, saveStorage } from '../helpers';
+import { saveModuleToSupabase } from '@/lib/supabase';
 import { closeModal } from './closeModal';
 import { renderModulAjar } from './modulAjarView';
 
-export function saveModul(e: Event): void {
+export async function saveModul(e: Event): Promise<void> {
   e.preventDefault();
   const title = (document.getElementById('modulTitle') as HTMLInputElement).value.trim();
   const grade = (document.getElementById('modulGrade') as HTMLSelectElement).value;
@@ -28,7 +29,8 @@ export function saveModul(e: Event): void {
 
   appData.modules.unshift(newModul);
   saveStorage();
+  await saveModuleToSupabase(newModul);
   renderModulAjar();
   closeModal();
-  alert(`✅ Modul Ajar "${title}" berhasil ditambahkan!`);
+  showToast(`Modul Ajar "${title}" berhasil ditambahkan & tersimpan ke Supabase!`, 'success');
 }
