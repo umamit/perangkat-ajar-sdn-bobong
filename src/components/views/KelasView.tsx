@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 export function KelasView() {
-  const { classes, students, setActiveView } = useApp();
+  const { classes, students, setActiveView, setSelectedClassFilter } = useApp();
 
   const classMap = new Map<string, any>();
   (classes || []).forEach(c => {
@@ -35,7 +35,10 @@ export function KelasView() {
             <Card
               key={c.id}
               className="cursor-pointer hover:border-primary/50 transition-all duration-200"
-              onClick={() => setActiveView('siswa')}
+              onClick={() => {
+                setSelectedClassFilter(c.id);
+                setActiveView('siswa');
+              }}
             >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">

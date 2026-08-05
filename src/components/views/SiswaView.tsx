@@ -12,9 +12,10 @@ import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
 import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
 
 export function SiswaView() {
-  const { students, classes, currentTeacher, showToast, setStudents, syncData } = useApp();
+  const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
   const [search, setSearch] = useState('');
-  const [selectedClass, setSelectedClass] = useState('ALL');
+  const selectedClass = selectedClassFilter;
+  const setSelectedClass = setSelectedClassFilter;
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 

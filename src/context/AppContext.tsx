@@ -16,6 +16,8 @@ interface AppContextType {
   setIsLoggedIn: (loggedIn: boolean) => void;
   activeView: string;
   setActiveView: (view: string) => void;
+  selectedClassFilter: string;
+  setSelectedClassFilter: (cls: string) => void;
   activeRoleMode: string;
   setActiveRoleMode: (mode: string) => void;
   currentTeacher: Teacher;
@@ -83,6 +85,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const [isInitializing, setIsInitializing] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<string>('dashboard');
+  const [selectedClassFilter, setSelectedClassFilter] = useState<string>('ALL');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
@@ -284,6 +287,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setIsLoggedIn,
         activeView,
         setActiveView,
+        selectedClassFilter,
+        setSelectedClassFilter,
         activeRoleMode,
         setActiveRoleMode,
         currentTeacher,
