@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { saveTeacherToSupabase } from '@/lib/supabase';
+import { backupSystemData } from '@/modules/backupSystemData';
 
 export function PengaturanView() {
-  const { currentTeacher, setCurrentTeacher, showToast, syncData } = useApp();
+  const { currentTeacher, setCurrentTeacher, students, classes, teachers, journals, attendance, modules, showToast, syncData } = useApp();
   const [name, setName] = useState(currentTeacher.name || 'Husnita Usman, M.Pd');
   const [nip, setNip] = useState(currentTeacher.nip || '199610272019032006');
   const [role, setRole] = useState(currentTeacher.role || 'Kepala Sekolah / Executive Admin');
@@ -51,7 +52,6 @@ export function PengaturanView() {
       localStorage.setItem('sdn_bobong_teacher', JSON.stringify(updated));
     } catch (err) {}
 
-    // Save password & profile directly to Supabase Cloud Database
     const supabasePayload = {
       nip: nip.trim(),
       name: name.trim(),
@@ -69,6 +69,23 @@ export function PengaturanView() {
       showToast('Profil & Kata Sandi Baru berhasil tersimpan ke Supabase Cloud!', 'success');
     } else {
       showToast('Profil diperbarui di sesi lokal, namun gagal terhubung ke Supabase', 'info');
+    }
+  };
+
+  const handleBackup = () => {
+    try {
+      showToast('Membuat berkas cadangan data...', 'info');
+      backupSystemData({
+        students,
+        classes,
+        teachers,
+        journals,
+        attendance,
+        modules,
+      });
+      showToast('Cadangan Data Sistem Berhasil Diunduh!', 'success');
+    } catch (err) {
+      showToast('Gagal membuat cadangan data', 'error');
     }
   };
 
@@ -149,7 +166,6 @@ export function PengaturanView() {
               </div>
             </div>
 
-            {/* Password Change Field */}
             <div className="space-y-1 pt-2 border-t border-slate-100">
               <label className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                 <i className="ri-lock-password-line text-primary" />
@@ -181,6 +197,23 @@ export function PengaturanView() {
               <i className="ri-save-line" /> {isSaving ? 'Menyimpan ke Supabase...' : 'Simpan Profil & Kata Sandi'}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card className="glass-panel border-white/80 shadow-md">
+        <CardHeader className="bg-white/50 border-b border-slate-200/40">
+          <CardTitle className="text-base font-extrabold text-slate-800 flex items-center gap-2">
+            <i className="ri-database-2-line text-emerald-600 text-lg" />
+            <span>Pencadangan Data Sekolah (Backup System)</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6 space-y-3">
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Unduh seluruh berkas cadangan data siswa, presensi, jurnal mengajar, dan modul ajar SD Negeri Bobong ke dalam format file `.json` untuk penyimpanan arsip aman.
+          </p>
+          <Button onClick={handleBackup} variant="outline" className="font-bold text-xs gap-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+            <i className="ri-download-cloud-2-line text-base text-emerald-600" /> Unduh Cadangan Data Sistem (.json)
+          </Button>
         </CardContent>
       </Card>
     </div>

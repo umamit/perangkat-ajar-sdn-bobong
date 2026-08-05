@@ -8,9 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { deleteStudentFromSupabase } from '@/lib/supabase';
+import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
+import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
 
 export function SiswaView() {
-  const { students, classes, showToast, setStudents, syncData } = useApp();
+  const { students, classes, currentTeacher, showToast, setStudents, syncData } = useApp();
   const [search, setSearch] = useState('');
   const [selectedClass, setSelectedClass] = useState('ALL');
 
@@ -33,6 +35,39 @@ export function SiswaView() {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (filteredStudents.length === 0) {
+      showToast('Tidak ada data siswa untuk dicetak', 'error');
+      return;
+    }
+    try {
+      showToast('Memproses Berkas PDF Data Siswa...', 'info');
+      await downloadSiswaPDF({
+        className: selectedClass,
+        students: filteredStudents,
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+      });
+      showToast('PDF Data Siswa Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mencetak PDF Data Siswa', 'error');
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (filteredStudents.length === 0) {
+      showToast('Tidak ada data siswa untuk diekspor', 'error');
+      return;
+    }
+    try {
+      showToast('Mengunduh File Excel Data Siswa...', 'info');
+      exportSiswaExcel(filteredStudents, selectedClass);
+      showToast('Excel Data Siswa Berhasil Diunduh!', 'success');
+    } catch (e) {
+      showToast('Gagal mengekspor file Excel Data Siswa', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -40,12 +75,18 @@ export function SiswaView() {
           <h3 className="text-xl font-bold text-slate-800">Daftar Siswa SD Negeri Bobong</h3>
           <p className="text-xs text-slate-500">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button size="sm" onClick={() => (window as any).showAddStudentModal()}>
-            <i className="ri-user-add-line" /> Tambah Siswa Baru
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={() => (window as any).showImportStudentModal()}>
-            <i className="ri-file-excel-2-line" /> Impor Excel / CSV
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
+          </Button>
+          <Button size="sm" onClick={() => (window as any).showAddStudentModal()} className="gap-1">
+            <i className="ri-user-add-line" /> Tambah Siswa
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => (window as any).showImportStudentModal()} className="gap-1">
+            <i className="ri-upload-2-line" /> Impor Excel
           </Button>
         </div>
       </div>

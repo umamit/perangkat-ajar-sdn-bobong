@@ -6,8 +6,29 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+import { downloadModulPDF } from '@/modules/generateModulPDF';
+
 export function ModulView() {
-  const { modules, showToast } = useApp();
+  const { modules, currentTeacher, showToast } = useApp();
+
+  const handleDownloadPDF = async (m: any) => {
+    try {
+      showToast(`Memproses Berkas PDF Modul ${m.title}...`, 'info');
+      await downloadModulPDF({
+        modul: {
+          title: m.title,
+          fase: m.grade || m.phase || 'Fase A',
+          classId: m.classId || '1A',
+          description: m.tp ? `TP: ${m.tp}\nATP: ${m.atp || '-'}` : undefined,
+        },
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+      });
+      showToast(`PDF Modul ${m.title} Berhasil Diunduh!`, 'success');
+    } catch (e) {
+      showToast('Gagal mencetak PDF Modul Ajar', 'error');
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -44,8 +65,8 @@ export function ModulView() {
               </div>
               <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-semibold">
                 <span className="text-slate-400">Waktu: {m.duration || '2 x 35 Menit'}</span>
-                <Button variant="outline" size="sm" onClick={() => showToast('Membuka file modul ajar...', 'info')}>
-                  <i className="ri-download-line" /> Unduh PDF
+                <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="gap-1 font-bold text-rose-700 border-rose-300 hover:bg-rose-50">
+                  <i className="ri-file-pdf-2-line text-rose-600" /> Unduh PDF
                 </Button>
               </div>
             </CardContent>
