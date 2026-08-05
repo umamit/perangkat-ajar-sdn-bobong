@@ -5,20 +5,26 @@ import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { printLaporanPDF } from '@/modules/printLaporanPDF';
+import { downloadLaporanPDFWithPdfLib } from '@/modules/generatePDFLib';
 
 export function LaporanView() {
-  const { students, classes, journals, attendance, currentTeacher } = useApp();
+  const { students, classes, journals, attendance, currentTeacher, showToast } = useApp();
 
-  const handlePrintPDF = () => {
-    printLaporanPDF({
-      totalStudents: students.length,
-      totalClasses: classes.length,
-      totalJournals: journals.length,
-      totalAttendance: attendance.length,
-      headmasterName: currentTeacher?.name,
-      headmasterNip: currentTeacher?.nip
-    });
+  const handleDownloadPDF = async () => {
+    try {
+      showToast('Memproses & Mengunduh Berkas PDF...', 'info');
+      await downloadLaporanPDFWithPdfLib({
+        totalStudents: students.length,
+        totalClasses: classes.length,
+        totalJournals: journals.length,
+        totalAttendance: attendance.length,
+        headmasterName: currentTeacher?.name,
+        headmasterNip: currentTeacher?.nip
+      });
+      showToast('Berkas PDF Laporan berhasil diunduh!', 'success');
+    } catch (err) {
+      showToast('Gagal membuat berkas PDF', 'error');
+    }
   };
 
   return (
@@ -28,8 +34,8 @@ export function LaporanView() {
           <h3 className="text-xl font-bold text-slate-800">Laporan Rekapitulasi Perangkat Ajar &amp; Presensi</h3>
           <p className="text-xs text-slate-500">Ringkasan administrasi pembelajaran SD Negeri Bobong</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handlePrintPDF} className="font-bold">
-          <i className="ri-printer-line" /> Cetak Laporan PDF
+        <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="font-bold gap-2">
+          <i className="ri-file-pdf-2-line text-rose-600 text-base" /> Unduh Berkas PDF (pdf-lib)
         </Button>
       </div>
 
