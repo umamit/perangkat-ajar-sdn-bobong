@@ -47,3 +47,7 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 * **BATAS MAKSIMAL 300 BARIS PER BERKAS**: Setiap berkas kode sumber (`.ts`, `.tsx`, `.css`) WAJIB dibatasi secara ketat MAKSIMAL 300 BARIS PER FILE.
 * **WET VS DRY & MODULAR REFACTORING**: Apabila sebuah berkas kode atau stylesheet mendekati/melebihi 300 baris, AI WAJIB memecahnya menjadi modul-modul terpisah di bawah folder yang sesuai (`src/modules/`, `src/styles/`, `src/components/views/`).
 * **PRINSIP 1 BERKAS 1 TANGGUNG JAWAB**: Menjaga arsitektur kode tetap bersih, ringan, dan mudah dipelihara (*maintainable*).
+
+## 9. ATURAN PENGHEMATAN TOKEN AI (AI TOKEN ECONOMY RULE)
+* **RESPONS SINGKAT & PADAT**: AI WAJIB memberikan respons yang ringkas, langsung ke intinya (to-the-point), dan menghindari basa-basi atau penjelasan panjang lebar yang tidak perlu untuk menghemat penggunaan token AI.
+* **FOKUS PADA SOLUSI**: Hindari mengulang-ulang instruksi pengguna. Langsung berikan solusi, hasil eksekusi, atau laporan ringkas.
