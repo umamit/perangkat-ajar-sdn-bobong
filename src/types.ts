@@ -67,6 +67,7 @@ export interface JournalEntry {
   topic: string;
   notes: string;
   attendance: string;
+  teacherNip?: string;
 }
 
 export interface ModuleAjar {
@@ -82,6 +83,7 @@ export interface ModuleAjar {
   materials: string[];
   steps: string[];
   assessment: string;
+  teacherNip?: string;
 }
 
 export interface FlashcardItem {
@@ -108,6 +110,7 @@ export interface TaskItem {
   type: string;
   status: string;
   description: string;
+  teacherNip?: string;
 }
 
 export interface AppData {

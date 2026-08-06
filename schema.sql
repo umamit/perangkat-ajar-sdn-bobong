@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS public.journals (
     topic TEXT NOT NULL,
     notes TEXT,
     attendance_summary TEXT,
+    teacher_nip TEXT REFERENCES public.teachers(nip) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -83,6 +84,7 @@ CREATE TABLE IF NOT EXISTS public.modules (
     atp TEXT,
     duration TEXT,
     file_url TEXT,
+    teacher_nip TEXT REFERENCES public.teachers(nip) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -116,6 +118,7 @@ CREATE TABLE IF NOT EXISTS public.assignments (
     class_id TEXT REFERENCES public.classes(id),
     due_date DATE,
     status TEXT DEFAULT 'Aktif',
+    teacher_nip TEXT REFERENCES public.teachers(nip) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -1,9 +1,28 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const nip = searchParams.get('nip') || '';
+
     const supabase = getSupabase();
+
+    // Prepare queries
+    let journalQuery = supabase.from('journals').select('*');
+    let moduleQuery = supabase.from('modules').select('*');
+    let assignmentQuery = supabase.from('assignments').select('*');
+
+    if (nip) {
+      journalQuery = journalQuery.eq('teacher_nip', nip);
+      moduleQuery = moduleQuery.eq('teacher_nip', nip);
+      assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
+    } else {
+      // If no NIP is active/logged in, return empty sets for security
+      journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      moduleQuery = moduleQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      assignmentQuery = assignmentQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+    }
 
     const [
       teachersRes,
@@ -19,20 +38,29 @@ export async function GET() {
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
       supabase.from('students').select('*'),
-      supabase.from('journals').select('*'),
+      journalQuery,
       supabase.from('attendance').select('*'),
-      supabase.from('modules').select('*'),
+      moduleQuery,
       supabase.from('grades').select('*'),
       supabase.from('flashcards').select('*'),
-      supabase.from('assignments').select('*')
+      assignmentQuery
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
       res.status === 'fulfilled' && res.value && !res.value.error ? res.value.data : [];
 
+    // Map teachers to omit the password field for client security
+    const teachersList = getValue(teachersRes).map((t: any) => {
+      if (t) {
+        const { password, ...rest } = t;
+        return rest;
+      }
+      return t;
+    });
+
     return NextResponse.json({
       success: true,
-      teachers: getValue(teachersRes),
+      teachers: teachersList,
       classes: getValue(classesRes),
       students: getValue(studentsRes),
       journals: getValue(journalsRes),

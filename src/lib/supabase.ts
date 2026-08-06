@@ -14,25 +14,49 @@ export function getSupabase(): SupabaseClient {
   return supabaseClient;
 }
 
-export async function syncFromSupabase() {
+export async function syncFromSupabase(nip?: string) {
   try {
     const supabase = getSupabase();
+    let journalQuery = supabase.from('journals').select('*');
+    let moduleQuery = supabase.from('modules').select('*');
+    let assignmentQuery = supabase.from('assignments').select('*');
+
+    if (nip) {
+      journalQuery = journalQuery.eq('teacher_nip', nip);
+      moduleQuery = moduleQuery.eq('teacher_nip', nip);
+      assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
+    } else {
+      // Force empty sets if no NIP is passed to preserve privacy
+      journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      moduleQuery = moduleQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      assignmentQuery = assignmentQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+    }
+
     const [tRes, cRes, sRes, aRes, jRes, mRes, fRes, assRes] = await Promise.allSettled([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
       supabase.from('students').select('*'),
       supabase.from('attendance').select('*'),
-      supabase.from('journals').select('*'),
-      supabase.from('modules').select('*'),
+      journalQuery,
+      moduleQuery,
       supabase.from('flashcards').select('*'),
-      supabase.from('assignments').select('*')
+      assignmentQuery
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
       res.status === 'fulfilled' && res.value && !res.value.error ? res.value.data : [];
 
+    // Omit teacher passwords on the returned object just in case
+    const teachersList = getValue(tRes).map((t: any) => {
+      if (t) {
+        const { password, ...rest } = t;
+        return rest;
+      }
+      return t;
+    });
+
     return {
-      teachers: getValue(tRes),
+      teachers: teachersList,
       classes: getValue(cRes),
       students: getValue(sRes),
       attendance: getValue(aRes),
@@ -151,7 +175,17 @@ export async function saveTeacherToSupabase(teacher: any) {
 export async function saveJournalToSupabase(journal: any) {
   try {
     const supabase = getSupabase();
-    const { error } = await supabase.from('journals').upsert(journal);
+    const payload = {
+      id: journal.id,
+      date: journal.date,
+      time_slot: journal.time || journal.time_slot || '',
+      class_id: journal.classId || journal.class_id,
+      topic: journal.topic,
+      notes: journal.notes || '',
+      attendance_summary: journal.attendance || journal.attendance_summary || '',
+      teacher_nip: journal.teacherNip || journal.teacher_nip
+    };
+    const { error } = await supabase.from('journals').upsert(payload);
     return !error;
   } catch (e) {
     console.warn('[Save Journal Error]', e);
@@ -173,7 +207,15 @@ export async function saveFlashcardToSupabase(flashcard: any) {
 export async function saveAssignmentToSupabase(assignment: any) {
   try {
     const supabase = getSupabase();
-    const { error } = await supabase.from('assignments').upsert(assignment);
+    const payload = {
+      id: assignment.id,
+      title: assignment.title,
+      class_id: assignment.classId || assignment.class_id,
+      due_date: assignment.dueDate || assignment.due_date,
+      status: assignment.status,
+      teacher_nip: assignment.teacherNip || assignment.teacher_nip
+    };
+    const { error } = await supabase.from('assignments').upsert(payload);
     return !error;
   } catch (e) {
     console.warn('[Save Assignment Error]', e);
@@ -184,7 +226,18 @@ export async function saveAssignmentToSupabase(assignment: any) {
 export async function saveModuleToSupabase(moduleData: any) {
   try {
     const supabase = getSupabase();
-    const { error } = await supabase.from('modules').upsert(moduleData);
+    const payload = {
+      id: moduleData.id,
+      title: moduleData.title,
+      phase: moduleData.phase,
+      class_id: moduleData.classId || moduleData.class_id,
+      tp: moduleData.tp,
+      atp: moduleData.atp,
+      duration: moduleData.duration,
+      file_url: moduleData.fileUrl || moduleData.file_url,
+      teacher_nip: moduleData.teacherNip || moduleData.teacher_nip
+    };
+    const { error } = await supabase.from('modules').upsert(payload);
     return !error;
   } catch (e) {
     console.warn('[Save Module Error]', e);

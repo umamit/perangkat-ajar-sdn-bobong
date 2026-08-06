@@ -7,48 +7,41 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function LoginView() {
-  const { setIsLoggedIn, setCurrentTeacher, teachers, showToast } = useApp();
+  const { setIsLoggedIn, setCurrentTeacher, showToast } = useApp();
   const [nip, setNip] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
     const inputNip = nip.trim();
     const inputPass = password.trim();
 
-    // Pure Supabase match
-    const matched = teachers.find(
-      t =>
-        t.nip === inputNip &&
-        (t.password === inputPass || inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong')
-    ) || (
-      inputNip === '199610272019032006' &&
-      (inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong')
-        ? {
-            nip: '199610272019032006',
-            name: 'Husnita Usman, M.Pd',
-            role: 'Kepala Sekolah / Executive Admin',
-            subject: 'Bahasa Inggris & Manajemen Sekolah',
-            avatar: '/assets/logo-sdn-bobong.png'
-          }
-        : null
-    );
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nip: inputNip, password: inputPass })
+      });
+      const data = await res.json();
 
-    if (matched) {
-      setCurrentTeacher(matched);
-      document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
-      try {
-        localStorage.setItem('sdn_bobong_auth', 'true');
-        localStorage.setItem('sdn_bobong_teacher', JSON.stringify(matched));
-      } catch (err) {}
-      setIsLoggedIn(true);
-      showToast(`Selamat datang, ${matched.name}!`, 'success');
-    } else {
-      setErrorMsg('NIP atau Password salah. Silakan periksa kembali!');
+      if (data.success && data.teacher) {
+        setCurrentTeacher(data.teacher);
+        document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
+        try {
+          localStorage.setItem('sdn_bobong_auth', 'true');
+          localStorage.setItem('sdn_bobong_teacher', JSON.stringify(data.teacher));
+        } catch (err) {}
+        setIsLoggedIn(true);
+        showToast(`Selamat datang, ${data.teacher.name}!`, 'success');
+      } else {
+        setErrorMsg(data.error || 'NIP atau Password salah. Silakan periksa kembali!');
+      }
+    } catch (err) {
+      setErrorMsg('Terjadi kesalahan koneksi. Silakan coba lagi.');
     }
   };
 

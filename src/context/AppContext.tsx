@@ -127,7 +127,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const syncData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/sync');
+      const savedTeacher = typeof window !== 'undefined'
+        ? (() => { try { const s = localStorage.getItem('sdn_bobong_teacher'); return s ? JSON.parse(s) : null; } catch { return null; } })()
+        : null;
+      const nip = savedTeacher?.nip || '';
+      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`);
       const data = await res.json();
       if (data.success) {
         if (data.teachers && data.teachers.length > 0) {
