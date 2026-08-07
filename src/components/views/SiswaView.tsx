@@ -36,7 +36,15 @@ export function SiswaView() {
     name: '',
     classId: lockedClass || classes[0]?.id || '1A',
     gender: 'L' as 'L' | 'P',
-    nis: ''
+    nis: '',
+    nisn: '',
+    nik: '',
+    birthInfo: '',
+    parentName: '',
+    religion: '',
+    parentJob: '',
+    address: '',
+    admissionYear: ''
   });
 
   const [editForm, setEditForm] = useState({
@@ -44,7 +52,15 @@ export function SiswaView() {
     name: '',
     classId: '1A',
     gender: 'L' as 'L' | 'P',
-    nis: ''
+    nis: '',
+    nisn: '',
+    nik: '',
+    birthInfo: '',
+    parentName: '',
+    religion: '',
+    parentJob: '',
+    address: '',
+    admissionYear: ''
   });
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
@@ -87,7 +103,15 @@ export function SiswaView() {
         scoreFormatif: 0,
         scoreSumatif: 0,
         scoreSts: 0,
-        scoreSas: 0
+        scoreSas: 0,
+        nisn: addForm.nisn.trim() || undefined,
+        nik: addForm.nik.trim() || undefined,
+        birthInfo: addForm.birthInfo.trim() || undefined,
+        parentName: addForm.parentName.trim() || undefined,
+        religion: addForm.religion.trim() || undefined,
+        parentJob: addForm.parentJob.trim() || undefined,
+        address: addForm.address.trim() || undefined,
+        admissionYear: addForm.admissionYear.trim() || undefined
       };
 
       const success = await saveStudentToSupabase(newStudent);
@@ -99,7 +123,15 @@ export function SiswaView() {
           name: '',
           classId: classes[0]?.id || '1A',
           gender: 'L',
-          nis: ''
+          nis: '',
+          nisn: '',
+          nik: '',
+          birthInfo: '',
+          parentName: '',
+          religion: '',
+          parentJob: '',
+          address: '',
+          admissionYear: ''
         });
       } else {
         showToast('Gagal menyimpan siswa ke cloud', 'error');
@@ -117,7 +149,15 @@ export function SiswaView() {
       name: student.name,
       classId: student.classId,
       gender: student.gender || 'L',
-      nis: student.nis || ''
+      nis: student.nis || '',
+      nisn: student.nisn || '',
+      nik: student.nik || '',
+      birthInfo: student.birthInfo || '',
+      parentName: student.parentName || '',
+      religion: student.religion || '',
+      parentJob: student.parentJob || '',
+      address: student.address || '',
+      admissionYear: student.admissionYear || ''
     });
     setShowEditModal(true);
   };
@@ -136,6 +176,14 @@ export function SiswaView() {
         name: editForm.name.trim(),
         classId: editForm.classId,
         gender: editForm.gender,
+        nisn: editForm.nisn.trim() || undefined,
+        nik: editForm.nik.trim() || undefined,
+        birthInfo: editForm.birthInfo.trim() || undefined,
+        parentName: editForm.parentName.trim() || undefined,
+        religion: editForm.religion.trim() || undefined,
+        parentJob: editForm.parentJob.trim() || undefined,
+        address: editForm.address.trim() || undefined,
+        admissionYear: editForm.admissionYear.trim() || undefined
       };
 
       const success = await saveStudentToSupabase(updatedStudent);

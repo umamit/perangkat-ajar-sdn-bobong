@@ -54,51 +54,143 @@ export function StudentDialogs({
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddSubmit} className="space-y-4 mt-2">
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="studentName" className="font-bold text-slate-600">Nama Lengkap Siswa</Label>
-              <Input
-                id="studentName"
-                value={addForm.name}
-                onChange={e => setAddForm((f: any) => ({ ...f, name: e.target.value }))}
-                placeholder="Masukkan nama lengkap siswa"
-                required
-                className="h-10 rounded-xl"
-              />
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="studentNis" className="font-bold text-slate-600">NIS / NISN</Label>
-              <Input
-                id="studentNis"
-                value={addForm.nis}
-                onChange={e => setAddForm((f: any) => ({ ...f, nis: e.target.value }))}
-                placeholder="Masukkan Nomor Induk Siswa"
-                className="h-10 rounded-xl"
-              />
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="studentClass" className="font-bold text-slate-600">Kelas</Label>
-              <select
-                id="studentClass"
-                value={addForm.classId}
-                onChange={e => setAddForm((f: any) => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none"
-              >
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="studentGender" className="font-bold text-slate-600">Jenis Kelamin</Label>
-              <select
-                id="studentGender"
-                value={addForm.gender}
-                onChange={e => setAddForm((f: any) => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none"
-              >
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
+            <div className="max-h-[58vh] overflow-y-auto pr-1.5 space-y-3.5 text-left text-xs">
+              <div className="space-y-1.5">
+                <Label htmlFor="studentName" className="font-bold text-slate-600">Nama Lengkap Siswa</Label>
+                <Input
+                  id="studentName"
+                  value={addForm.name}
+                  onChange={e => setAddForm((f: any) => ({ ...f, name: e.target.value }))}
+                  placeholder="Masukkan nama lengkap siswa"
+                  required
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentNis" className="font-bold text-slate-600">NIS</Label>
+                  <Input
+                    id="studentNis"
+                    value={addForm.nis}
+                    onChange={e => setAddForm((f: any) => ({ ...f, nis: e.target.value }))}
+                    placeholder="NIS"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentNisn" className="font-bold text-slate-600">NISN</Label>
+                  <Input
+                    id="studentNisn"
+                    value={addForm.nisn}
+                    onChange={e => setAddForm((f: any) => ({ ...f, nisn: e.target.value }))}
+                    placeholder="NISN"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentClass" className="font-bold text-slate-600">Kelas</Label>
+                  <select
+                    id="studentClass"
+                    value={addForm.classId}
+                    onChange={e => setAddForm((f: any) => ({ ...f, classId: e.target.value }))}
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none h-10"
+                  >
+                    {classes.map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentGender" className="font-bold text-slate-600">Jenis Kelamin</Label>
+                  <select
+                    id="studentGender"
+                    value={addForm.gender}
+                    onChange={e => setAddForm((f: any) => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none h-10"
+                  >
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentNik" className="font-bold text-slate-600">NIK (KTP/KK)</Label>
+                  <Input
+                    id="studentNik"
+                    value={addForm.nik}
+                    onChange={e => setAddForm((f: any) => ({ ...f, nik: e.target.value }))}
+                    placeholder="Nomor NIK"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentReligion" className="font-bold text-slate-600">Agama</Label>
+                  <Input
+                    id="studentReligion"
+                    value={addForm.religion}
+                    onChange={e => setAddForm((f: any) => ({ ...f, religion: e.target.value }))}
+                    placeholder="Agama"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="studentBirthInfo" className="font-bold text-slate-600">Tempat Tanggal Lahir</Label>
+                <Input
+                  id="studentBirthInfo"
+                  value={addForm.birthInfo}
+                  onChange={e => setAddForm((f: any) => ({ ...f, birthInfo: e.target.value }))}
+                  placeholder="Contoh: Bobong, 12 April 2014"
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentParentName" className="font-bold text-slate-600">Nama Orang Tua</Label>
+                  <Input
+                    id="studentParentName"
+                    value={addForm.parentName}
+                    onChange={e => setAddForm((f: any) => ({ ...f, parentName: e.target.value }))}
+                    placeholder="Nama Ayah / Ibu"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentParentJob" className="font-bold text-slate-600">Pekerjaan Orang Tua</Label>
+                  <Input
+                    id="studentParentJob"
+                    value={addForm.parentJob}
+                    onChange={e => setAddForm((f: any) => ({ ...f, parentJob: e.target.value }))}
+                    placeholder="Pekerjaan"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentAddress" className="font-bold text-slate-600">Alamat Tempat Tinggal</Label>
+                  <Input
+                    id="studentAddress"
+                    value={addForm.address}
+                    onChange={e => setAddForm((f: any) => ({ ...f, address: e.target.value }))}
+                    placeholder="Alamat"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="studentAdmissionYear" className="font-bold text-slate-600">Tahun Masuk Sekolah</Label>
+                  <Input
+                    id="studentAdmissionYear"
+                    value={addForm.admissionYear}
+                    onChange={e => setAddForm((f: any) => ({ ...f, admissionYear: e.target.value }))}
+                    placeholder="Contoh: 2023"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
             </div>
             <DialogFooter className="pt-3 gap-2 sm:gap-0">
               <Button type="button" variant="outline" onClick={() => setShowAddModal(false)} className="rounded-xl h-10 text-xs font-bold">
@@ -121,51 +213,143 @@ export function StudentDialogs({
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleEditSubmit} className="space-y-4 mt-2">
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="editStudentName" className="font-bold text-slate-600">Nama Lengkap Siswa</Label>
-              <Input
-                id="editStudentName"
-                value={editForm.name}
-                onChange={e => setEditForm((f: any) => ({ ...f, name: e.target.value }))}
-                placeholder="Masukkan nama lengkap siswa"
-                required
-                className="h-10 rounded-xl"
-              />
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="editStudentNis" className="font-bold text-slate-600">NIS / NISN</Label>
-              <Input
-                id="editStudentNis"
-                value={editForm.nis}
-                onChange={e => setEditForm((f: any) => ({ ...f, nis: e.target.value }))}
-                placeholder="Masukkan Nomor Induk Siswa"
-                className="h-10 rounded-xl"
-              />
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="editStudentClass" className="font-bold text-slate-600">Kelas</Label>
-              <select
-                id="editStudentClass"
-                value={editForm.classId}
-                onChange={e => setEditForm((f: any) => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none"
-              >
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="editStudentGender" className="font-bold text-slate-600">Jenis Kelamin</Label>
-              <select
-                id="editStudentGender"
-                value={editForm.gender}
-                onChange={e => setEditForm((f: any) => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none"
-              >
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
+            <div className="max-h-[58vh] overflow-y-auto pr-1.5 space-y-3.5 text-left text-xs">
+              <div className="space-y-1.5">
+                <Label htmlFor="editStudentName" className="font-bold text-slate-600">Nama Lengkap Siswa</Label>
+                <Input
+                  id="editStudentName"
+                  value={editForm.name}
+                  onChange={e => setEditForm((f: any) => ({ ...f, name: e.target.value }))}
+                  placeholder="Masukkan nama lengkap siswa"
+                  required
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentNis" className="font-bold text-slate-600">NIS</Label>
+                  <Input
+                    id="editStudentNis"
+                    value={editForm.nis}
+                    onChange={e => setEditForm((f: any) => ({ ...f, nis: e.target.value }))}
+                    placeholder="NIS"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentNisn" className="font-bold text-slate-600">NISN</Label>
+                  <Input
+                    id="editStudentNisn"
+                    value={editForm.nisn}
+                    onChange={e => setEditForm((f: any) => ({ ...f, nisn: e.target.value }))}
+                    placeholder="NISN"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentClass" className="font-bold text-slate-600">Kelas</Label>
+                  <select
+                    id="editStudentClass"
+                    value={editForm.classId}
+                    onChange={e => setEditForm((f: any) => ({ ...f, classId: e.target.value }))}
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none h-10"
+                  >
+                    {classes.map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentGender" className="font-bold text-slate-600">Jenis Kelamin</Label>
+                  <select
+                    id="editStudentGender"
+                    value={editForm.gender}
+                    onChange={e => setEditForm((f: any) => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold focus:ring-2 focus:ring-primary/20 outline-none h-10"
+                  >
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentNik" className="font-bold text-slate-600">NIK (KTP/KK)</Label>
+                  <Input
+                    id="editStudentNik"
+                    value={editForm.nik}
+                    onChange={e => setEditForm((f: any) => ({ ...f, nik: e.target.value }))}
+                    placeholder="Nomor NIK"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentReligion" className="font-bold text-slate-600">Agama</Label>
+                  <Input
+                    id="editStudentReligion"
+                    value={editForm.religion}
+                    onChange={e => setEditForm((f: any) => ({ ...f, religion: e.target.value }))}
+                    placeholder="Agama"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="editStudentBirthInfo" className="font-bold text-slate-600">Tempat Tanggal Lahir</Label>
+                <Input
+                  id="editStudentBirthInfo"
+                  value={editForm.birthInfo}
+                  onChange={e => setEditForm((f: any) => ({ ...f, birthInfo: e.target.value }))}
+                  placeholder="Contoh: Bobong, 12 April 2014"
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentParentName" className="font-bold text-slate-600">Nama Orang Tua</Label>
+                  <Input
+                    id="editStudentParentName"
+                    value={editForm.parentName}
+                    onChange={e => setEditForm((f: any) => ({ ...f, parentName: e.target.value }))}
+                    placeholder="Nama Ayah / Ibu"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentParentJob" className="font-bold text-slate-600">Pekerjaan Orang Tua</Label>
+                  <Input
+                    id="editStudentParentJob"
+                    value={editForm.parentJob}
+                    onChange={e => setEditForm((f: any) => ({ ...f, parentJob: e.target.value }))}
+                    placeholder="Pekerjaan"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentAddress" className="font-bold text-slate-600">Alamat Tempat Tinggal</Label>
+                  <Input
+                    id="editStudentAddress"
+                    value={editForm.address}
+                    onChange={e => setEditForm((f: any) => ({ ...f, address: e.target.value }))}
+                    placeholder="Alamat"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="editStudentAdmissionYear" className="font-bold text-slate-600">Tahun Masuk Sekolah</Label>
+                  <Input
+                    id="editStudentAdmissionYear"
+                    value={editForm.admissionYear}
+                    onChange={e => setEditForm((f: any) => ({ ...f, admissionYear: e.target.value }))}
+                    placeholder="Contoh: 2023"
+                    className="h-10 rounded-xl"
+                  />
+                </div>
+              </div>
             </div>
             <DialogFooter className="pt-3 gap-2 sm:gap-0">
               <Button type="button" variant="outline" onClick={() => setShowEditModal(false)} className="rounded-xl h-10 text-xs font-bold">

@@ -33,6 +33,16 @@ export interface Student {
   scoreSumatif?: number;
   scoreSts?: number;
   scoreSas?: number;
+  // Detail pelengkap
+  nisn?: string;
+  nik?: string;
+  birthInfo?: string;
+  parentName?: string;
+  religion?: string;
+  parentJob?: string;
+  address?: string;
+  admissionYear?: string;
+  class_id?: string;
 }
 
 export interface TimetableSlot {

@@ -46,7 +46,7 @@ export async function seedSiswa6BToSupabase() {
       id: s.id,
       nis: s.nis,
       name: s.name,
-      class_id: s.class_id,
+      classId: s.classId,
       gender: s.gender,
     });
   }

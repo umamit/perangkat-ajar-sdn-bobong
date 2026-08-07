@@ -96,10 +96,31 @@ export async function deleteAttendanceFromSupabase(studentId: string, date: stri
   }
 }
 
-export async function saveStudentToSupabase(student: any) {
+import { Student } from '@/types';
+
+export async function saveStudentToSupabase(student: Student) {
   try {
     const supabase = getSupabase();
-    const { error } = await supabase.from('students').upsert(student);
+    const payload = {
+      id: student.id,
+      nis: student.nis,
+      name: student.name,
+      class_id: student.classId,
+      gender: student.gender,
+      score_formatif: student.scoreFormatif ?? 0,
+      score_sumatif: student.scoreSumatif ?? 0,
+      score_sts: student.scoreSts ?? 0,
+      score_sas: student.scoreSas ?? 0,
+      nisn: student.nisn || null,
+      nik: student.nik || null,
+      tempat_tanggal_lahir: student.birthInfo || null,
+      nama_orang_tua: student.parentName || null,
+      agama: student.religion || null,
+      pekerjaan_orang_tua: student.parentJob || null,
+      alamat: student.address || null,
+      tahun_masuk: student.admissionYear || null
+    };
+    const { error } = await supabase.from('students').upsert(payload);
     return !error;
   } catch (e) {
     console.warn('[Save Student Error]', e);
