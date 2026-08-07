@@ -198,25 +198,25 @@ export function AbsensiView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
-          <p className="text-xs text-slate-500">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
+          <h3 className="text-lg font-black text-slate-800 tracking-tight">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
+          <p className="text-xs text-slate-500 font-semibold">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-250 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-255 hover:bg-rose-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Absensi
           </Button>
-          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-bold text-teal-700 border-teal-300 hover:bg-teal-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-black text-teal-700 border-teal-250 hover:bg-teal-50/50 gap-1.5 rounded-xl">
             <i className="ri-checkbox-multiple-line text-sm" /> Tandai Semua Hadir
           </Button>
         </div>
       </div>
-
+ 
       {/* Attendance Summary Stat Cards */}
       <StatCards
         currentHadir={currentHadir} pctHadir={pctHadir}
@@ -225,20 +225,20 @@ export function AbsensiView() {
         currentAlpa={currentAlpa} pctAlpa={pctAlpa}
         currentUnselected={currentUnselected}
       />
-
+ 
       <AttendanceAiAnalyst selectedClass={selectedClass} />
-
-      <Card>
-        <CardHeader className="pb-3 border-b border-slate-100">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
+ 
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-4 border-b border-slate-100 bg-white/35">
+          <CardTitle className="text-sm font-extrabold flex items-center gap-2">
             <i className="ri-edit-line text-primary" /> Input Presensi Kelas
           </CardTitle>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div>
-              <label className="text-xs font-semibold text-slate-600 block mb-1">Pilih Kelas:</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1">Pilih Kelas:</label>
               {lockedClass ? (
                 <div className="h-9 flex items-center">
-                  <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                  <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                     Kelas {lockedClass} (Binaan)
                   </Badge>
                 </div>
@@ -249,28 +249,26 @@ export function AbsensiView() {
                     setSelectedClass(e.target.value);
                     setCurrentStatuses({});
                   }}
-                  className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                  className="w-full h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   {classes.map(c => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
+                    <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
               )}
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-600 block mb-1">Tanggal Presensi:</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1">Tanggal Presensi:</label>
               <input
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                className="w-full h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs font-bold">
-                <i className="ri-save-line" /> Simpan Presensi Hari Ini
+              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs font-black rounded-xl bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 gap-1">
+                <i className="ri-save-line text-sm" /> Simpan Presensi Hari Ini
               </Button>
             </div>
           </div>
@@ -278,10 +276,10 @@ export function AbsensiView() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">No</TableHead>
-                <TableHead>Nama Siswa</TableHead>
-                <TableHead className="text-center">Pilihan Status Presensi</TableHead>
+              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
+                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Siswa</TableHead>
+                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Pilihan Status Presensi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -289,11 +287,11 @@ export function AbsensiView() {
                 const sKey = getStatusKey(s);
                 const currentSt = currentStatuses[sKey] || null;
                 return (
-                  <TableRow key={s.id || idx} className="hover:bg-slate-50/80">
-                    <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
+                  <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
+                    <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
                     <TableCell className="font-bold text-slate-800 text-xs">
                       {s.name}
-                      <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
+                      <div className="text-[10px] text-slate-400 font-semibold mt-0.5">NIS: {s.nis || '-'}</div>
                     </TableCell>
                     <TableCell className="text-center">
                       <div className="flex justify-center items-center gap-1.5">
@@ -307,13 +305,13 @@ export function AbsensiView() {
                               : status === 'Sakit'
                               ? 'bg-orange-500 text-white shadow-sm'
                               : 'bg-rose-600 text-white shadow-sm';
-
+ 
                           return (
                             <button
                               key={status}
                               onClick={() => handleStatusChange(sKey, status)}
-                              className={`px-3 py-1 rounded-apple-sm text-xs font-bold transition-all ${
-                                active ? activeClass : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/60'
+                              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 ${
+                                active ? activeClass : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/40'
                               }`}
                             >
                               {status}
@@ -321,7 +319,7 @@ export function AbsensiView() {
                           );
                         })}
                         {!currentSt && (
-                          <span className="text-[10px] text-slate-400 italic ml-2">
+                          <span className="text-[10px] text-slate-450 italic ml-2 font-semibold">
                             (Belum Dipilih)
                           </span>
                         )}
@@ -332,7 +330,7 @@ export function AbsensiView() {
               })}
               {classStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs font-medium">
+                  <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs font-semibold">
                     Belum ada siswa di kelas ini
                   </TableCell>
                 </TableRow>
@@ -341,7 +339,7 @@ export function AbsensiView() {
           </Table>
         </CardContent>
       </Card>
-
+ 
       <RiwayatPresensiCard attendance={aggregatedHistory} />
     </div>
   );

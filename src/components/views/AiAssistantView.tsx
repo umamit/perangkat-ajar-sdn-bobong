@@ -64,74 +64,74 @@ export function AiAssistantView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold text-slate-800">AI Asisten Kurikulum Merdeka</h3>
-            <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">AI Asisten Kurikulum Merdeka</h3>
+            <span className="text-[9px] bg-primary/10 text-primary font-black px-2 py-0.5 rounded-full flex items-center gap-1">
               <i className="ri-flashlight-fill text-amber-500" /> Powered by Groq AI
             </span>
           </div>
-          <p className="text-xs text-slate-500">Generator Modul Ajar, Bank Soal & Konsultasi Pedagogi SD Negeri Bobong</p>
+          <p className="text-xs text-slate-500 font-semibold">Generator Modul Ajar, Bank Soal &amp; Konsultasi Pedagogi SD Negeri Bobong</p>
         </div>
       </div>
-
+ 
       {/* Mode Navigation Tabs */}
-      <div className="flex flex-wrap gap-1.5 border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap gap-1.5 border-b border-slate-100 pb-2">
         <button
           onClick={() => setMode('modul_ajar')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'modul_ajar' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'modul_ajar' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-book-open-line mr-1" /> Modul Ajar (RPP)
         </button>
         <button
           onClick={() => setMode('alur_tujuan')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'alur_tujuan' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'alur_tujuan' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-node-tree mr-1" /> Alur Tujuan (ATP)
         </button>
         <button
           onClick={() => setMode('lkpd_interaktif')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'lkpd_interaktif' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'lkpd_interaktif' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-pages-line mr-1" /> Lembar Kerja (LKPD)
         </button>
         <button
           onClick={() => setMode('soal_asesmen')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'soal_asesmen' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'soal_asesmen' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-file-list-3-line mr-1" /> Bank Soal Asesmen
         </button>
         <button
           onClick={() => setMode('projek_p5')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'projek_p5' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'projek_p5' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-palette-line mr-1" /> Rancangan P5
         </button>
         <button
           onClick={() => setMode('konsultasi')}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-            mode === 'konsultasi' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          className={`px-3 py-2 text-xs font-black rounded-xl transition-all duration-300 ${
+            mode === 'konsultasi' ? 'bg-primary text-white shadow-md shadow-primary/10' : 'bg-white/60 text-slate-600 hover:bg-slate-50 border border-slate-100'
           }`}
         >
           <i className="ri-question-answer-line mr-1" /> Tanya Jawab Pedagogi
         </button>
       </div>
-
-      <Card className="border-slate-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-bold text-slate-800">
+ 
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
+          <CardTitle className="text-sm font-black text-slate-800">
             {mode === 'modul_ajar' && '🎯 Buat Modul Ajar Kurikulum Merdeka'}
             {mode === 'alur_tujuan' && '🌿 Susun Alur Tujuan Pembelajaran (ATP)'}
             {mode === 'lkpd_interaktif' && '📑 Buat Lembar Kerja Peserta Didik (LKPD) Menarik'}
@@ -140,14 +140,14 @@ export function AiAssistantView() {
             {mode === 'konsultasi' && '💡 Konsultasi & Tanya Jawab Kurikulum Merdeka'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-semibold text-slate-600 block mb-1">Tingkat Kelas</label>
+        <CardContent className="space-y-4 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5 text-xs text-left">
+              <label className="font-bold text-slate-650 block mb-1">Tingkat Kelas</label>
               <select
                 value={grade}
                 onChange={e => setGrade(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="Kelas 1">Kelas 1 (Fase A)</option>
                 <option value="Kelas 2">Kelas 2 (Fase A)</option>
@@ -157,17 +157,17 @@ export function AiAssistantView() {
                 <option value="Kelas 6">Kelas 6 (Fase C)</option>
               </select>
             </div>
-            <div>
-              <label className="text-xs font-semibold text-slate-600 block mb-1">Mata Pelajaran</label>
+            <div className="space-y-1.5 text-xs text-left">
+              <label className="font-bold text-slate-650 block mb-1">Mata Pelajaran</label>
               <select
                 value={subject}
                 onChange={e => setSubject(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="Bahasa Inggris">Bahasa Inggris</option>
                 <option value="Bahasa Indonesia">Bahasa Indonesia</option>
                 <option value="Matematika">Matematika</option>
-                <option value="IPAS">IPAS (IPA & IPS)</option>
+                <option value="IPAS">IPAS (IPA &amp; IPS)</option>
                 <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
                 <option value="Pendidikan Agama Islam">Pendidikan Agama Islam</option>
                 <option value="Pendidikan Agama Kristen">Pendidikan Agama Kristen</option>
@@ -177,20 +177,20 @@ export function AiAssistantView() {
               </select>
             </div>
           </div>
-
-          <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1">Topik / Pertanyaan Pembelajaran</label>
+ 
+          <div className="space-y-1.5 text-xs text-left">
+            <label className="font-bold text-slate-650 block mb-1">Topik / Pertanyaan Pembelajaran</label>
             <Input
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               placeholder={`Contoh: Topik ${subject || 'pelajaran'} yang ingin dibuat modul atau soalnya...`}
-              className="text-xs py-5 rounded-xl"
+              className="text-xs py-5 rounded-xl focus:ring-2 focus:ring-primary/20"
             />
           </div>
-
+ 
           {/* Quick Template Chips */}
-          <div>
-            <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">Template Topik Cepat:</span>
+          <div className="space-y-1.5 text-xs text-left">
+            <span className="text-[10px] font-black text-slate-400 block tracking-wider uppercase mb-1.5">Template Topik Cepat:</span>
             <div className="flex flex-wrap gap-1.5">
               {QUICK_TEMPLATES.map((tmpl, idx) => (
                 <button
@@ -199,18 +199,18 @@ export function AiAssistantView() {
                     setPrompt(tmpl);
                     handleGenerate(tmpl);
                   }}
-                  className="text-[11px] bg-slate-100 hover:bg-primary/10 hover:text-primary text-slate-600 font-medium px-2.5 py-1 rounded-lg transition-colors"
+                  className="text-[10px] bg-white border border-slate-100 hover:bg-primary/5 hover:text-primary text-slate-600 font-bold px-2.5 py-1 rounded-lg transition-colors"
                 >
                   + {tmpl}
                 </button>
               ))}
             </div>
           </div>
-
+ 
           <Button
             onClick={() => handleGenerate()}
             disabled={loading}
-            className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm"
+            className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-primary/10 transition-all duration-300"
           >
             {loading ? (
               <>
@@ -224,25 +224,25 @@ export function AiAssistantView() {
           </Button>
         </CardContent>
       </Card>
-
+ 
       {/* Result Output Card */}
       {result && (
-        <Card className="border-slate-200 shadow-sm bg-white animate-fade-in">
-          <CardHeader className="pb-2 border-b border-slate-100 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-bold text-slate-800 flex items-center gap-2">
+        <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden animate-fade-in">
+          <CardHeader className="pb-2 border-b border-slate-100 bg-white/35 flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-black text-slate-800 flex items-center gap-2">
               <i className="ri-article-line text-primary" /> Hasil AI Kurikulum Merdeka
             </CardTitle>
             <Button
               onClick={handleCopy}
               variant="outline"
               size="sm"
-              className="text-xs font-semibold rounded-xl flex items-center gap-1"
+              className="text-[10px] font-black h-8 rounded-lg border-slate-200 hover:bg-slate-50 gap-1"
             >
               <i className="ri-file-copy-line" /> Salin Teks
             </Button>
           </CardHeader>
-          <CardContent className="pt-4">
-            <div className="prose prose-slate max-w-none text-xs leading-relaxed whitespace-pre-wrap font-sans text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100 overflow-x-auto">
+          <CardContent className="pt-4 p-4">
+            <div className="prose prose-slate max-w-none text-xs leading-relaxed whitespace-pre-wrap font-sans text-slate-700 bg-slate-50/50 p-4 rounded-xl border border-slate-100 overflow-x-auto">
               {result}
             </div>
           </CardContent>

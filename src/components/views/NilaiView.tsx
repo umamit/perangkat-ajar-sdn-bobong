@@ -163,44 +163,42 @@ export function NilaiView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Daftar Nilai Rapor Kelas - {selectedSubject}</h3>
-          <p className="text-xs text-slate-500">Kalkulasi nilai otomatis berdasarkan pembagian subjek dan guru yang login</p>
+          <h3 className="text-lg font-black text-slate-800 tracking-tight">Daftar Nilai Rapor Kelas - {selectedSubject}</h3>
+          <p className="text-xs text-slate-500 font-semibold">Kalkulasi nilai otomatis berdasarkan pembagian subjek dan guru yang login</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Nilai
           </Button>
         </div>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3 border-b border-slate-100">
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-4 border-b border-slate-100 bg-white/35">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
             <div className="flex items-center gap-2">
-              <label className="text-xs font-semibold text-slate-600">Filter Kelas:</label>
+              <label className="text-xs font-bold text-slate-650">Filter Kelas:</label>
               {lockedClass ? (
-                <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                   Kelas {lockedClass} (Binaan)
                 </Badge>
               ) : (
                 <select
                   value={selectedClass}
                   onChange={e => setSelectedClass(e.target.value)}
-                  className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                  className="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
                   {classes.map(c => {
                     const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
                     return (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({count} Siswa)
-                      </option>
+                      <option key={c.id} value={c.id}>{c.name} ({count} Siswa)</option>
                     );
                   })}
                 </select>
@@ -208,16 +206,16 @@ export function NilaiView() {
             </div>
 
             <div className="flex items-center gap-2">
-              <label className="text-xs font-semibold text-slate-600">Mata Pelajaran:</label>
+              <label className="text-xs font-bold text-slate-650">Mata Pelajaran:</label>
               {isGuruMapel ? (
-                <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                   {selectedSubject}
                 </Badge>
               ) : (
                 <select
                   value={selectedSubject}
                   onChange={e => setSelectedSubject(e.target.value)}
-                  className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                  className="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   {SUBJECTS.map(subj => (
                     <option key={subj} value={subj}>{subj}</option>
@@ -230,14 +228,14 @@ export function NilaiView() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">No</TableHead>
-                <TableHead>Nama Siswa</TableHead>
-                <TableHead>Kelas</TableHead>
-                <TableHead className="text-center w-28">Formatif (40%)</TableHead>
-                <TableHead className="text-center w-28">STS (30%)</TableHead>
-                <TableHead className="text-center w-28">SAS (30%)</TableHead>
-                <TableHead className="text-center w-32">Nilai Akhir Rapor</TableHead>
+              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
+                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Siswa</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Kelas</TableHead>
+                <TableHead className="text-center w-28 font-black text-[10px] uppercase text-slate-400">Formatif (40%)</TableHead>
+                <TableHead className="text-center w-28 font-black text-[10px] uppercase text-slate-400">STS (30%)</TableHead>
+                <TableHead className="text-center w-28 font-black text-[10px] uppercase text-slate-400">SAS (30%)</TableHead>
+                <TableHead className="text-center w-32 font-black text-[10px] uppercase text-slate-400">Nilai Akhir Rapor</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -248,13 +246,15 @@ export function NilaiView() {
                 const finalGrade = Math.round((formatif * 0.4) + (sts * 0.3) + (sas * 0.3));
 
                 return (
-                  <TableRow key={s.id || idx} className="hover:bg-slate-50/80">
-                    <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
+                  <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
+                    <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
                     <TableCell className="font-bold text-slate-800 text-xs">
                       {s.name}
-                      <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
+                      <div className="text-[10px] text-slate-400 font-semibold mt-0.5">NIS: {s.nis || '-'}</div>
                     </TableCell>
-                    <TableCell><Badge variant="default" className="font-extrabold">{s.classId}</Badge></TableCell>
+                    <TableCell>
+                      <Badge variant="default" className="font-black text-[10px] rounded-md px-2 py-0.5">{s.classId}</Badge>
+                    </TableCell>
                     <TableCell className="text-center">
                       <Input
                         type="number"
@@ -262,7 +262,7 @@ export function NilaiView() {
                         max={100}
                         value={formatif}
                         onChange={e => handleGradeChange(s.id, 'Formatif', parseInt(e.target.value))}
-                        className="w-20 text-center h-8 text-xs mx-auto font-bold"
+                        className="w-20 text-center h-8 text-xs mx-auto font-black rounded-lg focus:ring-primary/20"
                       />
                     </TableCell>
                     <TableCell className="text-center">
@@ -272,7 +272,7 @@ export function NilaiView() {
                         max={100}
                         value={sts}
                         onChange={e => handleGradeChange(s.id, 'STS', parseInt(e.target.value))}
-                        className="w-20 text-center h-8 text-xs mx-auto font-bold"
+                        className="w-20 text-center h-8 text-xs mx-auto font-black rounded-lg focus:ring-primary/20"
                       />
                     </TableCell>
                     <TableCell className="text-center">
@@ -282,13 +282,13 @@ export function NilaiView() {
                         max={100}
                         value={sas}
                         onChange={e => handleGradeChange(s.id, 'SAS', parseInt(e.target.value))}
-                        className="w-20 text-center h-8 text-xs mx-auto font-bold"
+                        className="w-20 text-center h-8 text-xs mx-auto font-black rounded-lg focus:ring-primary/20"
                       />
                     </TableCell>
                     <TableCell className="text-center">
-                      <div className="flex flex-col items-center gap-1.5 justify-center">
-                        <Badge variant={finalGrade >= 75 ? 'success' : 'warning'} className="text-xs px-2.5 py-0.5 font-bold">
-                          {finalGrade} {finalGrade >= 75 ? '(Tuntas)' : '(Perlu Bimbingan)'}
+                      <div className="flex flex-col items-center gap-1 justify-center">
+                        <Badge variant={finalGrade >= 75 ? 'success' : 'warning'} className="text-[10px] font-black rounded-md px-2 py-0.5">
+                          {finalGrade} {finalGrade >= 75 ? '(Tuntas)' : '(Bimbingan)'}
                         </Badge>
                         <Button
                           size="sm"
@@ -299,7 +299,7 @@ export function NilaiView() {
                             studentClass: s.classId,
                             score: finalGrade
                           })}
-                          className="h-6 px-2 text-[10px] font-bold text-primary hover:text-primary-dark gap-1"
+                          className="h-6 px-2 text-[9px] font-black text-primary hover:text-primary-dark gap-1 hover:bg-cyan-50/50 rounded-md"
                         >
                           <i className="ri-magic-line text-[9px]" /> AI Rapor
                         </Button>
@@ -310,7 +310,7 @@ export function NilaiView() {
               })}
               {filteredStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs font-medium">
+                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs font-semibold">
                     Tidak ada data siswa ditemukan untuk filter ini
                   </TableCell>
                 </TableRow>

@@ -2,20 +2,18 @@
 
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { deleteStudentFromSupabase, saveStudentToSupabase } from '@/lib/supabase';
 import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
 import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
-
 import { getTeacherAssignedClass } from '@/lib/utils';
+import { StudentDialogs } from './siswa/StudentDialogs';
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
@@ -296,25 +294,25 @@ export function SiswaView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Daftar Siswa SD Negeri Bobong</h3>
-          <p className="text-xs text-slate-500">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
+          <h3 className="text-lg font-black text-slate-800 tracking-tight">Daftar Siswa SD Negeri Bobong</h3>
+          <p className="text-xs text-slate-500 font-semibold">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-bold text-emerald-700 border-emerald-300 hover:bg-emerald-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
           </Button>
           {isKepsek && (
             <>
-              <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1">
+              <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white">
                 <i className="ri-user-add-line" /> Tambah Siswa
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1">
+              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary/20 text-primary hover:bg-cyan-50/30">
                 <i className="ri-upload-2-line" /> Impor Excel
               </Button>
             </>
@@ -322,8 +320,8 @@ export function SiswaView() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3 border-b border-slate-100">
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="relative w-full sm:w-72">
               <i className="ri-search-line absolute left-3 top-2.5 text-slate-400" />
@@ -332,20 +330,20 @@ export function SiswaView() {
                 placeholder="Cari nama atau NIS siswa..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-9 text-xs"
+                className="pl-9 text-xs h-9 rounded-xl focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs font-semibold text-slate-600">Filter Kelas:</label>
+              <label className="text-xs font-bold text-slate-600">Filter Kelas:</label>
               {lockedClass ? (
-                <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-lg">
                   Kelas {lockedClass} (Binaan)
                 </Badge>
               ) : (
                 <select
                   value={selectedClass}
                   onChange={e => setSelectedClass(e.target.value)}
-                  className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                  className="h-9 rounded-xl border border-slate-200 bg-white/80 px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
                   {classes.map(c => {
@@ -364,56 +362,56 @@ export function SiswaView() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">No</TableHead>
-                <TableHead>Nama Lengkap</TableHead>
-                <TableHead>Kelas</TableHead>
-                <TableHead>Gender</TableHead>
-                <TableHead className="text-center">Formatif</TableHead>
-                <TableHead className="text-center">Sumatif</TableHead>
-                {isKepsek && <TableHead className="text-center w-24">Aksi</TableHead>}
+              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
+                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Lengkap</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Kelas</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Gender</TableHead>
+                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Formatif</TableHead>
+                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Sumatif</TableHead>
+                {isKepsek && <TableHead className="text-center w-24 font-black text-[10px] uppercase text-slate-400">Aksi</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredStudents.map((s, idx) => (
-                <TableRow key={s.id || idx} className="hover:bg-slate-50/80">
-                  <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
+                <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
+                  <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
                   <TableCell className="font-bold text-slate-800 text-xs">
                     {s.name}
-                    <div className="text-[10px] text-slate-400 font-normal">NIS: {s.nis || '-'}</div>
+                    <div className="text-[10px] text-slate-400 font-semibold mt-0.5">NIS: {s.nis || '-'}</div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="default" className="font-extrabold">{s.classId}</Badge>
+                    <Badge variant="default" className="font-black text-[10px] rounded-md">{s.classId}</Badge>
                   </TableCell>
-                  <TableCell className="text-xs font-semibold">
+                  <TableCell className="text-xs font-bold">
                     {s.gender === 'L' ? (
-                      <span className="text-cyan-700 font-bold">Laki-Laki</span>
+                      <span className="text-cyan-600 bg-cyan-50 px-2 py-1 rounded-lg">Laki-Laki</span>
                     ) : (
-                      <span className="text-rose-600 font-bold">Perempuan</span>
+                      <span className="text-rose-600 bg-rose-50 px-2 py-1 rounded-lg">Perempuan</span>
                     )}
                   </TableCell>
-                  <TableCell className="text-center text-xs font-bold text-slate-700">
+                  <TableCell className="text-center text-xs font-black text-slate-700">
                     {s.scoreFormatif || 0}
                   </TableCell>
-                  <TableCell className="text-center text-xs font-bold text-slate-700">
+                  <TableCell className="text-center text-xs font-black text-slate-700">
                     {s.scoreSumatif || 0}
                   </TableCell>
                   {isKepsek && (
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
+                      <div className="flex items-center justify-center gap-0.5">
                         <button
                           onClick={() => handleEditClick(s)}
-                          className="p-1.5 rounded-apple-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                          className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
                           title="Edit Siswa"
                         >
-                          <i className="ri-edit-line" />
+                          <i className="ri-edit-line text-sm" />
                         </button>
                         <button
                           onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                          className="p-1.5 rounded-apple-sm text-rose-500 hover:bg-rose-50 hover:text-rose-700"
+                          className="p-1.5 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                           title="Hapus Siswa"
                         >
-                          <i className="ri-delete-bin-line" />
+                          <i className="ri-delete-bin-line text-sm" />
                         </button>
                       </div>
                     </TableCell>
@@ -422,7 +420,7 @@ export function SiswaView() {
               ))}
               {filteredStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={isKepsek ? 7 : 6} className="text-center text-slate-400 py-8 text-xs font-medium">
+                  <TableCell colSpan={isKepsek ? 7 : 6} className="text-center text-slate-400 py-8 text-xs font-semibold">
                     Tidak ada data siswa ditemukan untuk filter ini
                   </TableCell>
                 </TableRow>
@@ -432,174 +430,24 @@ export function SiswaView() {
         </CardContent>
       </Card>
 
-      {/* Modal Tambah Siswa */}
-      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-slate-800">Tambah Data Siswa Baru</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleAddSubmit} className="space-y-4 mt-2">
-            <div className="space-y-1">
-              <Label htmlFor="studentName">Nama Lengkap Siswa</Label>
-              <Input
-                id="studentName"
-                value={addForm.name}
-                onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
-                placeholder="Masukkan nama siswa"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="studentNis">NIS / NISN</Label>
-              <Input
-                id="studentNis"
-                value={addForm.nis}
-                onChange={e => setAddForm(f => ({ ...f, nis: e.target.value }))}
-                placeholder="Masukkan Nomor Induk Siswa"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="studentClass">Kelas</Label>
-              <select
-                id="studentClass"
-                value={addForm.classId}
-                onChange={e => setAddForm(f => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
-              >
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="studentGender">Jenis Kelamin</Label>
-              <select
-                id="studentGender"
-                value={addForm.gender}
-                onChange={e => setAddForm(f => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
-              >
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
-            </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
-                Batal
-              </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? 'Menyimpan...' : 'Simpan Data Siswa'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Edit Siswa */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-slate-800">Edit Data Siswa</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleEditSubmit} className="space-y-4 mt-2">
-            <div className="space-y-1">
-              <Label htmlFor="editStudentName">Nama Lengkap Siswa</Label>
-              <Input
-                id="editStudentName"
-                value={editForm.name}
-                onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                placeholder="Masukkan nama siswa"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="editStudentNis">NIS / NISN</Label>
-              <Input
-                id="editStudentNis"
-                value={editForm.nis}
-                onChange={e => setEditForm(f => ({ ...f, nis: e.target.value }))}
-                placeholder="Masukkan Nomor Induk Siswa"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="editStudentClass">Kelas</Label>
-              <select
-                id="editStudentClass"
-                value={editForm.classId}
-                onChange={e => setEditForm(f => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
-              >
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="editStudentGender">Jenis Kelamin</Label>
-              <select
-                id="editStudentGender"
-                value={editForm.gender}
-                onChange={e => setEditForm(f => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
-              >
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
-            </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>
-                Batal
-              </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Impor Excel */}
-      <Dialog open={showImportModal} onOpenChange={setShowImportModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-slate-800">Impor Langsung Data Siswa</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 mt-2">
-            <div className="bg-cyan-50 border border-cyan-200/50 p-4 rounded-xl text-xs space-y-2 text-slate-700">
-              <p className="font-bold text-cyan-800 flex items-center gap-1">
-                <i className="ri-information-line" /> Impor Langsung Data Siswa Massal:
-              </p>
-              <p className="text-slate-600">
-                Pilih file Excel (.xlsx, .xls) atau CSV (.csv). Seluruh data siswa akan otomatis langsung dimasukkan ke <strong>Kelas {selectedClass !== 'ALL' ? selectedClass : (classes[0]?.id || '1A')}</strong>.
-              </p>
-            </div>
-
-            <div className="border-2 border-dashed border-slate-200 p-8 text-center rounded-xl bg-slate-50 hover:bg-slate-100/50 transition-all flex flex-col items-center justify-center">
-              <i className="ri-file-excel-2-line text-4xl text-primary mb-2" />
-              <p className="text-xs font-bold text-slate-700 mb-4">Pilih File Excel / CSV untuk Memulai Impor</p>
-              <input
-                type="file"
-                id="directImportFile"
-                accept=".xlsx, .xls, .csv"
-                onChange={e => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleDirectImport(e.target.files[0]);
-                  }
-                }}
-                className="hidden"
-              />
-              <Button type="button" onClick={() => document.getElementById('directImportFile')?.click()}>
-                Pilih & Impor File
-              </Button>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowImportModal(false)}>
-                Batal
-              </Button>
-            </DialogFooter>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <StudentDialogs
+        showAddModal={showAddModal}
+        setShowAddModal={setShowAddModal}
+        showEditModal={showEditModal}
+        setShowEditModal={setShowEditModal}
+        showImportModal={showImportModal}
+        setShowImportModal={setShowImportModal}
+        saving={saving}
+        classes={classes}
+        selectedClass={selectedClass}
+        addForm={addForm}
+        setAddForm={setAddForm}
+        editForm={editForm}
+        setEditForm={setEditForm}
+        handleAddSubmit={handleAddSubmit}
+        handleEditSubmit={handleEditSubmit}
+        handleDirectImport={handleDirectImport}
+      />
     </div>
   );
 }

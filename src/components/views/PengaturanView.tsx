@@ -90,84 +90,88 @@ export function PengaturanView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-3xl">
+    <div className="space-y-6 animate-fade-in max-w-3xl text-slate-800">
       <div>
-        <h3 className="text-xl font-bold text-slate-800">Pengaturan Profil &amp; Keamanan Akun</h3>
-        <p className="text-xs text-slate-500">Kelola profil pribadi, kata sandi login, foto, NIP, dan identitas sekolah</p>
+        <h3 className="text-lg font-black text-slate-800 tracking-tight">Pengaturan Profil &amp; Keamanan Akun</h3>
+        <p className="text-xs text-slate-500 font-semibold">Kelola profil pribadi, kata sandi login, foto, NIP, dan identitas sekolah</p>
       </div>
 
-      <Card className="glass-panel border-white/80 shadow-md">
-        <CardHeader className="bg-white/50 border-b border-slate-200/40">
-          <CardTitle className="text-base font-extrabold text-slate-800 flex items-center gap-2">
-            <i className="ri-shield-keyhole-line text-primary text-lg" />
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
+          <CardTitle className="text-sm font-black text-slate-800 flex items-center gap-2">
+            <i className="ri-shield-keyhole-line text-primary text-base" />
             <span>Form Informasi Akun &amp; Keamanan</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-4 pb-4 border-b border-slate-100/50">
               <img
                 src={avatar}
                 alt="Avatar Guru"
-                className="w-20 h-20 rounded-full object-cover border-4 border-primary shadow-sm"
+                className="w-16 h-16 rounded-full object-cover border-2 border-primary/30 shadow-md"
               />
-              <div>
-                <h4 className="text-xs font-bold text-slate-700 mb-1">Foto Profil / Logo Guru</h4>
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-black text-slate-700">Foto Profil / Logo Guru</h4>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleAvatarChange}
-                  className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-apple-sm file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+                  className="text-[10px] text-slate-550 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:bg-primary/5 file:text-primary hover:file:bg-primary/10 transition-colors"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700">Nama Lengkap Guru / Admin:</label>
+              <div className="space-y-1.5 text-xs text-left">
+                <label className="font-bold text-slate-650">Nama Lengkap Guru / Admin:</label>
                 <Input
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   required
+                  className="h-10 rounded-xl"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700">NIP Login:</label>
+              <div className="space-y-1.5 text-xs text-left">
+                <label className="font-bold text-slate-650">NIP Login:</label>
                 <Input
                   type="text"
                   value={nip}
                   onChange={e => setNip(e.target.value)}
                   required
+                  className="h-10 rounded-xl"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700">Role / Jabatan:</label>
+              <div className="space-y-1.5 text-xs text-left">
+                <label className="font-bold text-slate-650">Role / Jabatan:</label>
                 <Input
                   type="text"
                   value={role}
                   onChange={e => setRole(e.target.value)}
                   required
+                  className="h-10 rounded-xl"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700">Nama Sekolah:</label>
+              <div className="space-y-1.5 text-xs text-left">
+                <label className="font-bold text-slate-650">Nama Sekolah:</label>
                 <Input
                   type="text"
                   value={school}
                   onChange={e => setSchool(e.target.value)}
                   required
+                  className="h-10 rounded-xl"
                 />
               </div>
             </div>
 
-            <div className="space-y-1 pt-2 border-t border-slate-100">
-              <label className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+            <div className="space-y-1.5 pt-4 border-t border-slate-100/50 text-xs text-left">
+              <label className="font-bold text-slate-800 flex items-center gap-1.5">
                 <i className="ri-lock-password-line text-primary" />
                 <span>Kata Sandi Baru (Password Login):</span>
               </label>
@@ -177,7 +181,7 @@ export function PengaturanView() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Masukkan kata sandi baru"
-                  className="pr-10 font-mono"
+                  className="pr-10 font-mono h-10 rounded-xl"
                   required
                 />
                 <button
@@ -188,31 +192,31 @@ export function PengaturanView() {
                   <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
                 </button>
               </div>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[10px] text-slate-450 font-semibold">
                 Password ini akan langsung tersimpan ke Supabase Cloud dan digunakan saat login berikutnya.
               </p>
             </div>
 
-            <Button type="submit" disabled={isSaving} className="mt-4 font-bold">
-              <i className="ri-save-line" /> {isSaving ? 'Menyimpan ke Supabase...' : 'Simpan Profil & Kata Sandi'}
+            <Button type="submit" disabled={isSaving} className="mt-4 font-black text-xs h-10 rounded-xl bg-primary hover:bg-primary-dark text-white gap-1.5 shadow-md shadow-primary/10">
+              <i className="ri-save-line" /> {isSaving ? 'Menyimpan...' : 'Simpan Profil & Kata Sandi'}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Card className="glass-panel border-white/80 shadow-md">
-        <CardHeader className="bg-white/50 border-b border-slate-200/40">
-          <CardTitle className="text-base font-extrabold text-slate-800 flex items-center gap-2">
-            <i className="ri-database-2-line text-emerald-600 text-lg" />
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
+        <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
+          <CardTitle className="text-sm font-black text-slate-800 flex items-center gap-2">
+            <i className="ri-database-2-line text-emerald-600 text-base" />
             <span>Pencadangan Data Sekolah (Backup System)</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6 space-y-3">
-          <p className="text-xs text-slate-600 leading-relaxed">
+        <CardContent className="p-6 space-y-4">
+          <p className="text-xs text-slate-600 leading-relaxed font-semibold">
             Unduh seluruh berkas cadangan data siswa, presensi, jurnal mengajar, dan modul ajar SD Negeri Bobong ke dalam format file `.json` untuk penyimpanan arsip aman.
           </p>
-          <Button onClick={handleBackup} variant="outline" className="font-bold text-xs gap-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50">
-            <i className="ri-download-cloud-2-line text-base text-emerald-600" /> Unduh Cadangan Data Sistem (.json)
+          <Button onClick={handleBackup} variant="outline" className="text-xs font-black rounded-xl border-emerald-200 text-emerald-700 hover:bg-emerald-50/50 gap-1.5">
+            <i className="ri-download-cloud-2-line text-sm text-emerald-600" /> Unduh Cadangan Data Sistem (.json)
           </Button>
         </CardContent>
       </Card>

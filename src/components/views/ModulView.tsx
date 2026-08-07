@@ -92,41 +92,43 @@ export function ModulView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Perangkat & Modul Ajar Kurikulum Merdeka</h3>
-          <p className="text-xs text-slate-500">Modul Ajar {currentTeacher?.subject || 'Mata Pelajaran'} SD Negeri Bobong (TP, ATP, Alokasi Waktu)</p>
+          <h3 className="text-lg font-black text-slate-800 tracking-tight">Perangkat &amp; Modul Ajar Kurikulum Merdeka</h3>
+          <p className="text-xs text-slate-500 font-semibold">Modul Ajar {currentTeacher?.subject || 'Mata Pelajaran'} SD Negeri Bobong (TP, ATP, Alokasi Waktu)</p>
         </div>
-        <Button size="sm" onClick={() => setShowModal(true)}>
+        <Button size="sm" onClick={() => setShowModal(true)} className="gap-1 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white">
           <i className="ri-upload-cloud-line" /> Unggah Modul Baru
         </Button>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+ 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {modules.map((m, idx) => (
-          <Card key={m.id || idx} className="hover:border-primary/50 transition-all duration-200">
-            <CardHeader className="pb-2">
+          <Card key={m.id || idx} className="rounded-2xl border border-white/85 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-primary/20">
+            <CardHeader className="pb-2 bg-white/35 border-b border-slate-100/50">
               <div className="flex justify-between items-center">
-                <Badge variant="default">{m.grade || m.phase || 'Fase A'}</Badge>
-                <i className="ri-file-text-line text-2xl text-primary" />
+                <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">{m.grade || m.phase || 'Fase A'}</Badge>
+                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
+                  <i className="ri-file-text-line text-base" />
+                </div>
               </div>
-              <CardTitle className="text-base font-bold text-slate-800 mt-2">
+              <CardTitle className="text-sm font-extrabold text-slate-850 mt-3 line-clamp-1">
                 {m.title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-xs">
+            <CardContent className="space-y-4 text-xs pt-4">
               <div className="space-y-1">
-                <span className="font-bold text-slate-700 block">Tujuan Pembelajaran (TP):</span>
-                <p className="text-slate-500 line-clamp-2">{m.tp || 'Mengidentifikasi kosakata dasar'}</p>
+                <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider block">Tujuan Pembelajaran (TP):</span>
+                <p className="text-slate-650 font-semibold line-clamp-2 leading-relaxed">{m.tp || 'Mengidentifikasi kosakata dasar'}</p>
               </div>
               <div className="space-y-1">
-                <span className="font-bold text-slate-700 block">Alur Tujuan Pembelajaran (ATP):</span>
-                <p className="text-slate-500 line-clamp-2">{m.atp || 'Menyimak, menirukan, dan merespon instruksi sederhana'}</p>
+                <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider block">Alur Tujuan Pembelajaran (ATP):</span>
+                <p className="text-slate-650 font-semibold line-clamp-2 leading-relaxed">{m.atp || 'Menyimak, menirukan, dan merespon instruksi sederhana'}</p>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-semibold">
-                <span className="text-slate-400">Waktu: {m.duration || '2 x 35 Menit'}</span>
-                <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="gap-1 font-bold text-rose-700 border-rose-300 hover:bg-rose-50">
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-bold">
+                <span className="text-slate-450 text-[10px] font-black uppercase">Waktu: {m.duration || '2 x 35 Menit'}</span>
+                <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1">
                   <i className="ri-file-pdf-2-line text-rose-600" /> Unduh PDF
                 </Button>
               </div>
@@ -134,74 +136,78 @@ export function ModulView() {
           </Card>
         ))}
       </div>
-
+ 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+        <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-slate-800">Buat Modul Ajar / RPP Baru</DialogTitle>
+            <DialogTitle className="text-base font-black text-slate-800 flex items-center gap-2">
+              <i className="ri-add-box-line text-primary" /> Buat Modul Ajar / RPP Baru
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4 mt-2">
-            <div className="space-y-1">
-              <Label htmlFor="modulTitle">Judul Modul / Topik</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulTitle" className="font-bold text-slate-650">Judul Modul / Topik</Label>
               <Input
                 id="modulTitle"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="Contoh: Unit 3 - My Family"
                 required
+                className="h-10 rounded-xl"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="modulClass">Target Kelas</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulClass" className="font-bold text-slate-655">Target Kelas</Label>
               <select
                 id="modulClass"
                 value={form.classId}
                 onChange={e => setForm(f => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {classes.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="modulDuration">Alokasi Waktu</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulDuration" className="font-bold text-slate-650">Alokasi Waktu</Label>
               <Input
                 id="modulDuration"
                 value={form.duration}
                 onChange={e => setForm(f => ({ ...f, duration: e.target.value }))}
                 required
+                className="h-10 rounded-xl"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="modulTarget">Tujuan Pembelajaran (TP)</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulTarget" className="font-bold text-slate-650">Tujuan Pembelajaran (TP)</Label>
               <textarea
                 id="modulTarget"
                 value={form.tp}
                 onChange={e => setForm(f => ({ ...f, tp: e.target.value }))}
                 placeholder="Tujuan pembelajaran yang ingin dicapai..."
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:ring-2 focus:ring-primary/20 resize-none leading-relaxed"
                 rows={2}
                 required
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="modulCP">Capaian Pembelajaran (CP)</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulCP" className="font-bold text-slate-650">Capaian Pembelajaran (CP)</Label>
               <textarea
                 id="modulCP"
                 value={form.cp}
                 onChange={e => setForm(f => ({ ...f, cp: e.target.value }))}
                 placeholder="Ringkasan CP / instruksi materi..."
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:ring-2 focus:ring-primary/20 resize-none leading-relaxed"
                 rows={2}
                 required
               />
             </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm({ title: '', classId: classes[0]?.id || '1A', duration: '2 x 35 Menit', tp: '', cp: '' }); }}>
+            <DialogFooter className="pt-3 gap-2 sm:gap-0">
+              <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm({ title: '', classId: classes[0]?.id || '1A', duration: '2 x 35 Menit', tp: '', cp: '' }); }} className="rounded-xl h-10 text-xs font-bold">
                 Batal
               </Button>
-              <Button type="submit" disabled={saving}>
+              <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
                 {saving ? 'Menyimpan...' : 'Simpan Modul'}
               </Button>
             </DialogFooter>

@@ -69,113 +69,123 @@ export function TugasView() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Manajemen Tugas &amp; Evaluasi Siswa</h3>
-          <p className="text-xs text-slate-500">Daftar penugasan terstruktur {currentTeacher?.subject || 'Mata Pelajaran'} SD (Terhubung Supabase Cloud)</p>
+          <h3 className="text-lg font-black text-slate-800 tracking-tight">Manajemen Tugas &amp; Evaluasi Siswa</h3>
+          <p className="text-xs text-slate-500 font-semibold">Daftar penugasan terstruktur {currentTeacher?.subject || 'Mata Pelajaran'} SD (Supabase Sync)</p>
         </div>
-        <Button size="sm" onClick={() => setShowModal(true)}>
+        <Button size="sm" onClick={() => setShowModal(true)} className="gap-1 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white">
           <i className="ri-add-line" /> Buat Tugas Baru
         </Button>
       </div>
-
-      <Card>
+ 
+      <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">No</TableHead>
-                <TableHead>Judul Penugasan</TableHead>
-                <TableHead>Kelas</TableHead>
-                <TableHead>Tenggat Waktu</TableHead>
-                <TableHead>Status</TableHead>
+              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
+                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Judul Penugasan</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Kelas</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Tenggat Waktu</TableHead>
+                <TableHead className="font-black text-[10px] uppercase text-slate-400">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {itemList.map((item, idx) => (
-                <TableRow key={item.id || idx} className="hover:bg-slate-50/80">
-                  <TableCell className="font-semibold text-xs text-slate-500">{idx + 1}</TableCell>
+                <TableRow key={item.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
+                  <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
                   <TableCell className="font-bold text-slate-800 text-xs">{item.title}</TableCell>
-                  <TableCell><Badge variant="default" className="font-extrabold">{item.classId}</Badge></TableCell>
-                  <TableCell className="text-xs text-slate-600 font-medium">{item.dueDate}</TableCell>
-                  <TableCell><Badge variant="secondary">{item.status}</Badge></TableCell>
+                  <TableCell>
+                    <Badge variant="default" className="font-black text-[10px] rounded-md px-2 py-0.5">{item.classId}</Badge>
+                  </TableCell>
+                  <TableCell className="text-xs font-semibold text-slate-600">{item.dueDate}</TableCell>
+                  <TableCell>
+                    <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5">
+                      {item.status}
+                    </Badge>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
-
+ 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+        <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-slate-800">Tambah Penugasan Baru</DialogTitle>
+            <DialogTitle className="text-base font-black text-slate-800 flex items-center gap-2">
+              <i className="ri-task-line text-primary" /> Tambah Penugasan Baru
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4 mt-2">
-            <div className="space-y-1">
-              <Label htmlFor="tugasTitle">Judul Penugasan</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="tugasTitle" className="font-bold text-slate-650">Judul Penugasan</Label>
               <Input
                 id="tugasTitle"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="Contoh: Kuis Kosakata Family Members"
                 required
+                className="h-10 rounded-xl"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="tugasClass">Target Kelas</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="tugasClass" className="font-bold text-slate-655">Target Kelas</Label>
               <select
                 id="tugasClass"
                 value={form.classId}
                 onChange={e => setForm(f => ({ ...f, classId: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
               >
                 {classes.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="tugasType">Jenis Penugasan</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="tugasType" className="font-bold text-slate-655">Jenis Penugasan</Label>
               <select
                 id="tugasType"
                 value={form.type}
                 onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="Formatif">Formatif (LM)</option>
                 <option value="Sumatif">Sumatif (STS/SAS)</option>
                 <option value="Proyek">Proyek P5</option>
               </select>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="tugasDueDate">Tenggat Waktu (Deadline)</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="tugasDueDate" className="font-bold text-slate-650">Tenggat Waktu (Deadline)</Label>
               <Input
                 id="tugasDueDate"
                 type="date"
                 value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
                 required
+                className="h-10 rounded-xl"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="tugasDescription">Deskripsi / Instruksi Tugas</Label>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="tugasDescription" className="font-bold text-slate-650">Deskripsi / Instruksi Tugas</Label>
               <textarea
                 id="tugasDescription"
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Tuliskan petunjuk pengerjaan tugas untuk siswa..."
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:ring-2 focus:ring-primary/20 resize-none leading-relaxed"
                 rows={3}
                 required
               />
             </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
+            <DialogFooter className="pt-3 gap-2 sm:gap-0">
+              <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="rounded-xl h-10 text-xs font-bold">
                 Batal
               </Button>
-              <Button type="submit" disabled={saving}>
+              <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
                 {saving ? 'Menyimpan...' : 'Simpan Penugasan'}
               </Button>
             </DialogFooter>
