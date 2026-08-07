@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import {
+  useLegacyTable as useTable,
+  getCoreRowModel,
+  getSortedRowModel
+} from '@tanstack/react-table/legacy';
+import { flexRender, SortingState } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Student } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -19,10 +25,124 @@ export function StudentTable({
   handleDelete
 }: StudentTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const toggleExpand = (id: string) => {
     setExpandedId(prev => (prev === id ? null : id));
   };
+
+  // 1. Definisikan Column TanStack Table untuk desktop view
+  const columns = useMemo(() => {
+    const cols = [
+      {
+        id: 'no',
+        header: 'Nomor Urut',
+        cell: ({ row }: any) => <span className="font-bold text-slate-400 text-xs">{row.index + 1}</span>
+      },
+      {
+        accessorKey: 'nis',
+        header: 'NIS',
+        cell: ({ getValue }: any) => <span className="font-bold text-slate-800 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'nisn',
+        header: 'NISN',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'nik',
+        header: 'NIK',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'name',
+        header: 'Nama Siswa',
+        cell: ({ getValue }: any) => <span className="font-black text-slate-800 text-xs">{getValue() as string}</span>
+      },
+      {
+        accessorKey: 'birthInfo',
+        header: 'Tempat Tanggal Lahir',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'gender',
+        header: 'Jenis Kelamin',
+        cell: ({ getValue }: any) => {
+          const val = getValue() as string;
+          return val === 'L' ? (
+            <span className="text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded text-xs font-bold">Laki-Laki</span>
+          ) : (
+            <span className="text-rose-600 bg-rose-50 px-2 py-0.5 rounded text-xs font-bold">Perempuan</span>
+          );
+        }
+      },
+      {
+        accessorKey: 'parentName',
+        header: 'Nama Orang Tua',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'religion',
+        header: 'Agama',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'parentJob',
+        header: 'Pekerjaan Orang Tua',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'address',
+        header: 'Alamat',
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+      },
+      {
+        accessorKey: 'admissionYear',
+        header: 'Tahun Masuk SD',
+        cell: ({ getValue }: any) => <span className="font-black text-slate-700 text-xs">{(getValue() as string) || '-'}</span>
+      }
+    ];
+
+    if (isKepsek) {
+      cols.push({
+        id: 'actions',
+        header: 'Aksi',
+        cell: ({ row }: any) => {
+          const s = row.original;
+          return (
+            <div className="flex items-center justify-center gap-0.5">
+              <button
+                onClick={() => handleEditClick(s)}
+                className="p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                title="Edit Siswa"
+              >
+                <i className="ri-edit-line text-sm" />
+              </button>
+              <button
+                onClick={() => handleDelete(s.id || s.nis || '', s.name)}
+                className="p-1 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                title="Hapus Siswa"
+              >
+                <i className="ri-delete-bin-line text-sm" />
+              </button>
+            </div>
+          );
+        }
+      });
+    }
+
+    return cols;
+  }, [isKepsek, handleEditClick, handleDelete]);
+
+  // 2. Inisialisasi TanStack Table Hook menggunakan useTable
+  const table = useTable({
+    data: filteredStudents,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel()
+  });
 
   return (
     <div className="w-full">
@@ -42,7 +162,7 @@ export function StudentTable({
                   </span>
                   <div>
                     <h4 className="font-extrabold text-sm text-slate-800 leading-snug">{s.name}</h4>
-                    <p className="text-[10px] text-slate-450 font-bold mt-0.5">NIS: {s.nis || '-'}</p>
+                    <p className="text-[10px] text-slate-455 font-bold mt-0.5">NIS: {s.nis || '-'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -55,7 +175,6 @@ export function StudentTable({
                 </div>
               </div>
 
-              {/* Collapsible Details - Urutan Persis sesuai Permintaan */}
               {isExpanded && (
                 <div className="mt-2 pt-2.5 border-t border-slate-105 space-y-2.5 text-xs text-slate-650 animate-fade-in">
                   <div className="space-y-2">
@@ -137,72 +256,35 @@ export function StudentTable({
         )}
       </div>
 
-      {/* Desktop Table Layout - Urutan Kolom Sesuai Persis dengan Gambar/Permintaan */}
+      {/* Desktop Table Layout using TanStack Table API */}
       <div className="hidden md:block overflow-x-auto border border-slate-100 rounded-2xl bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
-              <TableHead className="w-12 font-black text-[10px] uppercase text-slate-450">Nomor Urut</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-450">NIS</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">NISN</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">NIK</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Nama Siswa</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Tempat Tanggal Lahir</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Jenis Kelamin</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Nama Orang Tua</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Agama</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Pekerjaan Orang Tua</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Alamat</TableHead>
-              <TableHead className="font-black text-[10px] uppercase text-slate-455">Tahun Masuk SD</TableHead>
-              {isKepsek && <TableHead className="text-center w-20 font-black text-[10px] uppercase text-slate-455">Aksi</TableHead>}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredStudents.map((s, idx) => (
-              <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
-                <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
-                <TableCell className="font-bold text-slate-800 text-xs">{s.nis || '-'}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.nisn || '-'}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.nik || '-'}</TableCell>
-                <TableCell className="font-black text-slate-800 text-xs">{s.name}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.birthInfo || '-'}</TableCell>
-                <TableCell className="text-xs font-bold">
-                  {s.gender === 'L' ? (
-                    <span className="text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded">Laki-Laki</span>
-                  ) : (
-                    <span className="text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Perempuan</span>
-                  )}
-                </TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.parentName || '-'}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.religion || '-'}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.parentJob || '-'}</TableCell>
-                <TableCell className="font-semibold text-slate-650 text-xs">{s.address || '-'}</TableCell>
-                <TableCell className="font-black text-slate-700 text-xs">{s.admissionYear || '-'}</TableCell>
-                {isKepsek && (
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-0.5">
-                      <button
-                        onClick={() => handleEditClick(s)}
-                        className="p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                        title="Edit Siswa"
-                      >
-                        <i className="ri-edit-line text-sm" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                        className="p-1 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
-                        title="Hapus Siswa"
-                      >
-                        <i className="ri-delete-bin-line text-sm" />
-                      </button>
-                    </div>
-                  </TableCell>
-                )}
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableRow key={headerGroup.id} className="bg-slate-50/40 hover:bg-slate-50/40">
+                {headerGroup.headers.map(header => (
+                  <TableHead key={header.id} className="font-black text-[10px] uppercase text-slate-455">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
-            {filteredStudents.length === 0 && (
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map(row => (
+              <TableRow key={row.id} className="hover:bg-white/40 border-slate-100 transition-colors">
+                {row.getVisibleCells().map(cell => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+            {table.getRowModel().rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={isKepsek ? 13 : 12} className="text-center text-slate-400 py-8 text-xs font-semibold">
+                <TableCell colSpan={columns.length} className="text-center text-slate-400 py-8 text-xs font-semibold">
                   Tidak ada data siswa ditemukan untuk filter ini
                 </TableCell>
               </TableRow>
