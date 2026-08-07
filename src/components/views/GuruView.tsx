@@ -177,10 +177,11 @@ export function GuruView() {
             <div className="space-y-1">
               <Label>Jabatan / Peran</Label>
               <Select value={form.role} onValueChange={(v: string) => setForm(f => ({ ...f, role: v }))}>
-                <SelectTrigger id="teacherRole">
+                <SelectTrigger id="teacherRole" className="bg-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
+                  <SelectItem value="Guru">Guru</SelectItem>
                   <SelectItem value="Guru Mata Pelajaran">Guru Mata Pelajaran</SelectItem>
                   <SelectItem value="Guru Kelas">Guru Kelas</SelectItem>
                   <SelectItem value="Wali Kelas">Wali Kelas</SelectItem>
