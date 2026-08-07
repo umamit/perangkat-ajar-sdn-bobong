@@ -6,16 +6,42 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { deleteStudentFromSupabase } from '@/lib/supabase';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { deleteStudentFromSupabase, saveStudentToSupabase } from '@/lib/supabase';
 import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
 import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
+import * as XLSX from 'xlsx';
+import Papa from 'papaparse';
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
   const [search, setSearch] = useState('');
   const selectedClass = selectedClassFilter;
   const setSelectedClass = setSelectedClassFilter;
+
+  // Dialog states
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Form states
+  const [addForm, setAddForm] = useState({
+    name: '',
+    classId: classes[0]?.id || '1A',
+    gender: 'L' as 'L' | 'P',
+    nis: ''
+  });
+
+  const [editForm, setEditForm] = useState({
+    id: '',
+    name: '',
+    classId: '1A',
+    gender: 'L' as 'L' | 'P',
+    nis: ''
+  });
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 
@@ -29,10 +55,204 @@ export function SiswaView() {
 
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Apakah Anda yakin ingin menghapus data siswa ${name}?`)) {
-      setStudents(prev => prev.filter(s => s.id !== id && s.nis !== id));
-      await deleteStudentFromSupabase(id);
-      await syncData();
-      showToast(`Siswa ${name} berhasil dihapus permanen`, 'info');
+      try {
+        setStudents(prev => prev.filter(s => s.id !== id && s.nis !== id));
+        await deleteStudentFromSupabase(id);
+        showToast(`Siswa ${name} berhasil dihapus permanen`, 'info');
+      } catch (e) {
+        showToast('Gagal menghapus siswa', 'error');
+      }
+    }
+  };
+
+  const handleAddSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addForm.name.trim()) {
+      showToast('Nama lengkap wajib diisi', 'error');
+      return;
+    }
+    setSaving(true);
+    try {
+      const generatedId = crypto.randomUUID();
+      const newStudent = {
+        id: generatedId,
+        nis: addForm.nis.trim() || generatedId,
+        name: addForm.name.trim(),
+        classId: addForm.classId,
+        gender: addForm.gender,
+        scoreFormatif: 0,
+        scoreSumatif: 0,
+        scoreSts: 0,
+        scoreSas: 0
+      };
+
+      const success = await saveStudentToSupabase(newStudent);
+      if (success) {
+        setStudents(prev => [...prev, newStudent]);
+        showToast(`Siswa ${addForm.name} berhasil ditambahkan`, 'success');
+        setShowAddModal(false);
+        setAddForm({
+          name: '',
+          classId: classes[0]?.id || '1A',
+          gender: 'L',
+          nis: ''
+        });
+      } else {
+        showToast('Gagal menyimpan siswa ke cloud', 'error');
+      }
+    } catch (err) {
+      showToast('Terjadi kesalahan saat menyimpan', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditClick = (student: any) => {
+    setEditForm({
+      id: student.id,
+      name: student.name,
+      classId: student.classId,
+      gender: student.gender || 'L',
+      nis: student.nis || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editForm.name.trim()) {
+      showToast('Nama lengkap wajib diisi', 'error');
+      return;
+    }
+    setSaving(true);
+    try {
+      const updatedStudent = {
+        id: editForm.id,
+        nis: editForm.nis.trim() || editForm.id,
+        name: editForm.name.trim(),
+        classId: editForm.classId,
+        gender: editForm.gender,
+      };
+
+      const success = await saveStudentToSupabase(updatedStudent);
+      if (success) {
+        setStudents(prev => prev.map(s => s.id === editForm.id ? { ...s, ...updatedStudent } : s));
+        showToast(`Perubahan data siswa ${editForm.name} berhasil disimpan`, 'success');
+        setShowEditModal(false);
+      } else {
+        showToast('Gagal mengupdate data siswa ke cloud', 'error');
+      }
+    } catch (err) {
+      showToast('Terjadi kesalahan saat menyimpan', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDirectImport = async (file: File) => {
+    showToast('Membaca & mengimpor file Excel ke Supabase Cloud...', 'info');
+    const targetClass = selectedClass !== 'ALL' ? selectedClass : (classes[0]?.id || '1A');
+
+    const parseAndSaveRows = async (rawData: any[]) => {
+      if (!rawData || rawData.length === 0) {
+        showToast('File Excel / CSV kosong!', 'error');
+        return;
+      }
+
+      let importedCount = 0;
+      const parsedStudents: any[] = [];
+
+      for (let i = 0; i < rawData.length; i++) {
+        const row = rawData[i];
+        const keys = Object.keys(row);
+        const findVal = (...possibleNames: string[]) => {
+          const matchedKey = keys.find(k => possibleNames.some(p => k.toLowerCase().trim() === p.toLowerCase().trim()));
+          return matchedKey ? String(row[matchedKey]).trim() : '';
+        };
+
+        let name = findVal('Nama Lengkap', 'Nama', 'name', 'Nama Siswa', 'siswa', 'Nama_Siswa');
+        let nis = findVal('NISN', 'NIS', 'id', 'No Induk', 'Nomor Induk', 'Nis/Nisn');
+        let rawClass = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
+        let rawGender = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
+
+        if (!name && keys.length >= 2) {
+          const val1 = String(row[keys[0]] || '').trim();
+          const val2 = String(row[keys[1]] || '').trim();
+          if (isNaN(Number(val2)) && val2.length > 2) {
+            name = val2;
+            nis = val1;
+          } else if (isNaN(Number(val1)) && val1.length > 2) {
+            name = val1;
+          }
+        }
+
+        if (name && name.toLowerCase() !== 'nama lengkap' && name.toLowerCase() !== 'nama' && name.toLowerCase() !== 'name') {
+          let classId = rawClass.toUpperCase().trim()
+            .replace('KELAS', '').replace('III', '3').replace('II', '2').replace('IV', '4')
+            .replace('VI', '6').replace('V', '5').replace('I', '1')
+            .replace(/[^0-9A-Z]/g, '');
+
+          if (!classId) classId = targetClass;
+
+          let gender = (rawGender.toUpperCase().startsWith('P') || rawGender.toUpperCase().startsWith('W')) ? 'P' : 'L';
+          const generatedId = crypto.randomUUID();
+          const newStudent = {
+            id: generatedId,
+            nis: nis || generatedId,
+            name: name,
+            classId: classId,
+            gender: gender,
+            scoreFormatif: 0,
+            scoreSumatif: 0,
+            scoreSts: 0,
+            scoreSas: 0
+          };
+
+          const success = await saveStudentToSupabase(newStudent);
+          if (success) {
+            parsedStudents.push(newStudent);
+            importedCount++;
+          }
+        }
+      }
+
+      if (importedCount === 0) {
+        showToast('Gagal mengimpor: Tidak ada nama siswa yang valid terbaca', 'error');
+        return;
+      }
+
+      setStudents(prev => [...prev, ...parsedStudents]);
+      showToast(`Sukses mengimpor ${importedCount} data siswa ke Kelas ${targetClass}!`, 'success');
+      setShowImportModal(false);
+    };
+
+    const filename = file.name.toLowerCase();
+    if (filename.endsWith('.csv')) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async (results) => {
+          await parseAndSaveRows(results.data);
+        },
+        error: (err) => {
+          showToast('Gagal membaca file CSV!', 'error');
+        }
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[firstSheetName];
+          const rawData = XLSX.utils.sheet_to_json(sheet);
+          await parseAndSaveRows(rawData);
+        } catch (err) {
+          showToast('Gagal membaca file Excel!', 'error');
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
   };
 
@@ -84,10 +304,10 @@ export function SiswaView() {
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
           </Button>
-          <Button size="sm" onClick={() => (window as any).showAddStudentModal()} className="gap-1">
+          <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1">
             <i className="ri-user-add-line" /> Tambah Siswa
           </Button>
-          <Button variant="outline" size="sm" onClick={() => (window as any).showImportStudentModal()} className="gap-1">
+          <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1">
             <i className="ri-upload-2-line" /> Impor Excel
           </Button>
         </div>
@@ -166,7 +386,7 @@ export function SiswaView() {
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center gap-1">
                       <button
-                        onClick={() => (window as any).showEditStudentModal(s.id || s.nis)}
+                        onClick={() => handleEditClick(s)}
                         className="p-1.5 rounded-apple-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
                         title="Edit Siswa"
                       >
@@ -194,6 +414,175 @@ export function SiswaView() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Modal Tambah Siswa */}
+      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Tambah Data Siswa Baru</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleAddSubmit} className="space-y-4 mt-2">
+            <div className="space-y-1">
+              <Label htmlFor="studentName">Nama Lengkap Siswa</Label>
+              <Input
+                id="studentName"
+                value={addForm.name}
+                onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
+                placeholder="Masukkan nama siswa"
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="studentNis">NIS / NISN</Label>
+              <Input
+                id="studentNis"
+                value={addForm.nis}
+                onChange={e => setAddForm(f => ({ ...f, nis: e.target.value }))}
+                placeholder="Masukkan Nomor Induk Siswa"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="studentClass">Kelas</Label>
+              <select
+                id="studentClass"
+                value={addForm.classId}
+                onChange={e => setAddForm(f => ({ ...f, classId: e.target.value }))}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+              >
+                {classes.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="studentGender">Jenis Kelamin</Label>
+              <select
+                id="studentGender"
+                value={addForm.gender}
+                onChange={e => setAddForm(f => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+              >
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
+                Batal
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Menyimpan...' : 'Simpan Data Siswa'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Edit Siswa */}
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Edit Data Siswa</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4 mt-2">
+            <div className="space-y-1">
+              <Label htmlFor="editStudentName">Nama Lengkap Siswa</Label>
+              <Input
+                id="editStudentName"
+                value={editForm.name}
+                onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+                placeholder="Masukkan nama siswa"
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="editStudentNis">NIS / NISN</Label>
+              <Input
+                id="editStudentNis"
+                value={editForm.nis}
+                onChange={e => setEditForm(f => ({ ...f, nis: e.target.value }))}
+                placeholder="Masukkan Nomor Induk Siswa"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="editStudentClass">Kelas</Label>
+              <select
+                id="editStudentClass"
+                value={editForm.classId}
+                onChange={e => setEditForm(f => ({ ...f, classId: e.target.value }))}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+              >
+                {classes.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="editStudentGender">Jenis Kelamin</Label>
+              <select
+                id="editStudentGender"
+                value={editForm.gender}
+                onChange={e => setEditForm(f => ({ ...f, gender: e.target.value as 'L' | 'P' }))}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+              >
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>
+                Batal
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Impor Excel */}
+      <Dialog open={showImportModal} onOpenChange={setShowImportModal}>
+        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Impor Langsung Data Siswa</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="bg-cyan-50 border border-cyan-200/50 p-4 rounded-xl text-xs space-y-2 text-slate-700">
+              <p className="font-bold text-cyan-800 flex items-center gap-1">
+                <i className="ri-information-line" /> Impor Langsung Data Siswa Massal:
+              </p>
+              <p className="text-slate-600">
+                Pilih file Excel (.xlsx, .xls) atau CSV (.csv). Seluruh data siswa akan otomatis langsung dimasukkan ke <strong>Kelas {selectedClass !== 'ALL' ? selectedClass : (classes[0]?.id || '1A')}</strong>.
+              </p>
+            </div>
+
+            <div className="border-2 border-dashed border-slate-200 p-8 text-center rounded-xl bg-slate-50 hover:bg-slate-100/50 transition-all flex flex-col items-center justify-center">
+              <i className="ri-file-excel-2-line text-4xl text-primary mb-2" />
+              <p className="text-xs font-bold text-slate-700 mb-4">Pilih File Excel / CSV untuk Memulai Impor</p>
+              <input
+                type="file"
+                id="directImportFile"
+                accept=".xlsx, .xls, .csv"
+                onChange={e => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleDirectImport(e.target.files[0]);
+                  }
+                }}
+                className="hidden"
+              />
+              <Button type="button" onClick={() => document.getElementById('directImportFile')?.click()}>
+                Pilih & Impor File
+              </Button>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowImportModal(false)}>
+                Batal
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

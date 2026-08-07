@@ -32,6 +32,7 @@ interface AppContextType {
   attendance: any[];
   setAttendance: React.Dispatch<React.SetStateAction<any[]>>;
   modules: any[];
+  setModules: React.Dispatch<React.SetStateAction<any[]>>;
   flashcards: any[];
   setFlashcards: React.Dispatch<React.SetStateAction<any[]>>;
   assignments: any[];
@@ -307,6 +308,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         attendance,
         setAttendance,
         modules,
+        setModules,
         flashcards,
         setFlashcards,
         assignments,

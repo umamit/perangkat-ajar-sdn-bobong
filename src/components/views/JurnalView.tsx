@@ -1,22 +1,82 @@
-'use client';
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 import { downloadJurnalPDF } from '@/modules/generateJurnalPDF';
 import { exportJurnalExcel } from '@/modules/exportJurnalExcel';
+import { saveJournalToSupabase, deleteJournalFromSupabase } from '@/lib/supabase';
 
 export function JurnalView() {
-  const { journals, setJournals, currentTeacher, showToast } = useApp();
+  const { journals, setJournals, classes, currentTeacher, showToast } = useApp();
+  const [showModal, setShowModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+  
+  const [form, setForm] = useState({
+    date: new Date().toISOString().split('T')[0],
+    time: '07.30 - 08.40',
+    classId: classes[0]?.id || '1A',
+    topic: '',
+    notes: '',
+    attendance: 'Hadir Seluruh Siswa'
+  });
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Hapus entry jurnal mengajar ini?')) {
-      setJournals(prev => prev.filter(j => j.id !== id));
-      showToast('Jurnal mengajar berhasil dihapus', 'info');
+      try {
+        setJournals(prev => prev.filter(j => j.id !== id));
+        await deleteJournalFromSupabase(id);
+        showToast('Jurnal mengajar berhasil dihapus dari cloud', 'info');
+      } catch (e) {
+        showToast('Gagal menghapus jurnal', 'error');
+      }
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.topic.trim()) {
+      showToast('Topik pembelajaran wajib diisi', 'error');
+      return;
+    }
+    setSaving(true);
+    try {
+      const newJ = {
+        id: `J-${Date.now()}`,
+        date: form.date,
+        time: form.time,
+        classId: form.classId,
+        topic: form.topic.trim(),
+        notes: form.notes.trim() || '-',
+        attendance: form.attendance,
+        teacherNip: currentTeacher?.nip
+      };
+      
+      const success = await saveJournalToSupabase(newJ);
+      if (success) {
+        setJournals(prev => [newJ, ...prev]);
+        showToast('Jurnal mengajar berhasil disimpan ke Supabase Cloud', 'success');
+        setShowModal(false);
+        setForm({
+          date: new Date().toISOString().split('T')[0],
+          time: '07.30 - 08.40',
+          classId: classes[0]?.id || '1A',
+          topic: '',
+          notes: '',
+          attendance: 'Hadir Seluruh Siswa'
+        });
+      } else {
+        showToast('Gagal menyimpan jurnal ke cloud', 'error');
+      }
+    } catch (err) {
+      showToast('Terjadi kesalahan saat menyimpan', 'error');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -68,7 +128,7 @@ export function JurnalView() {
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Jurnal
           </Button>
-          <Button size="sm" onClick={() => (window as any).showAddJournalModal()} className="gap-1">
+          <Button size="sm" onClick={() => setShowModal(true)} className="gap-1">
             <i className="ri-add-line" /> Isi Jurnal Hari Ini
           </Button>
         </div>
@@ -120,6 +180,66 @@ export function JurnalView() {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold text-slate-800">Tambah Jurnal Mengajar Harian</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSave} className="space-y-4 mt-2">
+            <div className="space-y-1">
+              <Label htmlFor="jurnalDate">Tanggal Mengajar</Label>
+              <Input
+                id="jurnalDate"
+                type="date"
+                value={form.date}
+                onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="jurnalClass">Kelas</Label>
+              <select
+                id="jurnalClass"
+                value={form.classId}
+                onChange={e => setForm(f => ({ ...f, classId: e.target.value }))}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+              >
+                {classes.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="jurnalTopic">Materi / Topik Pembelajaran</Label>
+              <Input
+                id="jurnalTopic"
+                value={form.topic}
+                onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
+                placeholder="Contoh: Unit 2 - Family Members"
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="jurnalNotes">Catatan / Refleksi Guru</Label>
+              <Input
+                id="jurnalNotes"
+                value={form.notes}
+                onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
+                placeholder="Catatan perkembangan atau kendala..."
+              />
+            </div>
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
+                Batal
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Menyimpan...' : 'Simpan Jurnal'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
