@@ -52,3 +52,8 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 ## 9. ATURAN PENGHEMATAN TOKEN AI (AI TOKEN ECONOMY RULE)
 * **RESPONS SINGKAT & PADAT**: AI WAJIB memberikan respons yang ringkas, langsung ke intinya (to-the-point), dan menghindari basa-basi atau penjelasan panjang lebar yang tidak perlu untuk menghemat penggunaan token AI.
 * **FOKUS PADA SOLUSI**: Hindari mengulang-ulang instruksi pengguna. Langsung berikan solusi, hasil eksekusi, atau laporan ringkas.
+
+## 10. ATURAN DESAIN MOBILE-FIRST & ANTI-OVERFLOW (MOBILE-FIRST & NO OVERFLOW RULE)
+* **UTAMAKAN TAMPILAN SMARTPHONE (MOBILE-FIRST)**: Mengingat mayoritas guru mengakses platform melalui ponsel cerdas, semua elemen visual wajib didesain ramah perangkat genggam secara default.
+* **HINDARI OVERFLOW HORIZONTAL**: Dilarang menggunakan tabel lebar standar pada layar ponsel cerdas. Gunakan layout berbasis kartu (Card/List-based Layout) untuk mobile screen dan alihkan secara dinamis ke layout tabel di layar desktop menggunakan kelas utilitas responsif Tailwind CSS (`hidden md:block` dan `block md:hidden`).
+* **KONTROL SEUKURAN JEMPOL (THUMB-FRIENDLY)**: Semua tombol aksi, input teks/angka, dan seleksi status harus memiliki ukuran ketukan yang cukup besar (minimal tinggi `38px` - `44px`) dengan margin antar elemen yang longgar agar mudah dioperasikan di layar sentuh.
