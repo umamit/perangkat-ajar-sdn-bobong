@@ -15,11 +15,15 @@ import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 
+import { getTeacherAssignedClass } from '@/lib/utils';
+
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
   const [search, setSearch] = useState('');
-  const selectedClass = selectedClassFilter;
-  const setSelectedClass = setSelectedClassFilter;
+  
+  const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
+  const selectedClass = lockedClass || selectedClassFilter;
+  const setSelectedClass = lockedClass ? () => {} : setSelectedClassFilter;
 
   // Dialog states
   const [showAddModal, setShowAddModal] = useState(false);
@@ -30,7 +34,7 @@ export function SiswaView() {
   // Form states
   const [addForm, setAddForm] = useState({
     name: '',
-    classId: classes[0]?.id || '1A',
+    classId: lockedClass || classes[0]?.id || '1A',
     gender: 'L' as 'L' | 'P',
     nis: ''
   });
@@ -328,21 +332,27 @@ export function SiswaView() {
             </div>
             <div className="flex items-center gap-2">
               <label className="text-xs font-semibold text-slate-600">Filter Kelas:</label>
-              <select
-                value={selectedClass}
-                onChange={e => setSelectedClass(e.target.value)}
-                className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
-              >
-                <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
-                {classes.map(c => {
-                  const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
-                  return (
-                    <option key={c.id} value={c.id}>
-                      {c.name} ({count} Siswa)
-                    </option>
-                  );
-                })}
-              </select>
+              {lockedClass ? (
+                <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                  Kelas {lockedClass} (Binaan)
+                </Badge>
+              ) : (
+                <select
+                  value={selectedClass}
+                  onChange={e => setSelectedClass(e.target.value)}
+                  className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                >
+                  <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
+                  {classes.map(c => {
+                    const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
+                    return (
+                      <option key={c.id} value={c.id}>
+                        {c.name} ({count} Siswa)
+                      </option>
+                    );
+                  })}
+                </select>
+              )}
             </div>
           </div>
         </CardHeader>

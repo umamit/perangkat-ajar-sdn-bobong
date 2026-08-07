@@ -11,9 +11,16 @@ import { saveGradeToSupabase } from '@/lib/supabase';
 import { downloadNilaiPDF } from '@/modules/generateNilaiPDF';
 import { exportNilaiExcel } from '@/modules/exportNilaiExcel';
 
+import { getTeacherAssignedClass } from '@/lib/utils';
+
 export function NilaiView() {
   const { students, classes, currentTeacher, showToast, grades, setGrades } = useApp();
-  const [selectedClass, setSelectedClass] = useState('ALL');
+  
+  const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
+  const [selectedClassState, setSelectedClassState] = useState(lockedClass || 'ALL');
+  
+  const selectedClass = lockedClass || selectedClassState;
+  const setSelectedClass = lockedClass ? () => {} : setSelectedClassState;
 
   const SUBJECTS = [
     'Matematika',
@@ -148,21 +155,27 @@ export function NilaiView() {
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
             <div className="flex items-center gap-2">
               <label className="text-xs font-semibold text-slate-600">Filter Kelas:</label>
-              <select
-                value={selectedClass}
-                onChange={e => setSelectedClass(e.target.value)}
-                className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
-              >
-                <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
-                {classes.map(c => {
-                  const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
-                  return (
-                    <option key={c.id} value={c.id}>
-                      {c.name} ({count} Siswa)
-                    </option>
-                  );
-                })}
-              </select>
+              {lockedClass ? (
+                <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                  Kelas {lockedClass} (Binaan)
+                </Badge>
+              ) : (
+                <select
+                  value={selectedClass}
+                  onChange={e => setSelectedClass(e.target.value)}
+                  className="h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                >
+                  <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
+                  {classes.map(c => {
+                    const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
+                    return (
+                      <option key={c.id} value={c.id}>
+                        {c.name} ({count} Siswa)
+                      </option>
+                    );
+                  })}
+                </select>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

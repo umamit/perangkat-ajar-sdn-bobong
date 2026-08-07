@@ -68,3 +68,19 @@ export function eraseCookie(name: string) {
   if (typeof document === 'undefined') return;
   document.cookie = `${name}=; Max-Age=-99999999; path=/;`;
 }
+
+export function getTeacherAssignedClass(role: string, subject: string): string | null {
+  const roleLower = (role || '').toLowerCase();
+  const subjectLower = (subject || '').toLowerCase();
+  
+  if (roleLower.includes('kepala sekolah') || roleLower.includes('admin')) {
+    return null;
+  }
+  
+  if (roleLower.includes('guru kelas') || roleLower.includes('wali kelas')) {
+    const match = (subject + ' ' + role).match(/\b([1-6][A-Z])\b/i);
+    return match ? match[1].toUpperCase() : null;
+  }
+  
+  return null;
+}

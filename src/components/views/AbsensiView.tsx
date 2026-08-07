@@ -12,9 +12,17 @@ import { exportAbsensiExcel } from '@/modules/exportAbsensiExcel';
 import { RiwayatPresensiCard } from './absensi/RiwayatPresensiCard';
 import { StatCards } from './absensi/StatCards';
 
+import { getTeacherAssignedClass } from '@/lib/utils';
+
 export function AbsensiView() {
   const { students, classes, attendance, setAttendance, currentTeacher, showToast } = useApp();
-  const [selectedClass, setSelectedClass] = useState('1A');
+  
+  const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
+  const [selectedClassState, setSelectedClassState] = useState(lockedClass || '1A');
+  
+  const selectedClass = lockedClass || selectedClassState;
+  const setSelectedClass = lockedClass ? () => {} : setSelectedClassState;
+
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentStatuses, setCurrentStatuses] = useState<Record<string, string>>({});
 
@@ -181,20 +189,28 @@ export function AbsensiView() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div>
               <label className="text-xs font-semibold text-slate-600 block mb-1">Pilih Kelas:</label>
-              <select
-                value={selectedClass}
-                onChange={e => {
-                  setSelectedClass(e.target.value);
-                  setCurrentStatuses({});
-                }}
-                className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
-              >
-                {classes.map(c => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              {lockedClass ? (
+                <div className="h-9 flex items-center">
+                  <Badge variant="default" className="text-xs font-extrabold px-3 py-1.5 bg-primary/10 text-primary border border-primary/20">
+                    Kelas {lockedClass} (Binaan)
+                  </Badge>
+                </div>
+              ) : (
+                <select
+                  value={selectedClass}
+                  onChange={e => {
+                    setSelectedClass(e.target.value);
+                    setCurrentStatuses({});
+                  }}
+                  className="w-full h-9 rounded-apple-sm border border-slate-300 bg-white px-3 text-xs font-semibold outline-none"
+                >
+                  {classes.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label className="text-xs font-semibold text-slate-600 block mb-1">Tanggal Presensi:</label>
