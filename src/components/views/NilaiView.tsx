@@ -111,12 +111,13 @@ export function NilaiView() {
     const targetStudent = students.find(s => s.id === studentId || s.nis === studentId);
     if (targetStudent) {
       const existingRecord = grades.find(g => g.student_id === studentId && g.subject === selectedSubject && g.type === type);
-      const payload: any = {
+      const payload: { student_id: string; type: string; score: number; class_id: string; subject: string; teacher_nip: string; id?: string } = {
         student_id: studentId,
         type: type,
         score: num,
         class_id: targetStudent.classId,
-        subject: selectedSubject
+        subject: selectedSubject,
+        teacher_nip: currentTeacher?.nip || ''
       };
       if (existingRecord?.id) {
         payload.id = existingRecord.id;
