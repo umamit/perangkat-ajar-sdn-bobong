@@ -24,6 +24,7 @@ export function SiswaView() {
   const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
   const selectedClass = lockedClass || selectedClassFilter;
   const setSelectedClass = lockedClass ? () => {} : setSelectedClassFilter;
+  const isKepsek = !!(currentTeacher?.role?.toLowerCase().includes('kepala sekolah') || currentTeacher?.role?.toLowerCase().includes('admin'));
 
   // Dialog states
   const [showAddModal, setShowAddModal] = useState(false);
@@ -308,12 +309,16 @@ export function SiswaView() {
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-bold text-rose-700 border-rose-300 hover:bg-rose-50 gap-1.5">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
           </Button>
-          <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1">
-            <i className="ri-user-add-line" /> Tambah Siswa
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1">
-            <i className="ri-upload-2-line" /> Impor Excel
-          </Button>
+          {isKepsek && (
+            <>
+              <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1">
+                <i className="ri-user-add-line" /> Tambah Siswa
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1">
+                <i className="ri-upload-2-line" /> Impor Excel
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -366,7 +371,7 @@ export function SiswaView() {
                 <TableHead>Gender</TableHead>
                 <TableHead className="text-center">Formatif</TableHead>
                 <TableHead className="text-center">Sumatif</TableHead>
-                <TableHead className="text-center w-24">Aksi</TableHead>
+                {isKepsek && <TableHead className="text-center w-24">Aksi</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -393,29 +398,31 @@ export function SiswaView() {
                   <TableCell className="text-center text-xs font-bold text-slate-700">
                     {s.scoreSumatif || 0}
                   </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-1">
-                      <button
-                        onClick={() => handleEditClick(s)}
-                        className="p-1.5 rounded-apple-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-                        title="Edit Siswa"
-                      >
-                        <i className="ri-edit-line" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                        className="p-1.5 rounded-apple-sm text-rose-500 hover:bg-rose-50 hover:text-rose-700"
-                        title="Hapus Siswa"
-                      >
-                        <i className="ri-delete-bin-line" />
-                      </button>
-                    </div>
-                  </TableCell>
+                  {isKepsek && (
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          onClick={() => handleEditClick(s)}
+                          className="p-1.5 rounded-apple-sm text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                          title="Edit Siswa"
+                        >
+                          <i className="ri-edit-line" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(s.id || s.nis || '', s.name)}
+                          className="p-1.5 rounded-apple-sm text-rose-500 hover:bg-rose-50 hover:text-rose-700"
+                          title="Hapus Siswa"
+                        >
+                          <i className="ri-delete-bin-line" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
               {filteredStudents.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-slate-400 py-8 text-xs font-medium">
+                  <TableCell colSpan={isKepsek ? 7 : 6} className="text-center text-slate-400 py-8 text-xs font-medium">
                     Tidak ada data siswa ditemukan untuk filter ini
                   </TableCell>
                 </TableRow>
