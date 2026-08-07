@@ -196,7 +196,15 @@ export async function saveJournalToSupabase(journal: any) {
 export async function saveFlashcardToSupabase(flashcard: any) {
   try {
     const supabase = getSupabase();
-    const { error } = await supabase.from('flashcards').upsert(flashcard);
+    const payload = {
+      id: flashcard.id,
+      title: flashcard.title || flashcard.category || 'General',
+      word: flashcard.word,
+      meaning: flashcard.meaning || flashcard.translate,
+      phase: flashcard.phase,
+      teacher_nip: flashcard.teacherNip || flashcard.teacher_nip || null
+    };
+    const { error } = await supabase.from('flashcards').upsert(payload);
     return !error;
   } catch (e) {
     console.warn('[Save Flashcard Error]', e);

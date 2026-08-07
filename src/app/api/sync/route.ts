@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     let journalQuery = supabase.from('journals').select('*');
     let moduleQuery = supabase.from('modules').select('*');
     let assignmentQuery = supabase.from('assignments').select('*');
+    let flashcardQuery = supabase.from('flashcards').select('*');
 
     const isKepsekNip = nip === '199610272019032006';
 
@@ -21,11 +22,13 @@ export async function GET(request: Request) {
       journalQuery = journalQuery.eq('teacher_nip', nip);
       moduleQuery = moduleQuery.eq('teacher_nip', nip);
       assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
+      flashcardQuery = flashcardQuery.eq('teacher_nip', nip);
     } else if (!nip) {
       // If no NIP is active/logged in, return empty sets for security
       journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       moduleQuery = moduleQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       assignmentQuery = assignmentQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      flashcardQuery = flashcardQuery.eq('id', '00000000-0000-0000-0000-000000000000');
     }
 
     const [
@@ -46,7 +49,7 @@ export async function GET(request: Request) {
       supabase.from('attendance').select('*'),
       moduleQuery,
       supabase.from('grades').select('*'),
-      supabase.from('flashcards').select('*'),
+      flashcardQuery,
       assignmentQuery
     ]);
 

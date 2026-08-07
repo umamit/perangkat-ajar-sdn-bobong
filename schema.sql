@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS public.flashcards (
     word TEXT NOT NULL,
     meaning TEXT NOT NULL,
     phase TEXT DEFAULT 'Fase A',
+    teacher_nip TEXT REFERENCES public.teachers(nip) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -62,7 +62,8 @@ export function MateriFlashcardView() {
         category: form.category,
         example: form.example.trim() || '-',
         phase: form.phase,
-        icon: 'ri-book-open-line'
+        icon: 'ri-book-open-line',
+        teacher_nip: currentTeacher?.nip || null
       };
 
       const success = await saveFlashcardToSupabase(newCard);
@@ -122,7 +123,8 @@ export function MateriFlashcardView() {
               category: card.category || aiTopic,
               example: card.example || '-',
               phase: card.phase || form.phase,
-              icon: 'ri-book-open-line'
+              icon: 'ri-book-open-line',
+              teacher_nip: currentTeacher?.nip || null
             };
             const ok = await saveFlashcardToSupabase(newCard);
             if (ok) {
