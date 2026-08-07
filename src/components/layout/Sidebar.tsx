@@ -12,7 +12,7 @@ const navItems = [
   { id: 'jurnal', label: 'Jurnal Mengajar', icon: 'ri-book-read-line' },
   { id: 'modul', label: 'Modul Ajar', icon: 'ri-file-list-3-line' },
   { id: 'ai_assistant', label: 'AI Asisten Guru', icon: 'ri-magic-line' },
-  { id: 'materi', label: 'Materi & Flashcards', icon: 'ri-folder-open-line' },
+  { id: 'materi', label: 'Media Flashcard', icon: 'ri-folder-open-line' },
   { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
   { id: 'laporan', label: 'Laporan', icon: 'ri-bar-chart-box-line' },
   { id: 'guru', label: 'Kelola Data Guru', icon: 'ri-user-star-line' },

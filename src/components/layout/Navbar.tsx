@@ -22,7 +22,7 @@ export function Navbar() {
     nilai: 'Daftar Nilai',
     jurnal: 'Jurnal Mengajar',
     modul: 'Modul Ajar',
-    materi: 'Materi & Flashcards',
+    materi: 'Media Flashcard',
     tugas: 'Tugas & Bank Soal',
     laporan: 'Laporan',
     guru: 'Kelola Data Guru',
