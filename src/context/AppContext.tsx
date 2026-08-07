@@ -37,6 +37,8 @@ interface AppContextType {
   setFlashcards: React.Dispatch<React.SetStateAction<any[]>>;
   assignments: any[];
   setAssignments: React.Dispatch<React.SetStateAction<any[]>>;
+  grades: any[];
+  setGrades: React.Dispatch<React.SetStateAction<any[]>>;
   toasts: ToastMessage[];
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   syncData: () => Promise<void>;
@@ -103,6 +105,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', status: 'Aktif' },
     { id: '2', title: 'Tugas 2: Listening & Repeating', classId: '4A', dueDate: '2026-08-12', status: 'Aktif' }
   ]);
+  const [grades, setGrades] = useState<any[]>([]);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -273,6 +276,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             status: a.status || 'Aktif'
           })));
         }
+        if (data.grades) {
+          setGrades(data.grades);
+        }
       }
     } catch (err) {
       console.warn('[Supabase Sync Error]', err);
@@ -313,6 +319,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setFlashcards,
         assignments,
         setAssignments,
+        grades,
+        setGrades,
         toasts,
         showToast,
         syncData,
