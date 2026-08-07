@@ -22,30 +22,31 @@ export const defaultTeacher: Teacher = {
 
 export function useAppState() {
   // Synchronous lazy state initialization to prevent initial flash glitch
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const localAuth = localStorage.getItem('sdn_bobong_auth');
-        const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
-        return localAuth === 'true' || (cookieAuth ? cookieAuth.split('=')[1] === 'true' : false);
-      } catch (e) {
-        return false;
-      }
-    }
-    return false;
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
 
-  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(() => {
-    if (typeof window !== 'undefined') {
-      try {
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Run client-side check to confirm auth and restore session safely
+    try {
+      const localAuth = localStorage.getItem('sdn_bobong_auth');
+      const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
+      const authed = localAuth === 'true' || (cookieAuth ? cookieAuth.split('=')[1] === 'true' : false);
+      
+      setIsLoggedIn(authed);
+      if (authed) {
         const saved = localStorage.getItem('sdn_bobong_teacher');
-        if (saved) return JSON.parse(saved);
-      } catch (e) {}
+        if (saved) {
+          setCurrentTeacher(JSON.parse(saved));
+        }
+      }
+    } catch (e) {
+      console.warn('[Session Recovery Failed]', e);
+    } finally {
+      setIsInitializing(false);
     }
-    return defaultTeacher;
-  });
-
-  const [isInitializing, setIsInitializing] = useState<boolean>(false);
+  }, []);
   const [activeView, setActiveView] = useState<string>('dashboard');
   const [selectedClassFilter, setSelectedClassFilter] = useState<string>('ALL');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
