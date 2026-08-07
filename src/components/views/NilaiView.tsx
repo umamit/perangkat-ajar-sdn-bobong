@@ -36,10 +36,25 @@ export function NilaiView() {
   ];
 
   const isGuruMapel = currentTeacher?.role === 'Guru Mata Pelajaran';
-  const defaultSubject = currentTeacher?.subject && currentTeacher.subject !== 'Tematik' && currentTeacher.subject !== 'Manajemen Sekolah'
-    ? currentTeacher.subject 
-    : 'Matematika';
-  const [selectedSubject, setSelectedSubject] = useState(defaultSubject);
+  
+  const getNormalizedDefaultSubject = () => {
+    const rawSubj = currentTeacher?.subject || '';
+    if (rawSubj.toLowerCase().includes('bahasa inggris')) {
+      return 'Bahasa Inggris';
+    }
+    if (rawSubj.toLowerCase().includes('pjok')) {
+      return 'PJOK';
+    }
+    if (rawSubj.toLowerCase().includes('agama')) {
+      if (rawSubj.toLowerCase().includes('kristen')) {
+        return 'Pendidikan Agama Kristen';
+      }
+      return 'Pendidikan Agama Islam';
+    }
+    return 'Matematika';
+  };
+
+  const [selectedSubject, setSelectedSubject] = useState(getNormalizedDefaultSubject());
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 
