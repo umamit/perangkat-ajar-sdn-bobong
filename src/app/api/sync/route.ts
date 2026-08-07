@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,11 +15,13 @@ export async function GET(request: Request) {
     let moduleQuery = supabase.from('modules').select('*');
     let assignmentQuery = supabase.from('assignments').select('*');
 
-    if (nip) {
+    const isKepsekNip = nip === '199610272019032006';
+
+    if (nip && !isKepsekNip) {
       journalQuery = journalQuery.eq('teacher_nip', nip);
       moduleQuery = moduleQuery.eq('teacher_nip', nip);
       assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
-    } else {
+    } else if (!nip) {
       // If no NIP is active/logged in, return empty sets for security
       journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       moduleQuery = moduleQuery.eq('id', '00000000-0000-0000-0000-000000000000');

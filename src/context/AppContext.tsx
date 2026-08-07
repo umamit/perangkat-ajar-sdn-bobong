@@ -135,7 +135,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ? (() => { try { const s = localStorage.getItem('sdn_bobong_teacher'); return s ? JSON.parse(s) : null; } catch { return null; } })()
         : null;
       const nip = savedTeacher?.nip || '';
-      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`);
+      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`, {
+        cache: 'no-store'
+      });
       const data = await res.json();
       if (data.success) {
         if (data.teachers && data.teachers.length > 0) {
