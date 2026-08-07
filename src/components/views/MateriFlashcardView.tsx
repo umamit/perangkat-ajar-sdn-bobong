@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export function MateriFlashcardView() {
-  const { flashcards } = useApp();
+  const { flashcards, currentTeacher } = useApp();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
 
@@ -34,7 +34,7 @@ export function MateriFlashcardView() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Media Pembelajaran Interaktif (Flashcard)</h3>
-          <p className="text-xs text-slate-500">Kartu kosakata interaktif Bahasa Inggris SD (Terhubung Supabase Cloud)</p>
+          <p className="text-xs text-slate-500">Kartu media pembelajaran interaktif {currentTeacher?.subject || 'Mata Pelajaran'} SD (Terhubung Supabase Cloud)</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddFlashcardModal()}>
           <i className="ri-add-line" /> Tambah Flashcard
@@ -63,7 +63,7 @@ export function MateriFlashcardView() {
           </div>
 
           <div className="text-xs font-bold text-primary flex items-center gap-1">
-            <i className="ri-refresh-line" /> {flipped ? 'Kembali ke Bahasa Inggris' : 'Lihat Terjemahan'}
+            <i className="ri-refresh-line" /> {flipped ? 'Kembali ke soal' : 'Lihat Jawaban'}
           </div>
         </Card>
 

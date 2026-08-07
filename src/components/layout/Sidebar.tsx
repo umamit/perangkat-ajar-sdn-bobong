@@ -62,7 +62,7 @@ export function Sidebar() {
             className="teacher-avatar shrink-0"
           />
           <div className="teacher-details min-w-0 flex-1 overflow-hidden">
-            <h4 id="teacherNameSidebar" className="truncate leading-tight text-xs font-extrabold text-white" title={currentTeacher.name}>{currentTeacher.name || 'Guru Bahasa Inggris'}</h4>
+            <h4 id="teacherNameSidebar" className="truncate leading-tight text-xs font-extrabold text-white" title={currentTeacher.name}>{currentTeacher.name || 'Guru'}</h4>
             <p id="teacherNipSidebar" className="truncate text-[10px] text-slate-300">NIP: {currentTeacher.nip || '199610272019032006'}</p>
           </div>
         </div>

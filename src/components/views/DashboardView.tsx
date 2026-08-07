@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export function DashboardView() {
-  const { students, classes, modules, journals, setActiveView } = useApp();
+  const { students, classes, modules, journals, setActiveView, currentTeacher } = useApp();
 
   const totalStudents = students.length;
   const totalClasses = classes.length;
@@ -42,7 +42,7 @@ export function DashboardView() {
           </h1>
 
           <p className="text-sm sm:text-base text-cyan-50/95 leading-relaxed font-medium max-w-2xl">
-            Platform administrasi terpadu Bahasa Inggris SD, Modul Ajar Kurikulum Merdeka, Presensi Harian, dan Jurnal Mengajar Terverifikasi Supabase.
+            Platform administrasi terpadu {currentTeacher?.subject || 'Mata Pelajaran'} SD, Modul Ajar Kurikulum Merdeka, Presensi Harian, dan Jurnal Mengajar Terverifikasi Supabase.
           </p>
 
           <div className="pt-2 flex flex-wrap gap-3">

@@ -7,20 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export function AiAssistantView() {
-  const { showToast, classes } = useApp();
+  const { showToast, classes, currentTeacher } = useApp();
   const [mode, setMode] = useState<'modul_ajar' | 'soal_asesmen' | 'konsultasi'>('modul_ajar');
   const [grade, setGrade] = useState('Kelas 6');
-  const [subject, setSubject] = useState('Bahasa Inggris');
+  const [subject, setSubject] = useState(currentTeacher?.subject || 'Bahasa Inggris');
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
 
   const QUICK_TEMPLATES = [
-    'Greetings & Introduction (Perkenalan Diri)',
-    'Classroom Objects & Commands',
-    'Family Members & Relationships',
-    'Daily Activities & Simple Present Tense',
-    'My School & Environment'
+    `Pengantar materi ${subject || 'pelajaran'} untuk pemula`,
+    `Latihan soal ${subject || 'pelajaran'} tingkat dasar`,
+    `Kegiatan diskusi kelompok materi ${subject || 'pelajaran'}`,
+    `Proyek berbasis masalah (PBL) materi ${subject || 'pelajaran'}`,
+    `Asesmen formatif ${subject || 'pelajaran'} Kurikulum Merdeka`
   ];
 
   const handleGenerate = async (customPrompt?: string) => {
@@ -142,6 +142,11 @@ export function AiAssistantView() {
                 <option value="Matematika">Matematika</option>
                 <option value="IPAS">IPAS (IPA & IPS)</option>
                 <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+                <option value="Pendidikan Agama Islam">Pendidikan Agama Islam</option>
+                <option value="Pendidikan Agama Kristen">Pendidikan Agama Kristen</option>
+                <option value="PJOK">PJOK</option>
+                <option value="Seni Budaya">Seni Budaya</option>
+                <option value="Muatan Lokal">Muatan Lokal</option>
               </select>
             </div>
           </div>
@@ -151,7 +156,7 @@ export function AiAssistantView() {
             <Input
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
-              placeholder="Contoh: Greetings & Perkenalan Diri atau Cara mengajar HOTS..."
+              placeholder={`Contoh: Topik ${subject || 'pelajaran'} yang ingin dibuat modul atau soalnya...`}
               className="text-xs py-5 rounded-xl"
             />
           </div>

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export function TugasView() {
-  const { assignments } = useApp();
+  const { assignments, currentTeacher } = useApp();
 
   const itemList = assignments && assignments.length > 0 ? assignments : [
     { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', status: 'Aktif' },
@@ -20,7 +20,7 @@ export function TugasView() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Manajemen Tugas &amp; Evaluasi Siswa</h3>
-          <p className="text-xs text-slate-500">Daftar penugasan terstruktur Bahasa Inggris SD (Terhubung Supabase Cloud)</p>
+          <p className="text-xs text-slate-500">Daftar penugasan terstruktur {currentTeacher?.subject || 'Mata Pelajaran'} SD (Terhubung Supabase Cloud)</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddTugasModal()}>
           <i className="ri-add-line" /> Buat Tugas Baru

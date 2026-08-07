@@ -37,7 +37,7 @@ export function ModulView() {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Perangkat & Modul Ajar Kurikulum Merdeka</h3>
-          <p className="text-xs text-slate-500">Modul Ajar Bahasa Inggris SD Negeri Bobong (TP, ATP, Alokasi Waktu)</p>
+          <p className="text-xs text-slate-500">Modul Ajar {currentTeacher?.subject || 'Mata Pelajaran'} SD Negeri Bobong (TP, ATP, Alokasi Waktu)</p>
         </div>
         <Button size="sm" onClick={() => (window as any).showAddModulModal()}>
           <i className="ri-upload-cloud-line" /> Unggah Modul Baru
