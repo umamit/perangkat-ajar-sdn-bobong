@@ -26,6 +26,43 @@ export function JurnalView() {
     attendance: 'Hadir Seluruh Siswa'
   });
 
+  const [beautifying, setBeautifying] = useState(false);
+
+  const handleBeautifyNotes = async () => {
+    if (!form.notes.trim()) {
+      showToast('Ketik draf catatan guru terlebih dahulu', 'error');
+      return;
+    }
+    setBeautifying(true);
+    try {
+      const res = await fetch('/api/ai/groq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: form.notes,
+          mode: 'sempurnakan_jurnal',
+          grade: `Kelas ${form.classId}`,
+          subject: currentTeacher?.subject || 'Bahasa Inggris'
+        }),
+      });
+
+      const data = await res.json();
+      if (data.result) {
+        setForm(f => ({ ...f, notes: data.result }));
+        showToast('Catatan jurnal berhasil disempurnakan!', 'success');
+      } else if (data.fallbackResponse) {
+        setForm(f => ({ ...f, notes: data.fallbackResponse }));
+        showToast('Menampilkan draf bawaan (API Key belum diaktifkan)', 'info');
+      } else {
+        showToast(data.error || 'Gagal menyempurnakan catatan', 'error');
+      }
+    } catch (e) {
+      showToast('Terjadi kesalahan koneksi', 'error');
+    } finally {
+      setBeautifying(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (confirm('Hapus entry jurnal mengajar ini?')) {
       try {
@@ -220,13 +257,25 @@ export function JurnalView() {
                 required
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="jurnalNotes">Catatan / Refleksi Guru</Label>
-              <Input
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="jurnalNotes">Catatan / Refleksi Guru</Label>
+                <button
+                  type="button"
+                  onClick={handleBeautifyNotes}
+                  disabled={beautifying}
+                  className="text-[10px] text-primary hover:text-primary-dark font-extrabold flex items-center gap-1 bg-primary/5 px-2 py-0.5 rounded border border-primary/10 transition-all"
+                >
+                  {beautifying ? 'Memproses...' : '✨ Sempurnakan dengan AI'}
+                </button>
+              </div>
+              <textarea
                 id="jurnalNotes"
                 value={form.notes}
                 onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder="Catatan perkembangan atau kendala..."
+                rows={3}
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:border-primary resize-none"
               />
             </div>
             <DialogFooter className="pt-2">

@@ -12,6 +12,7 @@ import { downloadNilaiPDF } from '@/modules/generateNilaiPDF';
 import { exportNilaiExcel } from '@/modules/exportNilaiExcel';
 
 import { getTeacherAssignedClass } from '@/lib/utils';
+import { RaporAiDescriptor } from './nilai/RaporAiDescriptor';
 
 export function NilaiView() {
   const { students, classes, currentTeacher, showToast, grades, setGrades } = useApp();
@@ -21,6 +22,19 @@ export function NilaiView() {
   
   const selectedClass = lockedClass || selectedClassState;
   const setSelectedClass = lockedClass ? () => {} : setSelectedClassState;
+
+  // AppContext has selectedClassFilter, but if not we can use state
+  const [aiDialog, setAiDialog] = useState<{
+    open: boolean;
+    studentName: string;
+    studentClass: string;
+    score: number;
+  }>({
+    open: false,
+    studentName: '',
+    studentClass: '',
+    score: 0
+  });
 
   const SUBJECTS = [
     'Matematika',
@@ -272,9 +286,24 @@ export function NilaiView() {
                       />
                     </TableCell>
                     <TableCell className="text-center">
-                      <Badge variant={finalGrade >= 75 ? 'success' : 'warning'} className="text-sm px-3 py-1 font-black">
-                        {finalGrade} {finalGrade >= 75 ? '(Tuntas)' : '(Perlu Bimbingan)'}
-                      </Badge>
+                      <div className="flex flex-col items-center gap-1.5 justify-center">
+                        <Badge variant={finalGrade >= 75 ? 'success' : 'warning'} className="text-xs px-2.5 py-0.5 font-bold">
+                          {finalGrade} {finalGrade >= 75 ? '(Tuntas)' : '(Perlu Bimbingan)'}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setAiDialog({
+                            open: true,
+                            studentName: s.name,
+                            studentClass: s.classId,
+                            score: finalGrade
+                          })}
+                          className="h-6 px-2 text-[10px] font-bold text-primary hover:text-primary-dark gap-1"
+                        >
+                          <i className="ri-magic-line text-[9px]" /> AI Rapor
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -290,6 +319,15 @@ export function NilaiView() {
           </Table>
         </CardContent>
       </Card>
+
+      <RaporAiDescriptor
+        open={aiDialog.open}
+        onOpenChange={open => setAiDialog(prev => ({ ...prev, open }))}
+        studentName={aiDialog.studentName}
+        studentClass={aiDialog.studentClass}
+        subject={selectedSubject}
+        score={aiDialog.score}
+      />
     </div>
   );
 }

@@ -15,6 +15,11 @@ export function MateriFlashcardView() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // AI states
+  const [aiMode, setAiMode] = useState(false);
+  const [aiTopic, setAiTopic] = useState('');
+  const [generating, setGenerating] = useState(false);
+
   const [form, setForm] = useState({
     word: '',
     translate: '',
@@ -82,6 +87,71 @@ export function MateriFlashcardView() {
     }
   };
 
+  const handleAiGenerate = async () => {
+    if (!aiTopic.trim()) {
+      showToast('Masukkan topik terlebih dahulu', 'error');
+      return;
+    }
+    setGenerating(true);
+    try {
+      const res = await fetch('/api/ai/groq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: aiTopic,
+          mode: 'generate_flashcards',
+          grade: form.phase,
+          subject: currentTeacher?.subject || 'Bahasa Inggris'
+        }),
+      });
+
+      const data = await res.json();
+      if (data.result) {
+        const cards = JSON.parse(data.result);
+        if (Array.isArray(cards)) {
+          showToast(`Berhasil merumuskan ${cards.length} kartu! Menyimpan ke cloud...`, 'info');
+          let savedCount = 0;
+          const savedCards: any[] = [];
+          for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const newCard = {
+              id: Date.now() + i,
+              word: card.word || 'Word',
+              translate: card.meaning || card.translate || 'Terjemahan',
+              meaning: card.meaning || card.translate || 'Terjemahan',
+              category: card.category || aiTopic,
+              example: card.example || '-',
+              phase: card.phase || form.phase,
+              icon: 'ri-book-open-line'
+            };
+            const ok = await saveFlashcardToSupabase(newCard);
+            if (ok) {
+              savedCount++;
+              savedCards.push(newCard);
+            }
+          }
+          if (savedCount > 0) {
+            setFlashcards(prev => [...savedCards, ...prev]);
+            showToast(`${savedCount} Kartu kosakata baru berhasil disimpan ke database!`, 'success');
+            setShowModal(false);
+            setAiTopic('');
+          } else {
+            showToast('Gagal menyimpan kartu ke database', 'error');
+          }
+        } else {
+          showToast('Format respon AI tidak sesuai', 'error');
+        }
+      } else {
+        showToast(data.error || 'Gagal memanggil AI', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal memproses kartu kosakata AI', 'error');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
@@ -134,69 +204,123 @@ export function MateriFlashcardView() {
         <DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold text-slate-800">Tambah Kartu Kosakata (Flashcard)</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSave} className="space-y-4 mt-2">
-            <div className="space-y-1">
-              <Label htmlFor="flashcardWord">Kata / Istilah ({currentTeacher?.subject || 'Mata Pelajaran'})</Label>
-              <Input
-                id="flashcardWord"
-                value={form.word}
-                onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
-                placeholder="Contoh: Classroom atau Lay-up Shoot"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="flashcardTranslate">Terjemahan / Arti</Label>
-              <Input
-                id="flashcardTranslate"
-                value={form.translate}
-                onChange={e => setForm(f => ({ ...f, translate: e.target.value }))}
-                placeholder="Contoh: Ruang Kelas atau Tembakan melayang"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="flashcardCategory">Kategori Kosakata</Label>
-              <Input
-                id="flashcardCategory"
-                value={form.category}
-                onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                placeholder="Contoh: School & Classroom, Teknik Dasar, dll."
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="flashcardPhase">Fase / Tingkat</Label>
-              <select
-                id="flashcardPhase"
-                value={form.phase}
-                onChange={e => setForm(f => ({ ...f, phase: e.target.value }))}
-                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+            <div className="flex gap-2 border-b border-slate-100 pb-2 mt-2">
+              <button
+                type="button"
+                onClick={() => setAiMode(false)}
+                className={`text-xs font-bold pb-1 px-2 border-b-2 transition-all ${!aiMode ? 'border-primary text-primary' : 'border-transparent text-slate-400'}`}
               >
-                <option value="Fase A">Fase A (Kelas 1 & 2)</option>
-                <option value="Fase B">Fase B (Kelas 3 & 4)</option>
-                <option value="Fase C">Fase C (Kelas 5 & 6)</option>
-              </select>
+                Input Manual
+              </button>
+              <button
+                type="button"
+                onClick={() => setAiMode(true)}
+                className={`text-xs font-bold pb-1 px-2 border-b-2 transition-all ${aiMode ? 'border-primary text-primary' : 'border-transparent text-slate-400'}`}
+              >
+                ✨ Buat dengan AI
+              </button>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="flashcardExample">Contoh Penggunaan / Kalimat</Label>
-              <Input
-                id="flashcardExample"
-                value={form.example}
-                onChange={e => setForm(f => ({ ...f, example: e.target.value }))}
-                placeholder="Contoh kalimat penjelas..."
-              />
+          </DialogHeader>
+
+          {aiMode ? (
+            <div className="space-y-4 mt-4">
+              <div className="space-y-1">
+                <Label htmlFor="aiTopic">Topik Kosakata / Tema</Label>
+                <Input
+                  id="aiTopic"
+                  value={aiTopic}
+                  onChange={e => setAiTopic(e.target.value)}
+                  placeholder="Contoh: Peralatan makan, Benda kelas, Tubuh manusia"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="aiPhase">Fase / Tingkat</Label>
+                <select
+                  id="aiPhase"
+                  value={form.phase}
+                  onChange={e => setForm(f => ({ ...f, phase: e.target.value }))}
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                >
+                  <option value="Fase A">Fase A (Kelas 1 & 2)</option>
+                  <option value="Fase B">Fase B (Kelas 3 & 4)</option>
+                  <option value="Fase C">Fase C (Kelas 5 & 6)</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 text-xs">
+                <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
+                  Batal
+                </Button>
+                <Button type="button" onClick={handleAiGenerate} disabled={generating} className="gap-1.5 font-bold">
+                  {generating ? 'Menyusun...' : '✨ Generate 5 Kartu'}
+                </Button>
+              </div>
             </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
-                Batal
-              </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? 'Menyimpan...' : 'Simpan Kartu'}
-              </Button>
-            </DialogFooter>
-          </form>
+          ) : (
+            <form onSubmit={handleSave} className="space-y-4 mt-4">
+              <div className="space-y-1 text-xs">
+                <Label htmlFor="flashcardWord">Kata / Istilah ({currentTeacher?.subject || 'Mata Pelajaran'})</Label>
+                <Input
+                  id="flashcardWord"
+                  value={form.word}
+                  onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
+                  placeholder="Contoh: Classroom atau Lay-up Shoot"
+                  required
+                />
+              </div>
+              <div className="space-y-1 text-xs">
+                <Label htmlFor="flashcardTranslate">Terjemahan / Arti</Label>
+                <Input
+                  id="flashcardTranslate"
+                  value={form.translate}
+                  onChange={e => setForm(f => ({ ...f, translate: e.target.value }))}
+                  placeholder="Contoh: Ruang Kelas atau Tembakan melayang"
+                  required
+                />
+              </div>
+              <div className="space-y-1 text-xs">
+                <Label htmlFor="flashcardCategory">Kategori Kosakata</Label>
+                <Input
+                  id="flashcardCategory"
+                  value={form.category}
+                  onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                  placeholder="Contoh: School & Classroom, Teknik Dasar, dll."
+                  required
+                />
+              </div>
+              <div className="space-y-1 text-xs">
+                <Label htmlFor="flashcardPhase">Fase / Tingkat</Label>
+                <select
+                  id="flashcardPhase"
+                  value={form.phase}
+                  onChange={e => setForm(f => ({ ...f, phase: e.target.value }))}
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-medium"
+                >
+                  <option value="Fase A">Fase A (Kelas 1 & 2)</option>
+                  <option value="Fase B">Fase B (Kelas 3 & 4)</option>
+                  <option value="Fase C">Fase C (Kelas 5 & 6)</option>
+                </select>
+              </div>
+              <div className="space-y-1 text-xs">
+                <Label htmlFor="flashcardExample">Contoh Penggunaan / Kalimat</Label>
+                <Input
+                  id="flashcardExample"
+                  value={form.example}
+                  onChange={e => setForm(f => ({ ...f, example: e.target.value }))}
+                  placeholder="Contoh kalimat penjelas..."
+                />
+              </div>
+              <DialogFooter className="pt-2 text-xs">
+                <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
+                  Batal
+                </Button>
+                <Button type="submit" disabled={saving}>
+                  {saving ? 'Menyimpan...' : 'Simpan Kartu'}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { prompt, mode, grade, subject } = await req.json();
+    const body = await req.json();
+    const { prompt, mode, grade, subject } = body;
 
     const apiKey = process.env.GROQ_API_KEY;
 
@@ -34,6 +35,50 @@ Struktur Wajib:
 2. 3 Soal Isian Singkat
 3. 2 Soal Uraian/HOTS
 4. Kunci Jawaban Lengkap dan Rubrik Penilaian`;
+    } else if (mode === 'deskripsi_rapor') {
+      userMessage = `Tuliskan rekomendasi narasi Deskripsi Capaian Kompetensi Rapor Kurikulum Merdeka yang profesional, santun, dan objektif untuk siswa:
+- Nama Siswa: ${prompt}
+- Kelas: ${grade || 'Kelas 6'}
+- Mata Pelajaran: ${subject || 'Bahasa Inggris'}
+- Nilai Akhir: ${body.score || 80}
+
+Aturan Penulisan:
+1. Jika Nilai >= 85: Tuliskan capaian sangat baik dalam menguasai materi pokok dan menyarankan pengembangan berkelanjutan.
+2. Jika Nilai 75 - 84: Tuliskan capaian baik dalam menguasai materi pokok dan berikan sedikit bimbingan pada area pemahaman.
+3. Jika Nilai < 75: Tuliskan area kompetensi yang perlu bimbingan intensif dan rekomendasi tindakan remedial terukur.
+4. Gunakan nama siswa secara langsung dalam narasi (contoh: "Ananda [Nama Siswa] menunjukkan...").
+5. Hasil maksimal 3 kalimat padat, to-the-point, dan ramah.`;
+    } else if (mode === 'generate_flashcards') {
+      userMessage = `Buatkan 5 kartu kosakata interaktif (flashcard) untuk materi sekolah dasar:
+- Topik: ${prompt}
+- Fase/Tingkat: ${grade || 'Fase A'}
+- Mata Pelajaran: ${subject || 'Bahasa Inggris'}
+
+Keluaran WAJIB berupa JSON array mentah tanpa format Markdown lain (JANGAN ada bungkus \`\`\`json atau teks pembuka/penutup lainnya). Setiap objek kartu dalam array harus memiliki properti berikut secara presisi:
+{
+  "word": "Kata/istilah dalam Bahasa Inggris atau topik",
+  "meaning": "Arti kata/terjemahan dalam Bahasa Indonesia",
+  "category": "Kategori spesifik (misal: Benda Kelas, Tubuh manusia, dll.)",
+  "phase": "${grade || 'Fase A'}",
+  "example": "Contoh kalimat penggunaan kata tersebut"
+}`;
+    } else if (mode === 'sempurnakan_jurnal') {
+      userMessage = `Tolong sempurnakan draft catatan harian jurnal mengajar berikut agar menjadi laporan resmi, formal, dan profesional yang sesuai untuk administrasi sekolah:
+- Draft Kasar Guru: "${prompt}"
+- Mata Pelajaran: ${subject || 'Bahasa Inggris'}
+- Kelas: ${grade || 'Kelas 6'}
+
+Format hasil akhir langsung berupa narasi paragraf jurnal yang siap dipakai (tanpa pembuka/penutup seperti "Tentu, ini hasilnya:"). Buat teks menjadi formal, rapi, menyertakan langkah tindak lanjut evaluasi pembelajaran secara akademis.`;
+    } else if (mode === 'rekomendasi_absensi') {
+      userMessage = `Tuliskan rekomendasi tindakan dan draft surat pemanggilan orang tua / bimbingan konseling resmi untuk kasus ketidakhadiran siswa:
+- Nama Siswa: ${prompt}
+- Kelas: ${grade || 'Kelas 6'}
+- Detail Ketidakhadiran: ${body.details || 'Tidak hadir tanpa keterangan 3 kali berturut-turut'}
+
+Struktur Keluaran:
+1. Analisis Singkat Kasus (1-2 kalimat)
+2. Rekomendasi Tindakan untuk Guru (poin-poin pendek)
+3. Draft Surat Panggilan Orang Tua resmi dari SD Negeri Bobong yang sopan, rapi, dan formal (siap disalin)`;
     }
 
     if (!apiKey) {
@@ -70,7 +115,14 @@ Struktur Wajib:
     }
 
     const data = await response.json();
-    const aiText = data.choices?.[0]?.message?.content || 'Tidak ada tanggapan dari AI.';
+    let aiText = data.choices?.[0]?.message?.content || 'Tidak ada tanggapan dari AI.';
+
+    if (mode === 'generate_flashcards') {
+      aiText = aiText.trim();
+      if (aiText.startsWith('```')) {
+        aiText = aiText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+      }
+    }
 
     return NextResponse.json({
       success: true,

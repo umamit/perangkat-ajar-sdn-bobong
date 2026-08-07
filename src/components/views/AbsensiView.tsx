@@ -13,6 +13,7 @@ import { RiwayatPresensiCard } from './absensi/RiwayatPresensiCard';
 import { StatCards } from './absensi/StatCards';
 
 import { getTeacherAssignedClass } from '@/lib/utils';
+import { AttendanceAiAnalyst } from './absensi/AttendanceAiAnalyst';
 
 export function AbsensiView() {
   const { students, classes, attendance, setAttendance, currentTeacher, showToast } = useApp();
@@ -180,6 +181,8 @@ export function AbsensiView() {
         currentAlpa={currentAlpa} pctAlpa={pctAlpa}
         currentUnselected={currentUnselected}
       />
+
+      <AttendanceAiAnalyst selectedClass={selectedClass} />
 
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100">
