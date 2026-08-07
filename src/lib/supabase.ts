@@ -49,9 +49,13 @@ export async function deleteTeacherFromSupabase(nip: string) {
 
 export async function deleteJournalFromSupabase(id: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('journals').delete().eq('id', id);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteJournal', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Journal Error]', e);
     return false;
@@ -60,9 +64,13 @@ export async function deleteJournalFromSupabase(id: string) {
 
 export async function deleteFlashcardFromSupabase(id: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('flashcards').delete().eq('id', id);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteFlashcard', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Flashcard Error]', e);
     return false;
@@ -71,9 +79,13 @@ export async function deleteFlashcardFromSupabase(id: string) {
 
 export async function deleteAssignmentFromSupabase(id: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('assignments').delete().eq('id', id);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteAssignment', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Assignment Error]', e);
     return false;
@@ -82,11 +94,13 @@ export async function deleteAssignmentFromSupabase(id: string) {
 
 export async function deleteGradeFromSupabase(studentId: string, type?: string) {
   try {
-    const supabase = getSupabase();
-    let query = supabase.from('grades').delete().eq('student_id', studentId);
-    if (type) query = query.eq('type', type);
-    const { error } = await query;
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteGrade', payload: { studentId, type } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Grade Error]', e);
     return false;
@@ -95,9 +109,13 @@ export async function deleteGradeFromSupabase(studentId: string, type?: string) 
 
 export async function deleteAttendanceFromSupabase(studentId: string, date: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('attendance').delete().eq('student_id', studentId).eq('date', date);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteAttendance', payload: { studentId, date } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Attendance Error]', e);
     return false;
@@ -157,7 +175,6 @@ export async function saveTeacherToSupabase(teacher: any) {
 
 export async function saveJournalToSupabase(journal: any) {
   try {
-    const supabase = getSupabase();
     const payload = {
       id: journal.id,
       date: journal.date,
@@ -168,8 +185,13 @@ export async function saveJournalToSupabase(journal: any) {
       attendance_summary: journal.attendance || journal.attendance_summary || '',
       teacher_nip: journal.teacherNip || journal.teacher_nip
     };
-    const { error } = await supabase.from('journals').upsert(payload);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveJournal', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Journal Error]', e);
     return false;
@@ -178,7 +200,6 @@ export async function saveJournalToSupabase(journal: any) {
 
 export async function saveFlashcardToSupabase(flashcard: any) {
   try {
-    const supabase = getSupabase();
     const payload = {
       id: flashcard.id,
       title: flashcard.title || flashcard.category || 'General',
@@ -187,8 +208,13 @@ export async function saveFlashcardToSupabase(flashcard: any) {
       phase: flashcard.phase,
       teacher_nip: flashcard.teacherNip || flashcard.teacher_nip || null
     };
-    const { error } = await supabase.from('flashcards').upsert(payload);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveFlashcard', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Flashcard Error]', e);
     return false;
@@ -197,7 +223,6 @@ export async function saveFlashcardToSupabase(flashcard: any) {
 
 export async function saveAssignmentToSupabase(assignment: any) {
   try {
-    const supabase = getSupabase();
     const payload = {
       id: assignment.id,
       title: assignment.title,
@@ -206,8 +231,13 @@ export async function saveAssignmentToSupabase(assignment: any) {
       status: assignment.status,
       teacher_nip: assignment.teacherNip || assignment.teacher_nip
     };
-    const { error } = await supabase.from('assignments').upsert(payload);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveAssignment', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Assignment Error]', e);
     return false;
@@ -216,7 +246,6 @@ export async function saveAssignmentToSupabase(assignment: any) {
 
 export async function saveModuleToSupabase(moduleData: any) {
   try {
-    const supabase = getSupabase();
     const payload = {
       id: moduleData.id,
       title: moduleData.title,
@@ -228,8 +257,13 @@ export async function saveModuleToSupabase(moduleData: any) {
       file_url: moduleData.fileUrl || moduleData.file_url,
       teacher_nip: moduleData.teacherNip || moduleData.teacher_nip
     };
-    const { error } = await supabase.from('modules').upsert(payload);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveModule', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Module Error]', e);
     return false;
@@ -238,9 +272,13 @@ export async function saveModuleToSupabase(moduleData: any) {
 
 export async function deleteModuleFromSupabase(id: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('modules').delete().eq('id', id);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteModule', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Module Error]', e);
     return false;
@@ -249,9 +287,13 @@ export async function deleteModuleFromSupabase(id: string) {
 
 export async function saveClassToSupabase(classData: any) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('classes').upsert(classData);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveClass', payload: classData })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Class Error]', e);
     return false;
@@ -260,9 +302,13 @@ export async function saveClassToSupabase(classData: any) {
 
 export async function deleteClassFromSupabase(id: string) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('classes').delete().eq('id', id);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteClass', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Delete Class Error]', e);
     return false;
@@ -271,15 +317,19 @@ export async function deleteClassFromSupabase(id: string) {
 
 export async function saveGradeToSupabase(studentIdOrGrade: any, type?: string, score?: number, classId?: string) {
   try {
-    const supabase = getSupabase();
     const payload = typeof studentIdOrGrade === 'object' ? studentIdOrGrade : {
       student_id: studentIdOrGrade,
       type: type,
       score: score,
       class_id: classId
     };
-    const { error } = await supabase.from('grades').upsert(payload);
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveGrade', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Grade Error]', e);
     return false;
@@ -288,9 +338,13 @@ export async function saveGradeToSupabase(studentIdOrGrade: any, type?: string, 
 
 export async function saveAttendanceToSupabase(records: any[]) {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from('attendance').upsert(records, { onConflict: 'student_id,date' });
-    return !error;
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveAttendance', payload: records })
+    });
+    const data = await res.json();
+    return !!data.success;
   } catch (e) {
     console.warn('[Save Attendance Error]', e);
     return false;

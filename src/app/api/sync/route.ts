@@ -103,33 +103,50 @@ export async function POST(request: Request) {
     const { action, payload } = body;
     const supabase = getSupabase();
 
-    if (action === 'saveTeacher') {
-      const { error } = await supabase.from('teachers').upsert(payload);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
+    switch (action) {
+      case 'saveTeacher':
+        return NextResponse.json({ success: !(await supabase.from('teachers').upsert(payload)).error });
+      case 'deleteTeacher':
+        return NextResponse.json({ success: !(await supabase.from('teachers').delete().eq('nip', payload.nip)).error });
+      case 'saveStudent':
+        return NextResponse.json({ success: !(await supabase.from('students').upsert(payload)).error });
+      case 'deleteStudent':
+        return NextResponse.json({ success: !(await supabase.from('students').delete().eq('id', payload.id)).error });
+      case 'saveJournal':
+        return NextResponse.json({ success: !(await supabase.from('journals').upsert(payload)).error });
+      case 'deleteJournal':
+        return NextResponse.json({ success: !(await supabase.from('journals').delete().eq('id', payload.id)).error });
+      case 'saveFlashcard':
+        return NextResponse.json({ success: !(await supabase.from('flashcards').upsert(payload)).error });
+      case 'deleteFlashcard':
+        return NextResponse.json({ success: !(await supabase.from('flashcards').delete().eq('id', payload.id)).error });
+      case 'saveAssignment':
+        return NextResponse.json({ success: !(await supabase.from('assignments').upsert(payload)).error });
+      case 'deleteAssignment':
+        return NextResponse.json({ success: !(await supabase.from('assignments').delete().eq('id', payload.id)).error });
+      case 'saveModule':
+        return NextResponse.json({ success: !(await supabase.from('modules').upsert(payload)).error });
+      case 'deleteModule':
+        return NextResponse.json({ success: !(await supabase.from('modules').delete().eq('id', payload.id)).error });
+      case 'saveClass':
+        return NextResponse.json({ success: !(await supabase.from('classes').upsert(payload)).error });
+      case 'deleteClass':
+        return NextResponse.json({ success: !(await supabase.from('classes').delete().eq('id', payload.id)).error });
+      case 'saveGrade':
+        return NextResponse.json({ success: !(await supabase.from('grades').upsert(payload)).error });
+      case 'deleteGrade': {
+        const { studentId, type } = payload;
+        let query = supabase.from('grades').delete().eq('student_id', studentId);
+        if (type) query = query.eq('type', type);
+        return NextResponse.json({ success: !(await query).error });
+      }
+      case 'saveAttendance':
+        return NextResponse.json({ success: !(await supabase.from('attendance').upsert(payload, { onConflict: 'student_id,date' })).error });
+      case 'deleteAttendance':
+        return NextResponse.json({ success: !(await supabase.from('attendance').delete().eq('student_id', payload.studentId).eq('date', payload.date)).error });
+      default:
+        return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
     }
-
-    if (action === 'deleteTeacher') {
-      const { nip } = payload;
-      const { error } = await supabase.from('teachers').delete().eq('nip', nip);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
-    }
-
-    if (action === 'saveStudent') {
-      const { error } = await supabase.from('students').upsert(payload);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
-    }
-
-    if (action === 'deleteStudent') {
-      const { id } = payload;
-      const { error } = await supabase.from('students').delete().eq('id', id);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
-    }
-
-    return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
   } catch (err: any) {
     console.error('[API Mutation Error]', err);
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
