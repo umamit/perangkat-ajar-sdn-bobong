@@ -17,6 +17,7 @@ export interface AbsensiPDFData {
   alpa: number;
   teacherName?: string;
   teacherNip?: string;
+  teacherRole?: string;
 }
 
 const STATUS_COLOR: Record<string, [number, number, number]> = {
@@ -129,13 +130,13 @@ export async function downloadAbsensiPDF(data: AbsensiPDFData): Promise<void> {
   page.drawText(`Bobong, ${sigDateStr}`, { x: rightX, y: curY, size: 8.5, font: fontRegular, color: rgb(0.2, 0.25, 0.35) });
   curY -= 12;
   page.drawText('Kepala SD Negeri Bobong', { x: leftX,  y: curY, size: 8.5, font: fontRegular, color: rgb(0.2, 0.25, 0.35) });
-  page.drawText('Guru Kelas / Wali Kelas', { x: rightX, y: curY, size: 8.5, font: fontRegular, color: rgb(0.2, 0.25, 0.35) });
+  page.drawText(data.teacherRole || 'Guru Kelas / Wali Kelas', { x: rightX, y: curY, size: 8.5, font: fontRegular, color: rgb(0.2, 0.25, 0.35) });
   curY -= 42;
   page.drawText('Husnita Usman, M.Pd', { x: leftX, y: curY, size: 9, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
-  page.drawText(data.teacherName || 'Husnita Usman, M.Pd', { x: rightX, y: curY, size: 9, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
+  page.drawText(data.teacherName || 'Guru Kelas', { x: rightX, y: curY, size: 9, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
   curY -= 12;
   page.drawText('NIP. 199610272019032006', { x: leftX, y: curY, size: 8, font: fontRegular, color: rgb(0.4, 0.45, 0.55) });
-  page.drawText(`NIP. ${data.teacherNip || '199610272019032006'}`, { x: rightX, y: curY, size: 8, font: fontRegular, color: rgb(0.4, 0.45, 0.55) });
+  page.drawText(`NIP. ${data.teacherNip || '-'}`, { x: rightX, y: curY, size: 8, font: fontRegular, color: rgb(0.4, 0.45, 0.55) });
 
   // ── Download ──────────────────────────────────────────────────────────────
   const pdfBytes = await pdfDoc.save();

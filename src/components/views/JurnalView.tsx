@@ -31,6 +31,8 @@ export function JurnalView() {
         journals,
         teacherName: currentTeacher?.name,
         teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
+        teacherSubject: currentTeacher?.subject,
       });
       showToast('PDF Jurnal Mengajar Berhasil Diunduh!', 'success');
     } catch (e) {
@@ -56,7 +58,7 @@ export function JurnalView() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-xl font-bold text-slate-800">Jurnal Mengajar Guru Bahasa Inggris</h3>
+          <h3 className="text-xl font-bold text-slate-800">Jurnal Mengajar {currentTeacher?.role || 'Guru'}</h3>
           <p className="text-xs text-slate-500">Catatan pelaksanaan pembelajaran harian dan topik per kelas</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

@@ -57,6 +57,8 @@ export function NilaiView() {
         students: filteredStudents,
         teacherName: currentTeacher?.name,
         teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
+        teacherSubject: currentTeacher?.subject,
       });
       showToast('PDF Daftar Nilai Berhasil Diunduh!', 'success');
     } catch (e) {

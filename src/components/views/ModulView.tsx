@@ -23,6 +23,8 @@ export function ModulView() {
         },
         teacherName: currentTeacher?.name,
         teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
+        teacherSubject: currentTeacher?.subject,
       });
       showToast(`PDF Modul ${m.title} Berhasil Diunduh!`, 'success');
     } catch (e) {

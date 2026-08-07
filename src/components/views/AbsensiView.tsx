@@ -110,6 +110,7 @@ export function AbsensiView() {
         alpa: currentAlpa,
         teacherName: currentTeacher?.name,
         teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
       });
       showToast('PDF Rekap Presensi Berhasil Diunduh!', 'success');
     } catch (err) {

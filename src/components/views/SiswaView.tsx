@@ -48,6 +48,7 @@ export function SiswaView() {
         students: filteredStudents,
         teacherName: currentTeacher?.name,
         teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
       });
       showToast('PDF Data Siswa Berhasil Diunduh!', 'success');
     } catch (e) {
