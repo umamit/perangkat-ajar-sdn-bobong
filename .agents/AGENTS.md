@@ -15,6 +15,7 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 * **VERIFIKASI SKEMA & FOREIGN KEY**: Sebelum menambah atau mengimpor data relasional (seperti data siswa berelasi kelas), AI WAJIB memverifikasi bahwa seluruh data induk (`classes`, `teachers`) sudah ada di Supabase Cloud untuk mencegah penolakan *foreign key constraint* (`code 23503`) atau penolakan RLS (`code 42501`).
 * **PENANGANAN KUNCI SERVIS (SERVICE ROLE KEY)**: Gunakan `Service Role Key` resmi pada lingkungan internal backend/SDK Supabase via `.env` agar operasi mutasi data guru dan siswa tidak terkunci secara tiba-tiba saat di-refresh oleh pengguna.
 * **PENGUJIAN SINKRONISASI REFRESH**: Setiap fitur penyimpanan atau impor data siswa WAJIB diuji ketahanannya saat halaman dimuat ulang (*browser refresh/re-login*) untuk menjamin data tidak terhapus.
+* **DUKUNGAN BANYAK AKUN GURU (MULTI-TEACHER SUPPORT)**: Selalu ingat bahwa aplikasi ini digunakan oleh banyak akun guru. Semua data privat (seperti jurnal mengajar, media flashcard, modul ajar, tugas) wajib disaring dan disimpan berdasarkan identitas guru yang sedang aktif login (misalnya disaring berdasarkan `teacher_nip` atau `author` di database Supabase) agar tidak tercampur antar guru, kecuali untuk Kepala Sekolah / Executive Admin yang memiliki izin supervisor penuh untuk semua kelas dan guru.
 
 ## 3. Batasan Arsitektur Proyek & Keamanan
 * **Teknologi Utama**: Next.js 15 App Router (`/src/app`), React 19, TypeScript (`/src`), Tailwind CSS v3 (`tailwind.config.js`), Shadcn UI Design System, Supabase Cloud.
