@@ -179,7 +179,7 @@ export function GuruView() {
               <Select
                 value={form.role}
                 onValueChange={(v: string) => setForm(f => {
-                  const isTematik = v === 'Guru Kelas' || v === 'Wali Kelas' || v === 'Guru';
+                  const isTematik = v === 'Guru Kelas';
                   return {
                     ...f,
                     role: v,
@@ -191,23 +191,21 @@ export function GuruView() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="Guru">Guru</SelectItem>
                   <SelectItem value="Guru Mata Pelajaran">Guru Mata Pelajaran</SelectItem>
                   <SelectItem value="Guru Kelas">Guru Kelas</SelectItem>
-                  <SelectItem value="Wali Kelas">Wali Kelas</SelectItem>
                   <SelectItem value="Kepala Sekolah">Kepala Sekolah</SelectItem>
                   <SelectItem value="Tenaga Kependidikan">Tenaga Kependidikan</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label htmlFor="teacherSubject" className={(form.role === 'Guru Kelas' || form.role === 'Wali Kelas' || form.role === 'Guru') ? 'text-slate-400' : ''}>Mata Pelajaran</Label>
+              <Label htmlFor="teacherSubject" className={form.role === 'Guru Kelas' ? 'text-slate-400' : ''}>Mata Pelajaran</Label>
               <Input
                 id="teacherSubject"
                 value={form.subject}
                 onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
                 placeholder="Contoh: Bahasa Inggris"
-                disabled={form.role === 'Guru Kelas' || form.role === 'Wali Kelas' || form.role === 'Guru'}
+                disabled={form.role === 'Guru Kelas'}
                 className="disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 cursor-not-allowed bg-white"
               />
             </div>
