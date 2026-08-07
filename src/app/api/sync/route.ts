@@ -96,3 +96,43 @@ export async function GET(request: Request) {
     }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { action, payload } = body;
+    const supabase = getSupabase();
+
+    if (action === 'saveTeacher') {
+      const { error } = await supabase.from('teachers').upsert(payload);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === 'deleteTeacher') {
+      const { nip } = payload;
+      const { error } = await supabase.from('teachers').delete().eq('nip', nip);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === 'saveStudent') {
+      const { error } = await supabase.from('students').upsert(payload);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === 'deleteStudent') {
+      const { id } = payload;
+      const { error } = await supabase.from('students').delete().eq('id', id);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
+    }
+
+    return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
+  } catch (err: any) {
+    console.error('[API Mutation Error]', err);
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
