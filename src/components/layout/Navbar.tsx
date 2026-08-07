@@ -29,7 +29,7 @@ export function Navbar() {
     pengaturan: 'Pengaturan'
   };
 
-  const isKepsek = currentTeacher?.role?.toLowerCase().includes('kepala') || currentTeacher?.role?.toLowerCase().includes('admin');
+  const isKepsek = currentTeacher?.role?.toLowerCase().includes('kepala') || currentTeacher?.role?.toLowerCase().includes('admin') || currentTeacher?.nip === '199610272019032006';
 
   return (
     <header className="top-bar flex justify-between items-center px-6 py-3.5 bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-sm">
