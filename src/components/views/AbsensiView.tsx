@@ -33,15 +33,61 @@ export function AbsensiView() {
     s => normalizeClass(s.classId) === normalizeClass(selectedClass) || s.classId === selectedClass
   );
 
-  const totalClassStudents = classStudents.length;
-
   const getStatusKey = (s: any) => (s.id || s.nis || '');
+
+  // Load existing attendance status when selectedClass or date changes
+  React.useEffect(() => {
+    const initialStatuses: Record<string, string> = {};
+    classStudents.forEach(s => {
+      const record = attendance.find(
+        a => a.student_id === s.id && 
+             (a.class_id || a.classId || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase() === normalizeClass(selectedClass) && 
+             a.date === date
+      );
+      if (record) {
+        initialStatuses[getStatusKey(s)] = record.status;
+      }
+    });
+    setCurrentStatuses(initialStatuses);
+  }, [selectedClass, date, attendance, students]);
+
+  const totalClassStudents = classStudents.length;
 
   const currentHadir = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Hadir').length;
   const currentIzin = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Izin').length;
   const currentSakit = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Sakit').length;
   const currentAlpa = classStudents.filter(s => currentStatuses[getStatusKey(s)] === 'Alpa').length;
   const currentUnselected = classStudents.filter(s => !currentStatuses[getStatusKey(s)]).length;
+
+  // Group raw student attendance records by date and class_id to generate history
+  const aggregatedHistory = React.useMemo(() => {
+    const groups: Record<string, { date: string; classId: string; hadir: number; izin: number; sakit: number; alpa: number }> = {};
+    
+    attendance.forEach(rec => {
+      const cId = rec.class_id || rec.classId;
+      if (!rec.date || !cId) return;
+      
+      const key = `${rec.date}_${cId}`;
+      if (!groups[key]) {
+        groups[key] = {
+          date: rec.date,
+          classId: cId,
+          hadir: 0,
+          izin: 0,
+          sakit: 0,
+          alpa: 0
+        };
+      }
+      
+      const status = rec.status;
+      if (status === 'Hadir') groups[key].hadir++;
+      else if (status === 'Izin') groups[key].izin++;
+      else if (status === 'Sakit') groups[key].sakit++;
+      else if (status === 'Alpa') groups[key].alpa++;
+    });
+    
+    return Object.values(groups).sort((a, b) => b.date.localeCompare(a.date));
+  }, [attendance]);
 
   const pctHadir = totalClassStudents > 0 ? Math.round((currentHadir / totalClassStudents) * 100) : 0;
   const pctIzin = totalClassStudents > 0 ? Math.round((currentIzin / totalClassStudents) * 100) : 0;
@@ -83,19 +129,17 @@ export function AbsensiView() {
       }))
       .filter(r => r.student_id);
 
-    await saveAttendanceToSupabase(supabaseRecords);
+    const ok = await saveAttendanceToSupabase(supabaseRecords);
 
-    const newEntry = {
-      date,
-      classId: selectedClass,
-      hadir: currentHadir,
-      izin: currentIzin,
-      sakit: currentSakit,
-      alpa: currentAlpa
-    };
-
-    setAttendance(prev => [newEntry, ...prev]);
-    showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) tersimpan di Supabase Cloud!`, 'success');
+    if (ok) {
+      setAttendance(prev => {
+        const filtered = prev.filter(r => !((r.class_id === selectedClass || r.classId === selectedClass) && r.date === date));
+        return [...supabaseRecords, ...filtered];
+      });
+      showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) tersimpan di Supabase Cloud!`, 'success');
+    } else {
+      showToast('Gagal menyimpan presensi ke Supabase Cloud', 'error');
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -298,7 +342,7 @@ export function AbsensiView() {
         </CardContent>
       </Card>
 
-      <RiwayatPresensiCard attendance={attendance} />
+      <RiwayatPresensiCard attendance={aggregatedHistory} />
     </div>
   );
 }
