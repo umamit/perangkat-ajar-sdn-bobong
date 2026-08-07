@@ -6,12 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getTeacherAssignedClass } from '@/lib/utils';
 
 export function DashboardView() {
   const { students, classes, modules, journals, setActiveView, currentTeacher } = useApp();
 
-  const totalStudents = students.length;
-  const totalClasses = classes.length;
+  const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
+  const totalStudents = lockedClass
+    ? students.filter(s => s.classId === lockedClass).length
+    : students.length;
+  const totalClasses = lockedClass ? 1 : classes.length;
   const totalModules = modules.length;
   const totalJournals = journals.length;
 
@@ -104,7 +108,7 @@ export function DashboardView() {
             </div>
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-extrabold text-slate-500">
-            <span>Fase A, B &amp; C</span>
+            <span>{lockedClass ? `Kelas ${lockedClass}` : 'Fase A, B & C'}</span>
             <span className="text-emerald-600">{totalClasses} Rombel</span>
           </div>
         </div>
