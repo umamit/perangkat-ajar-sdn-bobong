@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { saveFlashcardToSupabase } from '@/lib/supabase';
+import { FlashcardPlayer } from './flashcard/FlashcardPlayer';
+import { FlashcardDialog } from './flashcard/FlashcardDialog';
 
 export function MateriFlashcardView() {
   const { flashcards, currentTeacher, showToast, setFlashcards } = useApp();
@@ -166,172 +168,31 @@ export function MateriFlashcardView() {
         </Button>
       </div>
  
-      <div className="max-w-md mx-auto">
-        <Card
-          onClick={() => setFlipped(!flipped)}
-          className="cursor-pointer min-h-[260px] flex flex-col justify-between items-center text-center p-8 bg-gradient-to-br from-white via-white to-primary/5 shadow-xl border border-white/80 rounded-3xl hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]"
-        >
-          <div className="w-full flex justify-between items-center">
-            <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">{currentCard.phase || 'Fase A'}</Badge>
-            <span className="text-[10px] text-slate-400 font-black tracking-wider">
-              {currentIndex + 1} / {cardList.length}
-            </span>
-          </div>
+      <FlashcardPlayer
+        currentCard={currentCard}
+        currentIndex={currentIndex}
+        total={cardList.length}
+        flipped={flipped}
+        onFlip={() => setFlipped(!flipped)}
+        onPrev={handlePrev}
+        onNext={handleNext}
+      />
  
-          <div className="my-6 space-y-2.5">
-            <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-              {flipped ? currentCard.meaning : currentCard.word}
-            </h2>
-            <p className="text-[10px] text-slate-450 font-bold uppercase tracking-wider">
-              {flipped ? 'Arti dalam Bahasa Indonesia' : 'Klik kartu untuk melihat arti'}
-            </p>
-          </div>
- 
-          <div className="text-[10px] font-black text-primary flex items-center gap-1.5 bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
-            <i className="ri-refresh-line animate-spin-slow" /> {flipped ? 'KEMBALI KE SOAL' : 'LIHAT JAWABAN'}
-          </div>
-        </Card>
- 
-        <div className="flex justify-between items-center mt-6">
-          <Button variant="outline" size="sm" onClick={handlePrev} className="text-xs font-black rounded-xl border-slate-200 hover:bg-slate-50 gap-1">
-            <i className="ri-arrow-left-s-line" /> Sebelumnya
-          </Button>
-          <Button size="sm" onClick={handleNext} className="text-xs font-black rounded-xl bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 gap-1">
-            Berikutnya <i className="ri-arrow-right-s-line" />
-          </Button>
-        </div>
-      </div>
- 
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
-          <DialogHeader>
-            <DialogTitle className="text-base font-black text-slate-800 flex items-center gap-2">
-              <i className="ri-book-open-line text-primary" /> Tambah Kartu Kosakata (Flashcard)
-            </DialogTitle>
-            <div className="flex gap-1.5 border-b border-slate-100 pb-2 mt-2">
-              <button
-                type="button"
-                onClick={() => setAiMode(false)}
-                className={`text-xs font-black pb-1.5 px-3 border-b-2 transition-all ${!aiMode ? 'border-primary text-primary' : 'border-transparent text-slate-400'}`}
-              >
-                Input Manual
-              </button>
-              <button
-                type="button"
-                onClick={() => setAiMode(true)}
-                className={`text-xs font-black pb-1.5 px-3 border-b-2 transition-all ${aiMode ? 'border-primary text-primary' : 'border-transparent text-slate-400'}`}
-              >
-                ✨ Buat dengan AI
-              </button>
-            </div>
-          </DialogHeader>
- 
-          {aiMode ? (
-            <div className="space-y-4 mt-4">
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="aiTopic" className="font-bold text-slate-650">Topik Kosakata / Tema</Label>
-                <Input
-                  id="aiTopic"
-                  value={aiTopic}
-                  onChange={e => setAiTopic(e.target.value)}
-                  placeholder="Contoh: Peralatan makan, Benda kelas, Tubuh manusia"
-                  required
-                  className="h-10 rounded-xl"
-                />
-              </div>
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="aiPhase" className="font-bold text-slate-655">Fase / Tingkat</Label>
-                <select
-                  id="aiPhase"
-                  value={form.phase}
-                  onChange={e => setForm(f => ({ ...f, phase: e.target.value }))}
-                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="Fase A">Fase A (Kelas 1 & 2)</option>
-                  <option value="Fase B">Fase B (Kelas 3 & 4)</option>
-                  <option value="Fase C">Fase C (Kelas 5 & 6)</option>
-                </select>
-              </div>
- 
-              <div className="flex justify-end gap-2 pt-3 text-xs">
-                <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="rounded-xl h-10 text-xs font-bold">
-                  Batal
-                </Button>
-                <Button type="button" onClick={handleAiGenerate} disabled={generating} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white gap-1.5 shadow-md shadow-primary/10">
-                  {generating ? 'Menyusun...' : '✨ Generate 5 Kartu'}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleSave} className="space-y-4 mt-4">
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="flashcardWord" className="font-bold text-slate-650">Kata / Istilah ({currentTeacher?.subject || 'Mata Pelajaran'})</Label>
-                <Input
-                  id="flashcardWord"
-                  value={form.word}
-                  onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
-                  placeholder="Contoh: Classroom atau Lay-up Shoot"
-                  required
-                  className="h-10 rounded-xl"
-                />
-              </div>
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="flashcardTranslate" className="font-bold text-slate-650">Terjemahan / Arti</Label>
-                <Input
-                  id="flashcardTranslate"
-                  value={form.translate}
-                  onChange={e => setForm(f => ({ ...f, translate: e.target.value }))}
-                  placeholder="Contoh: Ruang Kelas atau Tembakan melayang"
-                  required
-                  className="h-10 rounded-xl"
-                />
-              </div>
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="flashcardCategory" className="font-bold text-slate-650">Kategori Kosakata</Label>
-                <Input
-                  id="flashcardCategory"
-                  value={form.category}
-                  onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                  placeholder="Contoh: School & Classroom, Teknik Dasar, dll."
-                  required
-                  className="h-10 rounded-xl"
-                />
-              </div>
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="flashcardPhase" className="font-bold text-slate-655">Fase / Tingkat</Label>
-                <select
-                  id="flashcardPhase"
-                  value={form.phase}
-                  onChange={e => setForm(f => ({ ...f, phase: e.target.value }))}
-                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="Fase A">Fase A (Kelas 1 & 2)</option>
-                  <option value="Fase B">Fase B (Kelas 3 & 4)</option>
-                  <option value="Fase C">Fase C (Kelas 5 & 6)</option>
-                </select>
-              </div>
-              <div className="space-y-1.5 text-xs text-left">
-                <Label htmlFor="flashcardExample" className="font-bold text-slate-650">Contoh Penggunaan / Kalimat</Label>
-                <Input
-                  id="flashcardExample"
-                  value={form.example}
-                  onChange={e => setForm(f => ({ ...f, example: e.target.value }))}
-                  placeholder="Contoh kalimat penjelas..."
-                  className="h-10 rounded-xl"
-                />
-              </div>
-              <DialogFooter className="pt-3 gap-2 sm:gap-0">
-                <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="rounded-xl h-10 text-xs font-bold">
-                  Batal
-                </Button>
-                <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
-                  {saving ? 'Menyimpan...' : 'Simpan Kartu'}
-                </Button>
-              </DialogFooter>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
+      <FlashcardDialog
+        open={showModal}
+        onOpenChange={setShowModal}
+        aiMode={aiMode}
+        setAiMode={setAiMode}
+        aiTopic={aiTopic}
+        setAiTopic={setAiTopic}
+        generating={generating}
+        onAiGenerate={handleAiGenerate}
+        form={form}
+        setForm={setForm}
+        saving={saving}
+        onSave={handleSave}
+        subjectLabel={currentTeacher?.subject}
+      />
     </div>
   );
 }

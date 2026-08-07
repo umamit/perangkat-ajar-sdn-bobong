@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { deleteStudentFromSupabase, saveStudentToSupabase } from '@/lib/supabase';
 import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
 import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
@@ -14,6 +13,8 @@ import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { StudentDialogs } from './siswa/StudentDialogs';
+import { StudentTable } from './siswa/StudentTable';
+import { parseStudentImport } from '@/modules/parseStudentImport';
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
@@ -153,110 +154,11 @@ export function SiswaView() {
   };
 
   const handleDirectImport = async (file: File) => {
-    showToast('Membaca & mengimpor file Excel ke Supabase Cloud...', 'info');
     const targetClass = selectedClass !== 'ALL' ? selectedClass : (classes[0]?.id || '1A');
-
-    const parseAndSaveRows = async (rawData: any[]) => {
-      if (!rawData || rawData.length === 0) {
-        showToast('File Excel / CSV kosong!', 'error');
-        return;
-      }
-
-      let importedCount = 0;
-      const parsedStudents: any[] = [];
-
-      for (let i = 0; i < rawData.length; i++) {
-        const row = rawData[i];
-        const keys = Object.keys(row);
-        const findVal = (...possibleNames: string[]) => {
-          const matchedKey = keys.find(k => possibleNames.some(p => k.toLowerCase().trim() === p.toLowerCase().trim()));
-          return matchedKey ? String(row[matchedKey]).trim() : '';
-        };
-
-        let name = findVal('Nama Lengkap', 'Nama', 'name', 'Nama Siswa', 'siswa', 'Nama_Siswa');
-        let nis = findVal('NISN', 'NIS', 'id', 'No Induk', 'Nomor Induk', 'Nis/Nisn');
-        let rawClass = findVal('Kelas', 'classId', 'Kelas Siswa', 'Rombel');
-        let rawGender = findVal('Jenis Kelamin', 'gender', 'JK', 'L/P', 'Sex');
-
-        if (!name && keys.length >= 2) {
-          const val1 = String(row[keys[0]] || '').trim();
-          const val2 = String(row[keys[1]] || '').trim();
-          if (isNaN(Number(val2)) && val2.length > 2) {
-            name = val2;
-            nis = val1;
-          } else if (isNaN(Number(val1)) && val1.length > 2) {
-            name = val1;
-          }
-        }
-
-        if (name && name.toLowerCase() !== 'nama lengkap' && name.toLowerCase() !== 'nama' && name.toLowerCase() !== 'name') {
-          let classId = rawClass.toUpperCase().trim()
-            .replace('KELAS', '').replace('III', '3').replace('II', '2').replace('IV', '4')
-            .replace('VI', '6').replace('V', '5').replace('I', '1')
-            .replace(/[^0-9A-Z]/g, '');
-
-          if (!classId) classId = targetClass;
-
-          let gender = (rawGender.toUpperCase().startsWith('P') || rawGender.toUpperCase().startsWith('W')) ? 'P' : 'L';
-          const generatedId = crypto.randomUUID();
-          const newStudent = {
-            id: generatedId,
-            nis: nis || generatedId,
-            name: name,
-            classId: classId,
-            gender: gender,
-            scoreFormatif: 0,
-            scoreSumatif: 0,
-            scoreSts: 0,
-            scoreSas: 0
-          };
-
-          const success = await saveStudentToSupabase(newStudent);
-          if (success) {
-            parsedStudents.push(newStudent);
-            importedCount++;
-          }
-        }
-      }
-
-      if (importedCount === 0) {
-        showToast('Gagal mengimpor: Tidak ada nama siswa yang valid terbaca', 'error');
-        return;
-      }
-
-      setStudents(prev => [...prev, ...parsedStudents]);
-      showToast(`Sukses mengimpor ${importedCount} data siswa ke Kelas ${targetClass}!`, 'success');
+    await parseStudentImport(file, targetClass, showToast, (newStudents) => {
+      setStudents(prev => [...prev, ...newStudents]);
       setShowImportModal(false);
-    };
-
-    const filename = file.name.toLowerCase();
-    if (filename.endsWith('.csv')) {
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: async (results) => {
-          await parseAndSaveRows(results.data);
-        },
-        error: (err) => {
-          showToast('Gagal membaca file CSV!', 'error');
-        }
-      });
-    } else {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const data = new Uint8Array(e.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[firstSheetName];
-          const rawData = XLSX.utils.sheet_to_json(sheet);
-          await parseAndSaveRows(rawData);
-        } catch (err) {
-          showToast('Gagal membaca file Excel!', 'error');
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    }
+    });
   };
 
   const handleDownloadPDF = async () => {
@@ -360,73 +262,12 @@ export function SiswaView() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
-                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Lengkap</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">Kelas</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">Gender</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Formatif</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Sumatif</TableHead>
-                {isKepsek && <TableHead className="text-center w-24 font-black text-[10px] uppercase text-slate-400">Aksi</TableHead>}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((s, idx) => (
-                <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
-                  <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
-                  <TableCell className="font-bold text-slate-800 text-xs">
-                    {s.name}
-                    <div className="text-[10px] text-slate-400 font-semibold mt-0.5">NIS: {s.nis || '-'}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="default" className="font-black text-[10px] rounded-md">{s.classId}</Badge>
-                  </TableCell>
-                  <TableCell className="text-xs font-bold">
-                    {s.gender === 'L' ? (
-                      <span className="text-cyan-600 bg-cyan-50 px-2 py-1 rounded-lg">Laki-Laki</span>
-                    ) : (
-                      <span className="text-rose-600 bg-rose-50 px-2 py-1 rounded-lg">Perempuan</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center text-xs font-black text-slate-700">
-                    {s.scoreFormatif || 0}
-                  </TableCell>
-                  <TableCell className="text-center text-xs font-black text-slate-700">
-                    {s.scoreSumatif || 0}
-                  </TableCell>
-                  {isKepsek && (
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-0.5">
-                        <button
-                          onClick={() => handleEditClick(s)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                          title="Edit Siswa"
-                        >
-                          <i className="ri-edit-line text-sm" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                          className="p-1.5 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
-                          title="Hapus Siswa"
-                        >
-                          <i className="ri-delete-bin-line text-sm" />
-                        </button>
-                      </div>
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))}
-              {filteredStudents.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={isKepsek ? 7 : 6} className="text-center text-slate-400 py-8 text-xs font-semibold">
-                    Tidak ada data siswa ditemukan untuk filter ini
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <StudentTable
+            filteredStudents={filteredStudents}
+            isKepsek={isKepsek}
+            handleEditClick={handleEditClick}
+            handleDelete={handleDelete}
+          />
         </CardContent>
       </Card>
 

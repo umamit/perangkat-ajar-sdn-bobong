@@ -31,6 +31,8 @@ export interface Student {
   gender: string;
   scoreFormatif?: number;
   scoreSumatif?: number;
+  scoreSts?: number;
+  scoreSas?: number;
 }
 
 export interface TimetableSlot {

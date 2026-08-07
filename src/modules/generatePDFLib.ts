@@ -20,8 +20,9 @@ export async function downloadLaporanPDFWithPdfLib(data: {
   totalClasses: number;
   totalJournals: number;
   totalAttendance: number;
-  headmasterName?: string;
-  headmasterNip?: string;
+  teacherName?: string;
+  teacherNip?: string;
+  teacherRole?: string;
   classStats?: ClassStat[];
   studentDetails?: StudentDetail[];
   selectedClassName?: string;
@@ -247,9 +248,9 @@ export async function downloadLaporanPDFWithPdfLib(data: {
   page.drawText('NIP. 199610272019032006', { x: 60, y: sigY - 68, size: 8, font: fontRegular });
 
   page.drawText(`Bobong, ${todayStr}`, { x: 360, y: sigY, size: 8.5, font: fontRegular });
-  page.drawText('Guru / Admin Sistem', { x: 360, y: sigY - 12, size: 8.5, font: fontRegular });
-  page.drawText(data.headmasterName || 'Husnita Usman, M.Pd', { x: 360, y: sigY - 56, size: 9, font: fontBold });
-  page.drawText(`NIP. ${data.headmasterNip || '199610272019032006'}`, { x: 360, y: sigY - 68, size: 8, font: fontRegular });
+  page.drawText(data.teacherRole || 'Guru / Admin Sistem', { x: 360, y: sigY - 12, size: 8.5, font: fontRegular });
+  page.drawText(data.teacherName || 'Husnita Usman, M.Pd', { x: 360, y: sigY - 56, size: 9, font: fontBold });
+  page.drawText(`NIP. ${data.teacherNip || '199610272019032006'}`, { x: 360, y: sigY - 68, size: 8, font: fontRegular });
 
   // Save PDF Bytes and Trigger Browser Direct File Download
   const pdfBytes = await pdfDoc.save();

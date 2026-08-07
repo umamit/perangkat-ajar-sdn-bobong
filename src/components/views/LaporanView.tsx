@@ -121,8 +121,9 @@ export function LaporanView() {
         totalClasses: filteredClasses.length,
         totalJournals: journals.length,
         totalAttendance: filteredAttendance.length,
-        headmasterName: currentTeacher?.name,
-        headmasterNip: currentTeacher?.nip,
+        teacherName: currentTeacher?.name,
+        teacherNip: currentTeacher?.nip,
+        teacherRole: currentTeacher?.role,
         classStats,
         studentDetails,
         selectedClassName: selectedClassExplorer

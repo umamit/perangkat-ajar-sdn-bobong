@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { saveModuleToSupabase } from '@/lib/supabase';
+import { saveModuleToSupabase, uploadFileToSupabase } from '@/lib/supabase';
 
 import { downloadModulPDF } from '@/modules/generateModulPDF';
 
@@ -14,6 +14,8 @@ export function ModulView() {
   const { modules, currentTeacher, classes, showToast, setModules } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [form, setForm] = useState({
     title: '',
@@ -56,7 +58,17 @@ export function ModulView() {
       const phase = selectedClassObj?.phase || 'Fase A';
       const grade = selectedClassObj?.name || `Kelas ${form.classId}`;
 
-      const newModul = {
+      let fileUrl = null;
+      if (selectedFile) {
+        showToast('Mengunggah dokumen modul...', 'info');
+        const path = `${currentTeacher?.nip || 'unknown'}_mod_${Date.now()}_${selectedFile.name}`;
+        fileUrl = await uploadFileToSupabase('documents', path, selectedFile);
+        if (!fileUrl) {
+          showToast('Gagal mengunggah berkas asli modul', 'error');
+        }
+      }
+
+      const newModul: any = {
         id: `MOD-${Date.now()}`,
         title: form.title.trim(),
         grade: grade,
@@ -66,7 +78,8 @@ export function ModulView() {
         tp: form.tp.trim(),
         atp: form.tp.trim(),
         cp: form.cp.trim(),
-        teacherNip: currentTeacher?.nip
+        teacherNip: currentTeacher?.nip,
+        fileUrl: fileUrl || undefined
       };
 
       const success = await saveModuleToSupabase(newModul);
@@ -81,6 +94,7 @@ export function ModulView() {
           tp: '',
           cp: ''
         });
+        setSelectedFile(null);
       } else {
         showToast('Gagal menyimpan modul ke cloud', 'error');
       }
@@ -128,9 +142,16 @@ export function ModulView() {
               </div>
               <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-bold">
                 <span className="text-slate-450 text-[10px] font-black uppercase">Waktu: {m.duration || '2 x 35 Menit'}</span>
-                <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1">
-                  <i className="ri-file-pdf-2-line text-rose-600" /> Unduh PDF
-                </Button>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1">
+                    <i className="ri-file-pdf-2-line text-rose-600" /> PDF
+                  </Button>
+                  {(m.file_url || m.fileUrl) && (
+                    <Button variant="outline" size="sm" onClick={() => window.open(m.file_url || m.fileUrl, '_blank')} className="h-8 rounded-lg text-[10px] font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1">
+                      <i className="ri-file-download-line text-emerald-600" /> Berkas
+                    </Button>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -203,8 +224,18 @@ export function ModulView() {
                 required
               />
             </div>
+            <div className="space-y-1.5 text-xs text-left">
+              <Label htmlFor="modulFile" className="font-bold text-slate-650">Unggah Berkas Asli (PDF/Word/Zip) - Opsional</Label>
+              <Input
+                id="modulFile"
+                type="file"
+                accept=".pdf,.docx,.doc,.zip"
+                onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+                className="h-10 rounded-xl pt-2"
+              />
+            </div>
             <DialogFooter className="pt-3 gap-2 sm:gap-0">
-              <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm({ title: '', classId: classes[0]?.id || '1A', duration: '2 x 35 Menit', tp: '', cp: '' }); }} className="rounded-xl h-10 text-xs font-bold">
+              <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm({ title: '', classId: classes[0]?.id || '1A', duration: '2 x 35 Menit', tp: '', cp: '' }); setSelectedFile(null); }} className="rounded-xl h-10 text-xs font-bold">
                 Batal
               </Button>
               <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">

@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { saveAttendanceToSupabase } from '@/lib/supabase';
+import { addToOfflineQueue } from '@/lib/offlineSync';
 import { downloadAbsensiPDF } from '@/modules/generateAbsensiPDF';
 import { exportAbsensiExcel } from '@/modules/exportAbsensiExcel';
 import { RiwayatPresensiCard } from './absensi/RiwayatPresensiCard';
 import { StatCards } from './absensi/StatCards';
+import { AttendanceTable } from './absensi/AttendanceTable';
 
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { AttendanceAiAnalyst } from './absensi/AttendanceAiAnalyst';
@@ -131,14 +133,21 @@ export function AbsensiView() {
 
     const ok = await saveAttendanceToSupabase(supabaseRecords);
 
+    // Apply state updates locally immediately for offline usability
+    setAttendance(prev => {
+      const filtered = prev.filter(r => !((r.class_id === selectedClass || r.classId === selectedClass) && r.date === date));
+      return [...supabaseRecords, ...filtered];
+    });
+
     if (ok) {
-      setAttendance(prev => {
-        const filtered = prev.filter(r => !((r.class_id === selectedClass || r.classId === selectedClass) && r.date === date));
-        return [...supabaseRecords, ...filtered];
-      });
       showToast(`Presensi kelas ${selectedClass} tanggal ${date} (${currentHadir} Hadir) tersimpan di Supabase Cloud!`, 'success');
     } else {
-      showToast('Gagal menyimpan presensi ke Supabase Cloud', 'error');
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        addToOfflineQueue('saveAttendance', supabaseRecords);
+        showToast('Presensi disimpan secara lokal (offline) dan akan disinkronkan saat online kembali.', 'info');
+      } else {
+        showToast('Gagal menyimpan presensi ke Supabase Cloud', 'error');
+      }
     }
   };
 
@@ -274,69 +283,12 @@ export function AbsensiView() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
-                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Siswa</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Pilihan Status Presensi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {classStudents.map((s, idx) => {
-                const sKey = getStatusKey(s);
-                const currentSt = currentStatuses[sKey] || null;
-                return (
-                  <TableRow key={s.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
-                    <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
-                    <TableCell className="font-bold text-slate-800 text-xs">
-                      {s.name}
-                      <div className="text-[10px] text-slate-400 font-semibold mt-0.5">NIS: {s.nis || '-'}</div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex justify-center items-center gap-1.5">
-                        {['Hadir', 'Izin', 'Sakit', 'Alpa'].map(status => {
-                          const active = currentSt === status;
-                          const activeClass =
-                            status === 'Hadir'
-                              ? 'bg-emerald-600 text-white shadow-sm'
-                              : status === 'Izin'
-                              ? 'bg-amber-500 text-white shadow-sm'
-                              : status === 'Sakit'
-                              ? 'bg-orange-500 text-white shadow-sm'
-                              : 'bg-rose-600 text-white shadow-sm';
- 
-                          return (
-                            <button
-                              key={status}
-                              onClick={() => handleStatusChange(sKey, status)}
-                              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 ${
-                                active ? activeClass : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/40'
-                              }`}
-                            >
-                              {status}
-                            </button>
-                          );
-                        })}
-                        {!currentSt && (
-                          <span className="text-[10px] text-slate-450 italic ml-2 font-semibold">
-                            (Belum Dipilih)
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {classStudents.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center text-slate-400 py-8 text-xs font-semibold">
-                    Belum ada siswa di kelas ini
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <AttendanceTable
+            classStudents={classStudents}
+            currentStatuses={currentStatuses}
+            getStatusKey={getStatusKey}
+            onStatusChange={handleStatusChange}
+          />
         </CardContent>
       </Card>
  

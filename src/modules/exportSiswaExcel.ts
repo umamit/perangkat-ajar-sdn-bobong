@@ -2,22 +2,35 @@ import * as XLSX from 'xlsx';
 import { Student } from '@/types';
 
 export function exportSiswaExcel(students: Student[], className: string): void {
-  const worksheetData = students.map((s, idx) => ({
-    No: idx + 1,
-    'NIS / NISN': s.nis || '-',
-    'Nama Lengkap': s.name,
-    'Jenis Kelamin': s.gender || 'L',
-    Kelas: s.classId || '-',
-  }));
+  const headers = [
+    ['PEMERINTAH KABUPATEN PULAU TALIABU'],
+    ['DINAS PENDIDIKAN - SD NEGERI BOBONG'],
+    ['Alamat: Desa Bobong, Kecamatan Taliabu Barat, Kabupaten Pulau Taliabu'],
+    [],
+    [`DATA INDUK SISWA KELAS: ${className === 'ALL' ? 'SEMUA KELAS' : className}`],
+    [`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`],
+    [],
+    ['No', 'NIS / NISN', 'Nama Lengkap', 'Jenis Kelamin', 'Kelas']
+  ];
 
-  const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+  const rows = students.map((s, idx) => [
+    idx + 1,
+    s.nis || '-',
+    s.name,
+    s.gender || 'L',
+    s.classId || '-'
+  ]);
+
+  const worksheetData = [...headers, ...rows];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
   const workbook = XLSX.utils.book_new();
 
   worksheet['!cols'] = [
-    { wch: 6 },  // No
-    { wch: 18 }, // NIS
-    { wch: 35 }, // Nama Lengkap
-    { wch: 14 }, // JK
+    { wch: 8 },  // No
+    { wch: 20 }, // NIS / NISN
+    { wch: 40 }, // Nama Lengkap
+    { wch: 15 }, // Jenis Kelamin
     { wch: 12 }, // Kelas
   ];
 
