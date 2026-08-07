@@ -174,9 +174,19 @@ export function GuruView() {
                 required
               />
             </div>
-            <div className="space-y-1">
+             <div className="space-y-1">
               <Label>Jabatan / Peran</Label>
-              <Select value={form.role} onValueChange={(v: string) => setForm(f => ({ ...f, role: v }))}>
+              <Select
+                value={form.role}
+                onValueChange={(v: string) => setForm(f => {
+                  const isTematik = v === 'Guru Kelas' || v === 'Wali Kelas' || v === 'Guru';
+                  return {
+                    ...f,
+                    role: v,
+                    subject: isTematik ? 'Semua Mata Pelajaran (Tematik)' : f.subject === 'Semua Mata Pelajaran (Tematik)' ? '' : f.subject
+                  };
+                })}
+              >
                 <SelectTrigger id="teacherRole" className="bg-white">
                   <SelectValue />
                 </SelectTrigger>
@@ -191,12 +201,14 @@ export function GuruView() {
               </Select>
             </div>
             <div className="space-y-1">
-              <Label htmlFor="teacherSubject">Mata Pelajaran</Label>
+              <Label htmlFor="teacherSubject" className={(form.role === 'Guru Kelas' || form.role === 'Wali Kelas' || form.role === 'Guru') ? 'text-slate-400' : ''}>Mata Pelajaran</Label>
               <Input
                 id="teacherSubject"
                 value={form.subject}
                 onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
                 placeholder="Contoh: Bahasa Inggris"
+                disabled={form.role === 'Guru Kelas' || form.role === 'Wali Kelas' || form.role === 'Guru'}
+                className="disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 cursor-not-allowed bg-white"
               />
             </div>
             <div className="space-y-1">
