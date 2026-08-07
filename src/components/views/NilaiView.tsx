@@ -96,7 +96,15 @@ export function NilaiView() {
         updated[existingIdx] = { ...updated[existingIdx], score: num };
         return updated;
       } else {
-        return [...prev, { student_id: studentId, subject: selectedSubject, type, score: num }];
+        return [...prev, {
+          student_id: studentId,
+          studentId,
+          classId: selectedClass,
+          class_id: selectedClass,
+          subject: selectedSubject,
+          type,
+          score: num
+        }];
       }
     });
 

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 interface FlashcardItem {
   word: string;
-  meaning: string;
+  meaning?: string;
   translate?: string;
   phase?: string;
 }

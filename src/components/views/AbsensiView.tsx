@@ -134,9 +134,20 @@ export function AbsensiView() {
     const ok = await saveAttendanceToSupabase(supabaseRecords);
 
     // Apply state updates locally immediately for offline usability
+    const localRecords = classStudents
+      .filter(s => currentStatuses[getStatusKey(s)])
+      .map(s => ({
+        studentId: s.id,
+        classId: selectedClass,
+        student_id: s.id,
+        class_id: selectedClass,
+        date: date,
+        status: currentStatuses[getStatusKey(s)] as 'Hadir' | 'Izin' | 'Sakit' | 'Alpa'
+      }));
+
     setAttendance(prev => {
       const filtered = prev.filter(r => !((r.class_id === selectedClass || r.classId === selectedClass) && r.date === date));
-      return [...supabaseRecords, ...filtered];
+      return [...localRecords, ...filtered];
     });
 
     if (ok) {

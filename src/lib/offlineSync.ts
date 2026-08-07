@@ -10,10 +10,24 @@ import {
   saveAttendanceToSupabase
 } from './supabase';
 
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
+
+export interface AppCacheData {
+  teachers: Teacher[];
+  students: Student[];
+  classes: ClassInfo[];
+  journals: JournalEntry[];
+  attendance: AttendanceRecord[];
+  modules: ModuleAjar[];
+  flashcards: FlashcardItem[];
+  assignments: TaskItem[];
+  grades: GradeRecord[];
+}
+
 export interface PendingMutation {
   id: string;
   action: string;
-  payload: any;
+  payload: unknown;
   timestamp: number;
 }
 
@@ -34,7 +48,7 @@ export function saveOfflineQueue(queue: PendingMutation[]) {
   } catch (e) {}
 }
 
-export function addToOfflineQueue(action: string, payload: any) {
+export function addToOfflineQueue(action: string, payload: unknown) {
   const queue = getOfflineQueue();
   const newMutation: PendingMutation = {
     id: Math.random().toString(36).substring(2, 9),
@@ -68,31 +82,37 @@ export async function flushOfflineQueue(showToast?: (msg: string, type: 'success
     try {
       switch (item.action) {
         case 'saveStudent':
-          success = await saveStudentToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveStudentToSupabase(item.payload as any);
           break;
         case 'deleteStudent':
-          success = await deleteStudentFromSupabase(item.payload);
+          success = await deleteStudentFromSupabase(item.payload as string);
           break;
         case 'saveJournal':
-          success = await saveJournalToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveJournalToSupabase(item.payload as any);
           break;
         case 'deleteJournal':
-          success = await deleteJournalFromSupabase(item.payload);
+          success = await deleteJournalFromSupabase(item.payload as string);
           break;
         case 'saveAssignment':
-          success = await saveAssignmentToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveAssignmentToSupabase(item.payload as any);
           break;
         case 'deleteAssignment':
-          success = await deleteAssignmentFromSupabase(item.payload);
+          success = await deleteAssignmentFromSupabase(item.payload as string);
           break;
         case 'saveModule':
-          success = await saveModuleToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveModuleToSupabase(item.payload as any);
           break;
         case 'saveGrade':
-          success = await saveGradeToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveGradeToSupabase(item.payload as any);
           break;
         case 'saveAttendance':
-          success = await saveAttendanceToSupabase(item.payload);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveAttendanceToSupabase(item.payload as any);
           break;
         default:
           success = true;
@@ -121,14 +141,14 @@ export async function flushOfflineQueue(showToast?: (msg: string, type: 'success
   return failedMutations.length === 0;
 }
 
-export function saveAppCache(data: any) {
+export function saveAppCache(data: AppCacheData) {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem('sdn_bobong_cache', JSON.stringify(data));
   } catch (e) {}
 }
 
-export function loadAppCache(): any | null {
+export function loadAppCache(): AppCacheData | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem('sdn_bobong_cache');

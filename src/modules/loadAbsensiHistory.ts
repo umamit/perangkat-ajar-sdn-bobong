@@ -46,10 +46,7 @@ export async function loadAbsensiHistory(): Promise<void> {
         </tr>`;
     }).join('');
 
-    appData.attendance = rows.map((r: any) => ({
-      date: r.date, classId: r.classId,
-      hadir: r.Hadir, izin: r.Izin, sakit: r.Sakit, alpa: r.Alpa
-    }));
+    // Note: attendance data is managed by React context in Next.js App Router
   } catch (err) {
     console.warn('[Absensi History Error]', err);
   }

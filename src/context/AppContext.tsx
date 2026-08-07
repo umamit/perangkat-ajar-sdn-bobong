@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { Student, Teacher, JournalEntry } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
 import { useAppState, ToastMessage } from './useAppState';
 import { flushOfflineQueue } from '@/lib/offlineSync';
 
@@ -20,19 +20,20 @@ interface AppContextType {
   setTeachers: React.Dispatch<React.SetStateAction<Teacher[]>>;
   students: Student[];
   setStudents: React.Dispatch<React.SetStateAction<Student[]>>;
-  classes: any[];
+  classes: ClassInfo[];
+  setClasses: React.Dispatch<React.SetStateAction<ClassInfo[]>>;
   journals: JournalEntry[];
   setJournals: React.Dispatch<React.SetStateAction<JournalEntry[]>>;
-  attendance: any[];
-  setAttendance: React.Dispatch<React.SetStateAction<any[]>>;
-  modules: any[];
-  setModules: React.Dispatch<React.SetStateAction<any[]>>;
-  flashcards: any[];
-  setFlashcards: React.Dispatch<React.SetStateAction<any[]>>;
-  assignments: any[];
-  setAssignments: React.Dispatch<React.SetStateAction<any[]>>;
-  grades: any[];
-  setGrades: React.Dispatch<React.SetStateAction<any[]>>;
+  attendance: AttendanceRecord[];
+  setAttendance: React.Dispatch<React.SetStateAction<AttendanceRecord[]>>;
+  modules: ModuleAjar[];
+  setModules: React.Dispatch<React.SetStateAction<ModuleAjar[]>>;
+  flashcards: FlashcardItem[];
+  setFlashcards: React.Dispatch<React.SetStateAction<FlashcardItem[]>>;
+  assignments: TaskItem[];
+  setAssignments: React.Dispatch<React.SetStateAction<TaskItem[]>>;
+  grades: GradeRecord[];
+  setGrades: React.Dispatch<React.SetStateAction<GradeRecord[]>>;
   toasts: ToastMessage[];
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   syncData: () => Promise<void>;

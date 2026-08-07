@@ -14,7 +14,7 @@ export function PengaturanView() {
   const [nip, setNip] = useState(currentTeacher.nip || '199610272019032006');
   const [role, setRole] = useState(currentTeacher.role || 'Kepala Sekolah / Executive Admin');
   const [school, setSchool] = useState(currentTeacher.school || 'SD Negeri Bobong');
-  const [password, setPassword] = useState(currentTeacher.password || 'kepseksdnbobong');
+  const [password, setPassword] = useState(currentTeacher.password || '');
   const [showPassword, setShowPassword] = useState(false);
   const [avatar, setAvatar] = useState(currentTeacher.avatar || '/assets/logo-sdn-bobong.png');
   const [oldPassword, setOldPassword] = useState('');

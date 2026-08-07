@@ -49,6 +49,9 @@ export interface AttendanceRecord {
   date: string;
   status: 'Hadir' | 'Izin' | 'Sakit' | 'Alpa';
   notes?: string;
+  // Supabase snake_case aliases
+  student_id?: string;
+  class_id?: string;
 }
 
 export interface GradeRecord {
@@ -56,9 +59,12 @@ export interface GradeRecord {
   studentId: string;
   classId: string;
   subject: string;
-  type: 'Formatif' | 'Sumatif';
+  type: 'Formatif' | 'Sumatif' | 'STS' | 'SAS';
   score: number;
   topic?: string;
+  // Supabase snake_case aliases
+  student_id?: string;
+  class_id?: string;
 }
 
 export interface JournalEntry {
@@ -86,15 +92,25 @@ export interface ModuleAjar {
   steps: string[];
   assessment: string;
   teacherNip?: string;
+  fileUrl?: string;
+  // Supabase snake_case aliases
+  file_url?: string;
+  teacher_nip?: string;
+  class_id?: string;
 }
 
 export interface FlashcardItem {
-  id: number;
+  id: number | string;
   word: string;
   translate: string;
   example: string;
   category: string;
   icon?: string;
+  // Optional legacy/Supabase fields
+  meaning?: string;
+  phase?: string;
+  title?: string;
+  teacher_nip?: string | null;
 }
 
 export interface QuizQuestion {
@@ -126,20 +142,12 @@ export interface AppData {
   flashcards: FlashcardItem[];
   quizQuestions: QuizQuestion[];
   tasks?: TaskItem[];
-  attendance?: any[];
-  schedules?: any[];
+  attendance?: AttendanceRecord[];
+  schedules?: TimetableSlot[];
 }
 
 declare global {
   interface Window {
-    supabase: any;
     appData: AppData;
-    getSupabase: () => any;
-    syncFromSupabase: () => Promise<void>;
-    saveStudentToSupabase: (s: Student) => Promise<void>;
-    deleteStudentFromSupabase: (nis: string) => Promise<void>;
-    saveJournalToSupabase: (j: JournalEntry) => Promise<void>;
-    saveTeacherToSupabase: (t: Teacher) => Promise<void>;
-    deleteTeacherFromSupabase: (nip: string) => Promise<void>;
   }
 }

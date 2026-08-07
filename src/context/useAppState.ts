@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Student, Teacher, JournalEntry } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, defaultAdminTeacher } from './syncMappers';
@@ -58,7 +58,7 @@ export function useAppState() {
     const cache = loadAppCache();
     return cache?.students || [];
   });
-  const [classes, setClasses] = useState<any[]>(() => {
+  const [classes, setClasses] = useState<ClassInfo[]>(() => {
     const cache = loadAppCache();
     return cache?.classes || [];
   });
@@ -66,29 +66,29 @@ export function useAppState() {
     const cache = loadAppCache();
     return cache?.journals || [];
   });
-  const [attendance, setAttendance] = useState<any[]>(() => {
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>(() => {
     const cache = loadAppCache();
     return cache?.attendance || [];
   });
-  const [modules, setModules] = useState<any[]>(() => {
+  const [modules, setModules] = useState<ModuleAjar[]>(() => {
     const cache = loadAppCache();
     return cache?.modules || [];
   });
-  const [flashcards, setFlashcards] = useState<any[]>(() => {
+  const [flashcards, setFlashcards] = useState<FlashcardItem[]>(() => {
     const cache = loadAppCache();
     return cache?.flashcards || [
-      { id: '1', title: 'Greetings & Introduction', word: 'Hello / Good Morning', meaning: 'Halo / Selamat Pagi', phase: 'Fase A' },
-      { id: '2', title: 'Classroom Objects', word: 'Pencil & Book', meaning: 'Pensil & Buku', phase: 'Fase A' },
-      { id: '3', title: 'Numbers 1-20', word: 'One, Two, Three...', meaning: 'Satu, Dua, Tiga...', phase: 'Fase B' }
+      { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
+      { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
+      { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
     ];
   });
-  const [assignments, setAssignments] = useState<any[]>(() => {
+  const [assignments, setAssignments] = useState<TaskItem[]>(() => {
     const cache = loadAppCache();
     return cache?.assignments || [
-      { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', status: 'Aktif' }
+      { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
     ];
   });
-  const [grades, setGrades] = useState<any[]>(() => {
+  const [grades, setGrades] = useState<GradeRecord[]>(() => {
     const cache = loadAppCache();
     return cache?.grades || [];
   });
