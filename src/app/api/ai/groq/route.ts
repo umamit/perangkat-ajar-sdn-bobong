@@ -35,6 +35,40 @@ Struktur Wajib:
 2. 3 Soal Isian Singkat
 3. 2 Soal Uraian/HOTS
 4. Kunci Jawaban Lengkap dan Rubrik Penilaian`;
+    } else if (mode === 'alur_tujuan') {
+      userMessage = `Buatkan Alur Tujuan Pembelajaran (ATP) Kurikulum Merdeka yang sistematis:
+- Kelas: ${grade || 'Kelas 6'}
+- Mata Pelajaran: ${subject || 'Bahasa Inggris'}
+- Topik/Materi Utama: ${prompt}
+
+Struktur Wajib:
+1. Analisis Capaian Pembelajaran (CP) terkait topik
+2. Tujuan Pembelajaran (TP) yang diturunkan (minimal 3 TP)
+3. Alur Runtutan Pembelajaran (Langkah 1, Langkah 2, Langkah 3)
+4. Perkiraan Alokasi Jam Pelajaran (JP) dan Kriteria Ketercapaian Tujuan Pembelajaran (KKTP)`;
+    } else if (mode === 'lkpd_interaktif') {
+      userMessage = `Buatkan Lembar Kerja Peserta Didik (LKPD) Kurikulum Merdeka yang menarik dan siap pakai:
+- Kelas: ${grade || 'Kelas 6'}
+- Mata Pelajaran: ${subject || 'Bahasa Inggris'}
+- Topik/Materi: ${prompt}
+
+Struktur Wajib:
+1. Judul LKPD, Kelas, Mata Pelajaran
+2. Tujuan Aktivitas
+3. Petunjuk Pengerjaan
+4. Langkah Kerja / Instruksi Kerja Tugas (Tugas Mandiri/Kelompok)
+5. Lembar Jawaban Siswa & Instrumen Penilaian Sederhana`;
+    } else if (mode === 'projek_p5') {
+      const p5Phase = grade?.includes('1') || grade?.includes('2') ? 'A' : (grade?.includes('3') || grade?.includes('4') ? 'B' : 'C');
+      userMessage = `Buatkan Rancangan Ringkas Modul Projek Penguatan Profil Pelajar Pancasila (P5) yang kreatif untuk Sekolah Dasar:
+- Sasaran Kelas/Fase: ${grade || 'Kelas 6'} (Fase ${p5Phase})
+- Tema P5 Pilihan: ${prompt || 'Gaya Hidup Berkelanjutan'}
+
+Struktur Wajib:
+1. Identitas Projek (Tema, Topik Spesifik, Alokasi Waktu)
+2. Dimensi, Elemen, dan Sub-elemen Profil Pelajar Pancasila yang disasar
+3. Alur Kegiatan Projek (Tahap Pengenalan, Kontekstualisasi, Aksi, Refleksi, Tindak Lanjut)
+4. Rubrik Asesmen Projek P5`;
     } else if (mode === 'deskripsi_rapor') {
       userMessage = `Tuliskan rekomendasi narasi Deskripsi Capaian Kompetensi Rapor Kurikulum Merdeka yang profesional, santun, dan objektif untuk siswa:
 - Nama Siswa: ${prompt}

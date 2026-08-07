@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 
 export function AiAssistantView() {
   const { showToast, classes, currentTeacher } = useApp();
-  const [mode, setMode] = useState<'modul_ajar' | 'soal_asesmen' | 'konsultasi'>('modul_ajar');
+  const [mode, setMode] = useState<'modul_ajar' | 'soal_asesmen' | 'konsultasi' | 'alur_tujuan' | 'lkpd_interaktif' | 'projek_p5'>('modul_ajar');
   const [grade, setGrade] = useState('Kelas 6');
   const [subject, setSubject] = useState(currentTeacher?.subject || 'Bahasa Inggris');
   const [prompt, setPrompt] = useState('');
@@ -78,30 +78,54 @@ export function AiAssistantView() {
       </div>
 
       {/* Mode Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap gap-1.5 border-b border-slate-200 pb-2">
         <button
           onClick={() => setMode('modul_ajar')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
             mode === 'modul_ajar' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <i className="ri-book-open-line mr-1.5" /> Modul Ajar (RPP)
+          <i className="ri-book-open-line mr-1" /> Modul Ajar (RPP)
+        </button>
+        <button
+          onClick={() => setMode('alur_tujuan')}
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            mode === 'alur_tujuan' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <i className="ri-node-tree mr-1" /> Alur Tujuan (ATP)
+        </button>
+        <button
+          onClick={() => setMode('lkpd_interaktif')}
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            mode === 'lkpd_interaktif' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <i className="ri-pages-line mr-1" /> Lembar Kerja (LKPD)
         </button>
         <button
           onClick={() => setMode('soal_asesmen')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
             mode === 'soal_asesmen' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <i className="ri-file-list-3-line mr-1.5" /> Bank Soal Asesmen
+          <i className="ri-file-list-3-line mr-1" /> Bank Soal Asesmen
+        </button>
+        <button
+          onClick={() => setMode('projek_p5')}
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            mode === 'projek_p5' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <i className="ri-palette-line mr-1" /> Rancangan P5
         </button>
         <button
           onClick={() => setMode('konsultasi')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
             mode === 'konsultasi' ? 'bg-primary text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <i className="ri-question-answer-line mr-1.5" /> Tanya Jawab Pedagogi
+          <i className="ri-question-answer-line mr-1" /> Tanya Jawab Pedagogi
         </button>
       </div>
 
@@ -109,7 +133,10 @@ export function AiAssistantView() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-bold text-slate-800">
             {mode === 'modul_ajar' && '🎯 Buat Modul Ajar Kurikulum Merdeka'}
+            {mode === 'alur_tujuan' && '🌿 Susun Alur Tujuan Pembelajaran (ATP)'}
+            {mode === 'lkpd_interaktif' && '📑 Buat Lembar Kerja Peserta Didik (LKPD) Menarik'}
             {mode === 'soal_asesmen' && '📝 Buat Bank Soal (Formatif / Sumatif)'}
+            {mode === 'projek_p5' && '🎨 Rancang Modul Projek Penguatan Profil Pelajar Pancasila (P5)'}
             {mode === 'konsultasi' && '💡 Konsultasi & Tanya Jawab Kurikulum Merdeka'}
           </CardTitle>
         </CardHeader>
@@ -203,7 +230,7 @@ export function AiAssistantView() {
         <Card className="border-slate-200 shadow-sm bg-white animate-fade-in">
           <CardHeader className="pb-2 border-b border-slate-100 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <i className="ri-[article-line] text-primary" /> Hasil AI Kurikulum Merdeka
+              <i className="ri-article-line text-primary" /> Hasil AI Kurikulum Merdeka
             </CardTitle>
             <Button
               onClick={handleCopy}
