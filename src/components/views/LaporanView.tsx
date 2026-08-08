@@ -98,7 +98,7 @@ export function LaporanView() {
   const studentDetails = explorerStudents.map(s => {
     const atts = attendance.filter(a => (a.student_id === s.id || a.studentId === s.id));
     const totalPresent = atts.filter(a => a.status === 'Hadir').length;
-    const attRate = atts.length > 0 ? Math.round((totalPresent / atts.length) * 100) : 100;
+    const attRate = atts.length > 0 ? Math.round((totalPresent / atts.length) * 100) : 0;
 
     const fVal = grades.find(g => g.student_id === s.id && g.type === 'Formatif' && g.subject === selectedSubject)?.score || 0;
     const sVal = grades.find(g => g.student_id === s.id && g.type === 'STS' && g.subject === selectedSubject)?.score || 0;
