@@ -84,3 +84,25 @@ export function getTeacherAssignedClass(role: string, subject: string): string |
   
   return null;
 }
+
+export function formatAdmissionYear(dateStr: string): string {
+  if (!dateStr) return '-';
+  if (dateStr.includes('-')) {
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const months = [
+          'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        const day = parseInt(parts[2], 10);
+        const monthIndex = parseInt(parts[1], 10) - 1;
+        const year = parts[0];
+        if (monthIndex >= 0 && monthIndex < 12) {
+          return `${day} ${months[monthIndex]} ${year}`;
+        }
+      }
+    } catch (e) {}
+  }
+  return dateStr;
+}

@@ -2,18 +2,16 @@
 
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { deleteStudentFromSupabase, saveStudentToSupabase } from '@/lib/supabase';
 import { downloadSiswaPDF } from '@/modules/generateSiswaPDF';
 import { exportSiswaExcel } from '@/modules/exportSiswaExcel';
-import * as XLSX from 'xlsx';
-import Papa from 'papaparse';
 import { getTeacherAssignedClass } from '@/lib/utils';
-import { StudentDialogs } from './siswa/StudentDialogs';
+import { AddStudentModal } from './siswa/AddStudentModal';
+import { EditStudentModal } from './siswa/EditStudentModal';
+import { ImportStudentModal } from './siswa/ImportStudentModal';
 import { StudentTable } from './siswa/StudentTable';
+import { StudentHeader } from './siswa/StudentHeader';
 import { parseStudentImport } from '@/modules/parseStudentImport';
 
 export function SiswaView() {
@@ -210,10 +208,7 @@ export function SiswaView() {
   };
 
   const handleDownloadPDF = async () => {
-    if (filteredStudents.length === 0) {
-      showToast('Tidak ada data siswa untuk dicetak', 'error');
-      return;
-    }
+    if (filteredStudents.length === 0) return showToast('Tidak ada data siswa untuk dicetak', 'error');
     try {
       showToast('Memproses Berkas PDF Data Siswa...', 'info');
       await downloadSiswaPDF({
@@ -224,91 +219,41 @@ export function SiswaView() {
         teacherRole: currentTeacher?.role,
       });
       showToast('PDF Data Siswa Berhasil Diunduh!', 'success');
-    } catch (e) {
+    } catch {
       showToast('Gagal mencetak PDF Data Siswa', 'error');
     }
   };
 
   const handleExportExcel = () => {
-    if (filteredStudents.length === 0) {
-      showToast('Tidak ada data siswa untuk diekspor', 'error');
-      return;
-    }
+    if (filteredStudents.length === 0) return showToast('Tidak ada data siswa untuk diekspor', 'error');
     try {
       showToast('Mengunduh File Excel Data Siswa...', 'info');
       exportSiswaExcel(filteredStudents, selectedClass);
       showToast('Excel Data Siswa Berhasil Diunduh!', 'success');
-    } catch (e) {
+    } catch {
       showToast('Gagal mengekspor file Excel Data Siswa', 'error');
     }
   };
 
   return (
     <div className="space-y-6 animate-fade-in text-slate-800">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h3 className="text-lg font-black text-slate-800 tracking-tight">Daftar Siswa SD Negeri Bobong</h3>
-          <p className="text-xs text-slate-500 font-semibold">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
-            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1.5 rounded-xl">
-            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
-          </Button>
-          {isKepsek && (
-            <>
-              <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white">
-                <i className="ri-user-add-line" /> Tambah Siswa
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary/20 text-primary hover:bg-cyan-50/30">
-                <i className="ri-upload-2-line" /> Impor Excel
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
+      <StudentHeader
+        handleExportExcel={handleExportExcel}
+        handleDownloadPDF={handleDownloadPDF}
+        isKepsek={isKepsek}
+        setShowAddModal={setShowAddModal}
+        setShowImportModal={setShowImportModal}
+        search={search}
+        setSearch={setSearch}
+        lockedClass={lockedClass}
+        selectedClass={selectedClass}
+        setSelectedClass={setSelectedClass}
+        classes={classes}
+        students={students}
+        normalizeClass={normalizeClass}
+      />
 
       <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
-        <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div className="relative w-full sm:w-72">
-              <i className="ri-search-line absolute left-3 top-2.5 text-slate-400" />
-              <Input
-                type="text"
-                placeholder="Cari nama atau NIS siswa..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="pl-9 text-xs h-9 rounded-xl focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-bold text-slate-600">Filter Kelas:</label>
-              {lockedClass ? (
-                <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-lg">
-                  Kelas {lockedClass} (Binaan)
-                </Badge>
-              ) : (
-                <select
-                  value={selectedClass}
-                  onChange={e => setSelectedClass(e.target.value)}
-                  className="h-9 rounded-xl border border-slate-200 bg-white/80 px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
-                  {classes.map(c => {
-                    const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
-                    return (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({count} Siswa)
-                      </option>
-                    );
-                  })}
-                </select>
-              )}
-            </div>
-          </div>
-        </CardHeader>
         <CardContent className="p-0">
           <StudentTable
             filteredStudents={filteredStudents}
@@ -320,23 +265,30 @@ export function SiswaView() {
         </CardContent>
       </Card>
 
-      <StudentDialogs
-        showAddModal={showAddModal}
-        setShowAddModal={setShowAddModal}
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        showImportModal={showImportModal}
-        setShowImportModal={setShowImportModal}
+      <AddStudentModal
+        isOpen={showAddModal}
+        onOpenChange={setShowAddModal}
         saving={saving}
         classes={classes}
-        selectedClass={selectedClass}
         addForm={addForm}
         setAddForm={setAddForm}
+        onSubmit={handleAddSubmit}
+      />
+      <EditStudentModal
+        isOpen={showEditModal}
+        onOpenChange={setShowEditModal}
+        saving={saving}
+        classes={classes}
         editForm={editForm}
         setEditForm={setEditForm}
-        handleAddSubmit={handleAddSubmit}
-        handleEditSubmit={handleEditSubmit}
-        handleDirectImport={handleDirectImport}
+        onSubmit={handleEditSubmit}
+      />
+      <ImportStudentModal
+        isOpen={showImportModal}
+        onOpenChange={setShowImportModal}
+        classes={classes}
+        selectedClass={selectedClass}
+        onImport={handleDirectImport}
       />
     </div>
   );
