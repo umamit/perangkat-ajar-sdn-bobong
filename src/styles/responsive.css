@@ -66,6 +66,54 @@
     transform: none;
     width: 280px;
     box-shadow: none;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar.collapsed {
+    width: 76px;
+    max-width: 76px;
+    padding: 20px 8px;
+    align-items: center;
+  }
+
+  .sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    width: 100%;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sidebar.collapsed .school-info {
+    display: none;
+  }
+
+  .sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: 12px 10px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .sidebar.collapsed .nav-item i {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .sidebar.collapsed .nav-item .nav-label {
+    display: none;
+  }
+
+  .sidebar.collapsed .teacher-profile-card {
+    justify-content: center;
+    padding: 6px;
+    width: 100%;
+    border: none;
+    background: transparent;
+  }
+
+  .sidebar.collapsed .teacher-profile-card .teacher-details {
+    display: none;
   }
 
   .sidebar-backdrop {

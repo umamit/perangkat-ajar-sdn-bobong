@@ -20,7 +20,7 @@ const navItems = [
 ];
 
 export function Sidebar() {
-  const { activeView, setActiveView, currentTeacher, sidebarOpen, setSidebarOpen } = useApp();
+  const { activeView, setActiveView, currentTeacher, sidebarOpen, setSidebarOpen, sidebarCollapsed } = useApp();
 
   const isKepsek = !!(
     currentTeacher?.role?.toLowerCase().includes('kepala sekolah') ||
@@ -35,7 +35,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className={`sidebar ${sidebarOpen ? 'active' : ''}`} id="sidebar">
+      <aside className={`sidebar ${sidebarOpen ? 'active' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`} id="sidebar">
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           <div className="sidebar-header shrink-0">
             <img
@@ -59,7 +59,8 @@ export function Sidebar() {
                   setSidebarOpen(false);
                 }}
               >
-                <i className={item.icon}></i> {item.label}
+                <i className={item.icon}></i>
+                <span className="nav-label">{item.label}</span>
               </a>
             ))}
           </nav>

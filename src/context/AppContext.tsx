@@ -41,6 +41,8 @@ interface AppContextType {
   isInitializing: boolean;
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: (collapsed: boolean) => void;
   logout: () => void;
 }
 

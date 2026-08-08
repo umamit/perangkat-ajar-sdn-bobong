@@ -12,6 +12,8 @@ export function Navbar() {
     logout,
     sidebarOpen,
     setSidebarOpen,
+    sidebarCollapsed,
+    setSidebarCollapsed,
     isLoading
   } = useApp();
 
@@ -41,6 +43,13 @@ export function Navbar() {
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           <i className={sidebarOpen ? 'ri-close-line text-xl' : 'ri-menu-line text-xl'} />
+        </button>
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="hidden md:flex items-center justify-center p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-colors duration-200"
+          title={sidebarCollapsed ? "Perbesar Menu" : "Kecilkan Menu"}
+        >
+          <i className={sidebarCollapsed ? "ri-menu-unfold-line text-xl" : "ri-menu-fold-line text-xl"} />
         </button>
         <div className="top-title">
           <h2 id="currentViewTitle" className="text-lg font-extrabold text-slate-800 tracking-tight">
