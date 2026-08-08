@@ -111,7 +111,26 @@ export function useAppState() {
     try {
       localStorage.removeItem('sdn_bobong_auth');
       localStorage.removeItem('sdn_bobong_teacher');
+      localStorage.removeItem('sdn_bobong_cache');
     } catch (e) {}
+
+    // Reset memory state immediately to secure teacher privacy
+    setTeachers([]);
+    setStudents([]);
+    setClasses([]);
+    setJournals([]);
+    setAttendance([]);
+    setModules([]);
+    setFlashcards([
+      { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
+      { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
+      { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
+    ]);
+    setAssignments([
+      { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
+    ]);
+    setGrades([]);
+
     setIsLoggedIn(false);
     showToast('Anda telah keluar dari aplikasi', 'info');
   }, [showToast]);
@@ -133,17 +152,17 @@ export function useAppState() {
         if (data.students) setStudents(finalStudents);
 
         const mappedClasses = mapClasses(data.classes || []);
-        if (data.classes?.length > 0) setClasses(mappedClasses);
+        if (data.classes) setClasses(mappedClasses);
 
         const mappedJournals = mapJournals(data.journals || []);
         if (data.journals) setJournals(mappedJournals);
 
         if (data.attendance) setAttendance(data.attendance);
         if (data.modules) setModules(data.modules);
-        if (data.flashcards?.length > 0) setFlashcards(data.flashcards);
+        if (data.flashcards) setFlashcards(data.flashcards);
 
         const mappedAssignments = mapAssignments(data.assignments || []);
-        if (data.assignments?.length > 0) setAssignments(mappedAssignments);
+        if (data.assignments) setAssignments(mappedAssignments);
         if (data.grades) setGrades(data.grades);
 
         saveAppCache({
