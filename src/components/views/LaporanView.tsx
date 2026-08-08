@@ -63,7 +63,7 @@ export function LaporanView() {
   // Perform overall attendance calculations
   const totalAttendanceDays = filteredAttendance.length;
   const totalHadir = filteredAttendance.filter(a => a.status === 'Hadir').length;
-  const averageAttendanceRate = totalAttendanceDays > 0 ? Math.round((totalHadir / totalAttendanceDays) * 100) : 100;
+  const averageAttendanceRate = totalAttendanceDays > 0 ? Math.round((totalHadir / totalAttendanceDays) * 100) : 0;
 
   // Prepare Stats for PDF download
   const classStats = filteredClasses.map(c => {
@@ -75,7 +75,7 @@ export function LaporanView() {
       totalAttDays += atts.length;
       totalAttPresent += atts.filter(a => a.status === 'Hadir').length;
     });
-    const attRate = totalAttDays > 0 ? Math.round((totalAttPresent / totalAttDays) * 100) : 100;
+    const attRate = totalAttDays > 0 ? Math.round((totalAttPresent / totalAttDays) * 100) : 0;
 
     let totalGradesSum = 0;
     classStudents.forEach(st => {

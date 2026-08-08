@@ -26,7 +26,7 @@ export function DashboardCharts() {
   const izinCount = relevantAttendance.filter(a => a.status === 'Izin').length;
   const alpaCount = relevantAttendance.filter(a => a.status === 'Alpa').length;
 
-  const attRate = totalAtt > 0 ? Math.round((hadirCount / totalAtt) * 100) : 100;
+  const attRate = totalAtt > 0 ? Math.round((hadirCount / totalAtt) * 100) : 0;
   const sakitRate = totalAtt > 0 ? Math.round((sakitCount / totalAtt) * 100) : 0;
   const izinRate = totalAtt > 0 ? Math.round((izinCount / totalAtt) * 100) : 0;
   const alpaRate = totalAtt > 0 ? Math.round((alpaCount / totalAtt) * 100) : 0;
