@@ -18,6 +18,7 @@ interface TeacherForm {
   role: string;
   subject: string;
   password: string;
+  classId?: string;
 }
 
 const defaultForm: TeacherForm = {
@@ -26,10 +27,11 @@ const defaultForm: TeacherForm = {
   role: 'Guru Mata Pelajaran',
   subject: 'Bahasa Inggris',
   password: 'sdnbobong',
+  classId: '1A',
 };
 
 export function GuruView() {
-  const { teachers, setTeachers, showToast, syncData } = useApp();
+  const { teachers, setTeachers, showToast, syncData, classes } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState<TeacherForm>(defaultForm);
   const [saving, setSaving] = useState(false);
@@ -51,11 +53,12 @@ export function GuruView() {
     }
     setSaving(true);
     try {
+      const isGuruKelas = form.role === 'Guru Kelas';
       const newTeacher = {
         nip: form.nip.trim(),
         name: form.name.trim(),
         role: form.role,
-        subject: form.subject.trim(),
+        subject: isGuruKelas ? `Guru Kelas ${form.classId || '1A'}` : form.subject.trim(),
         password: form.password.trim() || 'sdnbobong',
         avatar_url: '/assets/logo-sdn-bobong.png',
       };
@@ -198,6 +201,21 @@ export function GuruView() {
                 </SelectContent>
               </Select>
             </div>
+            {form.role === 'Guru Kelas' && (
+              <div className="space-y-1">
+                <Label htmlFor="teacherClass">Kelas Binaan (Wali Kelas) <span className="text-rose-500">*</span></Label>
+                <select
+                  id="teacherClass"
+                  value={form.classId || '1A'}
+                  onChange={e => setForm(f => ({ ...f, classId: e.target.value }))}
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20 h-10"
+                >
+                  {classes.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="space-y-1">
               <Label htmlFor="teacherSubject" className={form.role === 'Guru Kelas' ? 'text-slate-400' : ''}>Mata Pelajaran</Label>
               <Input
