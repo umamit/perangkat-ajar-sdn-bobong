@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function LoginView() {
-  const { setIsLoggedIn, setCurrentTeacher, showToast } = useApp();
+  const { setIsLoggedIn, setCurrentTeacher, showToast, syncData } = useApp();
   const [nip, setNip] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,6 +36,8 @@ export function LoginView() {
           localStorage.setItem('sdn_bobong_teacher', JSON.stringify(data.teacher));
         } catch (err) {}
         setIsLoggedIn(true);
+        // Memicu sinkronisasi data instan setelah session terdaftar agar halaman dashboard terisi bersih
+        syncData();
         showToast(`Selamat datang, ${data.teacher.name}!`, 'success');
       } else {
         setErrorMsg(data.error || 'NIP atau Password salah. Silakan periksa kembali!');
