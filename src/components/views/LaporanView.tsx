@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 import { downloadLaporanPDFWithPdfLib } from '@/modules/generatePDFLib';
 import { getTeacherAssignedClass } from '@/lib/utils';
+import { RekapJurnalSection } from './laporan/RekapJurnalSection';
 
 export function LaporanView() {
   const { students, classes, journals, attendance, currentTeacher, showToast, grades } = useApp();
@@ -290,6 +291,8 @@ export function LaporanView() {
           </Table>
         </CardContent>
       </Card>
+
+      {isKepsek && <RekapJurnalSection />}
     </div>
   );
 }

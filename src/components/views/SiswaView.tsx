@@ -13,6 +13,7 @@ import { ImportStudentModal } from './siswa/ImportStudentModal';
 import { StudentTable } from './siswa/StudentTable';
 import { StudentHeader } from './siswa/StudentHeader';
 import { parseStudentImport } from '@/modules/parseStudentImport';
+import { CounselingModal } from './siswa/CounselingModal';
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter, isLoading } = useApp();
@@ -27,39 +28,14 @@ export function SiswaView() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showCounselingModal, setShowCounselingModal] = useState(false);
+  const [selectedCounselingStudent, setSelectedCounselingStudent] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
   // Form states
-  const [addForm, setAddForm] = useState({
-    name: '',
-    classId: lockedClass || classes[0]?.id || '1A',
-    gender: 'L' as 'L' | 'P',
-    nis: '',
-    nisn: '',
-    nik: '',
-    birthInfo: '',
-    parentName: '',
-    religion: '',
-    parentJob: '',
-    address: '',
-    admissionYear: ''
-  });
-
-  const [editForm, setEditForm] = useState({
-    id: '',
-    name: '',
-    classId: '1A',
-    gender: 'L' as 'L' | 'P',
-    nis: '',
-    nisn: '',
-    nik: '',
-    birthInfo: '',
-    parentName: '',
-    religion: '',
-    parentJob: '',
-    address: '',
-    admissionYear: ''
-  });
+  const initialForm = { name: '', classId: '1A', gender: 'L' as 'L' | 'P', nis: '', nisn: '', nik: '', birthInfo: '', parentName: '', religion: '', parentJob: '', address: '', admissionYear: '' };
+  const [addForm, setAddForm] = useState({ ...initialForm, classId: lockedClass || classes[0]?.id || '1A' });
+  const [editForm, setEditForm] = useState({ ...initialForm, id: '' });
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 
@@ -235,6 +211,11 @@ export function SiswaView() {
     }
   };
 
+  const handleCounselingClick = (student: any) => {
+    setSelectedCounselingStudent(student);
+    setShowCounselingModal(true);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in text-slate-800">
       <StudentHeader
@@ -260,6 +241,7 @@ export function SiswaView() {
             isKepsek={isKepsek}
             handleEditClick={handleEditClick}
             handleDelete={handleDelete}
+            handleCounselingClick={handleCounselingClick}
             isLoading={isLoading}
           />
         </CardContent>
@@ -289,6 +271,11 @@ export function SiswaView() {
         classes={classes}
         selectedClass={selectedClass}
         onImport={handleDirectImport}
+      />
+      <CounselingModal
+        isOpen={showCounselingModal}
+        onOpenChange={setShowCounselingModal}
+        student={selectedCounselingStudent}
       />
     </div>
   );

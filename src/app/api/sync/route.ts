@@ -16,6 +16,7 @@ export async function GET(request: Request) {
     let assignmentQuery = supabase.from('assignments').select('*');
     let flashcardQuery = supabase.from('flashcards').select('*');
     let gradeQuery = supabase.from('grades').select('*');
+    let counselingQuery = supabase.from('counseling_logs').select('*');
 
     const isKepsekNip = nip === '199610272019032006';
 
@@ -25,6 +26,7 @@ export async function GET(request: Request) {
       assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
       flashcardQuery = flashcardQuery.eq('teacher_nip', nip);
       gradeQuery = gradeQuery.eq('teacher_nip', nip);
+      counselingQuery = counselingQuery.eq('teacher_nip', nip);
     } else if (!nip) {
       // If no NIP is active/logged in, return empty sets for security
       journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
@@ -32,6 +34,7 @@ export async function GET(request: Request) {
       assignmentQuery = assignmentQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       flashcardQuery = flashcardQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       gradeQuery = gradeQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      counselingQuery = counselingQuery.eq('id', '00000000-0000-0000-0000-000000000000');
     }
 
     const [
@@ -43,7 +46,8 @@ export async function GET(request: Request) {
       modulesRes,
       gradesRes,
       flashcardsRes,
-      assignmentsRes
+      assignmentsRes,
+      counselingRes
     ] = await Promise.allSettled([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
@@ -53,7 +57,8 @@ export async function GET(request: Request) {
       moduleQuery,
       gradeQuery,
       flashcardQuery,
-      assignmentQuery
+      assignmentQuery,
+      counselingQuery
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
@@ -78,7 +83,8 @@ export async function GET(request: Request) {
       modules: getValue(modulesRes),
       grades: getValue(gradesRes),
       flashcards: getValue(flashcardsRes),
-      assignments: getValue(assignmentsRes)
+      assignments: getValue(assignmentsRes),
+      counselingLogs: getValue(counselingRes)
     });
   } catch (err: any) {
     return NextResponse.json({
@@ -92,7 +98,8 @@ export async function GET(request: Request) {
       modules: [],
       grades: [],
       flashcards: [],
-      assignments: []
+      assignments: [],
+      counselingLogs: []
     }, { status: 500 });
   }
 }
@@ -112,6 +119,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: !(await supabase.from('students').upsert(payload)).error });
       case 'deleteStudent':
         return NextResponse.json({ success: !(await supabase.from('students').delete().eq('id', payload.id)).error });
+      case 'saveCounselingLog':
+        return NextResponse.json({ success: !(await supabase.from('counseling_logs').upsert(payload)).error });
+      case 'deleteCounselingLog':
+        return NextResponse.json({ success: !(await supabase.from('counseling_logs').delete().eq('id', payload.id)).error });
       case 'saveJournal':
         return NextResponse.json({ success: !(await supabase.from('journals').upsert(payload)).error });
       case 'deleteJournal':

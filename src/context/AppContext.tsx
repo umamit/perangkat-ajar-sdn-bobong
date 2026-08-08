@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog } from '@/types';
 import { useAppState, ToastMessage } from './useAppState';
 import { flushOfflineQueue } from '@/lib/offlineSync';
 
@@ -34,6 +34,8 @@ interface AppContextType {
   setAssignments: React.Dispatch<React.SetStateAction<TaskItem[]>>;
   grades: GradeRecord[];
   setGrades: React.Dispatch<React.SetStateAction<GradeRecord[]>>;
+  counselingLogs: CounselingLog[];
+  setCounselingLogs: React.Dispatch<React.SetStateAction<CounselingLog[]>>;
   toasts: ToastMessage[];
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   syncData: () => Promise<void>;

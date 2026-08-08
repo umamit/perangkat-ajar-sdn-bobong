@@ -141,6 +141,17 @@ export interface TaskItem {
   teacherNip?: string;
 }
 
+export interface CounselingLog {
+  id?: string;
+  studentId: string;
+  date: string;
+  category: 'Bimbingan' | 'Konseling' | 'Kunjungan Rumah' | 'Telepon Orang Tua';
+  notes: string;
+  followUp?: string;
+  teacherNip?: string;
+  created_at?: string;
+}
+
 export interface AppData {
   teacher: Teacher;
   teachers: Teacher[];
@@ -154,6 +165,7 @@ export interface AppData {
   tasks?: TaskItem[];
   attendance?: AttendanceRecord[];
   schedules?: TimetableSlot[];
+  counselingLogs?: CounselingLog[];
 }
 
 declare global {

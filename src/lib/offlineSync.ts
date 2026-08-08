@@ -7,10 +7,12 @@ import {
   deleteAssignmentFromSupabase,
   saveModuleToSupabase,
   saveGradeToSupabase,
-  saveAttendanceToSupabase
+  saveAttendanceToSupabase,
+  saveCounselingLogToSupabase,
+  deleteCounselingLogFromSupabase
 } from './supabase';
 
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog } from '@/types';
 
 export interface AppCacheData {
   teachers: Teacher[];
@@ -22,6 +24,7 @@ export interface AppCacheData {
   flashcards: FlashcardItem[];
   assignments: TaskItem[];
   grades: GradeRecord[];
+  counselingLogs?: CounselingLog[];
 }
 
 export interface PendingMutation {
@@ -113,6 +116,13 @@ export async function flushOfflineQueue(showToast?: (msg: string, type: 'success
         case 'saveAttendance':
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           success = await saveAttendanceToSupabase(item.payload as any);
+          break;
+        case 'saveCounselingLog':
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          success = await saveCounselingLogToSupabase(item.payload as any);
+          break;
+        case 'deleteCounselingLog':
+          success = await deleteCounselingLogFromSupabase(item.payload as string);
           break;
         default:
           success = true;

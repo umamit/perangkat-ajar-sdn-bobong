@@ -122,7 +122,46 @@ export async function deleteAttendanceFromSupabase(studentId: string, date: stri
   }
 }
 
-import { Student } from '@/types';
+import { Student, CounselingLog } from '@/types';
+
+export async function saveCounselingLogToSupabase(log: CounselingLog) {
+  try {
+    const payload = {
+      id: log.id,
+      student_id: log.studentId,
+      date: log.date,
+      category: log.category,
+      notes: log.notes,
+      follow_up: log.followUp || null,
+      teacher_nip: log.teacherNip || null
+    };
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveCounselingLog', payload })
+    });
+    const data = await res.json();
+    return !!data.success;
+  } catch (e) {
+    console.warn('[Save Counseling Log Error]', e);
+    return false;
+  }
+}
+
+export async function deleteCounselingLogFromSupabase(id: string) {
+  try {
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteCounselingLog', payload: { id } })
+    });
+    const data = await res.json();
+    return !!data.success;
+  } catch (e) {
+    console.warn('[Delete Counseling Log Error]', e);
+    return false;
+  }
+}
 
 export async function saveStudentToSupabase(student: Student) {
   try {

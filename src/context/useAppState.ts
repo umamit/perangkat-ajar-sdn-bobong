@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, defaultAdminTeacher } from './syncMappers';
@@ -93,6 +93,10 @@ export function useAppState() {
     const cache = loadAppCache();
     return cache?.grades || [];
   });
+  const [counselingLogs, setCounselingLogs] = useState<CounselingLog[]>(() => {
+    const cache = loadAppCache();
+    return cache?.counselingLogs || [];
+  });
   
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -147,6 +151,7 @@ export function useAppState() {
       { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
     ]);
     setGrades([]);
+    setCounselingLogs([]);
 
     setIsLoggedIn(false);
     showToast('Anda telah keluar dari aplikasi', 'info');
@@ -181,6 +186,7 @@ export function useAppState() {
         const mappedAssignments = mapAssignments(data.assignments || []);
         if (data.assignments) setAssignments(mappedAssignments);
         if (data.grades) setGrades(data.grades);
+        if (data.counselingLogs) setCounselingLogs(data.counselingLogs);
 
         saveAppCache({
           teachers: filtered,
@@ -191,7 +197,8 @@ export function useAppState() {
           modules: data.modules || [],
           flashcards: data.flashcards || [],
           assignments: mappedAssignments,
-          grades: data.grades || []
+          grades: data.grades || [],
+          counselingLogs: data.counselingLogs || []
         });
       }
     } catch (err) {
@@ -207,6 +214,7 @@ export function useAppState() {
         if (cache.flashcards) setFlashcards(cache.flashcards);
         if (cache.assignments) setAssignments(cache.assignments);
         if (cache.grades) setGrades(cache.grades);
+        if (cache.counselingLogs) setCounselingLogs(cache.counselingLogs);
       }
     } finally {
       setIsLoading(false);
@@ -244,6 +252,8 @@ export function useAppState() {
     setAssignments,
     grades,
     setGrades,
+    counselingLogs,
+    setCounselingLogs,
     toasts,
     isLoading,
     sidebarOpen,

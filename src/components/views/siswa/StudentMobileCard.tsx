@@ -13,6 +13,7 @@ interface StudentMobileCardProps {
   handleEditClick: (student: Student) => void;
   handleDelete: (id: string, name: string) => void;
   formatAdmissionYear: (dateStr: string) => string;
+  handleCounselingClick: (student: Student) => void;
 }
 
 export function StudentMobileCard({
@@ -23,7 +24,8 @@ export function StudentMobileCard({
   isKepsek,
   handleEditClick,
   handleDelete,
-  formatAdmissionYear
+  formatAdmissionYear,
+  handleCounselingClick
 }: StudentMobileCardProps) {
   const s = student;
   return (
@@ -97,26 +99,36 @@ export function StudentMobileCard({
             </div>
           </div>
 
-          {isKepsek && (
-            <div className="flex gap-2 pt-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleEditClick(s)}
-                className="flex-1 h-9 text-xs rounded-xl font-bold border-slate-200 text-slate-650 hover:bg-slate-50 gap-1.5"
-              >
-                <i className="ri-edit-line text-sm" /> Edit Siswa
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                className="flex-1 h-9 text-xs rounded-xl font-bold text-rose-600 hover:bg-rose-50 hover:text-rose-700 gap-1.5"
-              >
-                <i className="ri-delete-bin-line text-sm" /> Hapus
-              </Button>
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2 pt-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleCounselingClick(s)}
+              className="flex-1 min-w-[120px] h-9 text-xs rounded-xl font-bold border-cyan-200 text-primary hover:bg-cyan-50/50 gap-1.5 bg-white"
+            >
+              <i className="ri-heart-pulse-line text-sm" /> BK / Catatan Wali
+            </Button>
+            {isKepsek && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleEditClick(s)}
+                  className="flex-1 h-9 text-xs rounded-xl font-bold border-slate-200 text-slate-650 hover:bg-slate-50 gap-1.5"
+                >
+                  <i className="ri-edit-line text-sm" /> Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleDelete(s.id || s.nis || '', s.name)}
+                  className="h-9 text-xs rounded-xl font-bold text-rose-600 hover:bg-rose-50 hover:text-rose-700 gap-1.5"
+                >
+                  <i className="ri-delete-bin-line text-sm" /> Hapus
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

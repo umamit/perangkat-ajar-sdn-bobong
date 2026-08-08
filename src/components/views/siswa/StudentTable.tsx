@@ -18,6 +18,7 @@ interface StudentTableProps {
   isKepsek: boolean;
   handleEditClick: (student: Student) => void;
   handleDelete: (id: string, name: string) => void;
+  handleCounselingClick: (student: Student) => void;
   isLoading?: boolean;
 }
 
@@ -26,6 +27,7 @@ export function StudentTable({
   isKepsek,
   handleEditClick,
   handleDelete,
+  handleCounselingClick,
   isLoading
 }: StudentTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -107,36 +109,45 @@ export function StudentTable({
       }
     ];
 
-    if (isKepsek) {
-      cols.push({
-        id: 'actions',
-        header: 'Aksi',
-        cell: ({ row }: any) => {
-          const s = row.original;
-          return (
-            <div className="flex items-center justify-center gap-0.5">
-              <button
-                onClick={() => handleEditClick(s)}
-                className="p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                title="Edit Siswa"
-              >
-                <i className="ri-edit-line text-sm" />
-              </button>
-              <button
-                onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                className="p-1 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
-                title="Hapus Siswa"
-              >
-                <i className="ri-delete-bin-line text-sm" />
-              </button>
-            </div>
-          );
-        }
-      });
-    }
+    cols.push({
+      id: 'actions',
+      header: 'Aksi',
+      cell: ({ row }: any) => {
+        const s = row.original;
+        return (
+          <div className="flex items-center justify-center gap-1.5">
+            <button
+              onClick={() => handleCounselingClick(s)}
+              className="p-1 rounded-lg text-primary hover:bg-cyan-50 hover:text-primary-dark transition-colors"
+              title="Catatan BK / Wali"
+            >
+              <i className="ri-heart-pulse-line text-sm" />
+            </button>
+            {isKepsek && (
+              <>
+                <button
+                  onClick={() => handleEditClick(s)}
+                  className="p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  title="Edit Siswa"
+                >
+                  <i className="ri-edit-line text-sm" />
+                </button>
+                <button
+                  onClick={() => handleDelete(s.id || s.nis || '', s.name)}
+                  className="p-1 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                  title="Hapus Siswa"
+                >
+                  <i className="ri-delete-bin-line text-sm" />
+                </button>
+              </>
+            )}
+          </div>
+        );
+      }
+    });
 
     return cols;
-  }, [isKepsek, handleEditClick, handleDelete]);
+  }, [isKepsek, handleEditClick, handleDelete, handleCounselingClick]);
 
   // 2. Inisialisasi TanStack Table Hook menggunakan useTable
   const table = useTable({
@@ -178,6 +189,7 @@ export function StudentTable({
             handleEditClick={handleEditClick}
             handleDelete={handleDelete}
             formatAdmissionYear={formatAdmissionYear}
+            handleCounselingClick={handleCounselingClick}
           />
         ))}
         {filteredStudents.length === 0 && (
