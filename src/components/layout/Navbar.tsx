@@ -11,7 +11,8 @@ export function Navbar() {
     currentTeacher,
     logout,
     sidebarOpen,
-    setSidebarOpen
+    setSidebarOpen,
+    isLoading
   } = useApp();
 
   const titleMap: Record<string, string> = {
@@ -52,6 +53,14 @@ export function Navbar() {
       </div>
 
       <div className="top-actions flex items-center gap-3">
+        {/* Real-time Cloud Sync Indicator */}
+        {isLoading && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-50/50 border border-cyan-100/80 text-cyan-700 rounded-xl animate-pulse">
+            <i className="ri-refresh-line animate-spin text-sm" />
+            <span className="text-[10px] font-black uppercase tracking-wider hidden md:inline">Sinkronisasi Cloud...</span>
+          </div>
+        )}
+
         {/* User Account & Role Indicator Badge */}
         <div className="role-indicator flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
           <div className="flex items-center gap-1.5">

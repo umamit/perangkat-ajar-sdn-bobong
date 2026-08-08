@@ -12,10 +12,12 @@ export function LoginView() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    setIsSubmitting(true);
 
     const inputNip = nip.trim();
     const inputPass = password.trim();
@@ -37,13 +39,15 @@ export function LoginView() {
         } catch (err) {}
         setIsLoggedIn(true);
         // Memicu sinkronisasi data instan setelah session terdaftar agar halaman dashboard terisi bersih
-        syncData();
+        await syncData();
         showToast(`Selamat datang, ${data.teacher.name}!`, 'success');
       } else {
         setErrorMsg(data.error || 'NIP atau Password salah. Silakan periksa kembali!');
       }
     } catch (err) {
       setErrorMsg('Terjadi kesalahan koneksi. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -116,8 +120,22 @@ export function LoginView() {
               </div>
             </div>
  
-            <Button type="submit" className="w-full h-11 text-xs font-black shadow-md mt-4 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white rounded-xl transition-all duration-300 transform active:scale-95 gap-1.5">
-              <i className="ri-login-box-line text-base" /> Masuk Aplikasi
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-11 text-xs font-black shadow-md mt-4 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white rounded-xl transition-all duration-300 transform active:scale-95 gap-1.5"
+            >
+              {isSubmitting ? (
+                <>
+                  <i className="ri-loader-4-line animate-spin text-base" />
+                  Memproses Masuk...
+                </>
+              ) : (
+                <>
+                  <i className="ri-login-box-line text-base" />
+                  Masuk Aplikasi
+                </>
+              )}
             </Button>
           </form>
         </CardContent>
