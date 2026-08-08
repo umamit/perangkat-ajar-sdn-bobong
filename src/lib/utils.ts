@@ -27,6 +27,7 @@ export let appData: AppData = {
     { id: '3C', name: 'Kelas 3 - C', count: 16, room: 'Ruang 03C', phase: 'Fase B' },
     { id: '4A', name: 'Kelas 4 - A', count: 26, room: 'Ruang 07', phase: 'Fase B' },
     { id: '4B', name: 'Kelas 4 - B', count: 26, room: 'Ruang 08', phase: 'Fase B' },
+    { id: '4C', name: 'Kelas 4 - C', count: 14, room: 'Ruang 04C', phase: 'Fase B' },
     { id: '5A', name: 'Kelas 5 - A', count: 28, room: 'Ruang 09', phase: 'Fase C' },
     { id: '5B', name: 'Kelas 5 - B', count: 28, room: 'Ruang 10', phase: 'Fase C' },
     { id: '6A', name: 'Kelas 6 - A', count: 25, room: 'Ruang 11', phase: 'Fase C' },
