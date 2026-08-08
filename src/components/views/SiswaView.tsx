@@ -17,7 +17,7 @@ import { StudentTable } from './siswa/StudentTable';
 import { parseStudentImport } from '@/modules/parseStudentImport';
 
 export function SiswaView() {
-  const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter } = useApp();
+  const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter, isLoading } = useApp();
   const [search, setSearch] = useState('');
   
   const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
@@ -315,6 +315,7 @@ export function SiswaView() {
             isKepsek={isKepsek}
             handleEditClick={handleEditClick}
             handleDelete={handleDelete}
+            isLoading={isLoading}
           />
         </CardContent>
       </Card>

@@ -16,13 +16,15 @@ interface StudentTableProps {
   isKepsek: boolean;
   handleEditClick: (student: Student) => void;
   handleDelete: (id: string, name: string) => void;
+  isLoading?: boolean;
 }
 
 export function StudentTable({
   filteredStudents,
   isKepsek,
   handleEditClick,
-  handleDelete
+  handleDelete,
+  isLoading
 }: StudentTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -148,7 +150,22 @@ export function StudentTable({
     <div className="w-full">
       {/* Mobile Card-based Layout */}
       <div className="block md:hidden space-y-3">
-        {filteredStudents.map((s, idx) => {
+        {isLoading && filteredStudents.length === 0 ? (
+          Array.from({ length: 5 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col gap-3 animate-pulse"
+            >
+              <div className="flex gap-2.5 items-center">
+                <div className="w-6 h-6 rounded-full bg-slate-200" />
+                <div className="space-y-1.5 flex-1">
+                  <div className="h-4 bg-slate-200 rounded-lg w-2/3" />
+                  <div className="h-3 bg-slate-200 rounded-lg w-1/3" />
+                </div>
+              </div>
+            </div>
+          ))
+        ) : filteredStudents.map((s, idx) => {
           const isExpanded = expandedId === s.id;
           return (
             <div
@@ -273,7 +290,17 @@ export function StudentTable({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map(row => (
+            {isLoading && filteredStudents.length === 0 ? (
+              Array.from({ length: 5 }).map((_, rIdx) => (
+                <TableRow key={rIdx} className="animate-pulse border-slate-100">
+                  {columns.map((_, cIdx) => (
+                    <TableCell key={cIdx}>
+                      <div className="h-4 bg-slate-200 rounded w-4/5 mx-auto" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows.map(row => (
               <TableRow key={row.id} className="hover:bg-white/40 border-slate-100 transition-colors">
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id}>
