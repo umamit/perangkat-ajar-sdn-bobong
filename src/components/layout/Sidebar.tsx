@@ -22,6 +22,17 @@ const navItems = [
 export function Sidebar() {
   const { activeView, setActiveView, currentTeacher, sidebarOpen, setSidebarOpen } = useApp();
 
+  const isKepsek = !!(
+    currentTeacher?.role?.toLowerCase().includes('kepala sekolah') ||
+    currentTeacher?.role?.toLowerCase().includes('admin') ||
+    currentTeacher?.nip === '199610272019032006'
+  );
+
+  const visibleItems = navItems.filter(item => {
+    if (item.id === 'guru') return isKepsek;
+    return true;
+  });
+
   return (
     <>
       <aside className={`sidebar ${sidebarOpen ? 'active' : ''}`} id="sidebar">
@@ -39,7 +50,7 @@ export function Sidebar() {
           </div>
 
           <nav className="sidebar-nav flex-1 overflow-y-auto pr-1">
-            {navItems.map(item => (
+            {visibleItems.map(item => (
               <a
                 key={item.id}
                 className={`nav-item ${activeView === item.id ? 'active' : ''}`}

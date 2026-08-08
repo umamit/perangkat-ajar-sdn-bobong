@@ -22,7 +22,13 @@ import { GuruView } from '@/components/views/GuruView';
 import { PengaturanView } from '@/components/views/PengaturanView';
 
 function AppContent() {
-  const { isLoggedIn, isInitializing, activeView } = useApp();
+  const { isLoggedIn, isInitializing, activeView, currentTeacher } = useApp();
+
+  const isKepsek = !!(
+    currentTeacher?.role?.toLowerCase().includes('kepala sekolah') ||
+    currentTeacher?.role?.toLowerCase().includes('admin') ||
+    currentTeacher?.nip === '199610272019032006'
+  );
 
   if (isInitializing) {
     return (
@@ -56,7 +62,7 @@ function AppContent() {
           {activeView === 'materi' && <MateriFlashcardView />}
           {activeView === 'tugas' && <TugasView />}
           {activeView === 'laporan' && <LaporanView />}
-          {activeView === 'guru' && <GuruView />}
+          {activeView === 'guru' && isKepsek && <GuruView />}
           {activeView === 'pengaturan' && <PengaturanView />}
         </main>
       </div>
