@@ -25,6 +25,26 @@ export function AddStudentModal({
   setAddForm,
   onSubmit
 }: AddStudentModalProps) {
+  const [birthPlace, setBirthPlace] = React.useState('');
+  const [birthDate, setBirthDate] = React.useState('');
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      setBirthPlace('');
+      setBirthDate('');
+    }
+  }, [isOpen]);
+
+  const handlePlaceChange = (place: string) => {
+    setBirthPlace(place);
+    setAddForm((f: any) => ({ ...f, birthInfo: place && birthDate ? `${place}, ${birthDate}` : (place || birthDate || '') }));
+  };
+
+  const handleDateChange = (date: string) => {
+    setBirthDate(date);
+    setAddForm((f: any) => ({ ...f, birthInfo: birthPlace && date ? `${birthPlace}, ${date}` : (birthPlace || date || '') }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
@@ -129,15 +149,27 @@ export function AddStudentModal({
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="studentBirthInfo" className="font-bold text-slate-600">Tempat Tanggal Lahir</Label>
-              <Input
-                id="studentBirthInfo"
-                value={addForm.birthInfo}
-                onChange={e => setAddForm((f: any) => ({ ...f, birthInfo: e.target.value }))}
-                placeholder="Contoh: Bobong, 12 April 2014"
-                className="h-10 rounded-xl"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="studentBirthPlace" className="font-bold text-slate-600">Tempat Lahir</Label>
+                <Input
+                  id="studentBirthPlace"
+                  value={birthPlace}
+                  onChange={e => handlePlaceChange(e.target.value)}
+                  placeholder="Contoh: Bobong"
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="studentBirthDate" className="font-bold text-slate-600">Tanggal Lahir</Label>
+                <Input
+                  id="studentBirthDate"
+                  type="date"
+                  value={birthDate}
+                  onChange={e => handleDateChange(e.target.value)}
+                  className="h-10 rounded-xl text-slate-700"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

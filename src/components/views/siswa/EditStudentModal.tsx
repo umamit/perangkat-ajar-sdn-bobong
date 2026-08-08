@@ -16,6 +16,40 @@ interface EditStudentModalProps {
   onSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
+const parseBirthInfo = (birthInfo: string = '') => {
+  if (!birthInfo) return { place: '', date: '' };
+  const commaIndex = birthInfo.indexOf(',');
+  if (commaIndex === -1) {
+    return { place: birthInfo.trim(), date: '' };
+  }
+  const place = birthInfo.substring(0, commaIndex).trim();
+  const dateStr = birthInfo.substring(commaIndex + 1).trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return { place, date: dateStr };
+  }
+
+  try {
+    const parts = dateStr.split(' ');
+    if (parts.length === 3) {
+      const day = parts[0].padStart(2, '0');
+      const year = parts[2];
+      const months = [
+        'januari', 'februari', 'maret', 'april', 'mei', 'juni',
+        'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+      ];
+      const monthName = parts[1].toLowerCase();
+      const monthIdx = months.indexOf(monthName);
+      if (monthIdx !== -1) {
+        const month = String(monthIdx + 1).padStart(2, '0');
+        return { place, date: `${year}-${month}-${day}` };
+      }
+    }
+  } catch (e) {}
+
+  return { place, date: '' };
+};
+
 export function EditStudentModal({
   isOpen,
   onOpenChange,
@@ -25,6 +59,27 @@ export function EditStudentModal({
   setEditForm,
   onSubmit
 }: EditStudentModalProps) {
+  const [birthPlace, setBirthPlace] = React.useState('');
+  const [birthDate, setBirthDate] = React.useState('');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      const { place, date } = parseBirthInfo(editForm.birthInfo);
+      setBirthPlace(place);
+      setBirthDate(date);
+    }
+  }, [isOpen, editForm.birthInfo]);
+
+  const handlePlaceChange = (place: string) => {
+    setBirthPlace(place);
+    setEditForm((f: any) => ({ ...f, birthInfo: place && birthDate ? `${place}, ${birthDate}` : (place || birthDate || '') }));
+  };
+
+  const handleDateChange = (date: string) => {
+    setBirthDate(date);
+    setEditForm((f: any) => ({ ...f, birthInfo: birthPlace && date ? `${birthPlace}, ${date}` : (birthPlace || date || '') }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
@@ -129,15 +184,27 @@ export function EditStudentModal({
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="editStudentBirthInfo" className="font-bold text-slate-600">Tempat Tanggal Lahir</Label>
-              <Input
-                id="editStudentBirthInfo"
-                value={editForm.birthInfo}
-                onChange={e => setEditForm((f: any) => ({ ...f, birthInfo: e.target.value }))}
-                placeholder="Contoh: Bobong, 12 April 2014"
-                className="h-10 rounded-xl"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="editStudentBirthPlace" className="font-bold text-slate-600">Tempat Lahir</Label>
+                <Input
+                  id="editStudentBirthPlace"
+                  value={birthPlace}
+                  onChange={e => handlePlaceChange(e.target.value)}
+                  placeholder="Contoh: Bobong"
+                  className="h-10 rounded-xl"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="editStudentBirthDate" className="font-bold text-slate-600">Tanggal Lahir</Label>
+                <Input
+                  id="editStudentBirthDate"
+                  type="date"
+                  value={birthDate}
+                  onChange={e => handleDateChange(e.target.value)}
+                  className="h-10 rounded-xl text-slate-700"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
