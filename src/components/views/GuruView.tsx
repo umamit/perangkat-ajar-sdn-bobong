@@ -182,11 +182,20 @@ export function GuruView() {
               <Select
                 value={form.role}
                 onValueChange={(v: string) => setForm(f => {
-                  const isTematik = v === 'Guru Kelas';
+                  let sub = f.subject;
+                  if (v === 'Guru Kelas') {
+                    sub = 'Semua Mata Pelajaran (Tematik)';
+                  } else if (v === 'Guru Mata Pelajaran') {
+                    sub = 'Bahasa Inggris';
+                  } else if (v === 'Kepala Sekolah') {
+                    sub = 'Manajemen Sekolah';
+                  } else if (v === 'Tenaga Kependidikan') {
+                    sub = 'Administrasi Sekolah';
+                  }
                   return {
                     ...f,
                     role: v,
-                    subject: isTematik ? 'Semua Mata Pelajaran (Tematik)' : f.subject === 'Semua Mata Pelajaran (Tematik)' ? '' : f.subject
+                    subject: sub
                   };
                 })}
               >
@@ -216,17 +225,45 @@ export function GuruView() {
                 </select>
               </div>
             )}
-            <div className="space-y-1">
-              <Label htmlFor="teacherSubject" className={form.role === 'Guru Kelas' ? 'text-slate-400' : ''}>Mata Pelajaran</Label>
-              <Input
-                id="teacherSubject"
-                value={form.subject}
-                onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
-                placeholder="Contoh: Bahasa Inggris"
-                disabled={form.role === 'Guru Kelas'}
-                className="disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 cursor-not-allowed bg-white"
-              />
-            </div>
+            {form.role === 'Guru Kelas' && (
+              <div className="space-y-1">
+                <Label>Mata Pelajaran</Label>
+                <Input
+                  value="Semua Mata Pelajaran (Tematik)"
+                  disabled
+                  className="bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed text-xs font-semibold h-10"
+                />
+              </div>
+            )}
+
+            {form.role === 'Guru Mata Pelajaran' && (
+              <div className="space-y-1">
+                <Label htmlFor="teacherSubject">Mata Pelajaran <span className="text-rose-500">*</span></Label>
+                <select
+                  id="teacherSubject"
+                  value={form.subject || 'Bahasa Inggris'}
+                  onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-white font-semibold outline-none focus:ring-2 focus:ring-primary/20 h-10"
+                >
+                  <option value="Bahasa Inggris">Bahasa Inggris</option>
+                  <option value="PJOK">PJOK (Pendidikan Jasmani, Olahraga & Kesehatan)</option>
+                  <option value="PAI">PAI (Pendidikan Agama Islam)</option>
+                </select>
+              </div>
+            )}
+
+            {form.role !== 'Guru Kelas' && form.role !== 'Guru Mata Pelajaran' && (
+              <div className="space-y-1">
+                <Label htmlFor="teacherSubject">Fokus Tugas / Subjek</Label>
+                <Input
+                  id="teacherSubject"
+                  value={form.subject}
+                  onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
+                  placeholder="Contoh: Manajemen Sekolah"
+                  className="bg-white text-xs font-semibold h-10"
+                />
+              </div>
+            )}
             <div className="space-y-1">
               <Label htmlFor="teacherPassword">Password Login</Label>
               <Input
