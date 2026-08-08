@@ -38,7 +38,8 @@ export function PengaturanView() {
     e.preventDefault();
     setIsSaving(true);
 
-    if (oldPassword !== currentTeacher.password) {
+    const isPasswordChanging = password !== currentTeacher.password;
+    if (isPasswordChanging && oldPassword !== currentTeacher.password) {
       showToast('Kata sandi lama salah! Perubahan ditolak.', 'error');
       setIsSaving(false);
       return;
@@ -191,7 +192,7 @@ export function PengaturanView() {
                   onChange={e => setOldPassword(e.target.value)}
                   placeholder="Masukkan kata sandi lama Anda"
                   className="font-mono h-10 rounded-xl"
-                  required
+                  required={password !== currentTeacher.password}
                 />
               </div>
 
