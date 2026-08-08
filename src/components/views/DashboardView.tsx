@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getTeacherAssignedClass } from '@/lib/utils';
+import { DashboardCharts } from './dashboard/DashboardCharts';
 
 export function DashboardView() {
   const { students, classes, modules, journals, setActiveView, currentTeacher } = useApp();
@@ -150,6 +151,8 @@ export function DashboardView() {
         </div>
       </div>
  
+      {/* Ringkasan Statistik Grafis */}
+      <DashboardCharts />
       {/* Timetable & Recent Journals Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="glass-panel overflow-hidden border border-white/80 rounded-2xl bg-white/60 backdrop-blur-md shadow-sm">
