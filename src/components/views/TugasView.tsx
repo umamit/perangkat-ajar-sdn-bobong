@@ -63,11 +63,8 @@ export function TugasView() {
     }
   };
 
-  const itemList = assignments && assignments.length > 0 ? assignments : [
-    { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', status: 'Aktif' },
-    { id: '2', title: 'Tugas 2: Listening & Repeating', classId: '4A', dueDate: '2026-08-12', status: 'Aktif' }
-  ];
-
+  const itemList = assignments || [];
+ 
   return (
     <div className="space-y-6 animate-fade-in text-slate-800">
       <div className="flex justify-between items-center">
@@ -93,21 +90,30 @@ export function TugasView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {itemList.map((item, idx) => (
-                <TableRow key={item.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
-                  <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
-                  <TableCell className="font-bold text-slate-800 text-xs">{item.title}</TableCell>
-                  <TableCell>
-                    <Badge variant="default" className="font-black text-[10px] rounded-md px-2 py-0.5">{item.classId}</Badge>
-                  </TableCell>
-                  <TableCell className="text-xs font-semibold text-slate-600">{item.dueDate}</TableCell>
-                  <TableCell>
-                    <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5">
-                      {item.status}
-                    </Badge>
+              {itemList.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8 text-xs font-semibold text-slate-400">
+                    <i className="ri-inbox-2-line text-lg block mb-1 text-slate-300" />
+                    Belum ada penugasan terdaftar. Klik &apos;Buat Tugas Baru&apos; untuk menambahkan.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                itemList.map((item, idx) => (
+                  <TableRow key={item.id || idx} className="hover:bg-white/40 border-slate-100 transition-colors">
+                    <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
+                    <TableCell className="font-bold text-slate-800 text-xs">{item.title}</TableCell>
+                    <TableCell>
+                      <Badge variant="default" className="font-black text-[10px] rounded-md px-2 py-0.5">{item.classId}</Badge>
+                    </TableCell>
+                    <TableCell className="text-xs font-semibold text-slate-600">{item.dueDate}</TableCell>
+                    <TableCell>
+                      <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5">
+                        {item.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

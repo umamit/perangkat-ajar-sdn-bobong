@@ -30,20 +30,18 @@ export function MateriFlashcardView() {
     phase: 'Fase A'
   });
 
-  const cardList = flashcards && flashcards.length > 0 ? flashcards : [
-    { id: '1', title: 'Greetings & Introduction', word: 'Hello / Good Morning', meaning: 'Halo / Selamat Pagi', phase: 'Fase A' },
-    { id: '2', title: 'Classroom Objects', word: 'Pencil & Book', meaning: 'Pensil & Buku', phase: 'Fase A' },
-    { id: '3', title: 'Numbers 1-20', word: 'One, Two, Three...', meaning: 'Satu, Dua, Tiga...', phase: 'Fase B' }
-  ];
+  const cardList = flashcards || [];
 
   const currentCard = cardList[currentIndex] || cardList[0];
 
   const handleNext = () => {
+    if (cardList.length === 0) return;
     setFlipped(false);
     setCurrentIndex(prev => (prev + 1) % cardList.length);
   };
 
   const handlePrev = () => {
+    if (cardList.length === 0) return;
     setFlipped(false);
     setCurrentIndex(prev => (prev - 1 + cardList.length) % cardList.length);
   };
@@ -168,15 +166,24 @@ export function MateriFlashcardView() {
         </Button>
       </div>
  
-      <FlashcardPlayer
-        currentCard={currentCard}
-        currentIndex={currentIndex}
-        total={cardList.length}
-        flipped={flipped}
-        onFlip={() => setFlipped(!flipped)}
-        onPrev={handlePrev}
-        onNext={handleNext}
-      />
+      {cardList.length === 0 ? (
+        <div className="max-w-md mx-auto text-center p-8 bg-white/60 backdrop-blur-md rounded-[24px] border border-slate-100 shadow-sm space-y-3">
+          <i className="ri-inbox-2-line text-3xl text-slate-350 block mx-auto" />
+          <p className="text-xs font-semibold text-slate-500">
+            Belum ada kartu kosakata terdaftar. Klik &apos;Tambah Flashcard&apos; untuk membuat secara manual atau merumuskan otomatis dengan bantuan AI.
+          </p>
+        </div>
+      ) : (
+        <FlashcardPlayer
+          currentCard={currentCard}
+          currentIndex={currentIndex}
+          total={cardList.length}
+          flipped={flipped}
+          onFlip={() => setFlipped(!flipped)}
+          onPrev={handlePrev}
+          onNext={handleNext}
+        />
+      )}
  
       <FlashcardDialog
         open={showModal}
