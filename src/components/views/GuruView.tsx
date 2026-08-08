@@ -35,6 +35,30 @@ export function GuruView() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState<TeacherForm>(defaultForm);
   const [saving, setSaving] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>('');
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('File harus berupa gambar', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Ukuran file maksimal 5MB', 'error');
+        return;
+      }
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const resetForm = () => {
+    setForm(defaultForm);
+    setAvatarFile(null);
+    setAvatarPreview('');
+  };
 
   const handleDelete = async (nip: string, name: string) => {
     if (confirm(`Hapus data guru ${name}?`)) {
@@ -53,6 +77,24 @@ export function GuruView() {
     }
     setSaving(true);
     try {
+      let avatarUrl = '/assets/logo-sdn-bobong.png';
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append('file', avatarFile);
+        formData.append('nip', form.nip.trim());
+
+        const uploadRes = await fetch('/api/upload/avatar', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.success && uploadData.url) {
+          avatarUrl = uploadData.url;
+        } else {
+          showToast(uploadData.error || 'Gagal mengunggah foto avatar, menggunakan default', 'info');
+        }
+      }
+
       const isGuruKelas = form.role === 'Guru Kelas';
       const newTeacher = {
         nip: form.nip.trim(),
@@ -60,7 +102,7 @@ export function GuruView() {
         role: form.role,
         subject: isGuruKelas ? `Guru Kelas ${form.classId || '1A'}` : form.subject.trim(),
         password: form.password.trim() || 'sdnbobong',
-        avatar_url: '/assets/logo-sdn-bobong.png',
+        avatar_url: avatarUrl,
       };
       const ok = await saveTeacherToSupabase(newTeacher);
       if (ok) {
@@ -74,7 +116,7 @@ export function GuruView() {
         }]);
         showToast(`Data guru ${newTeacher.name} berhasil ditambahkan`, 'success');
         setShowModal(false);
-        setForm(defaultForm);
+        resetForm();
         await syncData();
       } else {
         showToast('Gagal menyimpan data guru ke Supabase Cloud', 'error');
@@ -157,6 +199,29 @@ export function GuruView() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4">
+            {/* Upload Avatar Area */}
+            <div className="flex flex-col items-center justify-center py-2 space-y-2">
+              <div className="relative group w-20 h-20 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm bg-slate-50 transition-all hover:border-primary/85">
+                <img
+                  src={avatarPreview || '/assets/logo-sdn-bobong.png'}
+                  alt="Avatar Preview"
+                  className="w-full h-full object-cover"
+                />
+                <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                  <i className="ri-camera-switch-line text-white text-lg" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">
+                {avatarFile ? avatarFile.name : 'Pilih Foto Profil Guru'}
+              </span>
+            </div>
+
             <div className="space-y-1">
               <Label htmlFor="teacherName">Nama Lengkap <span className="text-rose-500">*</span></Label>
               <Input
@@ -274,7 +339,7 @@ export function GuruView() {
               />
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm(defaultForm); }}>
+              <Button type="button" variant="outline" onClick={() => { setShowModal(false); resetForm(); }}>
                 Batal
               </Button>
               <Button type="submit" disabled={saving}>
