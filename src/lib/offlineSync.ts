@@ -12,7 +12,7 @@ import {
   deleteCounselingLogFromSupabase
 } from './supabase';
 
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule } from '@/types';
 
 export interface AppCacheData {
   teachers: Teacher[];
@@ -25,6 +25,7 @@ export interface AppCacheData {
   assignments: TaskItem[];
   grades: GradeRecord[];
   counselingLogs?: CounselingLog[];
+  schedules?: Schedule[];
 }
 
 export interface PendingMutation {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, defaultAdminTeacher } from './syncMappers';
@@ -97,6 +97,10 @@ export function useAppState() {
     const cache = loadAppCache();
     return cache?.counselingLogs || [];
   });
+  const [schedules, setSchedules] = useState<Schedule[]>(() => {
+    const cache = loadAppCache();
+    return cache?.schedules || [];
+  });
   
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -152,6 +156,7 @@ export function useAppState() {
     ]);
     setGrades([]);
     setCounselingLogs([]);
+    setSchedules([]);
 
     setIsLoggedIn(false);
     showToast('Anda telah keluar dari aplikasi', 'info');
@@ -187,6 +192,7 @@ export function useAppState() {
         if (data.assignments) setAssignments(mappedAssignments);
         if (data.grades) setGrades(data.grades);
         if (data.counselingLogs) setCounselingLogs(data.counselingLogs);
+        if (data.schedules) setSchedules(data.schedules);
 
         saveAppCache({
           teachers: filtered,
@@ -198,7 +204,8 @@ export function useAppState() {
           flashcards: data.flashcards || [],
           assignments: mappedAssignments,
           grades: data.grades || [],
-          counselingLogs: data.counselingLogs || []
+          counselingLogs: data.counselingLogs || [],
+          schedules: data.schedules || []
         });
       }
     } catch (err) {
@@ -215,6 +222,7 @@ export function useAppState() {
         if (cache.assignments) setAssignments(cache.assignments);
         if (cache.grades) setGrades(cache.grades);
         if (cache.counselingLogs) setCounselingLogs(cache.counselingLogs);
+        if (cache.schedules) setSchedules(cache.schedules);
       }
     } finally {
       setIsLoading(false);
@@ -254,6 +262,8 @@ export function useAppState() {
     setGrades,
     counselingLogs,
     setCounselingLogs,
+    schedules,
+    setSchedules,
     toasts,
     isLoading,
     sidebarOpen,

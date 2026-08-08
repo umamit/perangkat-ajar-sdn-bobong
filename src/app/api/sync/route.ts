@@ -17,6 +17,7 @@ export async function GET(request: Request) {
     let flashcardQuery = supabase.from('flashcards').select('*');
     let gradeQuery = supabase.from('grades').select('*');
     let counselingQuery = supabase.from('counseling_logs').select('*');
+    let scheduleQuery = supabase.from('schedules').select('*');
 
     const isKepsekNip = nip === '199610272019032006';
 
@@ -35,6 +36,7 @@ export async function GET(request: Request) {
       flashcardQuery = flashcardQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       gradeQuery = gradeQuery.eq('id', '00000000-0000-0000-0000-000000000000');
       counselingQuery = counselingQuery.eq('id', '00000000-0000-0000-0000-000000000000');
+      scheduleQuery = scheduleQuery.eq('id', '00000000-0000-0000-0000-000000000000');
     }
 
     const [
@@ -47,7 +49,8 @@ export async function GET(request: Request) {
       gradesRes,
       flashcardsRes,
       assignmentsRes,
-      counselingRes
+      counselingRes,
+      schedulesRes
     ] = await Promise.allSettled([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
@@ -58,7 +61,8 @@ export async function GET(request: Request) {
       gradeQuery,
       flashcardQuery,
       assignmentQuery,
-      counselingQuery
+      counselingQuery,
+      scheduleQuery
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
@@ -84,7 +88,8 @@ export async function GET(request: Request) {
       grades: getValue(gradesRes),
       flashcards: getValue(flashcardsRes),
       assignments: getValue(assignmentsRes),
-      counselingLogs: getValue(counselingRes)
+      counselingLogs: getValue(counselingRes),
+      schedules: getValue(schedulesRes)
     });
   } catch (err: any) {
     return NextResponse.json({
@@ -99,7 +104,8 @@ export async function GET(request: Request) {
       grades: [],
       flashcards: [],
       assignments: [],
-      counselingLogs: []
+      counselingLogs: [],
+      schedules: []
     }, { status: 500 });
   }
 }
@@ -155,6 +161,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: !(await supabase.from('attendance').upsert(payload, { onConflict: 'student_id,date' })).error });
       case 'deleteAttendance':
         return NextResponse.json({ success: !(await supabase.from('attendance').delete().eq('student_id', payload.studentId).eq('date', payload.date)).error });
+      case 'saveSchedule':
+        return NextResponse.json({ success: !(await supabase.from('schedules').upsert(payload)).error });
+      case 'deleteSchedule':
+        return NextResponse.json({ success: !(await supabase.from('schedules').delete().eq('id', payload.id)).error });
       default:
         return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
     }

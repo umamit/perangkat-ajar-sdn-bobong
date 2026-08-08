@@ -52,6 +52,21 @@ export interface TimetableSlot {
   topic: string;
 }
 
+export interface Schedule {
+  id?: string;
+  day: string;
+  timeStart: string;
+  timeEnd: string;
+  classId: string;
+  subject: string;
+  teacherNip?: string;
+  // Supabase snake_case aliases
+  class_id?: string;
+  time_start?: string;
+  time_end?: string;
+  teacher_nip?: string;
+}
+
 export interface AttendanceRecord {
   id?: string;
   studentId: string;
@@ -164,7 +179,7 @@ export interface AppData {
   quizQuestions: QuizQuestion[];
   tasks?: TaskItem[];
   attendance?: AttendanceRecord[];
-  schedules?: TimetableSlot[];
+  schedules?: Schedule[];
   counselingLogs?: CounselingLog[];
 }
 

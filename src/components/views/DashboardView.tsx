@@ -8,9 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { DashboardCharts } from './dashboard/DashboardCharts';
+import { KepsekStats } from './dashboard/KepsekStats';
 
 export function DashboardView() {
-  const { students, classes, modules, journals, setActiveView, currentTeacher } = useApp();
+  const { students, classes, modules, journals, setActiveView, currentTeacher, teachers, attendance } = useApp();
+
+  const isKepsek = !!(currentTeacher?.role?.toLowerCase().includes('kepala sekolah') || currentTeacher?.role?.toLowerCase().includes('admin') || currentTeacher?.nip === '199610272019032006');
 
   const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
   const totalStudents = lockedClass
@@ -237,6 +240,17 @@ export function DashboardView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Kepsek-only: School Statistics Panel */}
+      {isKepsek && (
+        <KepsekStats
+          teachers={teachers}
+          students={students}
+          classes={classes}
+          journals={journals}
+          attendance={attendance}
+        />
+      )}
     </div>
   );
 }
