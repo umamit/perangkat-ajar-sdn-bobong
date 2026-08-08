@@ -50,8 +50,10 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 * **PRINSIP 1 BERKAS 1 TANGGUNG JAWAB**: Menjaga arsitektur kode tetap bersih, ringan, dan mudah dipelihara (*maintainable*).
 
 ## 9. ATURAN PENGHEMATAN TOKEN AI (AI TOKEN ECONOMY RULE)
-* **RESPONS SINGKAT & PADAT**: AI WAJIB memberikan respons yang ringkas, langsung ke intinya (to-the-point), dan menghindari basa-basi atau penjelasan panjang lebar yang tidak perlu untuk menghemat penggunaan token AI.
-* **FOKUS PADA SOLUSI**: Hindari mengulang-ulang instruksi pengguna. Langsung berikan solusi, hasil eksekusi, atau laporan ringkas.
+* **RESPONS SINGKAT & PADAT**: AI WAJIB memberikan respons yang sangat ringkas, langsung ke intinya (to-the-point), dan menghindari basa-basi atau penjelasan teoretis pemrograman yang tidak diminta.
+* **DILARANG MENULIS KODE UTUH PADA CHAT**: Saat memperlihatkan perubahan kode, AI hanya boleh menampilkan potongan berkas (snippet / git diff) yang termodifikasi, dilarang menampilkan seluruh isi berkas di dalam chat.
+* **HINDARI RANGKUMAN BERULANG**: Dilarang merangkum checkpoint atau status pekerjaan sebelumnya di luar konteks pertanyaan user saat ini.
+* **FOKUS PADA SOLUSI**: Cukup berikan hasil eksekusi, status commit, atau konfirmasi penyelesaian secara padat.
 
 ## 10. ATURAN DESAIN MOBILE-FIRST & ANTI-OVERFLOW (MOBILE-FIRST & NO OVERFLOW RULE)
 * **UTAMAKAN TAMPILAN SMARTPHONE (MOBILE-FIRST)**: Mengingat mayoritas guru mengakses platform melalui ponsel cerdas, semua elemen visual wajib didesain ramah perangkat genggam secara default.
