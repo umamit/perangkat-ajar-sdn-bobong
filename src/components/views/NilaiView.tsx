@@ -15,12 +15,14 @@ import { exportNilaiExcel } from '@/modules/exportNilaiExcel';
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { RaporAiDescriptor } from './nilai/RaporAiDescriptor';
 import { GradeTable } from './nilai/GradeTable';
+import { GradeAnalysis } from './nilai/GradeAnalysis';
 
 export function NilaiView() {
   const { students, classes, currentTeacher, showToast, grades, setGrades } = useApp();
   
   const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
   const [selectedClassState, setSelectedClassState] = useState(lockedClass || 'ALL');
+  const [activeTab, setActiveTab] = useState<'input' | 'analisis'>('input');
   
   const selectedClass = lockedClass || selectedClassState;
   const setSelectedClass = lockedClass ? () => {} : setSelectedClassState;
@@ -193,6 +195,29 @@ export function NilaiView() {
         </div>
       </div>
 
+      <div className="flex border-b border-slate-200">
+        <button
+          onClick={() => setActiveTab('input')}
+          className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
+            activeTab === 'input'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-slate-400 hover:text-slate-650'
+          }`}
+        >
+          <i className="ri-edit-line" /> Tabel Input Nilai
+        </button>
+        <button
+          onClick={() => setActiveTab('analisis')}
+          className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
+            activeTab === 'analisis'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-slate-400 hover:text-slate-650'
+          }`}
+        >
+          <i className="ri-bar-chart-2-line" /> Analisis & Peta Nilai
+        </button>
+      </div>
+
       <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
         <CardHeader className="pb-4 border-b border-slate-100 bg-white/35">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
@@ -240,12 +265,22 @@ export function NilaiView() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <GradeTable
-            filteredStudents={filteredStudents}
-            getStudentScore={getStudentScore}
-            onGradeChange={handleGradeChange}
-            onOpenAiDialog={setAiDialog}
-          />
+          {activeTab === 'input' ? (
+            <GradeTable
+              filteredStudents={filteredStudents}
+              getStudentScore={getStudentScore}
+              onGradeChange={handleGradeChange}
+              onOpenAiDialog={setAiDialog}
+            />
+          ) : (
+            <div className="p-5">
+              <GradeAnalysis
+                filteredStudents={filteredStudents}
+                selectedSubject={selectedSubject}
+                grades={grades}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
