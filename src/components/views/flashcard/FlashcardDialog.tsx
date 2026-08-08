@@ -34,6 +34,11 @@ export function FlashcardDialog({
   open, onOpenChange, aiMode, setAiMode, aiTopic, setAiTopic,
   generating, onAiGenerate, form, setForm, saving, onSave, subjectLabel
 }: FlashcardDialogProps) {
+  const isEnglish = (subjectLabel || '').toLowerCase().includes('inggris');
+  const wordPlaceholder = isEnglish ? "Contoh: Classroom atau Lay-up Shoot" : "Contoh: Tawadhu, Fotosintesis, atau Dribbling";
+  const meaningPlaceholder = isEnglish ? "Contoh: Ruang Kelas atau Tembakan melayang" : "Contoh: Sikap rendah hati, Fotosintesis tanaman, dll.";
+  const topicPlaceholder = isEnglish ? "Contoh: Peralatan makan, Benda kelas, Tubuh manusia" : "Contoh: Rukun Islam, Sistem pencernaan, Gerak lokomotor";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md bg-white p-6 rounded-[24px] shadow-2xl border border-slate-100">
@@ -58,7 +63,7 @@ export function FlashcardDialog({
             <div className="space-y-1.5 text-xs text-left">
               <Label htmlFor="aiTopic" className="font-bold text-slate-650">Topik Kosakata / Tema</Label>
               <Input id="aiTopic" value={aiTopic} onChange={e => setAiTopic(e.target.value)}
-                placeholder="Contoh: Peralatan makan, Benda kelas, Tubuh manusia" required className="h-10 rounded-xl" />
+                placeholder={topicPlaceholder} required className="h-10 rounded-xl" />
             </div>
             <div className="space-y-1.5 text-xs text-left">
               <Label htmlFor="aiPhase" className="font-bold text-slate-655">Fase / Tingkat</Label>
@@ -82,12 +87,12 @@ export function FlashcardDialog({
             <div className="space-y-1.5 text-xs text-left">
               <Label htmlFor="flashcardWord" className="font-bold text-slate-650">Kata / Istilah ({subjectLabel || 'Mata Pelajaran'})</Label>
               <Input id="flashcardWord" value={form.word} onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
-                placeholder="Contoh: Classroom atau Lay-up Shoot" required className="h-10 rounded-xl" />
+                placeholder={wordPlaceholder} required className="h-10 rounded-xl" />
             </div>
             <div className="space-y-1.5 text-xs text-left">
               <Label htmlFor="flashcardTranslate" className="font-bold text-slate-650">Terjemahan / Arti</Label>
               <Input id="flashcardTranslate" value={form.translate} onChange={e => setForm(f => ({ ...f, translate: e.target.value }))}
-                placeholder="Contoh: Ruang Kelas atau Tembakan melayang" required className="h-10 rounded-xl" />
+                placeholder={meaningPlaceholder} required className="h-10 rounded-xl" />
             </div>
             <div className="space-y-1.5 text-xs text-left">
               <Label htmlFor="flashcardCategory" className="font-bold text-slate-650">Kategori Kosakata</Label>

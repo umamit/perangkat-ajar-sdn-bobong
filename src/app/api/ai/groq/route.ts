@@ -83,18 +83,18 @@ Aturan Penulisan:
 4. Gunakan nama siswa secara langsung dalam narasi (contoh: "Ananda [Nama Siswa] menunjukkan...").
 5. Hasil maksimal 3 kalimat padat, to-the-point, dan ramah.`;
     } else if (mode === 'generate_flashcards') {
-      userMessage = `Buatkan 5 kartu kosakata interaktif (flashcard) untuk materi sekolah dasar:
+      userMessage = `Buatkan 5 kartu kosakata/istilah interaktif (flashcard) untuk materi sekolah dasar:
 - Topik: ${prompt}
 - Fase/Tingkat: ${grade || 'Fase A'}
 - Mata Pelajaran: ${subject || 'Bahasa Inggris'}
 
 Keluaran WAJIB berupa JSON array mentah tanpa format Markdown lain (JANGAN ada bungkus \`\`\`json atau teks pembuka/penutup lainnya). Setiap objek kartu dalam array harus memiliki properti berikut secara presisi:
 {
-  "word": "Kata/istilah dalam Bahasa Inggris atau topik",
-  "meaning": "Arti kata/terjemahan dalam Bahasa Indonesia",
-  "category": "Kategori spesifik (misal: Benda Kelas, Tubuh manusia, dll.)",
+  "word": "Kata atau istilah utama sesuai topik dan mata pelajaran (kosakata bahasa Inggris untuk pelajaran Bahasa Inggris, atau istilah konsep/istilah olahraga/istilah agama untuk mapel lain)",
+  "meaning": "Definisi, arti, atau penjelasan singkat mengenai kata/istilah tersebut dalam Bahasa Indonesia",
+  "category": "Kategori spesifik (misal: Benda Kelas, Istilah Olahraga, Nilai Akhlak, dll.)",
   "phase": "${grade || 'Fase A'}",
-  "example": "Contoh kalimat penggunaan kata tersebut"
+  "example": "Contoh kalimat penggunaan kata/istilah tersebut sesuai konteks sekolah dasar"
 }`;
     } else if (mode === 'sempurnakan_jurnal') {
       userMessage = `Tolong sempurnakan draft catatan harian jurnal mengajar berikut agar menjadi laporan resmi, formal, dan profesional yang sesuai untuk administrasi sekolah:
