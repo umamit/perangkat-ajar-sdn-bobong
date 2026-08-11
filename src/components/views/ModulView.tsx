@@ -11,7 +11,7 @@ import { saveModuleToSupabase, uploadFileToSupabase } from '@/lib/supabase';
 import { downloadModulPDF } from '@/modules/generateModulPDF';
 
 export function ModulView() {
-  const { modules, currentTeacher, classes, showToast, setModules } = useApp();
+  const { modules, currentTeacher, classes, teachers, showToast, setModules } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -137,6 +137,12 @@ export function ModulView() {
               <CardTitle className="text-sm font-extrabold text-slate-850 mt-3 line-clamp-1">
                 {m.title}
               </CardTitle>
+              {currentTeacher?.nip === '199610272019032006' && (
+                <div className="text-[10px] font-black text-primary mt-1 flex items-center gap-1">
+                  <i className="ri-user-line text-[10px]" />
+                  <span>Oleh: {teachers.find(t => t.nip === (m.teacherNip || m.teacher_nip))?.name || `Guru (NIP: ${m.teacherNip || m.teacher_nip})`}</span>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="space-y-4 text-xs pt-4">
               <div className="space-y-1">
