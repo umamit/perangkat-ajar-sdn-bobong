@@ -123,7 +123,9 @@ export function ModulView() {
           <Card key={m.id || idx} className="rounded-2xl border border-white/85 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-primary/20">
             <CardHeader className="pb-2 bg-white/35 border-b border-slate-100/50">
               <div className="flex justify-between items-center">
-                <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">{m.grade || m.phase || 'Fase A'}</Badge>
+                <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">
+                  {classes.find(c => c.id === (m.classId || m.class_id))?.name || m.grade || m.phase || 'Fase A'}
+                </Badge>
                 <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
                   <i className="ri-file-text-line text-base" />
                 </div>

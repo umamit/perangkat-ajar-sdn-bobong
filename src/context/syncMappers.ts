@@ -1,4 +1,4 @@
-import { Teacher, Student, JournalEntry, ClassInfo, TaskItem, CounselingLog } from '@/types';
+import { Teacher, Student, JournalEntry, ClassInfo, TaskItem, CounselingLog, ModuleAjar } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 
 // Raw Supabase row shapes (snake_case dari DB)
@@ -137,5 +137,42 @@ export function mapCounselingLogs(raw: RawCounselingLog[]): CounselingLog[] {
     followUp: l.follow_up || '',
     teacherNip: l.teacher_nip || '',
     created_at: l.created_at
+  }));
+}
+
+export interface RawModule {
+  id: string;
+  grade?: string;
+  phase?: string;
+  title: string;
+  tp?: string;
+  atp?: string;
+  cp?: string;
+  duration?: string;
+  teacher_nip?: string;
+  file_url?: string;
+  class_id?: string;
+}
+
+export function mapModules(raw: RawModule[]): ModuleAjar[] {
+  return raw.map((m): ModuleAjar => ({
+    id: m.id,
+    grade: m.grade || '',
+    phase: m.phase || 'Fase A',
+    title: m.title,
+    tp: m.tp || '',
+    atp: m.atp || '',
+    cp: m.cp || '',
+    target: '',
+    duration: m.duration || '2 x 35 Menit',
+    materials: [],
+    steps: [],
+    assessment: '',
+    teacherNip: m.teacher_nip || '',
+    fileUrl: m.file_url || '',
+    classId: m.class_id || '',
+    file_url: m.file_url || '',
+    teacher_nip: m.teacher_nip || '',
+    class_id: m.class_id || ''
   }));
 }

@@ -3,7 +3,7 @@ import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar
 import { useQuery } from '@tanstack/react-query';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
-import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, defaultAdminTeacher } from './syncMappers';
+import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, mapModules, defaultAdminTeacher } from './syncMappers';
 
 export interface ToastMessage {
   id: string;
@@ -207,7 +207,8 @@ export function useAppState() {
         if (data.journals) setJournals(mappedJournals);
 
         if (data.attendance) setAttendance(data.attendance);
-        if (data.modules) setModules(data.modules);
+        const mappedModules = mapModules(data.modules || []);
+        if (data.modules) setModules(mappedModules);
         if (data.flashcards) setFlashcards(data.flashcards);
 
         const mappedAssignments = mapAssignments(data.assignments || []);
@@ -225,7 +226,7 @@ export function useAppState() {
           classes: mappedClasses,
           journals: mappedJournals,
           attendance: data.attendance || [],
-          modules: data.modules || [],
+          modules: mappedModules,
           flashcards: data.flashcards || [],
           assignments: mappedAssignments,
           grades: data.grades || [],

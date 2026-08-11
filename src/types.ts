@@ -118,6 +118,7 @@ export interface ModuleAjar {
   assessment: string;
   teacherNip?: string;
   fileUrl?: string;
+  classId?: string;
   // Supabase snake_case aliases
   file_url?: string;
   teacher_nip?: string;
