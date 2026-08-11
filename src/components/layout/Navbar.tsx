@@ -28,6 +28,7 @@ export function Navbar() {
     kelas: 'Data Kelas',
     absensi: 'Absensi',
     counseling: 'Bimbingan Konseling',
+    jadwal: 'Jadwal Pelajaran',
     nilai: 'Daftar Nilai',
     jurnal: 'Jurnal Mengajar',
     modul: 'Modul Ajar',
