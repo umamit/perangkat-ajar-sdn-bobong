@@ -386,7 +386,7 @@ export async function saveAttendanceToSupabase(records: any[]) {
   }
 }
 
-export async function uploadFileToSupabase(bucketName: string, path: string, file: File): Promise<string | null> {
+export async function uploadFileToSupabase(bucketName: string, path: string, file: File): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const formData = new FormData();
     formData.append('file', file);
@@ -396,15 +396,29 @@ export async function uploadFileToSupabase(bucketName: string, path: string, fil
       method: 'POST',
       body: formData
     });
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      const statusText = res.statusText || 'Server Error';
+      console.warn(`[Storage Server Error in ${bucketName}]`, res.status, statusText, text);
+      
+      let errorMsg = `Server error ${res.status}: ${statusText}`;
+      if (res.status === 413) {
+        errorMsg = 'Ukuran berkas terlalu besar (melebihi batas limit server/proxy 15MB)';
+      }
+      return { success: false, error: errorMsg };
+    }
+
     const data = await res.json();
     if (data.success && data.url) {
-      return data.url;
+      return { success: true, url: data.url };
     }
     console.warn(`[Storage Upload Error in ${bucketName}]`, data.error);
-    return null;
-  } catch (e) {
+    return { success: false, error: data.error || 'Gagal mengunggah berkas ke cloud storage' };
+  } catch (e: any) {
     console.warn(`[Storage Exception in ${bucketName}]`, e);
-    return null;
+    return { success: false, error: e.message || 'Terjadi masalah koneksi saat mengunggah' };
   }
 }
 

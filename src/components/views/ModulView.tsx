@@ -63,9 +63,13 @@ export function ModulView() {
         showToast('Mengunggah dokumen modul...', 'info');
         const cleanFileName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const path = `${currentTeacher?.nip || 'unknown'}_mod_${Date.now()}_${cleanFileName}`;
-        fileUrl = await uploadFileToSupabase('documents', path, selectedFile);
-        if (!fileUrl) {
-          showToast('Gagal mengunggah berkas asli modul', 'error');
+        const uploadResult = await uploadFileToSupabase('documents', path, selectedFile);
+        if (uploadResult.success) {
+          fileUrl = uploadResult.url || null;
+        } else {
+          showToast(`Gagal mengunggah berkas asli modul: ${uploadResult.error}`, 'error');
+          setSaving(false);
+          return;
         }
       }
 
