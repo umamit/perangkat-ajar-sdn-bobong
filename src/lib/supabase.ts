@@ -388,16 +388,20 @@ export async function saveAttendanceToSupabase(records: any[]) {
 
 export async function uploadFileToSupabase(bucketName: string, path: string, file: File): Promise<string | null> {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.storage.from(bucketName).upload(path, file, {
-      upsert: true
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('path', path);
+
+    const res = await fetch('/api/upload/document', {
+      method: 'POST',
+      body: formData
     });
-    if (error) {
-      console.warn(`[Storage Upload Error in ${bucketName}]`, error);
-      return null;
+    const data = await res.json();
+    if (data.success && data.url) {
+      return data.url;
     }
-    const { data: publicData } = supabase.storage.from(bucketName).getPublicUrl(path);
-    return publicData?.publicUrl || null;
+    console.warn(`[Storage Upload Error in ${bucketName}]`, data.error);
+    return null;
   } catch (e) {
     console.warn(`[Storage Exception in ${bucketName}]`, e);
     return null;
