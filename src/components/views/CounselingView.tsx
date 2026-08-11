@@ -22,6 +22,8 @@ export function CounselingView() {
 
   // Form states
   const [selectedStudentId, setSelectedStudentId] = useState('');
+  const [studentSearchText, setStudentSearchText] = useState('');
+  const [showStudentDropdown, setShowStudentDropdown] = useState(false);
   const [category, setCategory] = useState<'Bimbingan' | 'Konseling' | 'Kunjungan Rumah' | 'Telepon Orang Tua'>('Bimbingan');
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
@@ -56,6 +58,7 @@ export function CounselingView() {
     setNotes('');
     setFollowUp('');
     setSelectedStudentId('');
+    setStudentSearchText('');
     showToast('Catatan bimbingan berhasil disimpan.', 'success');
 
     const success = await saveCounselingLogToSupabase(newLog);
@@ -210,19 +213,64 @@ export function CounselingView() {
               <i className="ri-add-circle-line text-primary" /> Input Pembinaan Baru
             </h4>
 
-            <div className="space-y-1">
-              <Label className="font-bold text-slate-600">Pilih Siswa</Label>
-              <select
-                value={selectedStudentId}
-                onChange={e => setSelectedStudentId(e.target.value)}
-                className="w-full h-9 rounded-xl border border-slate-200 bg-white px-3 font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-                required
-              >
-                <option value="">-- Pilih Siswa --</option>
-                {students
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map(s => <option key={s.id} value={s.id}>{s.name} ({s.classId})</option>)}
-              </select>
+            <div className="space-y-1 text-left relative">
+              <Label className="font-bold text-slate-650">Pilih Siswa</Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Ketik nama / kelas..."
+                  value={studentSearchText}
+                  onChange={e => {
+                    setStudentSearchText(e.target.value);
+                    setShowStudentDropdown(true);
+                  }}
+                  onFocus={() => setShowStudentDropdown(true)}
+                  className="h-9 rounded-xl pr-8 text-xs font-semibold"
+                  required={!selectedStudentId}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowStudentDropdown(!showStudentDropdown)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                >
+                  <i className="ri-arrow-down-s-line" />
+                </button>
+              </div>
+
+              {showStudentDropdown && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setShowStudentDropdown(false)} />
+                  <div className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg z-20 p-1 space-y-0.5">
+                    {students
+                      .filter(s => 
+                        s.name.toLowerCase().includes(studentSearchText.toLowerCase()) || 
+                        (s.classId || '').toLowerCase().includes(studentSearchText.toLowerCase())
+                      )
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .slice(0, 15)
+                      .map(s => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedStudentId(s.id);
+                            setStudentSearchText(`${s.name} (${s.classId})`);
+                            setShowStudentDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-50 transition-colors ${selectedStudentId === s.id ? 'bg-primary/5 text-primary' : 'text-slate-700'}`}
+                        >
+                          {s.name} ({s.classId})
+                        </button>
+                      ))}
+                    {students.filter(s => 
+                      s.name.toLowerCase().includes(studentSearchText.toLowerCase()) || 
+                      (s.classId || '').toLowerCase().includes(studentSearchText.toLowerCase())
+                    ).length === 0 && (
+                      <p className="text-center py-3 text-slate-400 font-semibold">Siswa tidak ditemukan</p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="space-y-1">
