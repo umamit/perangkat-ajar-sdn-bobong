@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     if (teacher) {
       const dbPass = teacher.password || 'sdnbobong';
-      if (inputPass === dbPass || inputPass === 'sdnbobong') {
+      if (inputPass === dbPass) {
         matched = true;
         teacherData = {
           nip: teacher.nip,
