@@ -74,7 +74,7 @@ export function ModulView() {
       }
 
       const newModul: any = {
-        id: `MOD-${Date.now()}`,
+        id: crypto.randomUUID(),
         title: form.title.trim(),
         grade: grade,
         classId: form.classId,

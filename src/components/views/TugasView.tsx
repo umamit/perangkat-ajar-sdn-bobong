@@ -31,7 +31,7 @@ export function TugasView() {
     setSaving(true);
     try {
       const newAssignment = {
-        id: `TSK-${Date.now()}`,
+        id: crypto.randomUUID(),
         title: form.title.trim(),
         classId: form.classId,
         type: form.type,

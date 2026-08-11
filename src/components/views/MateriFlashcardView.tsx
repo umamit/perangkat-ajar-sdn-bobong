@@ -55,7 +55,7 @@ export function MateriFlashcardView() {
     setSaving(true);
     try {
       const newCard = {
-        id: Date.now(),
+        id: crypto.randomUUID(),
         word: form.word.trim(),
         translate: form.translate.trim(),
         meaning: form.translate.trim(),
@@ -116,7 +116,7 @@ export function MateriFlashcardView() {
           for (let i = 0; i < cards.length; i++) {
             const card = cards[i];
             const newCard = {
-              id: Date.now() + i,
+              id: crypto.randomUUID(),
               word: card.word || 'Word',
               translate: card.meaning || card.translate || 'Terjemahan',
               meaning: card.meaning || card.translate || 'Terjemahan',

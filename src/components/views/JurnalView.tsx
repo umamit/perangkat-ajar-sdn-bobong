@@ -84,7 +84,7 @@ export function JurnalView() {
     setSaving(true);
     try {
       const newJ = {
-        id: `J-${Date.now()}`,
+        id: crypto.randomUUID(),
         date: form.date,
         time: form.time,
         classId: form.classId,

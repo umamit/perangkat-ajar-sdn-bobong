@@ -13,7 +13,7 @@ export async function saveModul(e: Event): Promise<void> {
   const cp = (document.getElementById('modulCP') as HTMLTextAreaElement).value.trim();
 
   const newModul: any = {
-    id: `MOD-0${(appData.modules || []).length + 1}`,
+    id: crypto.randomUUID(),
     title,
     grade,
     phase: 'Fase A',
