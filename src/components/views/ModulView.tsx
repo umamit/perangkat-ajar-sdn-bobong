@@ -61,7 +61,8 @@ export function ModulView() {
       let fileUrl = null;
       if (selectedFile) {
         showToast('Mengunggah dokumen modul...', 'info');
-        const path = `${currentTeacher?.nip || 'unknown'}_mod_${Date.now()}_${selectedFile.name}`;
+        const cleanFileName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const path = `${currentTeacher?.nip || 'unknown'}_mod_${Date.now()}_${cleanFileName}`;
         fileUrl = await uploadFileToSupabase('documents', path, selectedFile);
         if (!fileUrl) {
           showToast('Gagal mengunggah berkas asli modul', 'error');
