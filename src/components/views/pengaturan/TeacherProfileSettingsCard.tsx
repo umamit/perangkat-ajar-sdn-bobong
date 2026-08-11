@@ -134,7 +134,8 @@ export function TeacherProfileSettingsCard() {
                   value={nip}
                   onChange={e => setNip(e.target.value)}
                   required
-                  className="h-9 rounded-xl"
+                  disabled={currentTeacher?.nip !== '199610272019032006'}
+                  className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
                 />
               </div>
             </div>
@@ -147,7 +148,8 @@ export function TeacherProfileSettingsCard() {
                   value={role}
                   onChange={e => setRole(e.target.value)}
                   required
-                  className="h-9 rounded-xl"
+                  disabled={currentTeacher?.nip !== '199610272019032006'}
+                  className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
                 />
               </div>
 
