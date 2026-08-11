@@ -165,7 +165,7 @@ export async function POST(request: Request) {
         if (!isKepsek && payload.nip !== cookieNip) {
           return NextResponse.json({ success: false, error: 'Unauthorized NIP mutation' }, { status: 403 });
         }
-        return NextResponse.json({ success: !(await supabase.from('teachers').upsert(payload)).error });
+        return NextResponse.json({ success: !(await supabase.from('teachers').upsert(payload, { onConflict: 'nip' })).error });
       case 'deleteTeacher':
         if (!isKepsek) {
           return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah yang dapat menghapus guru.' }, { status: 403 });
