@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
-import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, defaultAdminTeacher } from './syncMappers';
+import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, defaultAdminTeacher } from './syncMappers';
 
 export interface ToastMessage {
   id: string;
@@ -207,7 +207,9 @@ export function useAppState() {
         const mappedAssignments = mapAssignments(data.assignments || []);
         if (data.assignments) setAssignments(mappedAssignments);
         if (data.grades) setGrades(data.grades);
-        if (data.counselingLogs) setCounselingLogs(data.counselingLogs);
+        
+        const mappedCounseling = mapCounselingLogs(data.counselingLogs || []);
+        if (data.counselingLogs) setCounselingLogs(mappedCounseling);
         if (data.schedules) setSchedules(data.schedules);
         if (data.schoolSettings) setSchoolSettings(data.schoolSettings);
 
@@ -221,7 +223,7 @@ export function useAppState() {
           flashcards: data.flashcards || [],
           assignments: mappedAssignments,
           grades: data.grades || [],
-          counselingLogs: data.counselingLogs || [],
+          counselingLogs: mappedCounseling,
           schedules: data.schedules || [],
           schoolSettings: data.schoolSettings
         });

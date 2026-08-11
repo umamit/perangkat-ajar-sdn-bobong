@@ -1,4 +1,4 @@
-import { Teacher, Student, JournalEntry, ClassInfo, TaskItem } from '@/types';
+import { Teacher, Student, JournalEntry, ClassInfo, TaskItem, CounselingLog } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 
 // Raw Supabase row shapes (snake_case dari DB)
@@ -113,5 +113,29 @@ export function mapAssignments(raw: RawAssignment[]): TaskItem[] {
     type: 'Tugas',
     status: a.status || 'Aktif',
     description: ''
+  }));
+}
+
+interface RawCounselingLog {
+  id: string;
+  student_id: string;
+  date: string;
+  category: 'Bimbingan' | 'Konseling' | 'Kunjungan Rumah' | 'Telepon Orang Tua';
+  notes: string;
+  follow_up?: string;
+  teacher_nip?: string;
+  created_at?: string;
+}
+
+export function mapCounselingLogs(raw: RawCounselingLog[]): CounselingLog[] {
+  return raw.map((l): CounselingLog => ({
+    id: l.id,
+    studentId: l.student_id,
+    date: l.date,
+    category: l.category,
+    notes: l.notes,
+    followUp: l.follow_up || '',
+    teacherNip: l.teacher_nip || '',
+    created_at: l.created_at
   }));
 }
