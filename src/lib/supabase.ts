@@ -405,9 +405,24 @@ export async function uploadFileToSupabase(bucketName: string, path: string, fil
 }
 
 export async function uploadAvatarToSupabaseStorage(file: File, nip?: string): Promise<string> {
-  const fileName = `${nip || 'unknown'}_${Date.now()}.png`;
-  const url = await uploadFileToSupabase('avatars', fileName, file);
-  return url || '/assets/logo-sdn-bobong.png';
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (nip) formData.append('nip', nip);
+
+    const res = await fetch('/api/upload/avatar', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success && data.url) {
+      return data.url;
+    }
+    throw new Error(data.error || 'Upload failed');
+  } catch (e) {
+    console.warn('[Upload Avatar Client Error]', e);
+    throw e;
+  }
 }
 
 export async function saveSchoolSettingsToSupabase(settings: any) {
