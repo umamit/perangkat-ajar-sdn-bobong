@@ -8,19 +8,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { saveTeacherToSupabase, uploadAvatarToSupabaseStorage } from '@/lib/supabase';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
+const profileSchema = z.object({
+  name: z.string().min(3, 'Nama minimal 3 karakter'),
+  nip: z.string().min(3, 'NIP minimal 3 karakter'),
+  role: z.string().min(3, 'Role/Jabatan minimal 3 karakter'),
+  school: z.string().min(3, 'Nama sekolah minimal 3 karakter'),
+  oldPassword: z.string().optional(),
+  password: z.string().min(6, 'Kata sandi minimal 6 karakter')
+});
+
+type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export function TeacherProfileSettingsCard() {
   const { currentTeacher, setCurrentTeacher, showToast, syncData } = useApp();
   
-  // Profile settings states
-  const [name, setName] = useState(currentTeacher.name || 'Husnita Usman, M.Pd');
-  const [nip, setNip] = useState(currentTeacher.nip || '199610272019032006');
-  const [role, setRole] = useState(currentTeacher.role || 'Kepala Sekolah / Executive Admin');
-  const [school, setSchool] = useState(currentTeacher.school || 'SD Negeri Bobong');
-  const [password, setPassword] = useState(currentTeacher.password || '');
   const [showPassword, setShowPassword] = useState(false);
   const [avatar, setAvatar] = useState(currentTeacher.avatar || '/assets/logo-sdn-bobong.png');
-  const [oldPassword, setOldPassword] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   // Avatar Modal states
@@ -29,12 +36,23 @@ export function TeacherProfileSettingsCard() {
   const [previewUrl, setPreviewUrl] = useState<string>(avatar);
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: currentTeacher.name || '',
+      nip: currentTeacher.nip || '',
+      role: currentTeacher.role || '',
+      school: currentTeacher.school || '',
+      oldPassword: '',
+      password: currentTeacher.password || ''
+    }
+  });
+
+  const onSubmitForm = async (data: ProfileFormValues) => {
     setIsSaving(true);
 
-    const isPasswordChanging = password !== currentTeacher.password;
-    if (isPasswordChanging && oldPassword !== currentTeacher.password) {
+    const isPasswordChanging = data.password !== currentTeacher.password;
+    if (isPasswordChanging && data.oldPassword !== currentTeacher.password) {
       showToast('Kata sandi lama salah! Perubahan ditolak.', 'error');
       setIsSaving(false);
       return;
@@ -42,11 +60,11 @@ export function TeacherProfileSettingsCard() {
 
     const updated = {
       ...currentTeacher,
-      name,
-      nip,
-      role,
-      school,
-      password,
+      name: data.name,
+      nip: data.nip,
+      role: data.role,
+      school: data.school,
+      password: data.password,
       avatar
     };
 
@@ -57,17 +75,17 @@ export function TeacherProfileSettingsCard() {
     } catch (err) {}
 
     const supabasePayload = {
-      nip: nip.trim(),
-      name: name.trim(),
-      role: role.trim(),
+      nip: data.nip.trim(),
+      name: data.name.trim(),
+      role: data.role.trim(),
       subject: currentTeacher.subject || 'Bahasa Inggris & Manajemen Sekolah',
-      password: password.trim(),
+      password: data.password.trim(),
       avatar_url: avatar
     };
 
     const success = await saveTeacherToSupabase(supabasePayload);
     await syncData();
-    setOldPassword('');
+    reset({ ...data, oldPassword: '' });
     setIsSaving(false);
 
     if (success) {
@@ -87,7 +105,7 @@ export function TeacherProfileSettingsCard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-5 text-xs">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
             {/* Interactive Profile Photo Section */}
             <div className="flex items-center gap-4 pb-4 border-b border-slate-100/50">
               <div
@@ -120,23 +138,21 @@ export function TeacherProfileSettingsCard() {
                 <label className="font-bold text-slate-650">Nama Lengkap Guru / Admin:</label>
                 <Input
                   type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  required
+                  {...register('name')}
                   className="h-9 rounded-xl"
                 />
+                {errors.name && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.name.message}</p>}
               </div>
 
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-650">NIP Login:</label>
                 <Input
                   type="text"
-                  value={nip}
-                  onChange={e => setNip(e.target.value)}
-                  required
+                  {...register('nip')}
                   disabled={currentTeacher?.nip !== '199610272019032006'}
                   className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
                 />
+                {errors.nip && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.nip.message}</p>}
               </div>
             </div>
 
@@ -145,23 +161,21 @@ export function TeacherProfileSettingsCard() {
                 <label className="font-bold text-slate-650">Role / Jabatan:</label>
                 <Input
                   type="text"
-                  value={role}
-                  onChange={e => setRole(e.target.value)}
-                  required
+                  {...register('role')}
                   disabled={currentTeacher?.nip !== '199610272019032006'}
                   className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
                 />
+                {errors.role && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.role.message}</p>}
               </div>
 
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-650">Nama Sekolah:</label>
                 <Input
                   type="text"
-                  value={school}
-                  onChange={e => setSchool(e.target.value)}
-                  required
+                  {...register('school')}
                   className="h-9 rounded-xl"
                 />
+                {errors.school && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.school.message}</p>}
               </div>
             </div>
 
@@ -173,12 +187,11 @@ export function TeacherProfileSettingsCard() {
                 </label>
                 <Input
                   type="password"
-                  value={oldPassword}
-                  onChange={e => setOldPassword(e.target.value)}
+                  {...register('oldPassword')}
                   placeholder="Masukkan sandi lama"
                   className="font-mono h-9 rounded-xl"
-                  required={password !== currentTeacher.password}
                 />
+                {errors.oldPassword && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.oldPassword.message}</p>}
               </div>
 
               <div className="space-y-1 text-left font-semibold">
@@ -189,11 +202,9 @@ export function TeacherProfileSettingsCard() {
                 <div className="relative">
                   <Input
                     type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    {...register('password')}
                     placeholder="Sandi baru"
                     className="pr-10 font-mono h-9 rounded-xl"
-                    required
                   />
                   <button
                     type="button"
@@ -203,6 +214,7 @@ export function TeacherProfileSettingsCard() {
                     <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
                   </button>
                 </div>
+                {errors.password && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.password.message}</p>}
               </div>
             </div>
 
@@ -276,7 +288,7 @@ export function TeacherProfileSettingsCard() {
                   setIsUploading(true);
                   showToast('Mengunggah foto profil ke Supabase...', 'info');
                   try {
-                    const url = await uploadAvatarToSupabaseStorage(selectedFile, nip);
+                    const url = await uploadAvatarToSupabaseStorage(selectedFile, currentTeacher.nip);
                     setAvatar(url);
                     
                     const updated = { ...currentTeacher, avatar: url };

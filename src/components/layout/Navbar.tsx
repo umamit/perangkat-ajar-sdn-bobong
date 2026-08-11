@@ -5,6 +5,21 @@ import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 export function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const {
@@ -21,6 +36,59 @@ export function Navbar() {
     journals,
     assignments
   } = useApp();
+
+  const handleSubscribePush = async () => {
+    if (typeof window === 'undefined') return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('Browser Anda tidak mendukung push notification.');
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Izin notifikasi ditolak oleh pengguna.');
+        return;
+      }
+
+      const registration = await navigator.serviceWorker.ready;
+      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (!vapidKey) {
+        alert('Public VAPID key tidak terkonfigurasi di env.');
+        return;
+      }
+      
+      const convertedVapidKey = urlBase64ToUint8Array(vapidKey);
+
+      let subscription = await registration.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey
+        });
+      }
+
+      const res = await fetch('/api/webpush', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subscription,
+          nip: currentTeacher?.nip
+        })
+      });
+
+      const responseData = await res.json();
+      if (responseData.success) {
+        alert('Notifikasi sistem berhasil diaktifkan untuk perangkat ini!');
+        await fetch(`/api/webpush?title=SDN Bobong&message=Selamat! Perangkat Anda berhasil berlangganan notifikasi.`);
+      } else {
+        alert('Gagal mengaktifkan notifikasi: ' + responseData.error);
+      }
+    } catch (err: any) {
+      console.error('[Web Push Registration Error]', err);
+      alert('Kesalahan saat mendaftar notifikasi: ' + err.message);
+    }
+  };
 
   const titleMap: Record<string, string> = {
     dashboard: 'Dashboard',
@@ -176,6 +244,15 @@ export function Navbar() {
                       </div>
                     ))
                   )}
+                </div>
+                <div className="border-t border-slate-100 pt-2">
+                  <Button
+                    onClick={handleSubscribePush}
+                    variant="outline"
+                    className="w-full text-[10px] font-black h-8 rounded-xl bg-teal-50/50 hover:bg-teal-50 border-teal-200 text-teal-700 gap-1"
+                  >
+                    <i className="ri-notification-badge-line" /> Aktifkan Notifikasi Browser
+                  </Button>
                 </div>
               </div>
             </>

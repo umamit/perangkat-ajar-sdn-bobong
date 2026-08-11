@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, defaultAdminTeacher } from './syncMappers';
@@ -178,16 +179,21 @@ export function useAppState() {
     showToast('Anda telah keluar dari aplikasi', 'info');
   }, [showToast]);
 
+  const { refetch: refetchSync } = useQuery({
+    queryKey: ['syncData', currentTeacher?.nip || ''],
+    queryFn: async () => {
+      const nip = currentTeacher?.nip || '';
+      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`, { cache: 'no-store' });
+      return res.json();
+    },
+    enabled: false,
+  });
+
   const syncData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const savedTeacher = typeof window !== 'undefined'
-        ? (() => { try { const s = localStorage.getItem('sdn_bobong_teacher'); return s ? JSON.parse(s) : null; } catch { return null; } })()
-        : null;
-      const nip = savedTeacher?.nip || '';
-      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`, { cache: 'no-store' });
-      const data = await res.json();
-      if (data.success) {
+      const { data } = await refetchSync();
+      if (data && data.success) {
         const filtered = data.teachers?.length > 0 ? mapTeachers(data.teachers) : [defaultAdminTeacher];
         setTeachers(filtered);
 

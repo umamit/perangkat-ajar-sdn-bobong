@@ -14,6 +14,22 @@ import { StudentTable } from './siswa/StudentTable';
 import { StudentHeader } from './siswa/StudentHeader';
 import { parseStudentImport } from '@/modules/parseStudentImport';
 import { CounselingModal } from './siswa/CounselingModal';
+import * as z from 'zod';
+
+const studentSchema = z.object({
+  name: z.string().min(3, 'Nama lengkap minimal 3 karakter'),
+  nis: z.string().optional(),
+  nisn: z.string().regex(/^\d{10}$/, 'NISN harus terdiri dari 10 digit angka').optional().or(z.literal('')),
+  nik: z.string().regex(/^\d{16}$/, 'NIK harus terdiri dari 16 digit angka').optional().or(z.literal('')),
+  classId: z.string(),
+  gender: z.enum(['L', 'P']),
+  birthInfo: z.string().optional(),
+  parentName: z.string().optional(),
+  religion: z.string().optional(),
+  parentJob: z.string().optional(),
+  address: z.string().optional(),
+  admissionYear: z.string().regex(/^\d{4}$/, 'Tahun masuk harus 4 digit angka (misal: 2023)').optional().or(z.literal(''))
+});
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter, isLoading } = useApp();
@@ -61,8 +77,9 @@ export function SiswaView() {
 
   const handleAddSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!addForm.name.trim()) {
-      showToast('Nama lengkap wajib diisi', 'error');
+    const validation = studentSchema.safeParse(addForm);
+    if (!validation.success) {
+      showToast(validation.error.errors[0].message, 'error');
       return;
     }
     setSaving(true);
@@ -138,8 +155,9 @@ export function SiswaView() {
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editForm.name.trim()) {
-      showToast('Nama lengkap wajib diisi', 'error');
+    const validation = studentSchema.safeParse(editForm);
+    if (!validation.success) {
+      showToast(validation.error.errors[0].message, 'error');
       return;
     }
     setSaving(true);

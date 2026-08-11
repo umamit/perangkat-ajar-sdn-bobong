@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { AppProvider, useApp } from '@/context/AppContext';
+import { AppProvider, useApp, queryClient } from '@/context/AppContext';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Navbar } from '@/components/layout/Navbar';
 import { ToastContainer } from '@/components/layout/ToastContainer';
@@ -77,8 +78,10 @@ function AppContent() {
 
 export default function Page() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </QueryClientProvider>
   );
 }

@@ -1,10 +1,10 @@
 {
   "name": "perangkat-ajar-sdn-bobong",
-  "version": "4.9.5",
+  "version": "4.9.6",
   "description": "Perangkat Ajar Online - SD Negeri Bobong (Next.js & Supabase)",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/append-sw.js",
     "start": "next start",
     "lint": "next lint"
   },
@@ -19,10 +19,12 @@
   "author": "SD Negeri Bobong",
   "license": "MIT",
   "dependencies": {
+    "@hookform/resolvers": "^5.7.1",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-label": "^2.1.15",
     "@radix-ui/react-select": "^2.3.7",
     "@supabase/supabase-js": "^2.48.0",
+    "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-table": "^9.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -33,14 +35,20 @@
     "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.85.0",
+    "recharts": "^3.10.1",
     "tailwind-merge": "^3.6.0",
-    "xlsx": "^0.18.5"
+    "web-push": "^3.6.7",
+    "xlsx": "^0.18.5",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.13.4",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/recharts": "^1.8.29",
+    "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",

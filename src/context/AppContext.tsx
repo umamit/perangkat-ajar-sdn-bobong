@@ -4,6 +4,16 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from '@/types';
 import { useAppState, ToastMessage } from './useAppState';
 import { flushOfflineQueue } from '@/lib/offlineSync';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 interface AppContextType {
   isLoggedIn: boolean;

@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { Teacher, Student, ClassInfo, JournalEntry, AttendanceRecord } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface KepsekStatsProps {
   teachers: Teacher[];
@@ -158,23 +159,19 @@ export function KepsekStats({ teachers, students, classes, journals, attendance,
             </h4>
             <p className="text-[10px] text-slate-400 font-bold mt-0.5">Grafik rata-rata nilai seluruh siswa per kelas</p>
           </div>
-          <div className="p-2 flex items-end justify-between h-[150px] pt-6">
-            {classAverages.map((c, idx) => {
-              const maxVal = 100;
-              const heightPct = (c.avg / maxVal) * 100;
-              return (
-                <div key={idx} className="flex flex-col items-center gap-1.5 flex-1 group">
-                  <span className="text-[9px] font-black text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">{c.avg}</span>
-                  <div className="w-5 bg-cyan-50 border border-cyan-100 rounded-t-md relative overflow-hidden h-24 flex items-end">
-                    <div
-                      style={{ height: `${heightPct}%` }}
-                      className="w-full bg-cyan-500 rounded-t-md group-hover:bg-primary transition-all duration-500 shadow-sm"
-                    />
-                  </div>
-                  <span className="text-[9px] font-black text-slate-700">{c.name}</span>
-                </div>
-              );
-            })}
+          <div className="p-2 h-[150px] w-full text-[10px] pt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={classAverages} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fill: '#64748b', fontWeight: 'bold', fontSize: 9 }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  formatter={(value: any) => [`${value} Poin`, 'Rata-rata Nilai']}
+                  contentStyle={{ background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '10px', fontWeight: 'bold' }}
+                  cursor={{ fill: '#f1f5f9', opacity: 0.4 }}
+                />
+                <Bar dataKey="avg" fill="#12a5b8" radius={[5, 5, 0, 0]} maxBarSize={20} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </Card>
 
