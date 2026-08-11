@@ -21,6 +21,7 @@ import { LaporanView } from '@/components/views/LaporanView';
 import { GuruView } from '@/components/views/GuruView';
 import { PengaturanView } from '@/components/views/PengaturanView';
 import { JadwalView } from '@/components/views/JadwalView';
+import { CounselingView } from '@/components/views/CounselingView';
 
 function AppContent() {
   const { isLoggedIn, isInitializing, activeView, currentTeacher } = useApp();
@@ -56,6 +57,7 @@ function AppContent() {
           {activeView === 'siswa' && <SiswaView />}
           {activeView === 'kelas' && <KelasView />}
           {activeView === 'absensi' && <AbsensiView />}
+          {activeView === 'counseling' && <CounselingView />}
           {activeView === 'jadwal' && <JadwalView />}
           {activeView === 'nilai' && <NilaiView />}
           {activeView === 'jurnal' && <JurnalView />}

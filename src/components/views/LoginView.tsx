@@ -33,6 +33,7 @@ export function LoginView() {
       if (data.success && data.teacher) {
         setCurrentTeacher(data.teacher);
         document.cookie = 'sdn_bobong_auth=true; path=/; max-age=604800';
+        document.cookie = `sdn_bobong_nip=${data.teacher.nip}; path=/; max-age=604800`;
         try {
           localStorage.setItem('sdn_bobong_auth', 'true');
           localStorage.setItem('sdn_bobong_teacher', JSON.stringify(data.teacher));

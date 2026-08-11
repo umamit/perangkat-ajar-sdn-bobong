@@ -5,7 +5,8 @@ export async function drawOfficialKopSurat(
   page: PDFPage,
   pageWidth: number,
   startY: number,
-  margin: number = 40
+  margin: number = 40,
+  schoolSettings?: any
 ): Promise<number> {
   const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
@@ -83,9 +84,9 @@ export async function drawOfficialKopSurat(
     color: rgb(0, 0, 0),
   });
 
-  // Line 3: SD NEGERI BOBONG
+  // Line 3: Dynamic School Name
   curY -= 16;
-  const line3 = 'SD NEGERI BOBONG';
+  const line3 = (schoolSettings?.school_name || 'SD NEGERI BOBONG').toUpperCase();
   const line3Width = fontBold.widthOfTextAtSize(line3, 15);
   page.drawText(line3, {
     x: centerX - line3Width / 2,

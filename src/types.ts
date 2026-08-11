@@ -167,6 +167,16 @@ export interface CounselingLog {
   created_at?: string;
 }
 
+export interface SchoolSettings {
+  id: string;
+  school_name: string;
+  npsn: string;
+  academic_year: string;
+  semester: string;
+  headmaster_name: string;
+  headmaster_nip: string;
+}
+
 export interface AppData {
   teacher: Teacher;
   teachers: Teacher[];
@@ -181,6 +191,7 @@ export interface AppData {
   attendance?: AttendanceRecord[];
   schedules?: Schedule[];
   counselingLogs?: CounselingLog[];
+  schoolSettings?: SchoolSettings;
 }
 
 declare global {

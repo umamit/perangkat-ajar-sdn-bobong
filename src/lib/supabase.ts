@@ -409,3 +409,18 @@ export async function uploadAvatarToSupabaseStorage(file: File, nip?: string): P
   const url = await uploadFileToSupabase('avatars', fileName, file);
   return url || '/assets/logo-sdn-bobong.png';
 }
+
+export async function saveSchoolSettingsToSupabase(settings: any) {
+  try {
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveSchoolSettings', payload: settings })
+    });
+    const data = await res.json();
+    return !!data.success;
+  } catch (e) {
+    console.warn('[Save School Settings Error]', e);
+    return false;
+  }
+}

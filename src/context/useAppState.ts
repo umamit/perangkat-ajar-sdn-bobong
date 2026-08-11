@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule } from '@/types';
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from '@/types';
 import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
 import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, defaultAdminTeacher } from './syncMappers';
@@ -9,6 +9,16 @@ export interface ToastMessage {
   message: string;
   type: 'success' | 'error' | 'info';
 }
+
+export const defaultSchoolSettings: SchoolSettings = {
+  id: 'global',
+  school_name: 'SD Negeri Bobong',
+  npsn: '60101234',
+  academic_year: '2026/2027',
+  semester: 'Ganjil',
+  headmaster_name: 'Husnita Usman, M.Pd',
+  headmaster_nip: '199610272019032006'
+};
 
 export const defaultTeacher: Teacher = {
   nip: '199610272019032006',
@@ -101,6 +111,10 @@ export function useAppState() {
     const cache = loadAppCache();
     return cache?.schedules || [];
   });
+  const [schoolSettings, setSchoolSettings] = useState<SchoolSettings>(() => {
+    const cache = loadAppCache();
+    return cache?.schoolSettings || defaultSchoolSettings;
+  });
   
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -133,6 +147,7 @@ export function useAppState() {
 
   const logout = useCallback(() => {
     document.cookie = 'sdn_bobong_auth=; path=/; max-age=0';
+    document.cookie = 'sdn_bobong_nip=; path=/; max-age=0';
     try {
       localStorage.removeItem('sdn_bobong_auth');
       localStorage.removeItem('sdn_bobong_teacher');
@@ -157,6 +172,7 @@ export function useAppState() {
     setGrades([]);
     setCounselingLogs([]);
     setSchedules([]);
+    setSchoolSettings(defaultSchoolSettings);
 
     setIsLoggedIn(false);
     showToast('Anda telah keluar dari aplikasi', 'info');
@@ -193,6 +209,7 @@ export function useAppState() {
         if (data.grades) setGrades(data.grades);
         if (data.counselingLogs) setCounselingLogs(data.counselingLogs);
         if (data.schedules) setSchedules(data.schedules);
+        if (data.schoolSettings) setSchoolSettings(data.schoolSettings);
 
         saveAppCache({
           teachers: filtered,
@@ -205,7 +222,8 @@ export function useAppState() {
           assignments: mappedAssignments,
           grades: data.grades || [],
           counselingLogs: data.counselingLogs || [],
-          schedules: data.schedules || []
+          schedules: data.schedules || [],
+          schoolSettings: data.schoolSettings
         });
       }
     } catch (err) {
@@ -223,6 +241,7 @@ export function useAppState() {
         if (cache.grades) setGrades(cache.grades);
         if (cache.counselingLogs) setCounselingLogs(cache.counselingLogs);
         if (cache.schedules) setSchedules(cache.schedules);
+        if (cache.schoolSettings) setSchoolSettings(cache.schoolSettings);
       }
     } finally {
       setIsLoading(false);
@@ -264,6 +283,8 @@ export function useAppState() {
     setCounselingLogs,
     schedules,
     setSchedules,
+    schoolSettings,
+    setSchoolSettings,
     toasts,
     isLoading,
     sidebarOpen,

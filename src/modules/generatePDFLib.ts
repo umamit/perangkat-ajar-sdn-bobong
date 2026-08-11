@@ -26,6 +26,8 @@ export async function downloadLaporanPDFWithPdfLib(data: {
   classStats?: ClassStat[];
   studentDetails?: StudentDetail[];
   selectedClassName?: string;
+  monthlyAttendanceData?: { name: string; pct: number }[];
+  schoolSettings?: any;
 }): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   let page = pdfDoc.addPage([595.28, 841.89]); // Standard A4
@@ -36,7 +38,7 @@ export async function downloadLaporanPDFWithPdfLib(data: {
 
   // Official Header Kop Surat
   let curY = height - 40;
-  curY = await drawOfficialKopSurat(pdfDoc, page, width, curY, 40);
+  curY = await drawOfficialKopSurat(pdfDoc, page, width, curY, 40, data.schoolSettings);
 
   // Report Title
   const titleText = data.selectedClassName 
@@ -139,6 +141,60 @@ export async function downloadLaporanPDFWithPdfLib(data: {
 
       nextY -= 18;
     });
+  }
+
+  // Add Monthly Attendance Summary Table if available
+  if (data.monthlyAttendanceData && data.monthlyAttendanceData.length > 0) {
+    nextY -= 15;
+    page.drawText(`REKAPITULASI PERSENTASE KEHADIRAN BULANAN KELAS`, {
+      x: 40,
+      y: nextY,
+      size: 10,
+      font: fontBold,
+      color: rgb(0.1, 0.15, 0.2),
+    });
+    nextY -= 15;
+
+    // Header Row
+    page.drawRectangle({
+      x: 40,
+      y: nextY - 5,
+      width: width - 80,
+      height: 20,
+      color: rgb(0.12, 0.16, 0.23),
+    });
+
+    const monthWidth = (width - 80) / data.monthlyAttendanceData.length;
+    data.monthlyAttendanceData.forEach((m, idx) => {
+      const xPos = 40 + idx * monthWidth + 10;
+      page.drawText(m.name, { x: xPos, y: nextY + 2, size: 8, font: fontBold, color: rgb(1, 1, 1) });
+    });
+
+    nextY -= 20;
+
+    // Values Row
+    page.drawRectangle({
+      x: 40,
+      y: nextY - 5,
+      width: width - 80,
+      height: 18,
+      color: rgb(0.96, 0.98, 0.99),
+      borderColor: rgb(0.9, 0.92, 0.94),
+      borderWidth: 0.5,
+    });
+
+    data.monthlyAttendanceData.forEach((m, idx) => {
+      const xPos = 40 + idx * monthWidth + 10;
+      page.drawText(`${m.pct}%`, {
+        x: xPos,
+        y: nextY + 1,
+        size: 8,
+        font: fontBold,
+        color: m.pct >= 75 ? rgb(0.1, 0.6, 0.3) : rgb(0.8, 0.2, 0.2),
+      });
+    });
+
+    nextY -= 20;
   }
 
   // Add Student Details on a new page if available to prevent page overflow

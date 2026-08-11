@@ -123,7 +123,36 @@ CREATE TABLE IF NOT EXISTS public.assignments (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Aktifkan Row Level Security (RLS) & Kebijakan Akses Publik Read/Write
+-- 10. Tabel Catatan Pembinaan Bimbingan Konseling (Counseling Logs)
+CREATE TABLE IF NOT EXISTS public.counseling_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('Bimbingan', 'Konseling', 'Kunjungan Rumah', 'Telepon Orang Tua')),
+    notes TEXT NOT NULL,
+    follow_up TEXT,
+    teacher_nip TEXT REFERENCES public.teachers(nip) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 11. Tabel Pengaturan Sekolah & Akademik (School Settings)
+CREATE TABLE IF NOT EXISTS public.school_settings (
+    id TEXT PRIMARY KEY,
+    school_name TEXT NOT NULL DEFAULT 'SD Negeri Bobong',
+    npsn TEXT DEFAULT '60101234',
+    academic_year TEXT DEFAULT '2026/2027',
+    semester TEXT DEFAULT 'Ganjil',
+    headmaster_name TEXT DEFAULT 'Husnita Usman, M.Pd',
+    headmaster_nip TEXT DEFAULT '199610272019032006',
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Seed Default School Settings
+INSERT INTO public.school_settings (id, school_name, npsn, academic_year, semester, headmaster_name, headmaster_nip)
+VALUES ('global', 'SD Negeri Bobong', '60101234', '2026/2027', 'Ganjil', 'Husnita Usman, M.Pd', '199610272019032006')
+ON CONFLICT (id) DO NOTHING;
+
+-- Aktifkan Row Level Security (RLS) pada semua tabel
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.attendance ENABLE ROW LEVEL SECURITY;
@@ -133,13 +162,14 @@ ALTER TABLE public.modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.teachers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.flashcards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.counseling_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.school_settings ENABLE ROW LEVEL SECURITY;
 
+-- Kebijakan RLS: Izinkan Baca Publik Hanya untuk Informasi Umum (Public Read Only)
 CREATE POLICY "Allow public read classes" ON public.classes FOR SELECT USING (true);
-CREATE POLICY "Allow public read/write students" ON public.students FOR ALL USING (true);
-CREATE POLICY "Allow public read/write attendance" ON public.attendance FOR ALL USING (true);
-CREATE POLICY "Allow public read/write grades" ON public.grades FOR ALL USING (true);
-CREATE POLICY "Allow public read/write journals" ON public.journals FOR ALL USING (true);
-CREATE POLICY "Allow public read/write modules" ON public.modules FOR ALL USING (true);
-CREATE POLICY "Allow public read/write teachers" ON public.teachers FOR ALL USING (true);
-CREATE POLICY "Allow public read/write flashcards" ON public.flashcards FOR ALL USING (true);
-CREATE POLICY "Allow public read/write assignments" ON public.assignments FOR ALL USING (true);
+CREATE POLICY "Allow public read teachers" ON public.teachers FOR SELECT USING (true);
+CREATE POLICY "Allow public read school_settings" ON public.school_settings FOR SELECT USING (true);
+
+-- Untuk tabel privat lainnya: RLS aktif tanpa kebijakan PUBLIC (Direct anon client-side access diblokir).
+-- Semua operasi baca/tulis aplikasi wajib melewati Backend API (/api/sync) menggunakan Service Role Key.
+

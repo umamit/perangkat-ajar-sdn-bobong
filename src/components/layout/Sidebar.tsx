@@ -8,6 +8,7 @@ const navItems = [
   { id: 'siswa', label: 'Data Siswa', icon: 'ri-group-line' },
   { id: 'kelas', label: 'Data Kelas', icon: 'ri-community-line' },
   { id: 'absensi', label: 'Absensi', icon: 'ri-checkbox-line' },
+  { id: 'counseling', label: 'Bimbingan Konseling', icon: 'ri-heart-pulse-line' },
   { id: 'jadwal', label: 'Jadwal Pelajaran', icon: 'ri-calendar-schedule-line' },
   { id: 'nilai', label: 'Daftar Nilai', icon: 'ri-graduation-cap-line' },
   { id: 'jurnal', label: 'Jurnal Mengajar', icon: 'ri-book-read-line' },

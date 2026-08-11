@@ -58,6 +58,8 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
     // Supabase Update
     const success = await saveCounselingLogToSupabase(newLog);
     if (!success) {
+      const { addToOfflineQueue } = require('@/lib/offlineSync');
+      addToOfflineQueue('saveCounselingLog', newLog);
       showToast('Koneksi lambat, data disimpan offline dan akan disinkronkan nanti.', 'info');
     }
     setSaving(false);
@@ -72,6 +74,8 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
 
     const success = await deleteCounselingLogFromSupabase(id);
     if (!success) {
+      const { addToOfflineQueue } = require('@/lib/offlineSync');
+      addToOfflineQueue('deleteCounselingLog', id);
       showToast('Koneksi terganggu, penghapusan akan diulang saat online.', 'error');
     }
   };

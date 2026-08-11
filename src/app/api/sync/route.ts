@@ -6,7 +6,15 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const nip = searchParams.get('nip') || '';
+    
+    // Retrieve NIP securely from cookie first, fall back to query param
+    const cookieHeader = request.headers.get('cookie') || '';
+    const cookieNip = cookieHeader
+      .split('; ')
+      .find(row => row.startsWith('sdn_bobong_nip='))
+      ?.split('=')[1] || '';
+      
+    const nip = cookieNip || searchParams.get('nip') || '';
 
     const supabase = getSupabase();
 
@@ -50,7 +58,8 @@ export async function GET(request: Request) {
       flashcardsRes,
       assignmentsRes,
       counselingRes,
-      schedulesRes
+      schedulesRes,
+      settingsRes
     ] = await Promise.allSettled([
       supabase.from('teachers').select('*'),
       supabase.from('classes').select('*'),
@@ -62,7 +71,8 @@ export async function GET(request: Request) {
       flashcardQuery,
       assignmentQuery,
       counselingQuery,
-      scheduleQuery
+      scheduleQuery,
+      supabase.from('school_settings').select('*')
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
@@ -77,6 +87,17 @@ export async function GET(request: Request) {
       return t;
     });
 
+    const settingsData = getValue(settingsRes);
+    const schoolSettings = settingsData.length > 0 ? settingsData[0] : {
+      id: 'global',
+      school_name: 'SD Negeri Bobong',
+      npsn: '60101234',
+      academic_year: '2026/2027',
+      semester: 'Ganjil',
+      headmaster_name: 'Husnita Usman, M.Pd',
+      headmaster_nip: '199610272019032006'
+    };
+
     return NextResponse.json({
       success: true,
       teachers: teachersList,
@@ -89,7 +110,8 @@ export async function GET(request: Request) {
       flashcards: getValue(flashcardsRes),
       assignments: getValue(assignmentsRes),
       counselingLogs: getValue(counselingRes),
-      schedules: getValue(schedulesRes)
+      schedules: getValue(schedulesRes),
+      schoolSettings
     });
   } catch (err: any) {
     return NextResponse.json({
@@ -105,7 +127,8 @@ export async function GET(request: Request) {
       flashcards: [],
       assignments: [],
       counselingLogs: [],
-      schedules: []
+      schedules: [],
+      schoolSettings: null
     }, { status: 500 });
   }
 }
@@ -116,40 +139,94 @@ export async function POST(request: Request) {
     const { action, payload } = body;
     const supabase = getSupabase();
 
+    // Authenticate NIP securely via cookie
+    const cookieHeader = request.headers.get('cookie') || '';
+    const cookieNip = cookieHeader
+      .split('; ')
+      .find(row => row.startsWith('sdn_bobong_nip='))
+      ?.split('=')[1] || '';
+
+    const isKepsek = cookieNip === '199610272019032006';
+
+    // Helper to check ownership for mutations
+    const verifyOwnership = (itemTeacherNip: string | null | undefined) => {
+      if (!isKepsek && itemTeacherNip && itemTeacherNip !== cookieNip) {
+        throw new Error('Unauthorized: Anda tidak memiliki akses untuk mengubah data ini.');
+      }
+    };
+
     switch (action) {
+      case 'saveSchoolSettings':
+        if (!isKepsek) {
+          return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah yang dapat mengubah pengaturan sekolah.' }, { status: 403 });
+        }
+        return NextResponse.json({ success: !(await supabase.from('school_settings').upsert(payload)).error });
       case 'saveTeacher':
+        if (!isKepsek && payload.nip !== cookieNip) {
+          return NextResponse.json({ success: false, error: 'Unauthorized NIP mutation' }, { status: 403 });
+        }
         return NextResponse.json({ success: !(await supabase.from('teachers').upsert(payload)).error });
       case 'deleteTeacher':
+        if (!isKepsek) {
+          return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah yang dapat menghapus guru.' }, { status: 403 });
+        }
         return NextResponse.json({ success: !(await supabase.from('teachers').delete().eq('nip', payload.nip)).error });
       case 'saveStudent':
         return NextResponse.json({ success: !(await supabase.from('students').upsert(payload)).error });
       case 'deleteStudent':
+        if (!isKepsek) {
+          return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah/Admin yang dapat menghapus siswa.' }, { status: 403 });
+        }
         return NextResponse.json({ success: !(await supabase.from('students').delete().eq('id', payload.id)).error });
       case 'saveCounselingLog':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('counseling_logs').upsert(payload)).error });
-      case 'deleteCounselingLog':
+      case 'deleteCounselingLog': {
+        const { data } = await supabase.from('counseling_logs').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('counseling_logs').delete().eq('id', payload.id)).error });
+      }
       case 'saveJournal':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('journals').upsert(payload)).error });
-      case 'deleteJournal':
+      case 'deleteJournal': {
+        const { data } = await supabase.from('journals').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('journals').delete().eq('id', payload.id)).error });
+      }
       case 'saveFlashcard':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('flashcards').upsert(payload)).error });
-      case 'deleteFlashcard':
+      case 'deleteFlashcard': {
+        const { data } = await supabase.from('flashcards').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('flashcards').delete().eq('id', payload.id)).error });
+      }
       case 'saveAssignment':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('assignments').upsert(payload)).error });
-      case 'deleteAssignment':
+      case 'deleteAssignment': {
+        const { data } = await supabase.from('assignments').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('assignments').delete().eq('id', payload.id)).error });
+      }
       case 'saveModule':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('modules').upsert(payload)).error });
-      case 'deleteModule':
+      case 'deleteModule': {
+        const { data } = await supabase.from('modules').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('modules').delete().eq('id', payload.id)).error });
+      }
       case 'saveClass':
+        if (!isKepsek) return NextResponse.json({ success: false, error: 'Unauthorized class modification' }, { status: 403 });
         return NextResponse.json({ success: !(await supabase.from('classes').upsert(payload)).error });
       case 'deleteClass':
+        if (!isKepsek) return NextResponse.json({ success: false, error: 'Unauthorized class deletion' }, { status: 403 });
         return NextResponse.json({ success: !(await supabase.from('classes').delete().eq('id', payload.id)).error });
       case 'saveGrade':
+        // Grade records have student IDs. We can allow upsert, but let's check ownership
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('grades').upsert(payload)).error });
       case 'deleteGrade': {
         const { studentId, type } = payload;
@@ -162,9 +239,13 @@ export async function POST(request: Request) {
       case 'deleteAttendance':
         return NextResponse.json({ success: !(await supabase.from('attendance').delete().eq('student_id', payload.studentId).eq('date', payload.date)).error });
       case 'saveSchedule':
+        verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('schedules').upsert(payload)).error });
-      case 'deleteSchedule':
+      case 'deleteSchedule': {
+        const { data } = await supabase.from('schedules').select('teacher_nip').eq('id', payload.id).single();
+        if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('schedules').delete().eq('id', payload.id)).error });
+      }
       default:
         return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
     }

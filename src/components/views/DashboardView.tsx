@@ -11,7 +11,7 @@ import { DashboardCharts } from './dashboard/DashboardCharts';
 import { KepsekStats } from './dashboard/KepsekStats';
 
 export function DashboardView() {
-  const { students, classes, modules, journals, setActiveView, currentTeacher, teachers, attendance } = useApp();
+  const { students, classes, modules, journals, setActiveView, currentTeacher, teachers, attendance, grades } = useApp();
 
   const isKepsek = !!(currentTeacher?.role?.toLowerCase().includes('kepala sekolah') || currentTeacher?.role?.toLowerCase().includes('admin') || currentTeacher?.nip === '199610272019032006');
 
@@ -249,6 +249,7 @@ export function DashboardView() {
           classes={classes}
           journals={journals}
           attendance={attendance}
+          grades={grades}
         />
       )}
     </div>
