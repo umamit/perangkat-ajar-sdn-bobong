@@ -179,11 +179,14 @@ export async function POST(request: Request) {
         }
         return NextResponse.json({ success: !(await supabase.from('students').delete().eq('id', payload.id)).error });
       case 'saveCounselingLog':
-        verifyOwnership(payload.teacher_nip);
+        if (!isKepsek) {
+          return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah/Admin yang dapat mengubah catatan BK.' }, { status: 403 });
+        }
         return NextResponse.json({ success: !(await supabase.from('counseling_logs').upsert(payload)).error });
       case 'deleteCounselingLog': {
-        const { data } = await supabase.from('counseling_logs').select('teacher_nip').eq('id', payload.id).single();
-        if (data) verifyOwnership(data.teacher_nip);
+        if (!isKepsek) {
+          return NextResponse.json({ success: false, error: 'Hanya Kepala Sekolah/Admin yang dapat menghapus catatan BK.' }, { status: 403 });
+        }
         return NextResponse.json({ success: !(await supabase.from('counseling_logs').delete().eq('id', payload.id)).error });
       }
       case 'saveJournal':

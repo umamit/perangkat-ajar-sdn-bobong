@@ -24,6 +24,8 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
   const [notes, setNotes] = useState('');
   const [followUp, setFollowUp] = useState('');
 
+  const isKepsek = currentTeacher?.nip === '199610272019032006';
+
   if (!student) return null;
 
   // Filter logs for this student
@@ -107,7 +109,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-3 text-xs">
           {/* History Section (Left/Top) */}
-          <div className="md:col-span-7 space-y-3">
+          <div className={isKepsek ? "md:col-span-7 space-y-3" : "md:col-span-12 space-y-3"}>
             <h3 className="font-bold text-slate-650 flex items-center gap-1.5 border-b pb-1 text-xs">
               <i className="ri-history-line" /> Riwayat Pembinaan ({studentLogs.length})
             </h3>
@@ -126,7 +128,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
                       </span>
                       <div className="flex items-center gap-1.5">
                         <span className="text-[10px] text-slate-400 font-medium">{log.date}</span>
-                        {(log.teacherNip === currentTeacher?.nip || currentTeacher?.role?.includes('Kepala Sekolah')) && (
+                        {isKepsek && (
                           <button
                             type="button"
                             onClick={() => log.id && handleDelete(log.id)}
@@ -152,7 +154,8 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
           </div>
 
           {/* Form Section (Right/Bottom) */}
-          <form onSubmit={handleSave} className="md:col-span-5 space-y-3.5 border-t md:border-t-0 md:border-l md:pl-5 pt-4 md:pt-0">
+          {isKepsek && (
+            <form onSubmit={handleSave} className="md:col-span-5 space-y-3.5 border-t md:border-t-0 md:border-l md:pl-5 pt-4 md:pt-0">
             <h3 className="font-bold text-slate-650 flex items-center gap-1.5 border-b pb-1 text-xs">
               <i className="ri-edit-box-line" /> Tambah Catatan Baru
             </h3>
@@ -210,6 +213,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
               {saving ? 'Menyimpan...' : 'Simpan Catatan'}
             </Button>
           </form>
+          )}
         </div>
       </DialogContent>
     </Dialog>

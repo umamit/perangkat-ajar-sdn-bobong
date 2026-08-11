@@ -115,7 +115,7 @@ export function CounselingView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Side: global timeline */}
-        <div className="lg:col-span-8 space-y-4">
+        <div className={isKepsek ? "lg:col-span-8 space-y-4" : "lg:col-span-12 space-y-4"}>
           {/* Filters Card */}
           <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md p-4 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -181,7 +181,7 @@ export function CounselingView() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-slate-400 font-semibold">{log.date}</span>
-                        {(log.teacherNip === currentTeacher?.nip || isKepsek) && (
+                        {isKepsek && (
                           <button
                             onClick={() => log.id && handleDelete(log.id)}
                             className="text-slate-400 hover:text-rose-500 transition-colors p-0.5 rounded"
@@ -207,8 +207,9 @@ export function CounselingView() {
         </div>
 
         {/* Right Side: add form */}
-        <div className="lg:col-span-4">
-          <form onSubmit={handleSave} className="p-5 bg-white/85 border border-white/90 rounded-[24px] shadow-sm space-y-4 sticky top-24">
+        {isKepsek && (
+          <div className="lg:col-span-4">
+            <form onSubmit={handleSave} className="p-5 bg-white/85 border border-white/90 rounded-[24px] shadow-sm space-y-4 sticky top-24">
             <h4 className="font-black text-sm text-slate-800 flex items-center gap-1.5 border-b pb-2">
               <i className="ri-add-circle-line text-primary" /> Input Pembinaan Baru
             </h4>
@@ -327,6 +328,7 @@ export function CounselingView() {
             </Button>
           </form>
         </div>
+        )}
       </div>
     </div>
   );
