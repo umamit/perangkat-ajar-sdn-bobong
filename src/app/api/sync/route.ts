@@ -35,7 +35,6 @@ export async function GET(request: Request) {
       assignmentQuery = assignmentQuery.eq('teacher_nip', nip);
       flashcardQuery = flashcardQuery.eq('teacher_nip', nip);
       gradeQuery = gradeQuery.eq('teacher_nip', nip);
-      counselingQuery = counselingQuery.eq('teacher_nip', nip);
     } else if (!nip) {
       // If no NIP is active/logged in, return empty sets for security
       journalQuery = journalQuery.eq('id', '00000000-0000-0000-0000-000000000000');
