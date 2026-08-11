@@ -94,7 +94,7 @@ export function JadwalView() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-black text-slate-800 flex items-center gap-2">
-            <i className="ri-calendar-schedule-line text-primary" />
+            <i className="ri-calendar-2-line text-primary" />
             Jadwal Pelajaran
           </h2>
           <p className="text-xs text-slate-400 font-semibold mt-1">

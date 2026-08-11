@@ -66,7 +66,7 @@ export function ScheduleGrid({ schedules, onEdit, onDelete }: ScheduleGridProps)
 
       {schedules.length === 0 && (
         <div className="text-center py-12">
-          <i className="ri-calendar-schedule-line text-4xl text-slate-200 block mb-3" />
+          <i className="ri-calendar-2-line text-4xl text-slate-200 block mb-3" />
           <p className="text-sm text-slate-400 font-bold">Belum ada jadwal untuk kelas ini</p>
           <p className="text-[10px] text-slate-300 font-semibold mt-1">Tekan &ldquo;Tambah Slot&rdquo; untuk mulai mengisi jadwal</p>
         </div>
@@ -83,7 +83,7 @@ export function ScheduleGrid({ schedules, onEdit, onDelete }: ScheduleGridProps)
     if (allTimes.length === 0) {
       return (
         <div className="hidden md:flex flex-col items-center justify-center py-16">
-          <i className="ri-calendar-schedule-line text-5xl text-slate-200 block mb-3" />
+          <i className="ri-calendar-2-line text-5xl text-slate-200 block mb-3" />
           <p className="text-sm text-slate-400 font-bold">Belum ada jadwal untuk kelas ini</p>
         </div>
       );
