@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     if (teacher) {
       const dbPass = teacher.password || 'sdnbobong';
-      if (inputPass === dbPass || inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong') {
+      if (inputPass === dbPass || inputPass === 'sdnbobong') {
         matched = true;
         teacherData = {
           nip: teacher.nip,
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
           avatar: teacher.avatar_url || '/assets/logo-sdn-bobong.png'
         };
       }
-    } else if (inputNip === '199610272019032006' && (inputPass === 'sdnbobong' || inputPass === 'kepseksdnbobong')) {
+    } else if (inputNip === '199610272019032006' && inputPass === 'sdnbobong') {
       // Fallback fallback for executive admin
       matched = true;
       teacherData = {
