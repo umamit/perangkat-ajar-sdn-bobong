@@ -116,15 +116,15 @@ export function StudentTable({
         const s = row.original;
         return (
           <div className="flex items-center justify-center gap-1.5">
-            <button
-              onClick={() => handleCounselingClick(s)}
-              className="p-1 rounded-lg text-primary hover:bg-cyan-50 hover:text-primary-dark transition-colors"
-              title="Catatan BK / Wali"
-            >
-              <i className="ri-heart-pulse-line text-sm" />
-            </button>
             {isKepsek && (
               <>
+                <button
+                  onClick={() => handleCounselingClick(s)}
+                  className="p-1 rounded-lg text-primary hover:bg-cyan-50 hover:text-primary-dark transition-colors"
+                  title="Catatan BK / Wali"
+                >
+                  <i className="ri-heart-pulse-line text-sm" />
+                </button>
                 <button
                   onClick={() => handleEditClick(s)}
                   className="p-1 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
