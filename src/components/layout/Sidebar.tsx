@@ -32,7 +32,7 @@ export function Sidebar() {
   );
 
   const visibleItems = navItems.filter(item => {
-    if (item.id === 'guru') return isKepsek;
+    if (item.id === 'guru' || item.id === 'virtual_card') return isKepsek;
     return true;
   });
 

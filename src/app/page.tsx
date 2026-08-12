@@ -57,7 +57,7 @@ function AppContent() {
         <main className="content-area p-6 space-y-6 flex-1 overflow-y-auto">
           {activeView === 'dashboard' && <DashboardView />}
           {activeView === 'siswa' && <SiswaView />}
-          {activeView === 'virtual_card' && <VirtualCardView />}
+          {activeView === 'virtual_card' && isKepsek && <VirtualCardView />}
           {activeView === 'kelas' && <KelasView />}
           {activeView === 'absensi' && <AbsensiView />}
           {activeView === 'counseling' && <CounselingView />}
