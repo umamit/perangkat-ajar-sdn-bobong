@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,28 +19,44 @@ export function VirtualCardView() {
     }
   }, [classes, selectedClassId]);
 
-  const filteredStudents = students.filter(s => s.classId === selectedClassId);
+  const filteredStudents = useMemo(() => {
+    return students.filter(s => s.classId === selectedClassId);
+  }, [students, selectedClassId]);
 
   useEffect(() => {
+    let active = true;
     const generateQRs = async () => {
-      const map: Record<string, string> = {};
-      for (const s of filteredStudents) {
-        try {
-          const url = await QRCode.toDataURL(s.id, {
-            margin: 1,
-            color: { dark: '#0A7E8D', light: '#FFFFFF' }
-          });
-          map[s.id] = url;
-        } catch (err) {
-          console.error('[QR Generation Error]', err);
-        }
+      try {
+        const promises = filteredStudents.map(async (s) => {
+          try {
+            const url = await QRCode.toDataURL(s.id, {
+              margin: 1,
+              color: { dark: '#0A7E8D', light: '#FFFFFF' }
+            });
+            return { id: s.id, url };
+          } catch (err) {
+            return { id: s.id, url: '' };
+          }
+        });
+        const results = await Promise.all(promises);
+        if (!active) return;
+        
+        const map: Record<string, string> = {};
+        results.forEach(r => {
+          if (r.url) map[r.id] = r.url;
+        });
+        setQrCodes(map);
+      } catch (err) {
+        console.error('[QR Generation Error]', err);
       }
-      setQrCodes(map);
     };
 
     if (filteredStudents.length > 0) {
       generateQRs();
     }
+    return () => {
+      active = false;
+    };
   }, [filteredStudents]);
 
   const toggleFlip = (id: string) => {
