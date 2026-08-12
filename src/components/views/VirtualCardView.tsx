@@ -94,17 +94,15 @@ export function VirtualCardView() {
             return (
               <div
                 key={s.id}
-                className="w-[340px] h-[215px] [perspective:1000px] cursor-pointer print:w-[340px] print:h-[215px] print:mb-6 print:inline-block print:mx-2 print:break-inside-avoid"
+                className="w-[340px] h-[215px] card-perspective cursor-pointer print:w-[340px] print:h-[215px] print:mb-6 print:inline-block print:mx-2 print:break-inside-avoid"
                 onClick={() => toggleFlip(s.id)}
               >
                 <div
-                  className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
-                    isFlipped ? '[transform:rotateY(180deg)]' : ''
-                  } print:[transform:none]`}
+                  className={`card-inner ${isFlipped ? 'is-flipped' : ''} print:[transform:none]`}
                 >
                   
                   {/* SISI DEPAN */}
-                  <div className="absolute w-full h-full [backface-visibility:hidden] print:relative print:[backface-visibility:visible] rounded-[18px] overflow-hidden border border-white/80 bg-gradient-to-br from-teal-600 to-cyan-700 text-white shadow-md p-4 flex flex-col justify-between">
+                  <div className="card-front print:relative print:[backface-visibility:visible] rounded-[18px] overflow-hidden border border-white/80 bg-gradient-to-br from-teal-600 to-cyan-700 text-white shadow-md p-4 flex flex-col justify-between">
                     <div className="flex items-center gap-2 border-b border-white/20 pb-2">
                       <img src="/assets/logo-sdn-bobong.png" alt="Logo" className="w-8 h-8 object-contain" />
                       <div className="leading-tight text-left">
@@ -155,7 +153,7 @@ export function VirtualCardView() {
                   </div>
 
                   {/* SISI BELAKANG */}
-                  <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] print:relative print:[backface-visibility:visible] print:[transform:none] rounded-[18px] overflow-hidden border border-slate-200 bg-white text-slate-800 shadow-md p-4 flex flex-col justify-between print:mt-4">
+                  <div className="card-back print:relative print:[backface-visibility:visible] print:[transform:none] rounded-[18px] overflow-hidden border border-slate-200 bg-white text-slate-800 shadow-md p-4 flex flex-col justify-between print:mt-4">
                     <div className="border-b border-slate-100 pb-1 text-center">
                       <h4 className="text-[9px] font-black text-primary-dark tracking-wide uppercase">TATA TERTIB &amp; KETENTUAN KARTU</h4>
                     </div>
@@ -191,6 +189,31 @@ export function VirtualCardView() {
       )}
 
       <style jsx global>{`
+        /* 3D Flip Card Styles */
+        .card-perspective {
+          perspective: 1000px;
+        }
+        .card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-style: preserve-3d;
+        }
+        .card-inner.is-flipped {
+          transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden; /* Safari */
+        }
+        .card-back {
+          transform: rotateY(180deg);
+        }
+
         @media print {
           body * {
             visibility: hidden;
