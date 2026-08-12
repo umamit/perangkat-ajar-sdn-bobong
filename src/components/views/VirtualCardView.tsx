@@ -5,12 +5,10 @@ import { useApp } from '@/context/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import * as QRCode from 'qrcode';
 
 export function VirtualCardView() {
   const { students, classes } = useApp();
   const [selectedClassId, setSelectedClassId] = useState<string>('');
-  const [qrCodes, setQrCodes] = useState<Record<string, string>>({});
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -22,42 +20,6 @@ export function VirtualCardView() {
   const filteredStudents = useMemo(() => {
     return students.filter(s => s.classId === selectedClassId);
   }, [students, selectedClassId]);
-
-  useEffect(() => {
-    let active = true;
-    const generateQRs = async () => {
-      try {
-        const promises = filteredStudents.map(async (s) => {
-          try {
-            const url = await QRCode.toDataURL(s.id, {
-              margin: 1,
-              color: { dark: '#0A7E8D', light: '#FFFFFF' }
-            });
-            return { id: s.id, url };
-          } catch (err) {
-            return { id: s.id, url: '' };
-          }
-        });
-        const results = await Promise.all(promises);
-        if (!active) return;
-        
-        const map: Record<string, string> = {};
-        results.forEach(r => {
-          if (r.url) map[r.id] = r.url;
-        });
-        setQrCodes(map);
-      } catch (err) {
-        console.error('[QR Generation Error]', err);
-      }
-    };
-
-    if (filteredStudents.length > 0) {
-      generateQRs();
-    }
-    return () => {
-      active = false;
-    };
-  }, [filteredStudents]);
 
   const toggleFlip = (id: string) => {
     setFlippedCards(prev => ({ ...prev, [id]: !prev[id] }));
@@ -183,11 +145,12 @@ export function VirtualCardView() {
                       </ol>
 
                       <div className="w-18 h-18 bg-slate-50 border border-slate-100 rounded-lg p-1 flex items-center justify-center shrink-0">
-                        {qrCodes[s.id] ? (
-                          <img src={qrCodes[s.id]} alt="QR Code" className="w-16 h-16 object-contain" />
-                        ) : (
-                          <div className="w-16 h-16 bg-slate-200 rounded animate-pulse" />
-                        )}
+                        <img 
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0A7E8D&data=${encodeURIComponent(s.id)}`} 
+                          alt="QR Code" 
+                          className="w-16 h-16 object-contain"
+                          loading="lazy"
+                        />
                       </div>
                     </div>
 
@@ -203,8 +166,6 @@ export function VirtualCardView() {
           })}
         </div>
       )}
-
-
     </div>
   );
 }
