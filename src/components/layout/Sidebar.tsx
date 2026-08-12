@@ -6,7 +6,7 @@ import { useApp } from '@/context/AppContext';
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: 'ri-grid-fill' },
   { id: 'siswa', label: 'Data Siswa', icon: 'ri-group-line' },
-  { id: 'virtual_card', label: 'Kartu Siswa Virtual', icon: 'ri-id-card-line' },
+  { id: 'virtual_card', label: 'Kartu Siswa Virtual', icon: 'ri-contacts-line' },
   { id: 'kelas', label: 'Data Kelas', icon: 'ri-community-line' },
   { id: 'absensi', label: 'Absensi', icon: 'ri-checkbox-line' },
   { id: 'counseling', label: 'Bimbingan Konseling', icon: 'ri-heart-pulse-line' },

@@ -56,7 +56,7 @@ export function VirtualCardView() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
         <div>
           <h3 className="text-lg font-black text-slate-850 tracking-tight flex items-center gap-2">
-            <i className="ri-id-card-fill text-primary" /> Kartu Siswa Virtual
+            <i className="ri-contacts-fill text-primary" /> Kartu Siswa Virtual
           </h3>
           <p className="text-xs text-slate-500 font-semibold">Cetak kartu pelajar virtual resmi dilengkapi QR Code absensi digital</p>
         </div>
