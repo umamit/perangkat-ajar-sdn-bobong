@@ -307,4 +307,21 @@
   .print\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+
+  body.print-single-active * {
+    visibility: hidden !important;
+  }
+  body.print-single-active .print-single-card,
+  body.print-single-active .print-single-card * {
+    visibility: visible !important;
+  }
+  body.print-single-active .print-single-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
 }
