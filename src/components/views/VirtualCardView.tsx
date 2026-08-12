@@ -5,7 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import QRCode from 'qrcode';
+import * as QRCode from 'qrcode';
 
 export function VirtualCardView() {
   const { students, classes } = useApp();
@@ -188,70 +188,7 @@ export function VirtualCardView() {
         </div>
       )}
 
-      <style jsx global>{`
-        /* 3D Flip Card Styles */
-        .card-perspective {
-          perspective: 1000px;
-        }
-        .card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          transform-style: preserve-3d;
-        }
-        .card-inner.is-flipped {
-          transform: rotateY(180deg);
-        }
-        .card-front, .card-back {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden; /* Safari */
-        }
-        .card-back {
-          transform: rotateY(180deg);
-        }
 
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #sidebar, .print\\:hidden, header, nav, .toast-container, button {
-            display: none !important;
-            visibility: hidden !important;
-          }
-          .app-container, .main-wrapper, .content-area, .content-area * {
-            visibility: visible;
-          }
-          .content-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 0 !important;
-            margin: 0 !important;
-            background: white !important;
-          }
-          .print\\:block {
-            display: block !important;
-          }
-          .print\\:inline-block {
-            display: inline-block !important;
-          }
-          .print\\:mb-6 {
-            margin-bottom: 24px !important;
-          }
-          .print\\:mx-2 {
-            margin-left: 8px !important;
-            margin-right: 8px !important;
-          }
-          .print\\:grid-cols-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

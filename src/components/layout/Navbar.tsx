@@ -93,6 +93,7 @@ export function Navbar() {
   const titleMap: Record<string, string> = {
     dashboard: 'Dashboard',
     siswa: 'Data Siswa',
+    virtual_card: 'Kartu Siswa Virtual',
     kelas: 'Data Kelas',
     absensi: 'Absensi',
     counseling: 'Bimbingan Konseling',

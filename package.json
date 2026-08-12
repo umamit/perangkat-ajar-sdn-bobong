@@ -1,6 +1,6 @@
 {
   "name": "perangkat-ajar-sdn-bobong",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "description": "Perangkat Ajar Online - SD Negeri Bobong (Next.js & Supabase)",
   "scripts": {
     "dev": "next dev",
