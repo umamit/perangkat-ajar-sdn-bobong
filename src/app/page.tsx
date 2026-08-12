@@ -23,6 +23,7 @@ import { GuruView } from '@/components/views/GuruView';
 import { PengaturanView } from '@/components/views/PengaturanView';
 import { JadwalView } from '@/components/views/JadwalView';
 import { CounselingView } from '@/components/views/CounselingView';
+import { VirtualCardView } from '@/components/views/VirtualCardView';
 
 function AppContent() {
   const { isLoggedIn, isInitializing, activeView, currentTeacher } = useApp();
@@ -56,6 +57,7 @@ function AppContent() {
         <main className="content-area p-6 space-y-6 flex-1 overflow-y-auto">
           {activeView === 'dashboard' && <DashboardView />}
           {activeView === 'siswa' && <SiswaView />}
+          {activeView === 'virtual_card' && <VirtualCardView />}
           {activeView === 'kelas' && <KelasView />}
           {activeView === 'absensi' && <AbsensiView />}
           {activeView === 'counseling' && <CounselingView />}
