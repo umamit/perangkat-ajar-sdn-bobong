@@ -14,6 +14,7 @@ import { StudentTable } from './siswa/StudentTable';
 import { StudentHeader } from './siswa/StudentHeader';
 import { parseStudentImport } from '@/modules/parseStudentImport';
 import { CounselingModal } from './siswa/CounselingModal';
+import { SyncDapodikModal } from './siswa/SyncDapodikModal';
 import * as z from 'zod';
 
 const studentSchema = z.object({
@@ -45,6 +46,7 @@ export function SiswaView() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showCounselingModal, setShowCounselingModal] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
   const [selectedCounselingStudent, setSelectedCounselingStudent] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
@@ -242,6 +244,7 @@ export function SiswaView() {
         isKepsek={isKepsek}
         setShowAddModal={setShowAddModal}
         setShowImportModal={setShowImportModal}
+        setShowSyncModal={setShowSyncModal}
         search={search}
         setSearch={setSearch}
         lockedClass={lockedClass}
@@ -294,6 +297,13 @@ export function SiswaView() {
         isOpen={showCounselingModal}
         onOpenChange={setShowCounselingModal}
         student={selectedCounselingStudent}
+      />
+      <SyncDapodikModal
+        isOpen={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        classes={classes}
+        showToast={showToast}
+        syncData={syncData}
       />
     </div>
   );

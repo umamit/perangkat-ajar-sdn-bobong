@@ -12,6 +12,7 @@ interface StudentHeaderProps {
   isKepsek: boolean;
   setShowAddModal: (val: boolean) => void;
   setShowImportModal: (val: boolean) => void;
+  setShowSyncModal: (val: boolean) => void;
   search: string;
   setSearch: (val: string) => void;
   lockedClass: string | null;
@@ -28,6 +29,7 @@ export function StudentHeader({
   isKepsek,
   setShowAddModal,
   setShowImportModal,
+  setShowSyncModal,
   search,
   setSearch,
   lockedClass,
@@ -58,6 +60,9 @@ export function StudentHeader({
               </Button>
               <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary/20 text-primary hover:bg-cyan-50/30">
                 <i className="ri-upload-2-line" /> Impor Excel
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowSyncModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary-dark/20 text-primary-dark hover:bg-teal-50/30">
+                <i className="ri-exchange-funds-line" /> Tarik Dapodik
               </Button>
             </>
           )}
