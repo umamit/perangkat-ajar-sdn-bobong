@@ -96,9 +96,9 @@ export async function drawOfficialKopSurat(
     color: rgb(0, 0, 0),
   });
 
-  // Line 4: Alamat: Jln. Mansur Sou, Desa Wayo, Kec. Taliabu Barat Kode Pos 97794
+  // Line 4: Alamat: Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Prov. Maluku Utara, 97791
   curY -= 14;
-  const line4 = 'Alamat: Jln. Mansur Sou, Desa Wayo, Kec. Taliabu Barat Kode Pos 97794';
+  const line4 = 'Alamat: Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Maluku Utara, 97791';
   const line4Width = fontItalic.widthOfTextAtSize(line4, 9.5);
   page.drawText(line4, {
     x: centerX - line4Width / 2,

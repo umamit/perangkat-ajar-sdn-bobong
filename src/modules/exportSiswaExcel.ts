@@ -5,7 +5,7 @@ export function exportSiswaExcel(students: Student[], className: string): void {
   const headers = [
     ['PEMERINTAH KABUPATEN PULAU TALIABU'],
     ['DINAS PENDIDIKAN - SD NEGERI BOBONG'],
-    ['Alamat: Desa Bobong, Kecamatan Taliabu Barat, Kabupaten Pulau Taliabu'],
+    ['Alamat: Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Prov. Maluku Utara, 97791'],
     [],
     [`DATA INDUK SISWA KELAS: ${className === 'ALL' ? 'SEMUA KELAS' : className}`],
     [`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`],

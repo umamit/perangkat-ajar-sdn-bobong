@@ -38,7 +38,7 @@ export function printLaporanPDF(data: {
         <div class="kop-surat">
           <h2>PEMERINTAH KABUPATEN PULAU TALIABU</h2>
           <h3>DINAS PENDIDIKAN - SD NEGERI BOBONG</h3>
-          <p>Alamat: Desa Bobong, Kecamatan Taliabu Barat, Kabupaten Pulau Taliabu</p>
+          <p>Alamat: Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Prov. Maluku Utara, 97791</p>
         </div>
 
         <div class="report-title">LAPORAN REKAPITULASI ADMINISTRASI PERANGKAT AJAR &amp; PRESENSI</div>

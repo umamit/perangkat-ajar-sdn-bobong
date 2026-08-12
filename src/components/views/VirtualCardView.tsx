@@ -86,7 +86,7 @@ export function VirtualCardView() {
                       <div className="leading-tight text-left">
                         <h4 className="text-[10px] font-black tracking-wider uppercase">Kartu Identitas Siswa</h4>
                         <h5 className="text-[11px] font-black text-secondary">SD Negeri Bobong</h5>
-                        <p className="text-[7px] text-white/70 font-semibold">Kec. Taliabu Barat, Kab. Pulau Taliabu</p>
+                        <p className="text-[6.5px] text-white/70 font-semibold">Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu</p>
                       </div>
                     </div>
 
@@ -155,7 +155,7 @@ export function VirtualCardView() {
                     </div>
 
                     <div className="border-t border-slate-100 pt-2 text-[6px] text-slate-400 font-bold text-center leading-tight">
-                      <p>SD NEGERI BOBONG - Jln. Lintas Bobong, Kec. Taliabu Barat, Pulau Taliabu</p>
+                      <p>SD NEGERI BOBONG - Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Prov. Maluku Utara, 97791</p>
                       <p className="text-[5px] text-slate-350">ID: {s.id}</p>
                     </div>
                   </div>
