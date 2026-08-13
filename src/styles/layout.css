@@ -312,20 +312,58 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  body.print-single-active * {
+  body.print-single-active {
+    background: white !important;
+  }
+  body.print-single-active .app-container {
+    display: block !important;
+  }
+  body.print-single-active #sidebar,
+  body.print-single-active header,
+  body.print-single-active nav,
+  body.print-single-active .toast-container,
+  body.print-single-active button,
+  body.print-single-active .grid,
+  body.print-single-active .space-y-6 > *:not(.fixed) {
+    display: none !important;
     visibility: hidden !important;
   }
-  body.print-single-active .print-single-card,
-  body.print-single-active .print-single-card * {
+  body.print-single-active .fixed.inset-0 {
+    position: absolute !important;
+    inset: 0 !important;
+    background: white !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
     visibility: visible !important;
+  }
+  body.print-single-active .fixed.inset-0 .absolute.top-4.right-4,
+  body.print-single-active .fixed.inset-0 .flex-1.space-y-4 {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  body.print-single-active .fixed.inset-0 .bg-white.rounded-2xl {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   body.print-single-active .print-single-card {
     display: flex !important;
     flex-direction: column !important;
     gap: 24px !important;
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    margin: 40px auto !important;
+    align-items: center !important;
+    visibility: visible !important;
+  }
+  body.print-single-active .print-single-card * {
+    visibility: visible !important;
   }
 }
