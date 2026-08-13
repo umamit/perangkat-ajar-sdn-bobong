@@ -33,7 +33,7 @@ export function StudentCardItem({
             <div className="leading-tight text-left">
               <h4 className="text-[9px] font-black tracking-wider uppercase">Kartu Identitas Siswa</h4>
               <h5 className="text-[11px] font-black text-secondary">SD Negeri Bobong</h5>
-              <p className="text-[6px] text-white/75 font-semibold">Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu</p>
+              <p className="text-[5.5px] text-white/75 font-semibold">Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu</p>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E5A900]" />
           </div>
@@ -107,7 +107,7 @@ export function StudentCardItem({
           </div>
 
           <div className="border-t border-teal-500/10 pt-2 text-[6px] text-slate-400 font-bold text-center leading-tight">
-            <p>SD NEGERI BOBONG - Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Prov. Maluku Utara, 97791</p>
+            <p>SD NEGERI BOBONG - Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Provinsi Maluku Utara, 97791</p>
             <p className="text-[5px] text-slate-350">ID: {s.id}</p>
           </div>
         </div>
