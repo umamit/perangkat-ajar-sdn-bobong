@@ -26,7 +26,7 @@ export function StudentCardItem({
       <div className={`card-inner ${isFlipped ? 'is-flipped' : ''} print:[transform:none]`}>
         
         {/* SISI DEPAN */}
-        <div className="card-front print:relative print:[backface-visibility:visible] rounded-[18px] overflow-hidden border border-slate-200 bg-white text-slate-800 shadow-md flex flex-col justify-between p-0">
+        <div className="card-front print:relative print:[backface-visibility:visible] rounded-[18px] overflow-hidden border border-teal-100 bg-gradient-to-br from-teal-50/60 via-slate-50 to-teal-50/30 text-slate-800 shadow-md flex flex-col justify-between p-0">
           {/* Header: Teal Gradient with gold bottom stripe */}
           <div className="bg-gradient-to-r from-teal-700 to-cyan-800 text-white px-4 py-2.5 flex items-center gap-2 relative">
             <img src="/assets/logo-sdn-bobong.png" alt="Logo" className="w-8 h-8 object-contain" />
@@ -40,7 +40,7 @@ export function StudentCardItem({
 
           {/* Body */}
           <div className="flex-1 flex gap-3 px-4 pt-3 items-center">
-            <div className="w-16 h-20 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+            <div className="w-16 h-20 rounded-lg bg-white border border-teal-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
               <i className="ri-user-3-line text-3xl text-slate-350" />
             </div>
             

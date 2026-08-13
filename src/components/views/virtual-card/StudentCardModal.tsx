@@ -50,7 +50,7 @@ export function StudentCardModal({
           >
             <div className={`card-inner ${isModalCardFlipped ? 'is-flipped' : ''}`}>
               {/* FRONT */}
-              <div className="card-front rounded-[18px] overflow-hidden border border-slate-200 bg-white text-slate-800 p-0 flex flex-col justify-between">
+              <div className="card-front rounded-[18px] overflow-hidden border border-teal-100 bg-gradient-to-br from-teal-50/60 via-slate-50 to-teal-50/30 text-slate-800 p-0 flex flex-col justify-between">
                 {/* Header: Teal Gradient with gold bottom stripe */}
                 <div className="bg-gradient-to-r from-teal-700 to-cyan-800 text-white px-4 py-2.5 flex items-center gap-2 relative">
                   <img src="/assets/logo-sdn-bobong.png" alt="Logo" className="w-8 h-8 object-contain" />
@@ -63,7 +63,7 @@ export function StudentCardModal({
                 </div>
 
                 <div className="flex-1 flex gap-3 px-4 pt-3 items-center">
-                  <div className="w-16 h-20 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                  <div className="w-16 h-20 rounded-lg bg-white border border-teal-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
                     <i className="ri-user-3-line text-3xl text-slate-350" />
                   </div>
                   <div className="flex-1 text-left space-y-1 text-[9px] font-bold text-slate-700">
@@ -133,7 +133,7 @@ export function StudentCardModal({
           {/* Flat Print Layout for Single Card (Visible only during printing) */}
           <div className="hidden print-single-card print:flex print:flex-col print:gap-6 print:items-center">
             {/* Front Side Print */}
-            <div className="w-[340px] h-[215px] rounded-[18px] overflow-hidden border border-slate-200 bg-white text-slate-800 p-0 flex flex-col justify-between">
+            <div className="w-[340px] h-[215px] rounded-[18px] overflow-hidden border border-teal-100 bg-gradient-to-br from-teal-50/60 via-slate-50 to-teal-50/30 text-slate-800 p-0 flex flex-col justify-between">
               <div className="bg-gradient-to-r from-teal-700 to-cyan-800 text-white px-4 py-2.5 flex items-center gap-2 relative">
                 <img src="/assets/logo-sdn-bobong.png" alt="Logo" className="w-8 h-8 object-contain" />
                 <div className="leading-tight text-left">
@@ -144,7 +144,7 @@ export function StudentCardModal({
                 <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E5A900]" />
               </div>
               <div className="flex-1 flex gap-3 px-4 pt-3 items-center">
-                <div className="w-16 h-20 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                <div className="w-16 h-20 rounded-lg bg-white border border-teal-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
                   <i className="ri-user-3-line text-3xl text-slate-350" />
                 </div>
                 <div className="flex-1 text-left space-y-1 text-[9px] font-bold text-slate-700">
