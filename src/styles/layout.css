@@ -329,41 +329,16 @@
     visibility: hidden !important;
   }
   body.print-single-active .fixed.inset-0 {
-    position: absolute !important;
-    inset: 0 !important;
-    background: white !important;
-    display: block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    visibility: visible !important;
-  }
-  body.print-single-active .fixed.inset-0 .absolute.top-4.right-4,
-  body.print-single-active .fixed.inset-0 .flex-1.space-y-4 {
     display: none !important;
     visibility: hidden !important;
   }
-  body.print-single-active .fixed.inset-0 .bg-white.rounded-2xl {
-    background: white !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  body.print-single-active .print-single-card {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 24px !important;
-    margin: 40px auto !important;
-    align-items: center !important;
+  body.print-single-active .print-single-card-container {
+    display: block !important;
     visibility: visible !important;
+    margin: 40px auto !important;
+    width: 340px !important;
   }
-  body.print-single-active .print-single-card * {
+  body.print-single-active .print-single-card-container * {
     visibility: visible !important;
   }
 }

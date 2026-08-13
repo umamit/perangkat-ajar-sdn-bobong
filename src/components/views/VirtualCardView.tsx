@@ -118,6 +118,16 @@ export function VirtualCardView() {
         setIsModalCardFlipped={setIsModalCardFlipped}
         handlePrintSingle={handlePrintSingle}
       />
+
+      {/* Print Single Card Container (Visible only on print when print-single-active is active) */}
+      {selectedStudent && (
+        <div className="hidden print-single-card-container">
+          <StudentCardItem
+            student={selectedStudent}
+            selectedClassId={selectedClassId}
+          />
+        </div>
+      )}
     </div>
   );
 }
