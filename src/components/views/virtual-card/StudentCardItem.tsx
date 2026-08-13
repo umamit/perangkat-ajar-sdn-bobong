@@ -72,9 +72,11 @@ export function StudentCardItem({
             <div className="text-right leading-none relative">
               <span className="block mb-0.5">Mengetahui,</span>
               <span className="block font-black text-slate-700">Kepala Sekolah</span>
-              <div className="absolute right-0 bottom-[-5px] w-12 h-12 bg-blue-500/5 rounded-full border border-blue-500/20 flex items-center justify-center text-[5px] text-blue-500/50 font-black uppercase rotate-[-12deg] tracking-tighter">
-                SDN BOBONG
-              </div>
+              <img 
+                src="/assets/ttd-stempel.png" 
+                alt="Stempel & TTD" 
+                className="absolute right-[-8px] bottom-[-4px] w-14 h-14 object-contain pointer-events-none z-10" 
+              />
               <span className="block font-extrabold text-slate-700 mt-4 border-t border-slate-200 pt-0.5">Husnita Usman, M.Pd</span>
             </div>
           </div>
