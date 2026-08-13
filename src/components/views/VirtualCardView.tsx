@@ -39,16 +39,23 @@ export function VirtualCardView() {
 
   const handlePrintSingle = () => {
     document.body.classList.add('print-single-active');
-    window.print();
-    setTimeout(() => {
+    
+    const cleanup = () => {
       document.body.classList.remove('print-single-active');
-    }, 500);
+      window.removeEventListener('afterprint', cleanup);
+    };
+
+    window.addEventListener('afterprint', cleanup);
+    window.print();
+
+    // Fallback cleanup
+    setTimeout(cleanup, 2000);
   };
 
   return (
-    <div className="space-y-6 animate-fade-in text-slate-800 print:space-y-0 print:p-0">
+    <div className="space-y-6 animate-fade-in text-slate-800 print:space-y-0 print:p-0 virtual-card-view">
       {/* Controls: Hidden on print */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden virtual-card-controls">
         <div>
           <h3 className="text-lg font-black text-slate-850 tracking-tight flex items-center gap-2">
             <i className="ri-contacts-fill text-primary" /> Kartu Siswa Virtual
@@ -78,13 +85,13 @@ export function VirtualCardView() {
       </div>
 
       {filteredStudents.length === 0 ? (
-        <Card className="p-8 text-center text-slate-450 font-bold text-xs bg-white/50 backdrop-blur-sm border border-slate-100 rounded-2xl print:hidden">
+        <Card className="p-8 text-center text-slate-450 font-bold text-xs bg-white/50 backdrop-blur-sm border border-slate-100 rounded-2xl print:hidden virtual-card-grid">
           <i className="ri-user-unfollow-line text-3xl block text-slate-350 mb-2" />
           Belum ada data siswa di kelas ini.
         </Card>
       ) : (
         /* Card Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center print:grid-cols-2 print:gap-4 print:bg-white print:w-full print:block">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center print:grid-cols-2 print:gap-4 print:bg-white print:w-full print:block virtual-card-grid">
           {filteredStudents.map(s => (
             <StudentCardItem
               key={s.id}

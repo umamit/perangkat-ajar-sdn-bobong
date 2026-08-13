@@ -323,8 +323,8 @@
   body.print-single-active nav,
   body.print-single-active .toast-container,
   body.print-single-active button,
-  body.print-single-active .grid,
-  body.print-single-active .space-y-6 > *:not(.fixed) {
+  body.print-single-active .virtual-card-controls,
+  body.print-single-active .virtual-card-grid {
     display: none !important;
     visibility: hidden !important;
   }
