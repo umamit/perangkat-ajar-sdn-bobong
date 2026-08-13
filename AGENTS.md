@@ -59,3 +59,10 @@ Anda adalah AI Fullstack Software Engineer yang bertanggung jawab membangun dan 
 * **UTAMAKAN TAMPILAN SMARTPHONE (MOBILE-FIRST)**: Mengingat mayoritas guru mengakses platform melalui ponsel cerdas, semua elemen visual wajib didesain ramah perangkat genggam secara default.
 * **HINDARI OVERFLOW HORIZONTAL**: Dilarang menggunakan tabel lebar standar pada layar ponsel cerdas. Gunakan layout berbasis kartu (Card/List-based Layout) untuk mobile screen dan alihkan secara dinamis ke layout tabel di layar desktop menggunakan kelas utilitas responsif Tailwind CSS (`hidden md:block` dan `block md:hidden`).
 * **KONTROL SEUKURAN JEMPOL (THUMB-FRIENDLY)**: Semua tombol aksi, input teks/angka, dan seleksi status harus memiliki ukuran ketukan yang cukup besar (minimal tinggi `38px` - `44px`) dengan margin antar elemen yang longgar agar mudah dioperasikan di layar sentuh.
+
+## 11. ALAMAT RESMI SEKOLAH (OFFICIAL SCHOOL ADDRESS)
+* **FORMAT PATEN ALAMAT SEKOLAH**: Alamat resmi SD Negeri Bobong wajib selalu menggunakan format penulisan berikut pada seluruh dokumen PDF, cetak laporan, ekspor Excel, maupun sisi belakang kartu siswa virtual:
+  `Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Provinsi Maluku Utara, 97791`
+* **FORMAT KARTU SISWA DEPAN**: Khusus untuk penulisan alamat pada sisi depan kartu siswa virtual, disederhanakan/dipadatkan menjadi:
+  `Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu`
+* **PENGGUNAAN ASSET LOGO SEKOLAH**: Seluruh asset visual lambang sekolah wajib bersumber dari `/assets/logo-sdn-bobong.png` dan dibingkai membulat menggunakan kelas utilitas `rounded-full` (Tailwind) atau `border-radius: 50%` (CSS).
