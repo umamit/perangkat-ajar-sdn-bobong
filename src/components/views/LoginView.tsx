@@ -144,7 +144,7 @@ export function LoginView() {
  
       <div className="mt-8 text-center relative z-10">
         <a
-          href="https://digital.ibraglobalenglish.uk"
+          href="https://ibradigital.id"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-primary transition-colors duration-200"
