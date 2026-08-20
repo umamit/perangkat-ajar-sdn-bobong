@@ -130,7 +130,7 @@ Struktur Keluaran:
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [
           { role: 'system', content: systemInstructions },
           { role: 'user', content: userMessage }
@@ -161,7 +161,7 @@ Struktur Keluaran:
     return NextResponse.json({
       success: true,
       result: aiText,
-      model: data.model || 'llama-3.3-70b-versatile',
+      model: data.model || 'openai/gpt-oss-120b',
     });
   } catch (err: any) {
     return NextResponse.json({
