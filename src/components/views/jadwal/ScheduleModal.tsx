@@ -9,16 +9,17 @@ interface ScheduleModalProps {
   schedule?: Schedule | null;
   classes: ClassInfo[];
   lockedClassId?: string;
+  defaultClassId?: string;
   teacherNip: string;
   onSave: (data: Omit<Schedule, 'id'> & { id?: string }) => void;
   onClose: () => void;
 }
 
-export function ScheduleModal({ schedule, classes, lockedClassId, teacherNip, onSave, onClose }: ScheduleModalProps) {
+export function ScheduleModal({ schedule, classes, lockedClassId, defaultClassId, teacherNip, onSave, onClose }: ScheduleModalProps) {
   const [day, setDay] = useState(schedule?.day || 'Senin');
   const [timeStart, setTimeStart] = useState(schedule?.timeStart || schedule?.time_start || '07:30');
   const [timeEnd, setTimeEnd] = useState(schedule?.timeEnd || schedule?.time_end || '08:30');
-  const [classId, setClassId] = useState(schedule?.classId || schedule?.class_id || lockedClassId || classes[0]?.id || '');
+  const [classId, setClassId] = useState(schedule?.classId || schedule?.class_id || lockedClassId || defaultClassId || classes[0]?.id || '');
   const [subject, setSubject] = useState(schedule?.subject || '');
   const [saving, setSaving] = useState(false);
 

@@ -154,6 +154,7 @@ export function JadwalView() {
           schedule={editingSchedule}
           classes={availableClasses}
           lockedClassId={lockedClass || undefined}
+          defaultClassId={selectedClass !== 'ALL' ? selectedClass : undefined}
           teacherNip={currentTeacher?.nip || ''}
           onSave={handleSave}
           onClose={() => { setShowModal(false); setEditingSchedule(null); }}
