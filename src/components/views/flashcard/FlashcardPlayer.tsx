@@ -32,7 +32,7 @@ export function FlashcardPlayer({
   onNext,
 }: FlashcardPlayerProps) {
   const promptText = `cute cartoon illustration of ${currentCard.word} (${currentCard.meaning || currentCard.translate || ''}), school flashcard style, isolated clean white background, vector digital art`;
-  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=400&height=400&nologo=true`;
+  const imageUrl = `/api/image-proxy?prompt=${encodeURIComponent(promptText)}`;
 
   return (
     <div className="max-w-md mx-auto">
