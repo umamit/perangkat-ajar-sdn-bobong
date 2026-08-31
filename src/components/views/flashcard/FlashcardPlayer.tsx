@@ -31,11 +31,14 @@ export function FlashcardPlayer({
   onPrev,
   onNext,
 }: FlashcardPlayerProps) {
+  const promptText = `cute cartoon illustration of ${currentCard.word} (${currentCard.meaning || currentCard.translate || ''}), school flashcard style, isolated clean white background, vector digital art`;
+  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=400&height=400&nologo=true`;
+
   return (
     <div className="max-w-md mx-auto">
       <Card
         onClick={onFlip}
-        className="cursor-pointer min-h-[260px] flex flex-col justify-between items-center text-center p-8 bg-gradient-to-br from-white via-white to-primary/5 shadow-xl border border-white/80 rounded-3xl hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]"
+        className="cursor-pointer min-h-[360px] flex flex-col justify-between items-center text-center p-6 bg-gradient-to-br from-white via-white to-primary/5 shadow-xl border border-white/80 rounded-3xl hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]"
       >
         <div className="w-full flex justify-between items-center">
           <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">{currentCard.phase || 'Fase A'}</Badge>
@@ -44,9 +47,20 @@ export function FlashcardPlayer({
           </span>
         </div>
 
-        <div className="my-6 space-y-2.5">
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-            {flipped ? currentCard.meaning : currentCard.word}
+        {/* Dynamic AI Illustration */}
+        <div className="my-3 w-32 h-32 relative bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center shadow-inner shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl}
+            alt={currentCard.word}
+            className="w-full h-full object-cover transition-opacity duration-300"
+            loading="lazy"
+          />
+        </div>
+
+        <div className="my-3 space-y-2.5">
+          <h2 className="text-xl font-black text-slate-800 tracking-tight">
+            {flipped ? (currentCard.meaning || currentCard.translate) : currentCard.word}
           </h2>
           <p className="text-[10px] text-slate-450 font-bold uppercase tracking-wider">
             {flipped ? 'Arti dalam Bahasa Indonesia' : 'Klik kartu untuk melihat arti'}
