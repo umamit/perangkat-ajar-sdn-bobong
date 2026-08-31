@@ -6,12 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { saveFlashcardToSupabase } from '@/lib/supabase';
+import { saveFlashcardToSupabase, deleteFlashcardDeckFromSupabase } from '@/lib/supabaseFlashcard';
 import { FlashcardPlayer } from './flashcard/FlashcardPlayer';
 import { FlashcardDialog } from './flashcard/FlashcardDialog';
 
 export function MateriFlashcardView() {
-  const { flashcards, currentTeacher, showToast, setFlashcards } = useApp();
+  const { flashcards, currentTeacher, showToast, setFlashcards, syncData } = useApp();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -30,7 +30,27 @@ export function MateriFlashcardView() {
     phase: 'Fase A'
   });
 
-  const cardList = flashcards || [];
+  const [selectedDeckTitle, setSelectedDeckTitle] = useState<string | null>(null);
+
+  const decks = React.useMemo(() => {
+    const groups: Record<string, { title: string; phase: string; teacher_nip?: string | null; cards: any[] }> = {};
+    (flashcards || []).forEach(c => {
+      const key = c.title || c.category || 'General';
+      if (!groups[key]) {
+        groups[key] = {
+          title: key,
+          phase: c.phase || 'Fase A',
+          teacher_nip: c.teacher_nip,
+          cards: []
+        };
+      }
+      groups[key].cards.push(c);
+    });
+    return Object.values(groups);
+  }, [flashcards]);
+
+  const activeDeck = decks.find(d => d.title === selectedDeckTitle);
+  const cardList = activeDeck ? activeDeck.cards : [];
 
   const currentCard = cardList[currentIndex] || cardList[0];
 
@@ -44,6 +64,21 @@ export function MateriFlashcardView() {
     if (cardList.length === 0) return;
     setFlipped(false);
     setCurrentIndex(prev => (prev - 1 + cardList.length) % cardList.length);
+  };
+
+  const handleDeleteDeck = async (title: string, teacher_nip: string) => {
+    if (!confirm(`Apakah Anda yakin ingin menghapus seluruh dek "${title}" beserta semua kartunya?`)) return;
+    setFlashcards(prev => prev.filter(c => (c.title || c.category) !== title));
+    if (selectedDeckTitle === title) {
+      setSelectedDeckTitle(null);
+    }
+    const ok = await deleteFlashcardDeckFromSupabase(title, teacher_nip);
+    if (ok) {
+      showToast(`Dek "${title}" berhasil dihapus`, 'success');
+    } else {
+      showToast('Gagal menghapus dek dari cloud', 'error');
+      await syncData();
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -165,24 +200,87 @@ export function MateriFlashcardView() {
           <i className="ri-add-line" /> Tambah Flashcard
         </Button>
       </div>
- 
-      {cardList.length === 0 ? (
-        <div className="max-w-md mx-auto text-center p-8 bg-white/60 backdrop-blur-md rounded-[24px] border border-slate-100 shadow-sm space-y-3">
-          <i className="ri-inbox-2-line text-3xl text-slate-350 block mx-auto" />
-          <p className="text-xs font-semibold text-slate-500">
-            Belum ada kartu kosakata terdaftar. Klik &apos;Tambah Flashcard&apos; untuk membuat secara manual atau merumuskan otomatis dengan bantuan AI.
-          </p>
-        </div>
+      {selectedDeckTitle === null ? (
+        decks.length === 0 ? (
+          <div className="max-w-md mx-auto text-center p-8 bg-white/60 backdrop-blur-md rounded-[24px] border border-slate-100 shadow-sm space-y-3">
+            <i className="ri-inbox-2-line text-3xl text-slate-350 block mx-auto" />
+            <p className="text-xs font-semibold text-slate-500">
+              Belum ada kartu kosakata terdaftar. Klik &apos;Tambah Flashcard&apos; untuk membuat secara manual atau merumuskan otomatis dengan bantuan AI.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {decks.map((deck, idx) => (
+              <Card key={deck.title || idx} className="rounded-2xl border border-white/85 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-primary/20 text-left">
+                <CardHeader className="pb-2 bg-white/35 border-b border-slate-100/50">
+                  <div className="flex justify-between items-center">
+                    <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">
+                      {deck.phase}
+                    </Badge>
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
+                      <i className="ri-book-open-line text-base" />
+                    </div>
+                  </div>
+                  <CardTitle className="text-sm font-extrabold text-slate-800 mt-3 line-clamp-1">
+                    {deck.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-xs pt-4">
+                  <p className="text-slate-600 font-semibold leading-relaxed">Berisi {deck.cards.length} kartu kosakata pembelajaran interaktif.</p>
+                  <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-bold gap-2">
+                    <Button
+                      onClick={() => {
+                        setSelectedDeckTitle(deck.title);
+                        setCurrentIndex(0);
+                        setFlipped(false);
+                      }}
+                      size="sm"
+                      className="flex-1 rounded-lg text-[10px] font-black bg-primary text-white hover:bg-primary-dark"
+                    >
+                      Mulai Belajar
+                    </Button>
+                    {(currentTeacher?.nip === '199610272019032006' || currentTeacher?.nip === deck.teacher_nip) && (
+                      <Button
+                        onClick={() => handleDeleteDeck(deck.title, deck.teacher_nip || '')}
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg text-[10px] font-black text-rose-700 border-rose-200 hover:bg-rose-50/50"
+                      >
+                        Hapus
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )
       ) : (
-        <FlashcardPlayer
-          currentCard={currentCard}
-          currentIndex={currentIndex}
-          total={cardList.length}
-          flipped={flipped}
-          onFlip={() => setFlipped(!flipped)}
-          onPrev={handlePrev}
-          onNext={handleNext}
-        />
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 max-w-md mx-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedDeckTitle(null)}
+              className="h-8 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-50 gap-1"
+            >
+              <i className="ri-arrow-left-line" /> Daftar Dek
+            </Button>
+            <span className="text-xs font-black text-slate-600 truncate">
+              Dek: {selectedDeckTitle} ({cardList.length} Kartu)
+            </span>
+          </div>
+
+          <FlashcardPlayer
+            currentCard={currentCard}
+            currentIndex={currentIndex}
+            total={cardList.length}
+            flipped={flipped}
+            onFlip={() => setFlipped(!flipped)}
+            onPrev={handlePrev}
+            onNext={handleNext}
+          />
+        </div>
       )}
  
       <FlashcardDialog

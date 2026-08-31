@@ -204,6 +204,15 @@ export async function POST(request: Request) {
         if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('flashcards').delete().eq('id', payload.id)).error });
       }
+      case 'deleteFlashcardDeck': {
+        const { title, teacher_nip } = payload;
+        verifyOwnership(teacher_nip);
+        let query = supabase.from('flashcards').delete().eq('title', title);
+        if (!isKepsek) {
+          query = query.eq('teacher_nip', cookieNip);
+        }
+        return NextResponse.json({ success: !(await query).error });
+      }
       case 'saveAssignment':
         verifyOwnership(payload.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from('assignments').upsert(payload)).error });
