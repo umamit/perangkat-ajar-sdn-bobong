@@ -58,7 +58,23 @@ export function useAppState() {
       setIsInitializing(false);
     }
   }, []);
-  const [activeView, setActiveView] = useState<string>('dashboard');
+  const [activeView, setActiveView] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem('sdn_bobong_active_view') || 'dashboard';
+      } catch (e) {
+        return 'dashboard';
+      }
+    }
+    return 'dashboard';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sdn_bobong_active_view', activeView);
+    } catch (e) {}
+  }, [activeView]);
+
   const [selectedClassFilter, setSelectedClassFilter] = useState<string>('ALL');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
   
@@ -153,6 +169,7 @@ export function useAppState() {
       localStorage.removeItem('sdn_bobong_auth');
       localStorage.removeItem('sdn_bobong_teacher');
       localStorage.removeItem('sdn_bobong_cache');
+      localStorage.removeItem('sdn_bobong_active_view');
     } catch (e) {}
 
     // Reset memory state immediately to secure teacher privacy
@@ -162,6 +179,7 @@ export function useAppState() {
     setJournals([]);
     setAttendance([]);
     setModules([]);
+    setActiveView('dashboard');
     setFlashcards([
       { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
       { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
