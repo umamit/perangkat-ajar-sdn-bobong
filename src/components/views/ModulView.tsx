@@ -6,12 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { saveModuleToSupabase, uploadFileToSupabase } from '@/lib/supabase';
+import { saveModuleToSupabase, uploadFileToSupabase, deleteModuleFromSupabase } from '@/lib/supabase';
 
 import { downloadModulPDF } from '@/modules/generateModulPDF';
 
 export function ModulView() {
-  const { modules, currentTeacher, classes, teachers, showToast, setModules } = useApp();
+  const { modules, currentTeacher, classes, teachers, showToast, setModules, syncData } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -24,6 +24,24 @@ export function ModulView() {
     tp: '',
     cp: ''
   });
+
+  const handleDelete = async (id: string) => {
+    if (!id) return;
+    if (confirm('Apakah Anda yakin ingin menghapus modul ajar ini dari cloud?')) {
+      try {
+        setModules((prev: any[]) => prev.filter(m => m.id !== id));
+        const success = await deleteModuleFromSupabase(id);
+        if (success) {
+          showToast('Modul ajar berhasil dihapus', 'success');
+        } else {
+          showToast('Gagal menghapus modul dari database cloud', 'error');
+          await syncData();
+        }
+      } catch (e) {
+        showToast('Terjadi kesalahan saat menghapus modul', 'error');
+      }
+    }
+  };
 
   const handleDownloadPDF = async (m: any) => {
     try {
@@ -130,8 +148,19 @@ export function ModulView() {
                 <Badge variant="default" className="font-black text-[10px] rounded-lg px-2.5 py-0.5">
                   {classes.find(c => c.id === (m.classId || m.class_id))?.name || m.grade || m.phase || 'Fase A'}
                 </Badge>
-                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
-                  <i className="ri-file-text-line text-base" />
+                <div className="flex items-center gap-1.5">
+                  {(currentTeacher?.nip === '199610272019032006' || currentTeacher?.nip === (m.teacherNip || m.teacher_nip)) && (
+                    <button
+                      onClick={() => m.id && handleDelete(m.id)}
+                      className="w-8 h-8 rounded-lg text-rose-500 hover:bg-rose-50 flex items-center justify-center transition-colors"
+                      title="Hapus Modul"
+                    >
+                      <i className="ri-delete-bin-line text-sm" />
+                    </button>
+                  )}
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
+                    <i className="ri-file-text-line text-base" />
+                  </div>
                 </div>
               </div>
               <CardTitle className="text-sm font-extrabold text-slate-850 mt-3 line-clamp-1">
