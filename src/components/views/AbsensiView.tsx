@@ -263,18 +263,21 @@ export function AbsensiView() {
                   </Badge>
                 </div>
               ) : (
-                <select
-                  value={selectedClass}
-                  onChange={e => {
-                    setSelectedClass(e.target.value);
-                    setCurrentStatuses({});
-                  }}
-                  className="w-full h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  {classes.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={selectedClass}
+                    onChange={e => {
+                      setSelectedClass(e.target.value);
+                      setCurrentStatuses({});
+                    }}
+                    className="w-full h-9 rounded-apple-md border border-slate-200/80 bg-white/70 backdrop-blur-md px-3 pr-8 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-primary/30 appearance-none cursor-pointer shadow-xs transition-all"
+                  >
+                    {classes.map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                  <i className="ri-arrow-down-s-line absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-base" />
+                </div>
               )}
             </div>
             <div>
