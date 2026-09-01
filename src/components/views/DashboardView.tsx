@@ -33,7 +33,7 @@ export function DashboardView() {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in text-slate-800">
+    <div className="flex flex-col gap-8 animate-fade-in text-slate-800">
       {/* Apple Liquid Glass Hero Banner */}
       <div className="relative overflow-hidden p-8 sm:p-10 text-white shadow-2xl rounded-3xl bg-gradient-to-br from-primary via-primary/95 to-primary-dark border border-white/10">
         <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-cyan-300/25 rounded-full blur-3xl pointer-events-none animate-pulse" />
