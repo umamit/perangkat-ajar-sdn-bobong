@@ -155,7 +155,7 @@ export function DashboardView() {
       {/* Timetable & Recent Journals Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="glass-panel overflow-hidden border border-white/80 rounded-2xl bg-white/60 backdrop-blur-md shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/40 border-b border-slate-150">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/30 border-b border-slate-100/40">
             <CardTitle className="text-sm font-extrabold flex items-center gap-3 text-slate-800">
               <div className="w-8.5 h-8.5 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
                 <i className="ri-calendar-check-line text-base" />
@@ -192,7 +192,7 @@ export function DashboardView() {
         </Card>
  
         <Card className="glass-panel overflow-hidden border border-white/80 rounded-2xl bg-white/60 backdrop-blur-md shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/40 border-b border-slate-150">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-5 bg-white/30 border-b border-slate-100/40">
             <CardTitle className="text-sm font-extrabold flex items-center gap-3 text-slate-800">
               <div className="w-8.5 h-8.5 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shadow-inner">
                 <i className="ri-book-read-line text-base" />
