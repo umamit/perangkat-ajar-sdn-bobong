@@ -1,6 +1,6 @@
 {
   "name": "perangkat-ajar-sdn-bobong",
-  "version": "5.5.31",
+  "version": "5.5.32",
   "description": "Perangkat Ajar Online - SD Negeri Bobong (Next.js & Supabase)",
   "scripts": {
     "dev": "next dev",
@@ -50,9 +50,9 @@
     "@types/react-dom": "^19.0.4",
     "@types/recharts": "^1.8.29",
     "@types/web-push": "^3.6.4",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.5.2",
-    "tailwindcss": "^4.3.3",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.7.3"
   }
 }
