@@ -222,7 +222,10 @@ export async function saveJournalToSupabase(journal: any) {
     };
     const res = await fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-teacher-nip': payload.teacher_nip || ''
+      },
       body: JSON.stringify({ action: 'saveJournal', payload })
     });
     const data = await res.json();

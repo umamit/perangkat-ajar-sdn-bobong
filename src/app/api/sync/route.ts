@@ -138,18 +138,20 @@ export async function POST(request: Request) {
     const { action, payload } = body;
     const supabase = getSupabase();
 
-    // Authenticate NIP securely via cookie
+    // Authenticate NIP via cookie with header/payload fallback for standalone PWA apps
     const cookieHeader = request.headers.get('cookie') || '';
     const cookieNip = cookieHeader
       .split('; ')
       .find(row => row.startsWith('sdn_bobong_nip='))
       ?.split('=')[1] || '';
+    const headerNip = request.headers.get('x-teacher-nip') || '';
+    const activeNip = cookieNip || headerNip || payload?.teacher_nip || payload?.teacherNip || '';
 
-    const isKepsek = cookieNip === '199610272019032006';
+    const isKepsek = activeNip === '199610272019032006';
 
     // Helper to check ownership for mutations
     const verifyOwnership = (itemTeacherNip: string | null | undefined) => {
-      if (!isKepsek && itemTeacherNip && itemTeacherNip !== cookieNip) {
+      if (!isKepsek && itemTeacherNip && activeNip && itemTeacherNip !== activeNip) {
         throw new Error('Unauthorized: Anda tidak memiliki akses untuk mengubah data ini.');
       }
     };

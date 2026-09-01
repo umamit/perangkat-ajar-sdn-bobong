@@ -49,7 +49,12 @@ export function useAppState() {
       if (authed) {
         const saved = localStorage.getItem('sdn_bobong_teacher');
         if (saved) {
-          setCurrentTeacher(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          setCurrentTeacher(parsed);
+          if (parsed?.nip) {
+            document.cookie = `sdn_bobong_auth=true; path=/; max-age=604800; SameSite=Lax`;
+            document.cookie = `sdn_bobong_nip=${parsed.nip}; path=/; max-age=604800; SameSite=Lax`;
+          }
         }
       }
     } catch (e) {
