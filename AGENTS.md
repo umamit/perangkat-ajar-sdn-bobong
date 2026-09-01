@@ -71,3 +71,8 @@ Anda adalah Arsitek Website, Pembuat Aplikasi, dan AI Fullstack Software Enginee
 ## 12. ATURAN PEMBARUAN DEPENDENSI & LIBRARY SECARA BERKALA (ALWAYS LATEST LIBRARY RULE)
 * **Wajib Memeriksa & Memperbarui Library**: AI WAJIB secara aktif memeriksa ketersediaan pembaruan pustaka/library (seperti Next.js, React, Tailwind CSS, Supabase SDK, TypeScript, dll.) pada proyek ini dan memperbaruinya ke versi rilis stabil terbaru secara berkala tanpa membiarkan dependensi tertinggal (*outdated*).
 * **Verifikasi Kompatibilitas**: Setiap pembaruan library wajib diuji dengan `npm run build` untuk menjamin tidak ada breaking changes atau konflik antar library.
+
+## 13. ATURAN PENYESUAIAN TAMPILAN MACOS TERBARU (MACOS TAHOE CRYSTAL GLASS HIG RULE)
+* **KACA AKRILIK KRISTAL NETRAL (MACOS TAHOE GLASS)**: Seluruh modul visual, kartu, panel dialog, modal, sidebar, dan header WAJIB secara ketat disesuaikan dengan standar antarmuka versi macOS terbaru (macOS 26 Tahoe Crystal Glass HIG).
+* **TRANSLUSEN DAN KONTINU (CONTINUOUS CRYSTAL GLASS)**: Menggunakan permukaan kaca transparan `backdrop-filter: blur(28px) saturate(180%)`, latar belakang netral bersih, bingkai spekular tipis 1px (`border-white/80` / `border-slate-100/40`), dan DILARANG KERAS menggunakan garis pemisah gelap yang memotong kartu secara tajam.
+* **VALIDITAS KELAS WARNA TAILWIND V4**: Seluruh kelas warna Tailwind CSS wajib menggunakan nilai langkah palet standar yang valid (`50`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`, `950`). DILARANG KERAS menggunakan langkah warna invalid seperti `-150`, `-250`, `-350`, `-450`, `-650`, `-850` yang menyebabkan peramban menghasilkan bingkai hitam/gelap kasar secara tidak sengaja.
