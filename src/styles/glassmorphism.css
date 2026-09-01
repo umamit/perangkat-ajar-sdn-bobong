@@ -1,44 +1,53 @@
 /* ----------------------------------------------------
-   5. APPLE LIQUID GLASS UTILITIES (macOS Sequoia)
+   5. APPLE LIQUID GLASS UTILITIES (iOS / macOS HIG)
    ---------------------------------------------------- */
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.78) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
-  box-shadow: 0 8px 32px 0 rgba(18, 165, 184, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9) !important;
-  border-radius: 20px !important;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 12px 36px 0 rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95) !important;
+  border-radius: 24px !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .glass-panel:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
   border-color: rgba(18, 165, 184, 0.35) !important;
-  box-shadow: 0 12px 40px 0 rgba(18, 165, 184, 0.16), inset 0 1px 1px 0 rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 16px 48px 0 rgba(18, 165, 184, 0.14), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1) !important;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.75) !important;
-  backdrop-filter: blur(16px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.8) !important;
-  border-radius: 16px !important;
-  transition: all 0.25s ease !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 8px 24px 0 rgba(15, 23, 42, 0.05), inset 0 1px 1.2px 0 rgba(255, 255, 255, 0.92) !important;
+  border-radius: 20px !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .glass-card:hover {
   background: rgba(255, 255, 255, 0.88) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 30px 0 rgba(18, 165, 184, 0.12) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 14px 36px 0 rgba(18, 165, 184, 0.12), inset 0 1px 1.2px 0 rgba(255, 255, 255, 1) !important;
 }
 
 .glass-hero {
   background: linear-gradient(135deg, rgba(18, 165, 184, 0.92) 0%, rgba(10, 126, 141, 0.96) 100%) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 16px 40px -10px rgba(10, 126, 141, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4) !important;
-  border-radius: 24px !important;
+  backdrop-filter: blur(28px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.38) !important;
+  box-shadow: 0 20px 48px -10px rgba(10, 126, 141, 0.38), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.5) !important;
+  border-radius: 28px !important;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.88) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.04), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95) !important;
 }
