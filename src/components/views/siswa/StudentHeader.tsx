@@ -50,7 +50,7 @@ export function StudentHeader({
           <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1.5 rounded-xl">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-300 hover:bg-rose-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Siswa
           </Button>
           {isKepsek && (

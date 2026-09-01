@@ -89,7 +89,7 @@ export function CounselingView() {
       case 'Konseling': return 'bg-rose-50 text-rose-600 border-rose-200';
       case 'Kunjungan Rumah': return 'bg-amber-50 text-amber-600 border-amber-200';
       case 'Telepon Orang Tua': return 'bg-emerald-50 text-emerald-600 border-emerald-200';
-      default: return 'bg-slate-50 text-slate-650 border-slate-200';
+      default: return 'bg-slate-50 text-slate-600 border-slate-200';
     }
   };
 
@@ -162,7 +162,7 @@ export function CounselingView() {
           {/* Timeline list */}
           <div className="space-y-3.5 max-h-[62vh] overflow-y-auto pr-1">
             {filteredLogs.length === 0 ? (
-              <div className="text-center py-16 text-slate-450 bg-white/60 border border-slate-100 rounded-2xl">
+              <div className="text-center py-16 text-slate-500 bg-white/60 border border-slate-100 rounded-2xl">
                 <i className="ri-folder-shield-2-line text-3xl opacity-60 mb-2 block" />
                 Tidak ditemukan catatan pembinaan yang cocok.
               </div>
@@ -195,7 +195,7 @@ export function CounselingView() {
                     <p className="text-slate-700 leading-relaxed font-semibold">{log.notes}</p>
                     {log.followUp && (
                       <div className="pt-2 border-t border-slate-100 text-[10px] text-slate-500">
-                        <span className="font-extrabold text-slate-650">Tindak Lanjut: </span>
+                        <span className="font-extrabold text-slate-600">Tindak Lanjut: </span>
                         {log.followUp}
                       </div>
                     )}
@@ -215,7 +215,7 @@ export function CounselingView() {
             </h4>
 
             <div className="space-y-1 text-left relative">
-              <Label className="font-bold text-slate-650">Pilih Siswa</Label>
+              <Label className="font-bold text-slate-600">Pilih Siswa</Label>
               <div className="relative">
                 <Input
                   type="text"

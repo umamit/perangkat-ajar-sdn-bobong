@@ -40,7 +40,7 @@ export function StudentCardItem({
 
           <div className="flex-1 flex gap-3 px-4 pt-3 items-center">
             <div className="w-16 h-20 rounded-lg bg-white border border-teal-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-              <i className="ri-user-3-line text-3xl text-slate-350" />
+              <i className="ri-user-3-line text-3xl text-slate-400" />
             </div>
             
             <div className="flex-1 text-left space-y-1 text-[9px] font-bold text-slate-700">
@@ -108,7 +108,7 @@ export function StudentCardItem({
 
           <div className="border-t border-teal-500/10 pt-2 text-[6px] text-slate-400 font-bold text-center leading-tight">
             <p>SD NEGERI BOBONG - Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Provinsi Maluku Utara, 97791</p>
-            <p className="text-[5px] text-slate-350">ID: {s.id}</p>
+            <p className="text-[5px] text-slate-400">ID: {s.id}</p>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ export function StudentCardItem({
           </div>
           <div className="flex-1 flex gap-3 px-4 pt-3 items-center">
             <div className="w-16 h-20 rounded-lg bg-white border border-teal-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-              <i className="ri-user-3-line text-3xl text-slate-350" />
+              <i className="ri-user-3-line text-3xl text-slate-400" />
             </div>
             <div className="flex-1 text-left space-y-1 text-[9px] font-bold text-slate-700">
               <div>
@@ -190,7 +190,7 @@ export function StudentCardItem({
           </div>
           <div className="border-t border-teal-500/10 pt-2 text-[6px] text-slate-400 font-bold text-center leading-tight">
             <p>SD NEGERI BOBONG - Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Provinsi Maluku Utara, 97791</p>
-            <p className="text-[5px] text-slate-350">ID: {s.id}</p>
+            <p className="text-[5px] text-slate-400">ID: {s.id}</p>
           </div>
         </div>
       </div>

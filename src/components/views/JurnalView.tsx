@@ -200,7 +200,7 @@ export function JurnalView() {
                   <TableCell className="text-center">
                     <button
                       onClick={() => handleDelete(j.id)}
-                      className="p-1.5 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                       title="Hapus Jurnal"
                     >
                       <i className="ri-delete-bin-line text-sm" />
@@ -229,7 +229,7 @@ export function JurnalView() {
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4 mt-2">
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="jurnalDate" className="font-bold text-slate-650">Tanggal Mengajar</Label>
+              <Label htmlFor="jurnalDate" className="font-bold text-slate-600">Tanggal Mengajar</Label>
               <Input
                 id="jurnalDate"
                 type="date"
@@ -253,7 +253,7 @@ export function JurnalView() {
               </select>
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="jurnalTopic" className="font-bold text-slate-650">Materi / Topik Pembelajaran</Label>
+              <Label htmlFor="jurnalTopic" className="font-bold text-slate-600">Materi / Topik Pembelajaran</Label>
               <Input
                 id="jurnalTopic"
                 value={form.topic}
@@ -265,7 +265,7 @@ export function JurnalView() {
             </div>
             <div className="space-y-1.5 text-xs text-left">
               <div className="flex justify-between items-center mb-0.5">
-                <Label htmlFor="jurnalNotes" className="font-bold text-slate-650">Catatan / Refleksi Guru</Label>
+                <Label htmlFor="jurnalNotes" className="font-bold text-slate-600">Catatan / Refleksi Guru</Label>
                 <button
                   type="button"
                   onClick={handleBeautifyNotes}

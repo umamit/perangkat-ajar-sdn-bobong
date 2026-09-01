@@ -97,7 +97,7 @@ export function FlashcardPlayer({
           <h2 className="text-xl font-black text-slate-800 tracking-tight">
             {flipped ? (currentCard.meaning || currentCard.translate) : currentCard.word}
           </h2>
-          <p className="text-[10px] text-slate-450 font-bold uppercase tracking-wider">
+          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
             {flipped ? 'Arti dalam Bahasa Indonesia' : 'Klik kartu untuk melihat arti'}
           </p>
         </div>

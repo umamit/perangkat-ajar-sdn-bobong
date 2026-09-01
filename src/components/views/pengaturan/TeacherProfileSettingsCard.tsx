@@ -135,7 +135,7 @@ export function TeacherProfileSettingsCard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1 text-left">
-                <label className="font-bold text-slate-650">Nama Lengkap Guru / Admin:</label>
+                <label className="font-bold text-slate-600">Nama Lengkap Guru / Admin:</label>
                 <Input
                   type="text"
                   {...register('name')}
@@ -145,7 +145,7 @@ export function TeacherProfileSettingsCard() {
               </div>
 
               <div className="space-y-1 text-left">
-                <label className="font-bold text-slate-650">NIP Login:</label>
+                <label className="font-bold text-slate-600">NIP Login:</label>
                 <Input
                   type="text"
                   {...register('nip')}
@@ -158,7 +158,7 @@ export function TeacherProfileSettingsCard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1 text-left">
-                <label className="font-bold text-slate-650">Role / Jabatan:</label>
+                <label className="font-bold text-slate-600">Role / Jabatan:</label>
                 <Input
                   type="text"
                   {...register('role')}
@@ -169,7 +169,7 @@ export function TeacherProfileSettingsCard() {
               </div>
 
               <div className="space-y-1 text-left">
-                <label className="font-bold text-slate-650">Nama Sekolah:</label>
+                <label className="font-bold text-slate-600">Nama Sekolah:</label>
                 <Input
                   type="text"
                   {...register('school')}

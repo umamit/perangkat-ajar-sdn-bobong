@@ -58,7 +58,7 @@ export function SchoolSettingsCard() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">Nama Sekolah:</Label>
+              <Label className="font-bold text-slate-600">Nama Sekolah:</Label>
               <Input
                 type="text"
                 value={schoolName}
@@ -68,7 +68,7 @@ export function SchoolSettingsCard() {
               />
             </div>
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">NPSN Sekolah:</Label>
+              <Label className="font-bold text-slate-600">NPSN Sekolah:</Label>
               <Input
                 type="text"
                 value={npsn}
@@ -81,7 +81,7 @@ export function SchoolSettingsCard() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">Tahun Ajaran:</Label>
+              <Label className="font-bold text-slate-600">Tahun Ajaran:</Label>
               <Input
                 type="text"
                 value={academicYear}
@@ -91,7 +91,7 @@ export function SchoolSettingsCard() {
               />
             </div>
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">Semester Aktif:</Label>
+              <Label className="font-bold text-slate-600">Semester Aktif:</Label>
               <select
                 value={semester}
                 onChange={e => setSemester(e.target.value)}
@@ -105,7 +105,7 @@ export function SchoolSettingsCard() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">Nama Kepala Sekolah:</Label>
+              <Label className="font-bold text-slate-600">Nama Kepala Sekolah:</Label>
               <Input
                 type="text"
                 value={headmasterName}
@@ -115,7 +115,7 @@ export function SchoolSettingsCard() {
               />
             </div>
             <div className="space-y-1 text-left">
-              <Label className="font-bold text-slate-650">NIP Kepala Sekolah:</Label>
+              <Label className="font-bold text-slate-600">NIP Kepala Sekolah:</Label>
               <Input
                 type="text"
                 value={headmasterNip}

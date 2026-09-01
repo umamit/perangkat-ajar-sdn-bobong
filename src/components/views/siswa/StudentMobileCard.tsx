@@ -51,7 +51,7 @@ export function StudentMobileCard({
       </div>
 
       {isExpanded && (
-        <div className="mt-2 pt-2.5 border-t border-slate-105 space-y-2.5 text-xs text-slate-650 animate-fade-in">
+        <div className="mt-2 pt-2.5 border-t border-slate-105 space-y-2.5 text-xs text-slate-600 animate-fade-in">
           <div className="space-y-2">
             <div>
               <span className="text-slate-400 block font-semibold text-[9px] uppercase">NIS</span>
@@ -113,7 +113,7 @@ export function StudentMobileCard({
                 size="sm"
                 variant="outline"
                 onClick={() => handleEditClick(s)}
-                className="flex-1 h-9 text-xs rounded-xl font-bold border-slate-200 text-slate-650 hover:bg-slate-50 gap-1.5"
+                className="flex-1 h-9 text-xs rounded-xl font-bold border-slate-200 text-slate-600 hover:bg-slate-50 gap-1.5"
               >
                 <i className="ri-edit-line text-sm" /> Edit
               </Button>

@@ -63,7 +63,7 @@ export function StatCards({
       </div>
 
       <div className="p-4 rounded-2xl bg-slate-100/70 border border-slate-200/80 shadow-sm relative overflow-hidden col-span-2 sm:col-span-1 transition-all duration-300 hover:shadow-slate-200/50 hover:scale-[1.02]">
-        <div className="absolute right-2.5 top-2 text-slate-350/30 text-3xl font-black pointer-events-none">
+        <div className="absolute right-2.5 top-2 text-slate-400/30 text-3xl font-black pointer-events-none">
           <i className="ri-user-search-line" />
         </div>
         <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider block">Belum Diisi</span>

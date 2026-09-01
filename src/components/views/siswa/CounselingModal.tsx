@@ -110,7 +110,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-3 text-xs">
           {/* History Section (Left/Top) */}
           <div className={isKepsek ? "md:col-span-7 space-y-3" : "md:col-span-12 space-y-3"}>
-            <h3 className="font-bold text-slate-650 flex items-center gap-1.5 border-b pb-1 text-xs">
+            <h3 className="font-bold text-slate-600 flex items-center gap-1.5 border-b pb-1 text-xs">
               <i className="ri-history-line" /> Riwayat Pembinaan ({studentLogs.length})
             </h3>
             {studentLogs.length === 0 ? (
@@ -143,7 +143,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
                     <p className="text-slate-700 leading-relaxed font-medium mt-1">{log.notes}</p>
                     {log.followUp && (
                       <div className="mt-1.5 pt-1.5 border-t border-slate-100 text-[11px] text-slate-500">
-                        <span className="font-bold text-slate-650">Tindak Lanjut: </span>
+                        <span className="font-bold text-slate-600">Tindak Lanjut: </span>
                         {log.followUp}
                       </div>
                     )}
@@ -156,7 +156,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
           {/* Form Section (Right/Bottom) */}
           {isKepsek && (
             <form onSubmit={handleSave} className="md:col-span-5 space-y-3.5 border-t md:border-t-0 md:border-l md:pl-5 pt-4 md:pt-0">
-            <h3 className="font-bold text-slate-650 flex items-center gap-1.5 border-b pb-1 text-xs">
+            <h3 className="font-bold text-slate-600 flex items-center gap-1.5 border-b pb-1 text-xs">
               <i className="ri-edit-box-line" /> Tambah Catatan Baru
             </h3>
 

@@ -168,7 +168,7 @@ export function ModulView() {
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-sm font-extrabold text-slate-850 mt-3 line-clamp-1">
+              <CardTitle className="text-sm font-extrabold text-slate-800 mt-3 line-clamp-1">
                 {m.title}
               </CardTitle>
               {currentTeacher?.nip === '199610272019032006' && (
@@ -181,14 +181,14 @@ export function ModulView() {
             <CardContent className="space-y-4 text-xs pt-4">
               <div className="space-y-1">
                 <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider block">Tujuan Pembelajaran (TP):</span>
-                <p className="text-slate-650 font-semibold line-clamp-2 leading-relaxed">{m.tp || 'Mengidentifikasi kosakata dasar'}</p>
+                <p className="text-slate-600 font-semibold line-clamp-2 leading-relaxed">{m.tp || 'Mengidentifikasi kosakata dasar'}</p>
               </div>
               <div className="space-y-1">
                 <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider block">Alur Tujuan Pembelajaran (ATP):</span>
-                <p className="text-slate-650 font-semibold line-clamp-2 leading-relaxed">{m.atp || 'Menyimak, menirukan, dan merespon instruksi sederhana'}</p>
+                <p className="text-slate-600 font-semibold line-clamp-2 leading-relaxed">{m.atp || 'Menyimak, menirukan, dan merespon instruksi sederhana'}</p>
               </div>
               <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-bold">
-                <span className="text-slate-450 text-[10px] font-black uppercase">Waktu: {m.duration || '2 x 35 Menit'}</span>
+                <span className="text-slate-500 text-[10px] font-black uppercase">Waktu: {m.duration || '2 x 35 Menit'}</span>
                 <div className="flex gap-1">
                   <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-300 hover:bg-rose-50/50 gap-1">
                     <i className="ri-file-pdf-2-line text-rose-600" /> PDF
@@ -214,7 +214,7 @@ export function ModulView() {
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4 mt-2">
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="modulTitle" className="font-bold text-slate-650">Judul Modul / Topik</Label>
+              <Label htmlFor="modulTitle" className="font-bold text-slate-600">Judul Modul / Topik</Label>
               <Input
                 id="modulTitle"
                 value={form.title}
@@ -238,7 +238,7 @@ export function ModulView() {
               </select>
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="modulDuration" className="font-bold text-slate-650">Alokasi Waktu</Label>
+              <Label htmlFor="modulDuration" className="font-bold text-slate-600">Alokasi Waktu</Label>
               <Input
                 id="modulDuration"
                 value={form.duration}
@@ -248,7 +248,7 @@ export function ModulView() {
               />
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="modulTarget" className="font-bold text-slate-650">Tujuan Pembelajaran (TP)</Label>
+              <Label htmlFor="modulTarget" className="font-bold text-slate-600">Tujuan Pembelajaran (TP)</Label>
               <textarea
                 id="modulTarget"
                 value={form.tp}
@@ -260,7 +260,7 @@ export function ModulView() {
               />
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="modulCP" className="font-bold text-slate-650">Capaian Pembelajaran (CP)</Label>
+              <Label htmlFor="modulCP" className="font-bold text-slate-600">Capaian Pembelajaran (CP)</Label>
               <textarea
                 id="modulCP"
                 value={form.cp}
@@ -272,7 +272,7 @@ export function ModulView() {
               />
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="modulFile" className="font-bold text-slate-650">Unggah Berkas Asli (PDF/Word/Zip) - Opsional</Label>
+              <Label htmlFor="modulFile" className="font-bold text-slate-600">Unggah Berkas Asli (PDF/Word/Zip) - Opsional</Label>
               <Input
                 id="modulFile"
                 type="file"

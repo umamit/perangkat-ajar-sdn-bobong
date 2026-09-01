@@ -128,7 +128,7 @@ export function TugasView() {
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4 mt-2">
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="tugasTitle" className="font-bold text-slate-650">Judul Penugasan</Label>
+              <Label htmlFor="tugasTitle" className="font-bold text-slate-600">Judul Penugasan</Label>
               <Input
                 id="tugasTitle"
                 value={form.title}
@@ -165,7 +165,7 @@ export function TugasView() {
               </select>
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="tugasDueDate" className="font-bold text-slate-650">Tenggat Waktu (Deadline)</Label>
+              <Label htmlFor="tugasDueDate" className="font-bold text-slate-600">Tenggat Waktu (Deadline)</Label>
               <Input
                 id="tugasDueDate"
                 type="date"
@@ -176,7 +176,7 @@ export function TugasView() {
               />
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <Label htmlFor="tugasDescription" className="font-bold text-slate-650">Deskripsi / Instruksi Tugas</Label>
+              <Label htmlFor="tugasDescription" className="font-bold text-slate-600">Deskripsi / Instruksi Tugas</Label>
               <textarea
                 id="tugasDescription"
                 value={form.description}

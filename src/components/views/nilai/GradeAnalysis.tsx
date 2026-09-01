@@ -80,7 +80,7 @@ export function GradeAnalysis({ filteredStudents, selectedSubject, grades }: Gra
 
   if (filteredStudents.length === 0) {
     return (
-      <div className="text-center text-slate-450 py-12 text-xs font-bold bg-white/70 backdrop-blur-md rounded-2xl border border-slate-100">
+      <div className="text-center text-slate-500 py-12 text-xs font-bold bg-white/70 backdrop-blur-md rounded-2xl border border-slate-100">
         <i className="ri-folder-info-line text-3xl opacity-60 mb-2 block" />
         Pilih rombel kelas terlebih dahulu untuk melihat analisis nilai.
       </div>

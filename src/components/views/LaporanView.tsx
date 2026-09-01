@@ -191,7 +191,7 @@ export function LaporanView() {
       <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm p-4">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-650">Subjek Nilai:</span>
+            <span className="text-xs font-bold text-slate-600">Subjek Nilai:</span>
             {isGuruMapel ? (
               <Badge variant="default" className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">{selectedSubject}</Badge>
             ) : (
@@ -206,7 +206,7 @@ export function LaporanView() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-650">Detail Kelas Explorer:</span>
+            <span className="text-xs font-bold text-slate-600">Detail Kelas Explorer:</span>
             {lockedClass ? (
               <Badge variant="default" className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20">Kelas {lockedClass}</Badge>
             ) : (

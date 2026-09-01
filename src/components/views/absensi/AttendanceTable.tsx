@@ -75,7 +75,7 @@ export function AttendanceTable({
           );
         })}
         {classStudents.length === 0 && (
-          <div className="text-center text-slate-450 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
+          <div className="text-center text-slate-500 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
             Belum ada siswa di kelas ini
           </div>
         )}
@@ -124,7 +124,7 @@ export function AttendanceTable({
                         );
                       })}
                       {!currentSt && (
-                        <span className="text-[10px] text-slate-450 italic ml-2 font-semibold">
+                        <span className="text-[10px] text-slate-500 italic ml-2 font-semibold">
                           (Belum Dipilih)
                         </span>
                       )}

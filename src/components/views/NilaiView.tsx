@@ -201,7 +201,7 @@ export function NilaiView() {
           className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
             activeTab === 'input'
               ? 'border-primary text-primary'
-              : 'border-transparent text-slate-400 hover:text-slate-650'
+              : 'border-transparent text-slate-400 hover:text-slate-600'
           }`}
         >
           <i className="ri-edit-line" /> Tabel Input Nilai
@@ -211,7 +211,7 @@ export function NilaiView() {
           className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
             activeTab === 'analisis'
               ? 'border-primary text-primary'
-              : 'border-transparent text-slate-400 hover:text-slate-650'
+              : 'border-transparent text-slate-400 hover:text-slate-600'
           }`}
         >
           <i className="ri-bar-chart-2-line" /> Analisis & Peta Nilai
@@ -222,7 +222,7 @@ export function NilaiView() {
         <CardHeader className="pb-4 border-b border-slate-100 bg-white/35">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
             <div className="flex items-center gap-2">
-              <label className="text-xs font-bold text-slate-650">Filter Kelas:</label>
+              <label className="text-xs font-bold text-slate-600">Filter Kelas:</label>
               {lockedClass ? (
                 <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                   Kelas {lockedClass} (Binaan)
@@ -245,7 +245,7 @@ export function NilaiView() {
             </div>
 
             <div className="flex items-center gap-2">
-              <label className="text-xs font-bold text-slate-650">Mata Pelajaran:</label>
+              <label className="text-xs font-bold text-slate-600">Mata Pelajaran:</label>
               {isGuruMapel ? (
                 <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                   {selectedSubject}

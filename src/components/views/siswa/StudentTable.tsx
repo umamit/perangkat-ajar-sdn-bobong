@@ -53,12 +53,12 @@ export function StudentTable({
       {
         accessorKey: 'nisn',
         header: 'NISN',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'nik',
         header: 'NIK',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'name',
@@ -68,7 +68,7 @@ export function StudentTable({
       {
         accessorKey: 'birthInfo',
         header: 'Tempat Tanggal Lahir',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'gender',
@@ -85,22 +85,22 @@ export function StudentTable({
       {
         accessorKey: 'parentName',
         header: 'Nama Orang Tua',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'religion',
         header: 'Agama',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'parentJob',
         header: 'Pekerjaan Orang Tua',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'address',
         header: 'Alamat',
-        cell: ({ getValue }: any) => <span className="font-semibold text-slate-650 text-xs">{(getValue() as string) || '-'}</span>
+        cell: ({ getValue }: any) => <span className="font-semibold text-slate-600 text-xs">{(getValue() as string) || '-'}</span>
       },
       {
         accessorKey: 'admissionYear',
@@ -134,7 +134,7 @@ export function StudentTable({
                 </button>
                 <button
                   onClick={() => handleDelete(s.id || s.nis || '', s.name)}
-                  className="p-1 rounded-lg text-rose-450 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                  className="p-1 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                   title="Hapus Siswa"
                 >
                   <i className="ri-delete-bin-line text-sm" />
@@ -193,7 +193,7 @@ export function StudentTable({
           />
         ))}
         {filteredStudents.length === 0 && (
-          <div className="text-center text-slate-450 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
+          <div className="text-center text-slate-500 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
             Tidak ada data siswa ditemukan
           </div>
         )}

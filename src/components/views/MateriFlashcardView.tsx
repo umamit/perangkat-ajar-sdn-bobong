@@ -193,7 +193,7 @@ export function MateriFlashcardView() {
       {selectedDeckTitle === null ? (
         decks.length === 0 ? (
           <div className="max-w-md mx-auto text-center p-8 bg-white/60 backdrop-blur-md rounded-[24px] border border-slate-100 shadow-sm space-y-3">
-            <i className="ri-inbox-2-line text-3xl text-slate-350 block mx-auto" />
+            <i className="ri-inbox-2-line text-3xl text-slate-400 block mx-auto" />
             <p className="text-xs font-semibold text-slate-500">
               Belum ada kartu kosakata terdaftar. Klik &apos;Tambah Flashcard&apos; untuk membuat secara manual atau merumuskan otomatis dengan bantuan AI.
             </p>

@@ -51,8 +51,8 @@ export function GradeTable({
                   <div>
                     <h4 className="font-extrabold text-sm text-slate-800 leading-snug">{s.name}</h4>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] text-slate-450 font-bold">NIS: {s.nis || '-'}</span>
-                      <span className="text-[9px] font-black bg-slate-100 text-slate-650 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-slate-500 font-bold">NIS: {s.nis || '-'}</span>
+                      <span className="text-[9px] font-black bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
                         Kelas {s.classId}
                       </span>
                     </div>
@@ -119,7 +119,7 @@ export function GradeTable({
           );
         })}
         {filteredStudents.length === 0 && (
-          <div className="text-center text-slate-450 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
+          <div className="text-center text-slate-500 py-8 text-xs font-bold bg-white rounded-2xl border border-slate-100">
             Tidak ada data siswa ditemukan
           </div>
         )}

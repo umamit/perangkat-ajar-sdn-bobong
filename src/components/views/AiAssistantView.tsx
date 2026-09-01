@@ -143,7 +143,7 @@ export function AiAssistantView() {
         <CardContent className="space-y-4 pt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5 text-xs text-left">
-              <label className="font-bold text-slate-650 block mb-1">Tingkat Kelas</label>
+              <label className="font-bold text-slate-600 block mb-1">Tingkat Kelas</label>
               <select
                 value={grade}
                 onChange={e => setGrade(e.target.value)}
@@ -158,7 +158,7 @@ export function AiAssistantView() {
               </select>
             </div>
             <div className="space-y-1.5 text-xs text-left">
-              <label className="font-bold text-slate-650 block mb-1">Mata Pelajaran</label>
+              <label className="font-bold text-slate-600 block mb-1">Mata Pelajaran</label>
               <select
                 value={subject}
                 onChange={e => setSubject(e.target.value)}
@@ -179,7 +179,7 @@ export function AiAssistantView() {
           </div>
  
           <div className="space-y-1.5 text-xs text-left">
-            <label className="font-bold text-slate-650 block mb-1">Topik / Pertanyaan Pembelajaran</label>
+            <label className="font-bold text-slate-600 block mb-1">Topik / Pertanyaan Pembelajaran</label>
             <Input
               value={prompt}
               onChange={e => setPrompt(e.target.value)}

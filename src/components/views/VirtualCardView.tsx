@@ -57,7 +57,7 @@ export function VirtualCardView() {
       {/* Controls: Hidden on print */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden virtual-card-controls">
         <div>
-          <h3 className="text-lg font-black text-slate-850 tracking-tight flex items-center gap-2">
+          <h3 className="text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
             <i className="ri-contacts-fill text-primary" /> Kartu Siswa Virtual
           </h3>
           <p className="text-xs text-slate-500 font-semibold">Cetak kartu pelajar virtual resmi dilengkapi QR Code absensi digital</p>
@@ -85,8 +85,8 @@ export function VirtualCardView() {
       </div>
 
       {filteredStudents.length === 0 ? (
-        <Card className="p-8 text-center text-slate-450 font-bold text-xs bg-white/50 backdrop-blur-sm border border-slate-100 rounded-2xl print:hidden virtual-card-grid">
-          <i className="ri-user-unfollow-line text-3xl block text-slate-350 mb-2" />
+        <Card className="p-8 text-center text-slate-500 font-bold text-xs bg-white/50 backdrop-blur-sm border border-slate-100 rounded-2xl print:hidden virtual-card-grid">
+          <i className="ri-user-unfollow-line text-3xl block text-slate-400 mb-2" />
           Belum ada data siswa di kelas ini.
         </Card>
       ) : (

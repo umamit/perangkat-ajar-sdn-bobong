@@ -152,7 +152,7 @@ export function DashboardCharts() {
             );
           })}
           {classData.length === 0 && (
-            <p className="text-xs text-center text-slate-450 font-semibold py-8">Belum ada kelas terdaftar</p>
+            <p className="text-xs text-center text-slate-500 font-semibold py-8">Belum ada kelas terdaftar</p>
           )}
         </CardContent>
       </Card>
