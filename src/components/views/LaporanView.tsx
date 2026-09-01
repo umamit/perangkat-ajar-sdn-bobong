@@ -182,7 +182,7 @@ export function LaporanView() {
           <h3 className="text-lg font-black text-slate-800 tracking-tight">Laporan Rekapitulasi &amp; Administrasi Kelas</h3>
           <p className="text-xs text-slate-500 font-semibold">Ringkasan serta grafik performa rombel sekolah</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1.5 rounded-xl">
+        <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-300 hover:bg-rose-50/50 gap-1.5 rounded-xl">
           <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Detail
         </Button>
       </div>

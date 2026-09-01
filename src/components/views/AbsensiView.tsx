@@ -225,13 +225,13 @@ export function AbsensiView() {
           <p className="text-xs text-slate-500 font-semibold">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-250 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
+          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black text-emerald-700 border-emerald-300 hover:bg-emerald-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-255 hover:bg-rose-50/50 gap-1.5 rounded-xl">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black text-rose-700 border-rose-300 hover:bg-rose-50/50 gap-1.5 rounded-xl">
             <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Absensi
           </Button>
-          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-black text-teal-700 border-teal-250 hover:bg-teal-50/50 gap-1.5 rounded-xl">
+          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-black text-teal-700 border-teal-300 hover:bg-teal-50/50 gap-1.5 rounded-xl">
             <i className="ri-checkbox-multiple-line text-sm" /> Tandai Semua Hadir
           </Button>
         </div>

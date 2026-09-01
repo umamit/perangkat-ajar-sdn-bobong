@@ -52,7 +52,7 @@ export function PengaturanView() {
           <p className="text-slate-600 leading-relaxed font-semibold">
             Unduh seluruh berkas cadangan data siswa, presensi, jurnal mengajar, dan modul ajar SD Negeri Bobong ke dalam format file `.json` untuk penyimpanan arsip aman.
           </p>
-          <Button onClick={handleBackup} variant="outline" className="text-[11px] font-black rounded-xl border-emerald-250 text-emerald-700 hover:bg-emerald-50/50 gap-1">
+          <Button onClick={handleBackup} variant="outline" className="text-[11px] font-black rounded-xl border-emerald-300 text-emerald-700 hover:bg-emerald-50/50 gap-1">
             <i className="ri-download-cloud-2-line text-sm text-emerald-600" /> Unduh Cadangan Data Sistem (.json)
           </Button>
         </CardContent>

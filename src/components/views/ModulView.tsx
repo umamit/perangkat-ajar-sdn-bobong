@@ -190,7 +190,7 @@ export function ModulView() {
               <div className="flex justify-between items-center pt-3 border-t border-slate-100 font-bold">
                 <span className="text-slate-450 text-[10px] font-black uppercase">Waktu: {m.duration || '2 x 35 Menit'}</span>
                 <div className="flex gap-1">
-                  <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-250 hover:bg-rose-50/50 gap-1">
+                  <Button variant="outline" size="sm" onClick={() => handleDownloadPDF(m)} className="h-8 rounded-lg text-[10px] font-black text-rose-700 border-rose-300 hover:bg-rose-50/50 gap-1">
                     <i className="ri-file-pdf-2-line text-rose-600" /> PDF
                   </Button>
                   {(m.file_url || m.fileUrl) && (
