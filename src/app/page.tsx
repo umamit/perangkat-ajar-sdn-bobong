@@ -50,12 +50,7 @@ function AppContent() {
   }
 
   return (
-    <div className="app-container flex min-h-screen relative overflow-hidden bg-slate-100/80">
-      {/* Apple Ambient Liquid Glass Mesh Orbs */}
-      <div className="fixed top-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-cyan-400/20 blur-[130px] pointer-events-none z-0" />
-      <div className="fixed bottom-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-amber-400/20 blur-[120px] pointer-events-none z-0" />
-      <div className="fixed top-[40%] right-[20%] w-[35vw] h-[35vw] rounded-full bg-emerald-400/15 blur-[140px] pointer-events-none z-0" />
-
+    <div className="app-container flex min-h-screen relative overflow-hidden bg-[#F4F6F9]">
       <Sidebar />
       <div className="main-wrapper flex-1 flex flex-col min-w-0 z-10 relative">
         <Navbar />
