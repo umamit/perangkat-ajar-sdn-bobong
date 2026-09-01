@@ -66,7 +66,7 @@ export function TugasView() {
   const itemList = assignments || [];
  
   return (
-    <div className="space-y-6 animate-fade-in text-slate-800">
+    <div className="flex flex-col gap-6 animate-fade-in text-slate-800">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-lg font-black text-slate-800 tracking-tight">Manajemen Tugas &amp; Evaluasi Siswa</h3>

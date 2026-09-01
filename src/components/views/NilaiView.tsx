@@ -179,7 +179,7 @@ export function NilaiView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in text-slate-800">
+    <div className="flex flex-col gap-6 animate-fade-in text-slate-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-lg font-black text-slate-800 tracking-tight">Daftar Nilai Rapor Kelas - {selectedSubject}</h3>

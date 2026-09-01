@@ -17,7 +17,7 @@ export function KelasView() {
   const uniqueClasses = Array.from(classMap.values());
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="flex flex-col gap-6 animate-fade-in">
       <div>
         <h3 className="text-xl font-bold text-slate-800">Daftar Kelas SD Negeri Bobong</h3>
         <p className="text-xs text-slate-500">Daftar kelas binaan dan statistik jumlah siswa terdaftar</p>

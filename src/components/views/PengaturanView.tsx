@@ -31,7 +31,7 @@ export function PengaturanView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-3xl text-slate-800">
+    <div className="flex flex-col gap-6 animate-fade-in max-w-3xl text-slate-800">
       <div>
         <h3 className="text-lg font-black text-slate-800 tracking-tight">Pengaturan Profil &amp; Keamanan Akun</h3>
         <p className="text-xs text-slate-500 font-semibold">Kelola profil pribadi, kata sandi login, foto, NIP, dan identitas sekolah</p>

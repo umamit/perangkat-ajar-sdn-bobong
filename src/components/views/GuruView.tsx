@@ -129,7 +129,7 @@ export function GuruView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="flex flex-col gap-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold text-slate-800">Kelola Data Guru &amp; Tenaga Pendidik</h3>

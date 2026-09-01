@@ -107,7 +107,7 @@ export function CounselingView() {
   }).sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <div className="space-y-6 animate-fade-in text-slate-800 text-xs">
+    <div className="flex flex-col gap-6 animate-fade-in text-slate-800 text-xs">
       <div>
         <h3 className="text-lg font-black text-slate-800 tracking-tight">Pusat Layanan Bimbingan Konseling (BK)</h3>
         <p className="text-[11px] text-slate-500 font-semibold">Timeline pembinaan karakter siswa dan riwayat bimbingan terintegrasi</p>
