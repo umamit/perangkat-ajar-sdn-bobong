@@ -237,7 +237,7 @@ export function SiswaView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in text-slate-800">
+    <div className="flex flex-col gap-6 animate-fade-in text-slate-800">
       <StudentHeader
         handleExportExcel={handleExportExcel}
         handleDownloadPDF={handleDownloadPDF}
