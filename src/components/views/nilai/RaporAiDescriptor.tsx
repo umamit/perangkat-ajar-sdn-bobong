@@ -89,7 +89,7 @@ export function RaporAiDescriptor({ open, onOpenChange, studentName, studentClas
                 value={desc}
                 onChange={e => setDesc(e.target.value)}
                 rows={4}
-                className="w-full text-xs p-3 rounded-xl border border-slate-300 outline-none focus:border-primary font-medium leading-relaxed bg-slate-50/50"
+                className="w-full text-xs p-3 rounded-apple-md border border-slate-200/80 outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/80 font-medium leading-relaxed bg-white/70 backdrop-blur-sm"
               />
               <Button onClick={handleCopy} className="w-full gap-1.5 text-xs font-bold" variant="outline">
                 <i className="ri-file-copy-line" /> Salin Deskripsi
