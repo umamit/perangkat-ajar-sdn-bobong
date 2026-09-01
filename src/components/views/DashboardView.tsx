@@ -81,7 +81,6 @@ export function DashboardView() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Card 1: Total Siswa */}
         <div className="glass-card group relative p-6 overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Total Siswa</span>
@@ -98,10 +97,9 @@ export function DashboardView() {
             <span>SDN Bobong</span>
           </div>
         </div>
- 
+
         {/* Card 2: Kelas Binaan */}
         <div className="glass-card group relative p-6 overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Kelas Binaan</span>
@@ -116,10 +114,9 @@ export function DashboardView() {
             <span className="text-emerald-600">{totalClasses} Rombel</span>
           </div>
         </div>
- 
+
         {/* Card 3: Modul Ajar SD */}
         <div className="glass-card group relative p-6 overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500" />
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Modul Ajar SD</span>
@@ -134,10 +131,9 @@ export function DashboardView() {
             <span className="text-amber-600">Lengkap</span>
           </div>
         </div>
- 
+
         {/* Card 4: Jurnal Terisi */}
         <div className="glass-card group relative p-6 overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-rose-500" />
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Jurnal Terisi</span>
