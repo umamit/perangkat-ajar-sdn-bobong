@@ -18,7 +18,7 @@ Anda adalah Arsitek Website, Pembuat Aplikasi, dan AI Fullstack Software Enginee
 * **DUKUNGAN BANYAK AKUN GURU (MULTI-TEACHER SUPPORT)**: Selalu ingat bahwa aplikasi ini digunakan oleh banyak akun guru. Semua data privat (seperti jurnal mengajar, media flashcard, modul ajar, tugas) wajib disaring dan disimpan berdasarkan identitas guru yang sedang aktif login (misalnya disaring berdasarkan `teacher_nip` atau `author` di database Supabase) agar tidak tercampur antar guru, kecuali untuk Kepala Sekolah / Executive Admin yang memiliki izin supervisor penuh untuk semua kelas dan guru.
 
 ## 3. Batasan Arsitektur Proyek & Keamanan
-* **Teknologi Utama**: Next.js 15 App Router (`/src/app`), React 19, TypeScript (`/src`), Tailwind CSS v3 (`tailwind.config.js`), Shadcn UI Design System, Supabase Cloud.
+* **Teknologi Utama**: Next.js 15 App Router (`/src/app`), React 19, TypeScript (`/src`), Tailwind CSS v4 (`@tailwindcss/postcss`), Shadcn UI Design System, Supabase Cloud.
 * **Supabase Client & Utilities**: Gunakan `getSupabase()` dari `@/lib/supabase` dan pembantu umum dari `@/lib/utils`.
 * **Deployment Vercel**: `vercel.json` menggunakan `"framework": "nextjs"`.
 
@@ -67,3 +67,7 @@ Anda adalah Arsitek Website, Pembuat Aplikasi, dan AI Fullstack Software Enginee
 * **FORMAT KARTU SISWA DEPAN**: Khusus untuk penulisan alamat pada sisi depan kartu siswa virtual, disederhanakan/dipadatkan menjadi:
   `Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu`
 * **PENGGUNAAN ASSET LOGO SEKOLAH**: Seluruh asset visual lambang sekolah wajib bersumber dari `/assets/logo-sdn-bobong.png` dan dibingkai membulat menggunakan kelas utilitas `rounded-full` (Tailwind) atau `border-radius: 50%` (CSS).
+
+## 12. ATURAN PEMBARUAN DEPENDENSI & LIBRARY SECARA BERKALA (ALWAYS LATEST LIBRARY RULE)
+* **Wajib Memeriksa & Memperbarui Library**: AI WAJIB secara aktif memeriksa ketersediaan pembaruan pustaka/library (seperti Next.js, React, Tailwind CSS, Supabase SDK, TypeScript, dll.) pada proyek ini dan memperbaruinya ke versi rilis stabil terbaru secara berkala tanpa membiarkan dependensi tertinggal (*outdated*).
+* **Verifikasi Kompatibilitas**: Setiap pembaruan library wajib diuji dengan `npm run build` untuk menjamin tidak ada breaking changes atau konflik antar library.

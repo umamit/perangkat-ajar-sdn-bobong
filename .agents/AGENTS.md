@@ -67,3 +67,7 @@ Anda adalah Arsitek Website, Pembuat Aplikasi, dan AI Fullstack Software Enginee
 * **FORMAT KARTU SISWA DEPAN**: Khusus untuk penulisan alamat pada sisi depan kartu siswa virtual, disederhanakan/dipadatkan menjadi:
   `Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu`
 * **PENGGUNAAN ASSET LOGO SEKOLAH**: Seluruh asset visual lambang sekolah wajib bersumber dari `/assets/logo-sdn-bobong.png` dan dibingkai membulat menggunakan kelas utilitas `rounded-full` (Tailwind) atau `border-radius: 50%` (CSS).
+
+## 12. ATURAN PEMBARUAN DEPENDENSI & LIBRARY SECARA BERKALA (ALWAYS LATEST LIBRARY RULE)
+* **Wajib Memeriksa & Memperbarui Library**: AI WAJIB secara aktif memeriksa ketersediaan pembaruan pustaka/library (seperti Next.js, React, Tailwind CSS, Supabase SDK, TypeScript, dll.) pada proyek ini dan memperbaruinya ke versi rilis stabil terbaru secara berkala tanpa membiarkan dependensi tertinggal (*outdated*).
+* **Verifikasi Kompatibilitas**: Setiap pembaruan library wajib diuji dengan `npm run build` untuk menjamin tidak ada breaking changes atau konflik antar library.
