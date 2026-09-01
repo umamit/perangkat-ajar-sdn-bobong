@@ -175,7 +175,7 @@ export function Navbar() {
     <header className="top-bar flex justify-between items-center px-6 py-3.5 bg-white/70 backdrop-blur-xl border-b border-white/80 sticky top-0 z-30 shadow-xs">
       <div className="flex items-center gap-3">
         <button
-          className="menu-toggle md:hidden p-2 rounded-apple-sm text-slate-600 hover:bg-slate-100 transition-colors"
+          className="menu-toggle md:hidden p-2 rounded-apple-md text-slate-600 hover:bg-white/60 hover:text-primary backdrop-blur-sm border border-transparent hover:border-white/80 transition-all active:scale-[0.96]"
           id="menuToggle"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
@@ -183,7 +183,7 @@ export function Navbar() {
         </button>
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="hidden md:flex items-center justify-center p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-colors duration-200"
+          className="hidden md:flex items-center justify-center p-2 rounded-apple-md text-slate-500 hover:bg-white/60 hover:text-primary backdrop-blur-sm border border-transparent hover:border-white/80 transition-all duration-200 active:scale-[0.96]"
           title={sidebarCollapsed ? "Perbesar Menu" : "Kecilkan Menu"}
         >
           <i className={sidebarCollapsed ? "ri-menu-unfold-line text-xl" : "ri-menu-fold-line text-xl"} />
@@ -211,7 +211,7 @@ export function Navbar() {
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-colors flex items-center justify-center"
+            className="relative p-2 rounded-apple-md text-slate-500 hover:bg-white/60 hover:text-primary backdrop-blur-sm border border-transparent hover:border-white/80 transition-all flex items-center justify-center active:scale-[0.96]"
             title="Pusat Peringatan & Notifikasi"
           >
             <i className="ri-notification-3-line text-xl" />
