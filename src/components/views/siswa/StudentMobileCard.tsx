@@ -51,7 +51,7 @@ export function StudentMobileCard({
       </div>
 
       {isExpanded && (
-        <div className="mt-2 pt-2.5 border-t border-slate-105 space-y-2.5 text-xs text-slate-600 animate-fade-in">
+        <div className="mt-2 pt-2.5 border-t border-slate-100/60 space-y-2.5 text-xs text-slate-600 animate-fade-in">
           <div className="space-y-2">
             <div>
               <span className="text-slate-400 block font-semibold text-[9px] uppercase">NIS</span>
