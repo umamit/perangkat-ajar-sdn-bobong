@@ -37,8 +37,9 @@ export function FlashcardPlayer({
 
   const primaryWord = (currentCard.word || '').split('/')[0].trim();
   const primaryMeaning = (currentCard.meaning || currentCard.translate || '').split('/')[0].trim();
+  const searchQuery = primaryWord || primaryMeaning;
   const promptText = `cute cartoon illustration of ${primaryWord} ${primaryMeaning ? `(${primaryMeaning})` : ''}, school flashcard style, isolated clean white background, vector digital art`;
-  const imageUrl = `/api/image-proxy?prompt=${encodeURIComponent(promptText)}`;
+  const imageUrl = `/api/image-proxy?query=${encodeURIComponent(searchQuery)}&prompt=${encodeURIComponent(promptText)}`;
 
   // Pre-load all images for the current deck
   useEffect(() => {
@@ -46,8 +47,9 @@ export function FlashcardPlayer({
     cardList.forEach((c) => {
       const pWord = (c.word || '').split('/')[0].trim();
       const pMeaning = (c.meaning || c.translate || '').split('/')[0].trim();
+      const pQuery = pWord || pMeaning;
       const pText = `cute cartoon illustration of ${pWord} ${pMeaning ? `(${pMeaning})` : ''}, school flashcard style, isolated clean white background, vector digital art`;
-      const url = `/api/image-proxy?prompt=${encodeURIComponent(pText)}`;
+      const url = `/api/image-proxy?query=${encodeURIComponent(pQuery)}&prompt=${encodeURIComponent(pText)}`;
       if (typeof window !== 'undefined') {
         const img = new window.Image();
         img.src = url;

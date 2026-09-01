@@ -19,37 +19,71 @@ function generateFallbackSvg(word: string): string {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const rawPrompt = searchParams.get('prompt') || 'Flashcard';
-  const cleanPrompt = rawPrompt
+  const query = searchParams.get('query') || rawPrompt;
+  
+  const cleanQuery = query
     .replace(/[\\/&()]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
-  try {
-    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=400&height=400&nologo=true&model=turbo&seed=42`;
-    
-    const res = await fetch(pollinationsUrl, {
-      signal: AbortSignal.timeout(8500),
-    });
+  const pexelsApiKey = process.env.PEXELS_API_KEY;
 
-    if (!res.ok) {
-      throw new Error(`Pollinations HTTP ${res.status}`);
+  // 1. Try Pexels API First if Key Exists (Fast & HD Real Photos)
+  if (pexelsApiKey) {
+    try {
+      const pexelsRes = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(cleanQuery)}&per_page=1&orientation=square`,
+        {
+          headers: { Authorization: pexelsApiKey },
+          signal: AbortSignal.timeout(4000),
+        }
+      );
+
+      if (pexelsRes.ok) {
+        const data = await pexelsRes.json();
+        const photoUrl = data.photos?.[0]?.src?.medium || data.photos?.[0]?.src?.small;
+        if (photoUrl) {
+          const imgRes = await fetch(photoUrl, { signal: AbortSignal.timeout(4000) });
+          if (imgRes.ok) {
+            const buffer = await imgRes.arrayBuffer();
+            return new NextResponse(Buffer.from(buffer), {
+              headers: {
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, max-age=31536000, immutable',
+              },
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[Pexels Proxy Notice]', cleanQuery, e);
     }
-
-    const buffer = await res.arrayBuffer();
-    return new NextResponse(Buffer.from(buffer), {
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    });
-  } catch (err) {
-    console.warn('[Image Proxy Fallback]', cleanPrompt, err);
-    const svg = generateFallbackSvg(cleanPrompt.split(' ')[0] || 'Flashcard');
-    return new NextResponse(svg, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=3600',
-      },
-    });
   }
+
+  // 2. Fallback to Pollinations AI Turbo
+  try {
+    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanQuery)}?width=400&height=400&nologo=true&model=turbo&seed=42`;
+    const res = await fetch(pollinationsUrl, { signal: AbortSignal.timeout(6000) });
+
+    if (res.ok) {
+      const buffer = await res.arrayBuffer();
+      return new NextResponse(Buffer.from(buffer), {
+        headers: {
+          'Content-Type': 'image/jpeg',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      });
+    }
+  } catch (err) {
+    console.warn('[Pollinations Fallback Notice]', cleanQuery, err);
+  }
+
+  // 3. Fallback to Clean SVG Vector
+  const svg = generateFallbackSvg(cleanQuery.split(' ')[0] || 'Flashcard');
+  return new NextResponse(svg, {
+    headers: {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'public, max-age=3600',
+    },
+  });
 }
