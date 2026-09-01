@@ -209,9 +209,9 @@ export function CounselingView() {
         {/* Right Side: add form */}
         {isKepsek && (
           <div className="lg:col-span-4">
-            <form onSubmit={handleSave} className="p-5 bg-white/85 border border-white/90 rounded-[24px] shadow-sm space-y-4 sticky top-24">
-            <h4 className="font-black text-sm text-slate-800 flex items-center gap-1.5 border-b pb-2">
-              <i className="ri-add-circle-line text-primary" /> Input Pembinaan Baru
+            <form onSubmit={handleSave} className="p-5 bg-white/80 backdrop-blur-xl border border-white/90 rounded-apple-lg shadow-xs space-y-4 sticky top-24">
+            <h4 className="font-black text-sm text-slate-800 flex items-center gap-1.5 mb-1">
+              <i className="ri-add-circle-line text-primary text-base" /> Input Pembinaan Baru
             </h4>
 
             <div className="space-y-1 text-left relative">
@@ -226,13 +226,13 @@ export function CounselingView() {
                     setShowStudentDropdown(true);
                   }}
                   onFocus={() => setShowStudentDropdown(true)}
-                  className="h-9 rounded-xl pr-8 text-xs font-semibold"
+                  className="h-9 rounded-apple-md pr-8 text-xs font-semibold bg-white/70 backdrop-blur-md border-slate-200/80"
                   required={!selectedStudentId}
                 />
                 <button
                   type="button"
                   onClick={() => setShowStudentDropdown(!showStudentDropdown)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   <i className="ri-arrow-down-s-line" />
                 </button>
@@ -241,7 +241,7 @@ export function CounselingView() {
               {showStudentDropdown && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setShowStudentDropdown(false)} />
-                  <div className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg z-20 p-1 space-y-0.5">
+                  <div className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white/95 backdrop-blur-2xl border border-white/90 rounded-apple-md shadow-xl z-20 p-1.5 space-y-0.5">
                     {students
                       .filter(s => 
                         s.name.toLowerCase().includes(studentSearchText.toLowerCase()) || 
@@ -258,7 +258,7 @@ export function CounselingView() {
                             setStudentSearchText(`${s.name} (${s.classId})`);
                             setShowStudentDropdown(false);
                           }}
-                          className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-50 transition-colors ${selectedStudentId === s.id ? 'bg-primary/5 text-primary' : 'text-slate-700'}`}
+                          className={`w-full text-left px-3 py-1.5 rounded-apple-sm text-xs font-bold hover:bg-primary/10 hover:text-primary-dark transition-colors ${selectedStudentId === s.id ? 'bg-primary/10 text-primary-dark' : 'text-slate-700'}`}
                         >
                           {s.name} ({s.classId})
                         </button>
@@ -280,7 +280,7 @@ export function CounselingView() {
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="h-9 rounded-xl"
+                className="h-9 rounded-apple-md bg-white/70 backdrop-blur-md border-slate-200/80"
                 required
               />
             </div>
@@ -288,10 +288,10 @@ export function CounselingView() {
             <div className="space-y-1">
               <Label className="font-bold text-slate-600">Kategori</Label>
               <Select value={category} onValueChange={(val: any) => setCategory(val)}>
-                <SelectTrigger className="h-9 rounded-xl">
+                <SelectTrigger className="h-9 rounded-apple-md bg-white/70 backdrop-blur-md border-slate-200/80">
                   <SelectValue placeholder="Pilih Kategori" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
+                <SelectContent className="bg-white/95 backdrop-blur-2xl border-white/90 rounded-apple-md shadow-xl">
                   <SelectItem value="Bimbingan">Bimbingan Siswa</SelectItem>
                   <SelectItem value="Konseling">Konseling Pribadi</SelectItem>
                   <SelectItem value="Kunjungan Rumah">Kunjungan Rumah (Home Visit)</SelectItem>
@@ -306,7 +306,7 @@ export function CounselingView() {
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 placeholder="Tuliskan kendala / catatan pembinaan..."
-                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:ring-2 focus:ring-primary/20 resize-none leading-relaxed"
+                className="w-full p-2.5 rounded-apple-md border border-slate-200/80 bg-white/70 backdrop-blur-md text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/80 resize-none leading-relaxed shadow-xs"
                 rows={3}
                 required
               />
@@ -318,12 +318,12 @@ export function CounselingView() {
                 value={followUp}
                 onChange={e => setFollowUp(e.target.value)}
                 placeholder="Rencana penanganan / follow up..."
-                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium outline-none focus:ring-2 focus:ring-primary/20 resize-none leading-relaxed"
+                className="w-full p-2.5 rounded-apple-md border border-slate-200/80 bg-white/70 backdrop-blur-md text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/80 resize-none leading-relaxed shadow-xs"
                 rows={2}
               />
             </div>
 
-            <Button type="submit" disabled={saving} className="w-full rounded-xl h-10 font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
+            <Button type="submit" disabled={saving} className="w-full rounded-apple-md h-10 font-bold bg-gradient-to-b from-primary via-primary to-primary-dark text-white shadow-md shadow-primary/20 border border-white/30 hover:brightness-105">
               {saving ? 'Menyimpan...' : 'Simpan Bimbingan'}
             </Button>
           </form>
