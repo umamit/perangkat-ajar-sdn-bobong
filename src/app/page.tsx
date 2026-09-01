@@ -54,7 +54,7 @@ function AppContent() {
       <Sidebar />
       <div className="main-wrapper flex-1 flex flex-col min-w-0">
         <Navbar />
-        <main className="content-area p-6 space-y-6 flex-1 overflow-y-auto">
+        <main className="content-area p-6 flex flex-col gap-6 flex-1 overflow-y-auto">
           {activeView === 'dashboard' && <DashboardView />}
           {activeView === 'siswa' && <SiswaView />}
           {activeView === 'virtual_card' && isKepsek && <VirtualCardView />}

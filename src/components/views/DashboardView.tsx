@@ -78,7 +78,7 @@ export function DashboardView() {
       </div>
  
       {/* Apple Liquid Glass Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-2">
         {/* Card 1: Total Siswa */}
         <div className="glass-card group relative p-6 overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
           <div className="flex items-center justify-between">
