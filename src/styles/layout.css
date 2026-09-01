@@ -254,8 +254,14 @@
 }
 
 .content-area {
-  padding: 16px;
+  padding: 24px;
   flex: 1;
+}
+
+.content-area > * {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
 }
 
 .view-section {
