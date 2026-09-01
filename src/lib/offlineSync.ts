@@ -159,18 +159,10 @@ export async function flushOfflineQueue(showToast?: (msg: string, type: 'success
 }
 
 export function saveAppCache(data: AppCacheData) {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem('sdn_bobong_cache', JSON.stringify(data));
-  } catch (e) {}
+  // Disabled: Data is always fetched fresh directly from Supabase Cloud
 }
 
 export function loadAppCache(): AppCacheData | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem('sdn_bobong_cache');
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) {
-    return null;
-  }
+  // Disabled: Data is always fetched fresh directly from Supabase Cloud
+  return null;
 }

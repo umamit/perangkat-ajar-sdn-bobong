@@ -83,60 +83,24 @@ export function useAppState() {
   const [selectedClassFilter, setSelectedClassFilter] = useState<string>('ALL');
   const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
   
-  const [teachers, setTeachers] = useState<Teacher[]>(() => {
-    const cache = loadAppCache();
-    return cache?.teachers || [];
-  });
-  const [students, setStudents] = useState<Student[]>(() => {
-    const cache = loadAppCache();
-    return cache?.students || [];
-  });
-  const [classes, setClasses] = useState<ClassInfo[]>(() => {
-    const cache = loadAppCache();
-    return cache?.classes || [];
-  });
-  const [journals, setJournals] = useState<JournalEntry[]>(() => {
-    const cache = loadAppCache();
-    return cache?.journals || [];
-  });
-  const [attendance, setAttendance] = useState<AttendanceRecord[]>(() => {
-    const cache = loadAppCache();
-    return cache?.attendance || [];
-  });
-  const [modules, setModules] = useState<ModuleAjar[]>(() => {
-    const cache = loadAppCache();
-    return cache?.modules || [];
-  });
-  const [flashcards, setFlashcards] = useState<FlashcardItem[]>(() => {
-    const cache = loadAppCache();
-    return cache?.flashcards || [
-      { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
-      { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
-      { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
-    ];
-  });
-  const [assignments, setAssignments] = useState<TaskItem[]>(() => {
-    const cache = loadAppCache();
-    return cache?.assignments || [
-      { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
-    ];
-  });
-  const [grades, setGrades] = useState<GradeRecord[]>(() => {
-    const cache = loadAppCache();
-    return cache?.grades || [];
-  });
-  const [counselingLogs, setCounselingLogs] = useState<CounselingLog[]>(() => {
-    const cache = loadAppCache();
-    return cache?.counselingLogs || [];
-  });
-  const [schedules, setSchedules] = useState<Schedule[]>(() => {
-    const cache = loadAppCache();
-    return cache?.schedules || [];
-  });
-  const [schoolSettings, setSchoolSettings] = useState<SchoolSettings>(() => {
-    const cache = loadAppCache();
-    return cache?.schoolSettings || defaultSchoolSettings;
-  });
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
+  const [journals, setJournals] = useState<JournalEntry[]>([]);
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+  const [modules, setModules] = useState<ModuleAjar[]>([]);
+  const [flashcards, setFlashcards] = useState<FlashcardItem[]>([
+    { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
+    { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
+    { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
+  ]);
+  const [assignments, setAssignments] = useState<TaskItem[]>([
+    { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
+  ]);
+  const [grades, setGrades] = useState<GradeRecord[]>([]);
+  const [counselingLogs, setCounselingLogs] = useState<CounselingLog[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [schoolSettings, setSchoolSettings] = useState<SchoolSettings>(defaultSchoolSettings);
   
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -243,38 +207,10 @@ export function useAppState() {
         if (data.schedules) setSchedules(data.schedules);
         if (data.schoolSettings) setSchoolSettings(data.schoolSettings);
 
-        saveAppCache({
-          teachers: filtered,
-          students: finalStudents,
-          classes: mappedClasses,
-          journals: mappedJournals,
-          attendance: data.attendance || [],
-          modules: mappedModules,
-          flashcards: data.flashcards || [],
-          assignments: mappedAssignments,
-          grades: data.grades || [],
-          counselingLogs: mappedCounseling,
-          schedules: data.schedules || [],
-          schoolSettings: data.schoolSettings
-        });
+        // Data is live synced directly from Supabase Cloud
       }
     } catch (err) {
       console.warn('[Supabase Sync Error]', err);
-      const cache = loadAppCache();
-      if (cache) {
-        if (cache.teachers) setTeachers(cache.teachers);
-        if (cache.students) setStudents(cache.students);
-        if (cache.classes) setClasses(cache.classes);
-        if (cache.journals) setJournals(cache.journals);
-        if (cache.attendance) setAttendance(cache.attendance);
-        if (cache.modules) setModules(cache.modules);
-        if (cache.flashcards) setFlashcards(cache.flashcards);
-        if (cache.assignments) setAssignments(cache.assignments);
-        if (cache.grades) setGrades(cache.grades);
-        if (cache.counselingLogs) setCounselingLogs(cache.counselingLogs);
-        if (cache.schedules) setSchedules(cache.schedules);
-        if (cache.schoolSettings) setSchoolSettings(cache.schoolSettings);
-      }
     } finally {
       setIsLoading(false);
     }
