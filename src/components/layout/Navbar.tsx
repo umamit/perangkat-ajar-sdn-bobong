@@ -172,7 +172,7 @@ export function Navbar() {
   }, [students, attendance, journals, assignments, lockedClass, todayStr, currentTeacher]);
 
   return (
-    <header className="top-bar flex justify-between items-center px-6 py-3.5 bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-sm">
+    <header className="top-bar flex justify-between items-center px-6 py-3.5 bg-white/70 backdrop-blur-xl border-b border-white/80 sticky top-0 z-30 shadow-xs">
       <div className="flex items-center gap-3">
         <button
           className="menu-toggle md:hidden p-2 rounded-apple-sm text-slate-600 hover:bg-slate-100 transition-colors"
