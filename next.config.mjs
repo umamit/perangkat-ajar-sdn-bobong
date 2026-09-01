@@ -62,16 +62,11 @@ const pwaConfig = withPWA({
       },
     },
     {
-      urlPattern: /\/api\/sync/i,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'api-sync',
-        expiration: { maxEntries: 4, maxAgeSeconds: 5 * 60 },
-        networkTimeoutSeconds: 10,
-      },
+      urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+      handler: 'NetworkOnly',
     },
     {
-      urlPattern: /\//i,
+      urlPattern: ({ url, request }) => url.pathname === '/' && request.method === 'GET',
       handler: 'NetworkFirst',
       options: {
         cacheName: 'start-url',

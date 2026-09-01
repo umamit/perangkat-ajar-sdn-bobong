@@ -78,6 +78,11 @@ export function ModulView() {
 
       let fileUrl = null;
       if (selectedFile) {
+        if (selectedFile.size > 15 * 1024 * 1024) {
+          showToast('Ukuran berkas modul maksimal 15MB', 'error');
+          setSaving(false);
+          return;
+        }
         showToast('Mengunggah dokumen modul...', 'info');
         const cleanFileName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const path = `${currentTeacher?.nip || 'unknown'}_mod_${Date.now()}_${cleanFileName}`;
