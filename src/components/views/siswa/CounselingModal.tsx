@@ -85,15 +85,15 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
   const getCategoryBadge = (cat: string) => {
     switch (cat) {
       case 'Bimbingan':
-        return 'bg-cyan-50 text-cyan-600 border-cyan-150';
+        return 'bg-cyan-50 text-cyan-600 border-cyan-200/80';
       case 'Konseling':
-        return 'bg-rose-50 text-rose-600 border-rose-150';
+        return 'bg-rose-50 text-rose-600 border-rose-200/80';
       case 'Kunjungan Rumah':
-        return 'bg-amber-50 text-amber-600 border-amber-150';
+        return 'bg-amber-50 text-amber-600 border-amber-200/80';
       case 'Telepon Orang Tua':
-        return 'bg-emerald-50 text-emerald-600 border-emerald-150';
+        return 'bg-emerald-50 text-emerald-600 border-emerald-200/80';
       default:
-        return 'bg-slate-50 text-slate-600 border-slate-150';
+        return 'bg-slate-50 text-slate-600 border-slate-200/80';
     }
   };
 

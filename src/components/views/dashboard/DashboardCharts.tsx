@@ -98,28 +98,28 @@ export function DashboardCharts() {
                 <span className="w-2.5 h-2.5 rounded-full bg-primary" />
                 <span>Hadir ({hadirCount}x)</span>
               </div>
-              <Badge variant="secondary" className="font-extrabold text-[10px] bg-cyan-50 text-primary-dark border border-cyan-150">{attRate}%</Badge>
+              <Badge variant="secondary" className="font-extrabold text-[10px] bg-cyan-50 text-primary-dark border border-cyan-200/80">{attRate}%</Badge>
             </div>
             <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                 <span>Izin ({izinCount}x)</span>
               </div>
-              <Badge variant="secondary" className="font-extrabold text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-150">{izinRate}%</Badge>
+              <Badge variant="secondary" className="font-extrabold text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200/80">{izinRate}%</Badge>
             </div>
             <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                 <span>Sakit ({sakitCount}x)</span>
               </div>
-              <Badge variant="secondary" className="font-extrabold text-[10px] bg-amber-50 text-amber-700 border border-amber-150">{sakitRate}%</Badge>
+              <Badge variant="secondary" className="font-extrabold text-[10px] bg-amber-50 text-amber-700 border border-amber-200/80">{sakitRate}%</Badge>
             </div>
             <div className="flex justify-between items-center text-xs font-semibold text-slate-700">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
                 <span>Alpa ({alpaCount}x)</span>
               </div>
-              <Badge variant="secondary" className="font-extrabold text-[10px] bg-rose-50 text-rose-700 border border-rose-150">{alpaRate}%</Badge>
+              <Badge variant="secondary" className="font-extrabold text-[10px] bg-rose-50 text-rose-700 border border-rose-200/80">{alpaRate}%</Badge>
             </div>
           </div>
         </CardContent>

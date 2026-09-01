@@ -28,7 +28,7 @@ export function ImportStudentModal({
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 mt-2">
-          <div className="bg-cyan-50/70 border border-cyan-150 p-4 rounded-2xl text-[11px] space-y-1.5 text-slate-700 backdrop-blur-sm">
+          <div className="bg-cyan-50/70 border border-cyan-200/80 p-4 rounded-2xl text-[11px] space-y-1.5 text-slate-700 backdrop-blur-sm">
             <p className="font-black text-cyan-800 flex items-center gap-1.5">
               <i className="ri-information-line text-sm" /> IMPOR LANGSUNG MASSAL:
             </p>

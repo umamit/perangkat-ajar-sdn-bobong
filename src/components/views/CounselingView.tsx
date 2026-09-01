@@ -170,7 +170,7 @@ export function CounselingView() {
               filteredLogs.map(log => {
                 const student = students.find(s => s.id === log.studentId);
                 return (
-                  <div key={log.id} className="p-4 bg-white/80 border border-slate-150 rounded-2xl relative space-y-2 shadow-sm hover:shadow-md transition-shadow">
+                  <div key={log.id} className="p-4 bg-white/80 border border-slate-200/80 rounded-2xl relative space-y-2 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-1.5">
                       <div className="flex items-center gap-2">
                         <span className="font-extrabold text-slate-800 text-xs">{student?.name || 'Siswa Hilang'}</span>

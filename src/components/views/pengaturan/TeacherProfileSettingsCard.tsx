@@ -228,7 +228,7 @@ export function TeacherProfileSettingsCard() {
       {/* Avatar Change Modal */}
       {showAvatarModal && (
         <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
-          <DialogContent className="max-w-xs sm:max-w-md bg-white rounded-3xl p-6 border border-slate-150">
+          <DialogContent className="max-w-xs sm:max-w-md bg-white rounded-3xl p-6 border border-slate-200/80">
             <DialogHeader className="border-b border-slate-100 pb-3">
               <DialogTitle className="text-sm font-black text-slate-800 flex items-center gap-1.5">
                 <i className="ri-image-edit-line text-primary" />

@@ -251,9 +251,9 @@ export function SyncDapodikModal({ isOpen, onClose, classes, showToast, syncData
               <Badge className="bg-teal-500/10 text-teal-700 border border-teal-500/20 text-[9px] font-black rounded-lg">Siap Disinkronkan</Badge>
             </div>
 
-            <div className="border border-slate-150 rounded-xl overflow-hidden max-h-40 overflow-y-auto">
-              <table className="w-full text-left text-[9px] border-collapse">
-                <thead className="bg-slate-50 sticky top-0 border-b border-slate-150 font-bold text-slate-600">
+            <div className="border border-slate-200/80 rounded-xl overflow-hidden max-h-40 overflow-y-auto">
+              <table className="w-full text-left text-[10px] border-collapse">
+                <thead className="bg-slate-50 sticky top-0 border-b border-slate-200/80 font-bold text-slate-600">
                   <tr>
                     <th className="p-2">Nama Lengkap</th>
                     <th className="p-2">NISN</th>
