@@ -132,12 +132,12 @@ export function AiAssistantView() {
       <Card className="rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
         <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
           <CardTitle className="text-sm font-black text-slate-800">
-            {mode === 'modul_ajar' && '🎯 Buat Modul Ajar Kurikulum Merdeka'}
-            {mode === 'alur_tujuan' && '🌿 Susun Alur Tujuan Pembelajaran (ATP)'}
-            {mode === 'lkpd_interaktif' && '📑 Buat Lembar Kerja Peserta Didik (LKPD) Menarik'}
-            {mode === 'soal_asesmen' && '📝 Buat Bank Soal (Formatif / Sumatif)'}
-            {mode === 'projek_p5' && '🎨 Rancang Modul Projek Penguatan Profil Pelajar Pancasila (P5)'}
-            {mode === 'konsultasi' && '💡 Konsultasi & Tanya Jawab Kurikulum Merdeka'}
+            {mode === 'modul_ajar' && <span className="flex items-center gap-2"><i className="ri-target-line text-primary text-base" /> Buat Modul Ajar Kurikulum Merdeka</span>}
+            {mode === 'alur_tujuan' && <span className="flex items-center gap-2"><i className="ri-git-merge-line text-emerald-600 text-base" /> Susun Alur Tujuan Pembelajaran (ATP)</span>}
+            {mode === 'lkpd_interaktif' && <span className="flex items-center gap-2"><i className="ri-file-copy-2-line text-amber-600 text-base" /> Buat Lembar Kerja Peserta Didik (LKPD) Menarik</span>}
+            {mode === 'soal_asesmen' && <span className="flex items-center gap-2"><i className="ri-file-list-3-line text-primary text-base" /> Buat Bank Soal (Formatif / Sumatif)</span>}
+            {mode === 'projek_p5' && <span className="flex items-center gap-2"><i className="ri-palette-line text-purple-600 text-base" /> Rancang Modul Projek Penguatan Profil Pelajar Pancasila (P5)</span>}
+            {mode === 'konsultasi' && <span className="flex items-center gap-2"><i className="ri-question-answer-line text-cyan-600 text-base" /> Konsultasi &amp; Tanya Jawab Kurikulum Merdeka</span>}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
