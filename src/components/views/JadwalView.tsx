@@ -8,6 +8,7 @@ import { Schedule } from '@/types';
 import { ScheduleGrid } from './jadwal/ScheduleGrid';
 import { ScheduleModal } from './jadwal/ScheduleModal';
 import { generateJadwalPDF } from '@/modules/generateJadwalPDF';
+import { Button } from '@/components/ui/button';
 
 export function JadwalView() {
   const { classes, schedules, setSchedules, currentTeacher, showToast } = useApp();
@@ -102,15 +103,13 @@ export function JadwalView() {
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <button onClick={handlePrint} disabled={printing || filteredSchedules.length === 0}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors disabled:opacity-50">
-            {printing ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-printer-line" />}
+          <Button variant="outline" size="sm" onClick={handlePrint} disabled={printing || filteredSchedules.length === 0} className="text-xs font-black bg-rose-50/80 backdrop-blur-sm text-rose-700 border border-rose-200/60 hover:bg-rose-100/80 shadow-xs gap-1.5 rounded-xl">
+            {printing ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-printer-line text-rose-600" />}
             Cetak PDF
-          </button>
-          <button onClick={() => { setEditingSchedule(null); setShowModal(true); }}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-sm hover:bg-primary-dark transition-colors">
-            <i className="ri-add-line" /> Tambah Slot
-          </button>
+          </Button>
+          <Button size="sm" onClick={() => { setEditingSchedule(null); setShowModal(true); }} className="text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1.5 rounded-xl">
+            <i className="ri-add-line text-sm" /> Tambah Slot
+          </Button>
         </div>
       </div>
 
@@ -118,14 +117,14 @@ export function JadwalView() {
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         {isKepsek && (
           <button onClick={() => setSelectedClass('ALL')}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-[10px] font-black border transition-all ${selectedClass === 'ALL' ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-primary/50'}`}>
+            className={`shrink-0 px-3.5 py-1.5 rounded-apple-md text-xs font-extrabold border transition-all cursor-pointer ${selectedClass === 'ALL' ? 'bg-gradient-to-b from-primary to-primary-dark text-white border-white/30 shadow-md shadow-primary/20' : 'bg-white/70 backdrop-blur-md text-slate-600 border-slate-200/80 hover:bg-white/90'}`}>
             Semua Kelas
           </button>
         )}
         {availableClasses.map(c => (
           <button key={c.id} onClick={() => setSelectedClass(c.id)}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-[10px] font-black border transition-all ${selectedClass === c.id ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-primary/50'}`}>
-            {c.name}
+            className={`shrink-0 px-3.5 py-1.5 rounded-apple-md text-xs font-extrabold border transition-all cursor-pointer ${selectedClass === c.id ? 'bg-gradient-to-b from-primary to-primary-dark text-white border-white/30 shadow-md shadow-primary/20' : 'bg-white/70 backdrop-blur-md text-slate-600 border-slate-200/80 hover:bg-white/90'}`}>
+            Kelas {c.name}
           </button>
         ))}
       </div>
