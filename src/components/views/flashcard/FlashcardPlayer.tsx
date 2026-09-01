@@ -13,6 +13,7 @@ interface FlashcardItem {
 }
 
 interface FlashcardPlayerProps {
+  cardList?: FlashcardItem[];
   currentCard: FlashcardItem;
   currentIndex: number;
   total: number;
@@ -23,6 +24,7 @@ interface FlashcardPlayerProps {
 }
 
 export function FlashcardPlayer({
+  cardList,
   currentCard,
   currentIndex,
   total,
@@ -37,6 +39,21 @@ export function FlashcardPlayer({
   const primaryMeaning = (currentCard.meaning || currentCard.translate || '').split('/')[0].trim();
   const promptText = `cute cartoon illustration of ${primaryWord} ${primaryMeaning ? `(${primaryMeaning})` : ''}, school flashcard style, isolated clean white background, vector digital art`;
   const imageUrl = `/api/image-proxy?prompt=${encodeURIComponent(promptText)}`;
+
+  // Pre-load all images for the current deck
+  useEffect(() => {
+    if (!cardList || cardList.length === 0) return;
+    cardList.forEach((c) => {
+      const pWord = (c.word || '').split('/')[0].trim();
+      const pMeaning = (c.meaning || c.translate || '').split('/')[0].trim();
+      const pText = `cute cartoon illustration of ${pWord} ${pMeaning ? `(${pMeaning})` : ''}, school flashcard style, isolated clean white background, vector digital art`;
+      const url = `/api/image-proxy?prompt=${encodeURIComponent(pText)}`;
+      if (typeof window !== 'undefined') {
+        const img = new window.Image();
+        img.src = url;
+      }
+    });
+  }, [cardList]);
 
   useEffect(() => {
     setImageLoading(true);

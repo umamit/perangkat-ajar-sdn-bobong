@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     .trim();
 
   try {
-    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=400&height=400&nologo=true`;
+    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=400&height=400&nologo=true&model=turbo&seed=42`;
     
     const res = await fetch(pollinationsUrl, {
       signal: AbortSignal.timeout(8500),

@@ -16,21 +16,11 @@ export function MateriFlashcardView() {
   const [flipped, setFlipped] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
-
-  // AI states
   const [aiMode, setAiMode] = useState(false);
   const [aiTopic, setAiTopic] = useState('');
   const [generating, setGenerating] = useState(false);
-
-  const [form, setForm] = useState({
-    word: '',
-    translate: '',
-    category: 'School & Classroom',
-    example: '',
-    phase: 'Fase A'
-  });
-
   const [selectedDeckTitle, setSelectedDeckTitle] = useState<string | null>(null);
+  const [form, setForm] = useState({ word: '', translate: '', category: 'School & Classroom', example: '', phase: 'Fase A' });
 
   const decks = React.useMemo(() => {
     const groups: Record<string, { title: string; phase: string; teacher_nip?: string | null; cards: any[] }> = {};
@@ -272,6 +262,7 @@ export function MateriFlashcardView() {
           </div>
 
           <FlashcardPlayer
+            cardList={cardList}
             currentCard={currentCard}
             currentIndex={currentIndex}
             total={cardList.length}
