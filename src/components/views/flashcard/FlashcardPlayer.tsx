@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,8 +31,16 @@ export function FlashcardPlayer({
   onPrev,
   onNext,
 }: FlashcardPlayerProps) {
-  const promptText = `cute cartoon illustration of ${currentCard.word} (${currentCard.meaning || currentCard.translate || ''}), school flashcard style, isolated clean white background, vector digital art`;
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const primaryWord = (currentCard.word || '').split('/')[0].trim();
+  const primaryMeaning = (currentCard.meaning || currentCard.translate || '').split('/')[0].trim();
+  const promptText = `cute cartoon illustration of ${primaryWord} ${primaryMeaning ? `(${primaryMeaning})` : ''}, school flashcard style, isolated clean white background, vector digital art`;
   const imageUrl = `/api/image-proxy?prompt=${encodeURIComponent(promptText)}`;
+
+  useEffect(() => {
+    setImageLoading(true);
+  }, [currentIndex, currentCard.word]);
 
   return (
     <div className="max-w-md mx-auto">
@@ -47,14 +55,22 @@ export function FlashcardPlayer({
           </span>
         </div>
 
-        {/* Dynamic AI Illustration */}
+        {/* Dynamic AI Illustration Container */}
         <div className="my-3 w-32 h-32 relative bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center shadow-inner shrink-0">
+          {imageLoading && (
+            <div className="absolute inset-0 bg-slate-50/90 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-1.5 text-slate-400">
+              <i className="ri-loader-4-line animate-spin text-lg text-primary" />
+              <span className="text-[9px] font-bold text-slate-500 tracking-tight">Memuat ilustrasi...</span>
+            </div>
+          )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            key={imageUrl}
             src={imageUrl}
             alt={currentCard.word}
-            className="w-full h-full object-cover transition-opacity duration-300"
-            loading="lazy"
+            className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={() => setImageLoading(false)}
+            onError={() => setImageLoading(false)}
           />
         </div>
 
@@ -83,3 +99,4 @@ export function FlashcardPlayer({
     </div>
   );
 }
+
