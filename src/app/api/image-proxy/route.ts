@@ -26,13 +26,16 @@ export async function GET(req: NextRequest) {
     .replace(/\s+/g, ' ')
     .trim();
 
+  // Child-safe educational query normalization
+  const educationalQuery = `${cleanQuery} object clean`;
+
   const pexelsApiKey = process.env.PEXELS_API_KEY;
 
   // 1. Try Pexels API First if Key Exists (Fast & HD Real Photos)
   if (pexelsApiKey) {
     try {
       const pexelsRes = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(cleanQuery)}&per_page=1&orientation=square`,
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(educationalQuery)}&per_page=1&orientation=square`,
         {
           headers: { Authorization: pexelsApiKey },
           signal: AbortSignal.timeout(4000),
