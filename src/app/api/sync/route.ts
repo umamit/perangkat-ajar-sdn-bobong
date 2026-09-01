@@ -163,7 +163,7 @@ export async function POST(request: Request) {
         }
         return NextResponse.json({ success: !(await supabase.from('school_settings').upsert(payload)).error });
       case 'saveTeacher':
-        if (!isKepsek && payload.nip !== cookieNip) {
+        if (!isKepsek && payload.nip !== activeNip) {
           return NextResponse.json({ success: false, error: 'Unauthorized NIP mutation' }, { status: 403 });
         }
         return NextResponse.json({ success: !(await supabase.from('teachers').upsert(payload, { onConflict: 'nip' })).error });
@@ -211,7 +211,7 @@ export async function POST(request: Request) {
         verifyOwnership(teacher_nip);
         let query = supabase.from('flashcards').delete().eq('title', title);
         if (!isKepsek) {
-          query = query.eq('teacher_nip', cookieNip);
+          query = query.eq('teacher_nip', activeNip);
         }
         return NextResponse.json({ success: !(await query).error });
       }
