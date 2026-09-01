@@ -209,7 +209,7 @@ export function CounselingModal({ isOpen, onOpenChange, student }: CounselingMod
               />
             </div>
 
-            <Button type="submit" disabled={saving} className="w-full rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 mt-1">
+            <Button type="submit" disabled={saving} className="w-full rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 mt-1">
               {saving ? 'Menyimpan...' : 'Simpan Catatan'}
             </Button>
           </form>

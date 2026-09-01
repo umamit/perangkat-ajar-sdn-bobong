@@ -54,7 +54,7 @@ export function ImportStudentModal({
               }}
               className="hidden"
             />
-            <Button type="button" onClick={() => document.getElementById('directImportFile')?.click()} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white px-5">
+            <Button type="button" onClick={() => document.getElementById('directImportFile')?.click()} className="rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 px-5">
               Pilih & Impor File
             </Button>
           </div>

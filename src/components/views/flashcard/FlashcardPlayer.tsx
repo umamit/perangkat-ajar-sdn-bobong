@@ -111,7 +111,7 @@ export function FlashcardPlayer({
         <Button variant="outline" size="sm" onClick={onPrev} className="text-xs font-black rounded-xl border-slate-200 hover:bg-slate-50 gap-1">
           <i className="ri-arrow-left-s-line" /> Sebelumnya
         </Button>
-        <Button size="sm" onClick={onNext} className="text-xs font-black rounded-xl bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 gap-1">
+        <Button size="sm" onClick={onNext} className="text-xs font-black rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1">
           Berikutnya <i className="ri-arrow-right-s-line" />
         </Button>
       </div>

@@ -77,7 +77,7 @@ export function FlashcardDialog({
             <div className="flex justify-end gap-2 pt-3 text-xs">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl h-10 text-xs font-bold">Batal</Button>
               <Button type="button" onClick={onAiGenerate} disabled={generating}
-                className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white gap-1.5 shadow-md shadow-primary/10">
+                className="rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1.5 shadow-md shadow-primary/10">
                 {generating ? 'Menyusun...' : 'Generate 5 Kartu'}
               </Button>
             </div>
@@ -116,7 +116,7 @@ export function FlashcardDialog({
             <DialogFooter className="pt-3 gap-2 sm:gap-0">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl h-10 text-xs font-bold">Batal</Button>
               <Button type="submit" disabled={saving}
-                className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
+                className="rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105">
                 {saving ? 'Menyimpan...' : 'Simpan Kartu'}
               </Button>
             </DialogFooter>

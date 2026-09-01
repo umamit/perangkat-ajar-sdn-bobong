@@ -196,7 +196,7 @@ export function SyncDapodikModal({ isOpen, onClose, classes, showToast, syncData
 
             <Button
               onClick={handleProcessManualJson}
-              className="w-full h-9 text-xs font-black bg-primary hover:bg-primary-dark text-white rounded-xl"
+              className="w-full h-9 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 rounded-xl"
             >
               Proses Data JSON
             </Button>
@@ -236,7 +236,7 @@ export function SyncDapodikModal({ isOpen, onClose, classes, showToast, syncData
             <Button
               onClick={handleFetchAuto}
               disabled={loading}
-              className="w-full h-9 text-xs font-black bg-primary hover:bg-primary-dark text-white rounded-xl"
+              className="w-full h-9 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 rounded-xl"
             >
               {loading ? 'Menghubungkan...' : 'Koneksikan & Ambil Data'}
             </Button>

@@ -290,7 +290,7 @@ export function AbsensiView() {
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs font-black rounded-xl bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 gap-1">
+              <Button onClick={handleSaveAbsensi} className="w-full h-9 text-xs font-black rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1">
                 <i className="ri-save-line text-sm" /> Simpan Presensi Hari Ini
               </Button>
             </div>

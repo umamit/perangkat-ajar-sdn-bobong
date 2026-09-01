@@ -77,7 +77,7 @@ export function VirtualCardView() {
           <Button
             onClick={handlePrint}
             disabled={filteredStudents.length === 0}
-            className="h-10 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white gap-2 shadow-md shadow-primary/10"
+            className="h-10 rounded-xl font-black text-xs bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-2 shadow-md shadow-primary/10"
           >
             <i className="ri-printer-line text-sm" /> Cetak Kartu Kelas ({filteredStudents.length})
           </Button>

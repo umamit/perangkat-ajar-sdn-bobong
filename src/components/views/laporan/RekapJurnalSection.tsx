@@ -160,7 +160,7 @@ export function RekapJurnalSection() {
           <Button
             onClick={handleCetakPDF}
             disabled={printing}
-            className="w-full sm:w-auto px-6 rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10 flex items-center gap-2"
+            className="w-full sm:w-auto px-6 rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 flex items-center gap-2"
           >
             {printing ? (
               <>Memproses PDF...</>

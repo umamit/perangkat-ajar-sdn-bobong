@@ -140,7 +140,7 @@ export function ModulView() {
           <h3 className="text-lg font-black text-slate-800 tracking-tight">Perangkat &amp; Modul Ajar Kurikulum Merdeka</h3>
           <p className="text-xs text-slate-500 font-semibold">Modul Ajar {currentTeacher?.subject || 'Mata Pelajaran'} SD Negeri Bobong (TP, ATP, Alokasi Waktu)</p>
         </div>
-        <Button size="sm" onClick={() => setShowModal(true)} className="gap-1 rounded-xl font-black text-xs bg-primary hover:bg-primary-dark text-white">
+        <Button size="sm" onClick={() => setShowModal(true)} className="gap-1 rounded-xl font-black text-xs bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105">
           <i className="ri-upload-cloud-line" /> Unggah Modul Baru
         </Button>
       </div>
@@ -285,7 +285,7 @@ export function ModulView() {
               <Button type="button" variant="outline" onClick={() => { setShowModal(false); setForm({ title: '', classId: classes[0]?.id || '1A', duration: '2 x 35 Menit', tp: '', cp: '' }); setSelectedFile(null); }} className="rounded-xl h-10 text-xs font-bold">
                 Batal
               </Button>
-              <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-primary hover:bg-primary-dark text-white shadow-md shadow-primary/10">
+              <Button type="submit" disabled={saving} className="rounded-xl h-10 text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105">
                 {saving ? 'Menyimpan...' : 'Simpan Modul'}
               </Button>
             </DialogFooter>

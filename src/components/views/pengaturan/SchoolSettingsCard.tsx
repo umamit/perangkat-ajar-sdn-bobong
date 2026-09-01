@@ -126,7 +126,7 @@ export function SchoolSettingsCard() {
             </div>
           </div>
 
-          <Button type="submit" disabled={isSaving} className="font-black text-[11px] h-9 rounded-xl bg-primary hover:bg-primary-dark text-white gap-1 shadow-sm">
+          <Button type="submit" disabled={isSaving} className="font-black text-[11px] h-9 rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1 shadow-sm">
             <i className="ri-save-line" /> {isSaving ? 'Menyimpan...' : 'Simpan Pengaturan Sekolah'}
           </Button>
         </form>

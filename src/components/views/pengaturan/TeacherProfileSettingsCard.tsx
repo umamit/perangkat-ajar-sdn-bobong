@@ -218,7 +218,7 @@ export function TeacherProfileSettingsCard() {
               </div>
             </div>
 
-            <Button type="submit" disabled={isSaving} className="mt-2 font-black text-[11px] h-9 rounded-xl bg-primary hover:bg-primary-dark text-white gap-1 shadow-sm">
+            <Button type="submit" disabled={isSaving} className="mt-2 font-black text-[11px] h-9 rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1 shadow-sm">
               <i className="ri-save-line" /> {isSaving ? 'Menyimpan...' : 'Simpan Profil & Kata Sandi'}
             </Button>
           </form>
@@ -312,7 +312,7 @@ export function TeacherProfileSettingsCard() {
                   }
                   setIsUploading(false);
                 }}
-                className="text-xs font-black bg-primary hover:bg-primary-dark text-white rounded-xl gap-1 h-9 shadow-sm"
+                className="text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 rounded-xl gap-1 h-9 shadow-sm"
               >
                 {isUploading ? <i className="ri-refresh-line animate-spin" /> : <i className="ri-checkbox-circle-line" />}
                 Simpan Foto

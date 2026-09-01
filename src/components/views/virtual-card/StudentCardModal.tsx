@@ -132,7 +132,7 @@ export function StudentCardModal({
 
           <Button
             onClick={handlePrintSingle}
-            className="w-full h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-black text-xs gap-2 shadow-md shadow-primary/10 mt-2"
+            className="w-full h-10 rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 font-black text-xs gap-2 shadow-md shadow-primary/10 mt-2"
           >
             <i className="ri-printer-line text-sm" /> Cetak Kartu Ini
           </Button>
