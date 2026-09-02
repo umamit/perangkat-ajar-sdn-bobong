@@ -58,11 +58,11 @@ export function StudentHeader({
               <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1 rounded-xl font-black text-xs bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105">
                 <i className="ri-user-add-line" /> Tambah Siswa
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary/20 text-primary hover:bg-cyan-50/30">
-                <i className="ri-upload-2-line" /> Impor Excel
+              <Button variant="outline" size="sm" onClick={() => setShowImportModal(true)} className="text-xs font-black bg-cyan-50/80 backdrop-blur-sm text-primary-dark border border-cyan-200/60 hover:bg-cyan-100/80 shadow-xs gap-1.5 rounded-xl">
+                <i className="ri-upload-2-line text-sm text-cyan-600" /> Impor Excel
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowSyncModal(true)} className="gap-1 rounded-xl font-black text-xs border-primary-dark/20 text-primary-dark hover:bg-teal-50/30">
-                <i className="ri-exchange-funds-line" /> Tarik Dapodik
+              <Button variant="outline" size="sm" onClick={() => setShowSyncModal(true)} className="text-xs font-black bg-teal-50/80 backdrop-blur-sm text-teal-700 border border-teal-200/60 hover:bg-teal-100/80 shadow-xs gap-1.5 rounded-xl">
+                <i className="ri-exchange-funds-line text-sm text-teal-600" /> Tarik Dapodik
               </Button>
             </>
           )}
