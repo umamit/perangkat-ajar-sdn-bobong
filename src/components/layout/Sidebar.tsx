@@ -22,7 +22,7 @@ const navItems = [
   { id: 'pengaturan', label: 'Pengaturan', icon: 'ri-settings-4-line' },
 ];
 
-export function Sidebar() {
+export const Sidebar = React.memo(function Sidebar() {
   const { activeView, setActiveView, currentTeacher, sidebarOpen, setSidebarOpen, sidebarCollapsed } = useApp();
 
   const isKepsek = !!(
@@ -92,4 +92,4 @@ export function Sidebar() {
       )}
     </>
   );
-}
+});

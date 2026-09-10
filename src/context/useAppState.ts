@@ -83,8 +83,9 @@ export function useAppState() {
     enabled: false,
   });
 
+  const { setIsLoading } = ui;
   const syncData = useCallback(async () => {
-    ui.setIsLoading(true);
+    setIsLoading(true);
     try {
       const { data } = await refetchSync();
       if (data && data.success) {
@@ -104,9 +105,9 @@ export function useAppState() {
     } catch (err) {
       console.warn("[Supabase Sync Error]", err);
     } finally {
-      ui.setIsLoading(false);
+      setIsLoading(false);
     }
-  }, [refetchSync, ui]);
+  }, [refetchSync, setIsLoading]);
 
   return {
     ...auth,

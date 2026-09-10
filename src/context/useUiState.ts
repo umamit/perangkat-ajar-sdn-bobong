@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 
 export interface ToastMessage {
   id: string;
@@ -7,7 +7,8 @@ export interface ToastMessage {
 }
 
 export function useUiState() {
-  const [activeView, setActiveView] = useState<string>(() => {
+  const [isPending, startTransition] = useTransition();
+  const [activeView, setActiveViewState] = useState<string>(() => {
     if (typeof window !== "undefined") {
       try {
         return localStorage.getItem("sdn_bobong_active_view") || "dashboard";
@@ -17,6 +18,12 @@ export function useUiState() {
     }
     return "dashboard";
   });
+
+  const setActiveView = useCallback((view: string) => {
+    startTransition(() => {
+      setActiveViewState(view);
+    });
+  }, []);
 
   useEffect(() => {
     try {
