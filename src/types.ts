@@ -103,6 +103,8 @@ export interface JournalEntry {
   teacherNip?: string;
 }
 
+export type Journal = JournalEntry;
+
 export interface ModuleAjar {
   id: string;
   grade: string;

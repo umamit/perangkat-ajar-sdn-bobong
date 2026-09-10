@@ -6,11 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
 import { downloadLaporanPDFWithPdfLib } from '@/modules/generatePDFLib';
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { RekapJurnalSection } from './laporan/RekapJurnalSection';
+import { StudentDetailTable, StudentDetailRow } from './laporan/StudentDetailTable';
 
 export function LaporanView() {
   const { students, classes, journals, attendance, currentTeacher, showToast, grades, schoolSettings } = useApp();
@@ -283,48 +282,10 @@ export function LaporanView() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50/40 hover:bg-slate-50/40">
-                <TableHead className="w-12 font-black text-[10px] uppercase text-slate-400">No</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">Nama Siswa</TableHead>
-                <TableHead className="font-black text-[10px] uppercase text-slate-400">NIS</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Kehadiran (%)</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Rata-Rata Nilai ({selectedSubject})</TableHead>
-                <TableHead className="text-center font-black text-[10px] uppercase text-slate-400">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {studentDetails.map((s, idx) => (
-                <TableRow key={idx} className="hover:bg-white/40 border-slate-100 transition-colors">
-                  <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
-                  <TableCell className="font-bold text-slate-800 text-xs">{s.name}</TableCell>
-                  <TableCell className="font-semibold text-xs text-slate-500">{s.nis}</TableCell>
-                  <TableCell className="text-center font-black text-xs">
-                    <span className={s.attendanceRate >= 75 ? 'text-emerald-600' : 'text-rose-600'}>
-                      {s.attendanceRate}%
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-center font-black text-xs">{s.gradeAverage}</TableCell>
-                  <TableCell className="text-center">
-                    <Badge
-                      variant={s.attendanceRate >= 75 && s.gradeAverage >= 75 ? 'success' : 'warning'}
-                      className="text-[9px] font-black rounded-md px-2 py-0.5"
-                    >
-                      {s.attendanceRate >= 75 && s.gradeAverage >= 75 ? 'Tuntas' : 'Perlu Bimbingan'}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {studentDetails.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-slate-400 py-8 text-xs font-semibold">
-                    Tidak ada data siswa terdaftar di rombel ini
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <StudentDetailTable
+            students={studentDetails}
+            subjectName={selectedSubject}
+          />
         </CardContent>
       </Card>
 
