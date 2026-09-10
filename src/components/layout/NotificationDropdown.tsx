@@ -144,8 +144,8 @@ export function NotificationDropdown({
 
   return (
     <>
-      <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 mt-2 w-84 bg-white border border-slate-200/80 rounded-2xl shadow-xl z-50 p-4 text-left text-xs space-y-3 animate-fade-in">
+      <div className="fixed inset-0 z-40 bg-black/10 sm:bg-transparent" onClick={onClose} />
+      <div className="fixed sm:absolute inset-x-3 sm:inset-auto top-16 sm:top-full sm:right-0 sm:mt-2 w-auto sm:w-84 max-w-sm sm:max-w-none mx-auto sm:mx-0 bg-white border border-slate-200/80 rounded-2xl shadow-2xl sm:shadow-xl z-50 p-4 text-left text-xs space-y-3 animate-fade-in">
         <div className="flex justify-between items-center border-b border-slate-100 pb-2">
           <span className="font-black text-slate-800 flex items-center gap-1.5">
             <i className="ri-notification-badge-line text-primary text-sm" /> Notifikasi Harian
