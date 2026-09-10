@@ -9,9 +9,11 @@ interface TaskCardsMobileProps {
   tasks: TaskItem[];
   onDelete: (item: TaskItem) => void;
   canDelete: (item: TaskItem) => boolean;
+  onVerify?: (item: TaskItem) => void;
+  isKepsek?: boolean;
 }
 
-export function TaskCardsMobile({ tasks, onDelete, canDelete }: TaskCardsMobileProps) {
+export function TaskCardsMobile({ tasks, onDelete, canDelete, onVerify, isKepsek }: TaskCardsMobileProps) {
   if (tasks.length === 0) {
     return (
       <div className="md:hidden text-center py-8 text-xs font-semibold text-slate-400 bg-white/70 backdrop-blur-md rounded-2xl border border-white/80 p-6">
@@ -37,7 +39,12 @@ export function TaskCardsMobile({ tasks, onDelete, canDelete }: TaskCardsMobileP
               </div>
               <h4 className="font-extrabold text-sm text-slate-800 leading-snug mt-0.5">{item.title}</h4>
             </div>
-            <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5 shrink-0">
+            <Badge
+              variant={item.status === 'Aktif' ? 'success' : item.status === 'Menunggu Verifikasi' ? 'outline' : 'secondary'}
+              className={`font-black text-[10px] rounded-md px-2 py-0.5 shrink-0 ${
+                item.status === 'Menunggu Verifikasi' ? 'bg-amber-50 text-amber-700 border-amber-200' : ''
+              }`}
+            >
               {item.status}
             </Badge>
           </div>
@@ -69,17 +76,30 @@ export function TaskCardsMobile({ tasks, onDelete, canDelete }: TaskCardsMobileP
               )}
             </div>
 
-            {canDelete(item) && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onDelete(item)}
-                className="h-8 w-8 p-0 rounded-xl text-rose-600 border-rose-100 hover:bg-rose-50"
-                title="Hapus Penugasan"
-              >
-                <i className="ri-delete-bin-line text-xs" />
-              </Button>
-            )}
+            <div className="flex items-center gap-1.5">
+              {isKepsek && item.status === 'Menunggu Verifikasi' && onVerify && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onVerify(item)}
+                  className="h-8 px-2.5 rounded-xl text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 text-xs font-bold flex items-center gap-1"
+                  title="Verifikasi & Setujui Soal"
+                >
+                  <i className="ri-check-line text-sm text-emerald-600" /> Setujui
+                </Button>
+              )}
+              {canDelete(item) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDelete(item)}
+                  className="h-8 w-8 p-0 rounded-xl text-rose-600 border-rose-100 hover:bg-rose-50"
+                  title="Hapus Penugasan"
+                >
+                  <i className="ri-delete-bin-line text-xs" />
+                </Button>
+              )}
+            </div>
           </div>
         </Card>
       ))}

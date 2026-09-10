@@ -9,9 +9,11 @@ interface TaskTableDesktopProps {
   tasks: TaskItem[];
   onDelete: (item: TaskItem) => void;
   canDelete: (item: TaskItem) => boolean;
+  onVerify?: (item: TaskItem) => void;
+  isKepsek?: boolean;
 }
 
-export function TaskTableDesktop({ tasks, onDelete, canDelete }: TaskTableDesktopProps) {
+export function TaskTableDesktop({ tasks, onDelete, canDelete, onVerify, isKepsek }: TaskTableDesktopProps) {
   return (
     <div className="hidden md:block">
       <Table>
@@ -24,7 +26,7 @@ export function TaskTableDesktop({ tasks, onDelete, canDelete }: TaskTableDeskto
             <TableHead className="font-black text-[10px] uppercase text-slate-400">Tenggat Waktu</TableHead>
             <TableHead className="font-black text-[10px] uppercase text-slate-400">Berkas Soal</TableHead>
             <TableHead className="font-black text-[10px] uppercase text-slate-400">Status</TableHead>
-            <TableHead className="w-16 text-right font-black text-[10px] uppercase text-slate-400">Aksi</TableHead>
+            <TableHead className="w-24 text-right font-black text-[10px] uppercase text-slate-400">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -75,24 +77,42 @@ export function TaskTableDesktop({ tasks, onDelete, canDelete }: TaskTableDeskto
                   )}
                 </TableCell>
                 <TableCell>
-                  <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5">
+                  <Badge
+                    variant={item.status === 'Aktif' ? 'success' : item.status === 'Menunggu Verifikasi' ? 'outline' : 'secondary'}
+                    className={`font-black text-[10px] rounded-md px-2 py-0.5 ${
+                      item.status === 'Menunggu Verifikasi' ? 'bg-amber-50 text-amber-700 border-amber-200' : ''
+                    }`}
+                  >
                     {item.status}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  {canDelete(item) ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onDelete(item)}
-                      className="h-7 w-7 p-0 rounded-lg text-rose-600 border-rose-100 hover:bg-rose-50 hover:border-rose-200"
-                      title="Hapus Penugasan"
-                    >
-                      <i className="ri-delete-bin-line text-xs" />
-                    </Button>
-                  ) : (
-                    <span className="text-slate-300 text-xs">-</span>
-                  )}
+                  <div className="flex items-center justify-end gap-1">
+                    {isKepsek && item.status === 'Menunggu Verifikasi' && onVerify && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onVerify(item)}
+                        className="h-7 px-2 rounded-lg text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 text-[10px] font-bold flex items-center gap-1"
+                        title="Verifikasi & Setujui Soal"
+                      >
+                        <i className="ri-check-line text-xs text-emerald-600" /> Setujui
+                      </Button>
+                    )}
+                    {canDelete(item) ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onDelete(item)}
+                        className="h-7 w-7 p-0 rounded-lg text-rose-600 border-rose-100 hover:bg-rose-50 hover:border-rose-200"
+                        title="Hapus Penugasan"
+                      >
+                        <i className="ri-delete-bin-line text-xs" />
+                      </Button>
+                    ) : (
+                      <span className="text-slate-300 text-xs">-</span>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))

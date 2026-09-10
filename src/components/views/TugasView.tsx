@@ -91,6 +91,21 @@ export function TugasView() {
     }
   };
 
+  const handleVerify = async (item: TaskItem) => {
+    try {
+      const updatedItem: TaskItem = { ...item, status: 'Aktif' };
+      const success = await saveAssignmentToSupabase(updatedItem);
+      if (success) {
+        setAssignments(prev => prev.map(a => a.id === item.id ? updatedItem : a));
+        showToast(`Penugasan "${item.title}" berhasil disetujui & aktif!`, 'success');
+      } else {
+        showToast('Gagal memverifikasi penugasan ke cloud', 'error');
+      }
+    } catch {
+      showToast('Terjadi kesalahan saat memverifikasi penugasan', 'error');
+    }
+  };
+
   const handleCopyPublicLink = () => {
     if (typeof window === 'undefined') return;
     const url = `${window.location.origin}/unggah-soal`;
@@ -132,12 +147,24 @@ export function TugasView() {
       {/* Desktop Table Layout */}
       <Card className="hidden md:block rounded-2xl border border-white/80 bg-white/70 backdrop-blur-md shadow-sm overflow-hidden">
         <CardContent className="p-0">
-          <TaskTableDesktop tasks={itemList} onDelete={handleDelete} canDelete={canDelete} />
+          <TaskTableDesktop
+            tasks={itemList}
+            onDelete={handleDelete}
+            canDelete={canDelete}
+            onVerify={handleVerify}
+            isKepsek={isKepsek}
+          />
         </CardContent>
       </Card>
 
       {/* Mobile-First Card Layout */}
-      <TaskCardsMobile tasks={itemList} onDelete={handleDelete} canDelete={canDelete} />
+      <TaskCardsMobile
+        tasks={itemList}
+        onDelete={handleDelete}
+        canDelete={canDelete}
+        onVerify={handleVerify}
+        isKepsek={isKepsek}
+      />
 
       {/* Modal Dialog Form */}
       <TaskFormModal
