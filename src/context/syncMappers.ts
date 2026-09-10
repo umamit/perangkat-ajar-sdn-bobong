@@ -24,7 +24,18 @@ interface RawStudent {
 }
 interface RawClass { id: string; name: string; phase?: string; room?: string; }
 interface RawJournal { id: string; date: string; time_slot?: string; class_id: string; topic: string; notes?: string; attendance_summary?: string; }
-interface RawAssignment { id: string; title: string; class_id: string; due_date: string; status?: string; teacher_nip?: string; }
+interface RawAssignment {
+  id: string;
+  title: string;
+  class_id: string;
+  due_date: string;
+  status?: string;
+  teacher_nip?: string;
+  file_url?: string;
+  file_name?: string;
+  description?: string;
+  type?: string;
+}
 
 export const ADMIN_NIP = '199610272019032006';
 export const LEGACY_NIP = '197508201999031002';
@@ -107,10 +118,10 @@ export function mapJournals(raw: RawJournal[]): JournalEntry[] {
 export function mapAssignments(raw: RawAssignment[]): TaskItem[] {
   return raw.map((a): TaskItem => {
     let cleanTitle = a.title || '';
-    let fileUrl: string | undefined;
-    let fileName: string | undefined;
-    let assignmentType = 'Formatif';
-    let description = '';
+    let fileUrl: string | undefined = a.file_url;
+    let fileName: string | undefined = a.file_name;
+    let assignmentType = a.type || 'Formatif';
+    let description = a.description || '';
 
     const metaMatch = cleanTitle.match(/\s*__META__\[(.*?)\]$/);
     if (metaMatch) {
@@ -119,12 +130,12 @@ export function mapAssignments(raw: RawAssignment[]): TaskItem[] {
       for (const pair of metaPairs) {
         const [k, ...vParts] = pair.split(':');
         const v = vParts.join(':');
-        if (k === 'FILE_URL') fileUrl = v;
-        if (k === 'FILE_NAME') {
+        if (k === 'FILE_URL' && !fileUrl) fileUrl = v;
+        if (k === 'FILE_NAME' && !fileName) {
           try { fileName = decodeURIComponent(v); } catch { fileName = v; }
         }
-        if (k === 'TYPE') assignmentType = v;
-        if (k === 'DESC') {
+        if (k === 'TYPE' && !a.type) assignmentType = v;
+        if (k === 'DESC' && !a.description) {
           try { description = decodeURIComponent(v); } catch { description = v; }
         }
       }
