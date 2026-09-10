@@ -1,209 +1,39 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useApp } from '@/context/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { saveGradeToSupabase } from '@/lib/supabase';
-import { addToOfflineQueue } from '@/lib/offlineSync';
-import { downloadNilaiPDF } from '@/modules/generateNilaiPDF';
-import { exportNilaiExcel } from '@/modules/exportNilaiExcel';
-
-import { getTeacherAssignedClass } from '@/lib/utils';
-import { RaporAiDescriptor } from './nilai/RaporAiDescriptor';
-import { GradeTable } from './nilai/GradeTable';
-import { GradeAnalysis } from './nilai/GradeAnalysis';
-import { GradeHeader } from './nilai/GradeHeader';
+import React from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { RaporAiDescriptor } from "./nilai/RaporAiDescriptor";
+import { GradeTable } from "./nilai/GradeTable";
+import { GradeAnalysis } from "./nilai/GradeAnalysis";
+import { GradeHeader } from "./nilai/GradeHeader";
+import { useGradeManagement, SUBJECTS } from "./nilai/useGradeManagement";
 
 export function NilaiView() {
-  const { students, classes, currentTeacher, showToast, grades, setGrades } = useApp();
-  
-  const lockedClass = getTeacherAssignedClass(currentTeacher?.role, currentTeacher?.subject);
-  const [selectedClassState, setSelectedClassState] = useState(lockedClass || 'ALL');
-  const [activeTab, setActiveTab] = useState<'input' | 'analisis'>('input');
-  
-  const selectedClass = lockedClass || selectedClassState;
-  const setSelectedClass = lockedClass ? () => {} : setSelectedClassState;
-
-  // AppContext has selectedClassFilter, but if not we can use state
-  const [aiDialog, setAiDialog] = useState<{
-    open: boolean;
-    studentName: string;
-    studentClass: string;
-    score: number;
-  }>({
-    open: false,
-    studentName: '',
-    studentClass: '',
-    score: 0
-  });
-
-  const SUBJECTS = [
-    'Matematika',
-    'Bahasa Indonesia',
-    'IPAS',
-    'Pendidikan Pancasila',
-    'Seni Budaya',
-    'PJOK',
-    'Pendidikan Agama Islam',
-    'Pendidikan Agama Kristen',
-    'Bahasa Inggris',
-    'Muatan Lokal'
-  ];
-
-  const isGuruMapel = currentTeacher?.role === 'Guru Mata Pelajaran';
-  
-  const getNormalizedDefaultSubject = () => {
-    const rawSubj = currentTeacher?.subject || '';
-    if (rawSubj.toLowerCase().includes('bahasa inggris')) {
-      return 'Bahasa Inggris';
-    }
-    if (rawSubj.toLowerCase().includes('pjok')) {
-      return 'PJOK';
-    }
-    if (rawSubj.toLowerCase().includes('agama')) {
-      if (rawSubj.toLowerCase().includes('kristen')) {
-        return 'Pendidikan Agama Kristen';
-      }
-      return 'Pendidikan Agama Islam';
-    }
-    return 'Matematika';
-  };
-
-  const [selectedSubject, setSelectedSubject] = useState(getNormalizedDefaultSubject());
-
-  const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
-
-  const filteredStudents = students.filter(s => {
-    const studentClassNorm = normalizeClass(s.classId);
-    const selectedClassNorm = normalizeClass(selectedClass);
-    return selectedClass === 'ALL' || studentClassNorm === selectedClassNorm || s.classId === selectedClass;
-  });
-
-  const getStudentScore = (studentId: string, type: 'Formatif' | 'STS' | 'SAS') => {
-    const record = grades.find(g => g.student_id === studentId && g.subject === selectedSubject && g.type === type);
-    return record ? Number(record.score) : 0;
-  };
-
-  const handleGradeChange = async (studentId: string, type: 'Formatif' | 'STS' | 'SAS', val: number) => {
-    const num = Math.min(100, Math.max(0, val || 0));
-    
-    // Update local state reaktif
-    setGrades(prev => {
-      const existingIdx = prev.findIndex(g => g.student_id === studentId && g.subject === selectedSubject && g.type === type);
-      if (existingIdx > -1) {
-        const updated = [...prev];
-        updated[existingIdx] = { ...updated[existingIdx], score: num };
-        return updated;
-      } else {
-        return [...prev, {
-          student_id: studentId,
-          studentId,
-          classId: selectedClass,
-          class_id: selectedClass,
-          subject: selectedSubject,
-          type,
-          score: num
-        }];
-      }
-    });
-
-    const targetStudent = students.find(s => s.id === studentId || s.nis === studentId);
-    if (targetStudent) {
-      const existingRecord = grades.find(g => g.student_id === studentId && g.subject === selectedSubject && g.type === type);
-      const payload: { student_id: string; type: string; score: number; class_id: string; subject: string; teacher_nip: string; id?: string } = {
-        student_id: studentId,
-        type: type,
-        score: num,
-        class_id: targetStudent.classId,
-        subject: selectedSubject,
-        teacher_nip: currentTeacher?.nip || ''
-      };
-      if (existingRecord?.id) {
-        payload.id = existingRecord.id;
-      }
-      const ok = await saveGradeToSupabase(payload);
-      if (!ok && typeof navigator !== 'undefined' && !navigator.onLine) {
-        addToOfflineQueue('saveGrade', payload);
-      }
-    }
-  };
-
-  const handleDownloadPDF = async () => {
-    if (filteredStudents.length === 0) {
-      showToast('Tidak ada data nilai untuk dicetak', 'error');
-      return;
-    }
-    const studentsWithGrades = filteredStudents.map(s => ({
-      ...s,
-      scoreFormatif: getStudentScore(s.id, 'Formatif'),
-      scoreSts: getStudentScore(s.id, 'STS'),
-      scoreSas: getStudentScore(s.id, 'SAS'),
-    }));
-    try {
-      showToast('Memproses Berkas PDF Daftar Nilai...', 'info');
-      await downloadNilaiPDF({
-        className: selectedClass,
-        students: studentsWithGrades,
-        teacherName: currentTeacher?.name,
-        teacherNip: currentTeacher?.nip,
-        teacherRole: currentTeacher?.role,
-        teacherSubject: selectedSubject,
-      });
-      showToast('PDF Daftar Nilai Berhasil Diunduh!', 'success');
-    } catch (e) {
-      showToast('Gagal mencetak PDF Daftar Nilai', 'error');
-    }
-  };
-
-  const handleExportExcel = () => {
-    if (filteredStudents.length === 0) {
-      showToast('Tidak ada data nilai untuk diekspor', 'error');
-      return;
-    }
-    const studentsWithGrades = filteredStudents.map(s => ({
-      ...s,
-      scoreFormatif: getStudentScore(s.id, 'Formatif'),
-      scoreSts: getStudentScore(s.id, 'STS'),
-      scoreSas: getStudentScore(s.id, 'SAS'),
-    }));
-    try {
-      showToast('Mengunduh File Excel Daftar Nilai...', 'info');
-      exportNilaiExcel(studentsWithGrades, selectedClass);
-      showToast('Excel Daftar Nilai Berhasil Diunduh!', 'success');
-    } catch (e) {
-      showToast('Gagal mengekspor file Excel', 'error');
-    }
-  };
+  const g = useGradeManagement();
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in text-slate-800">
       <GradeHeader
-        selectedSubject={selectedSubject}
-        onExportExcel={handleExportExcel}
-        onDownloadPDF={handleDownloadPDF}
+        selectedSubject={g.selectedSubject}
+        onExportExcel={g.handleExportExcel}
+        onDownloadPDF={g.handleDownloadPDF}
       />
 
       <div className="flex border-b border-slate-200">
         <button
-          onClick={() => setActiveTab('input')}
-          className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
-            activeTab === 'input'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-slate-400 hover:text-slate-600'
-          }`}
+          onClick={() => g.setActiveTab("input")}
+          className={"px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 " + (
+            g.activeTab === "input" ? "border-primary text-primary" : "border-transparent text-slate-400 hover:text-slate-600"
+          )}
         >
           <i className="ri-edit-line" /> Tabel Input Nilai
         </button>
         <button
-          onClick={() => setActiveTab('analisis')}
-          className={`px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 ${
-            activeTab === 'analisis'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-slate-400 hover:text-slate-600'
-          }`}
+          onClick={() => g.setActiveTab("analisis")}
+          className={"px-4 py-2.5 text-xs font-black border-b-2 transition-all flex items-center gap-1.5 " + (
+            g.activeTab === "analisis" ? "border-primary text-primary" : "border-transparent text-slate-400 hover:text-slate-600"
+          )}
         >
           <i className="ri-bar-chart-2-line" /> Analisis & Peta Nilai
         </button>
@@ -214,22 +44,20 @@ export function NilaiView() {
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
             <div className="flex items-center gap-2">
               <label className="text-xs font-bold text-slate-600">Filter Kelas:</label>
-              {lockedClass ? (
+              {g.lockedClass ? (
                 <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
-                  Kelas {lockedClass} (Binaan)
+                  Kelas {g.lockedClass} (Binaan)
                 </Badge>
               ) : (
                 <select
-                  value={selectedClass}
-                  onChange={e => setSelectedClass(e.target.value)}
+                  value={g.selectedClass}
+                  onChange={e => g.setSelectedClass(e.target.value)}
                   className="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  <option value="ALL">Semua Kelas ({students.length} Siswa)</option>
-                  {classes.map(c => {
-                    const count = students.filter(s => normalizeClass(s.classId) === normalizeClass(c.id)).length;
-                    return (
-                      <option key={c.id} value={c.id}>{c.name} ({count} Siswa)</option>
-                    );
+                  <option value="ALL">Semua Kelas ({g.students.length} Siswa)</option>
+                  {g.classes.map(c => {
+                    const count = g.students.filter(s => g.normalizeClass(s.classId) === g.normalizeClass(c.id)).length;
+                    return <option key={c.id} value={c.id}>{c.name} ({count} Siswa)</option>;
                   })}
                 </select>
               )}
@@ -237,38 +65,36 @@ export function NilaiView() {
 
             <div className="flex items-center gap-2">
               <label className="text-xs font-bold text-slate-600">Mata Pelajaran:</label>
-              {isGuruMapel ? (
+              {g.isGuruMapel ? (
                 <Badge variant="default" className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
-                  {selectedSubject}
+                  {g.selectedSubject}
                 </Badge>
               ) : (
                 <select
-                  value={selectedSubject}
-                  onChange={e => setSelectedSubject(e.target.value)}
+                  value={g.selectedSubject}
+                  onChange={e => g.setSelectedSubject(e.target.value)}
                   className="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  {SUBJECTS.map(subj => (
-                    <option key={subj} value={subj}>{subj}</option>
-                  ))}
+                  {SUBJECTS.map(subj => <option key={subj} value={subj}>{subj}</option>)}
                 </select>
               )}
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {activeTab === 'input' ? (
+          {g.activeTab === "input" ? (
             <GradeTable
-              filteredStudents={filteredStudents}
-              getStudentScore={getStudentScore}
-              onGradeChange={handleGradeChange}
-              onOpenAiDialog={setAiDialog}
+              filteredStudents={g.filteredStudents}
+              getStudentScore={g.getStudentScore}
+              onGradeChange={g.handleGradeChange}
+              onOpenAiDialog={g.setAiDialog}
             />
           ) : (
             <div className="p-5">
               <GradeAnalysis
-                filteredStudents={filteredStudents}
-                selectedSubject={selectedSubject}
-                grades={grades}
+                filteredStudents={g.filteredStudents}
+                selectedSubject={g.selectedSubject}
+                grades={g.grades}
               />
             </div>
           )}
@@ -276,12 +102,12 @@ export function NilaiView() {
       </Card>
 
       <RaporAiDescriptor
-        open={aiDialog.open}
-        onOpenChange={open => setAiDialog(prev => ({ ...prev, open }))}
-        studentName={aiDialog.studentName}
-        studentClass={aiDialog.studentClass}
-        subject={selectedSubject}
-        score={aiDialog.score}
+        open={g.aiDialog.open}
+        onOpenChange={open => g.setAiDialog(prev => ({ ...prev, open }))}
+        studentName={g.aiDialog.studentName}
+        studentClass={g.aiDialog.studentClass}
+        subject={g.selectedSubject}
+        score={g.aiDialog.score}
       />
     </div>
   );

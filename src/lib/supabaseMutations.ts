@@ -1,52 +1,8 @@
-import { Student, CounselingLog } from '@/types';
+import { Student, CounselingLog } from "@/types";
+import { postSyncMutation } from "./postSyncMutation";
 
-// Central helper for all sync mutations to guarantee PWA authentication persistence
-export async function postSyncMutation(action: string, payload: any, nip?: string): Promise<boolean> {
-  try {
-    const teacherNip = nip || payload?.teacher_nip || payload?.teacherNip || payload?.nip || '';
-    const res = await fetch('/api/sync', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-teacher-nip': teacherNip,
-      },
-      body: JSON.stringify({ action, payload }),
-    });
-    const data = await res.json();
-    return !!data.success;
-  } catch (e) {
-    console.warn(`[Sync Error in ${action}]`, e);
-    return false;
-  }
-}
-
-export async function deleteStudentFromSupabase(id: string) {
-  return postSyncMutation('deleteStudent', { id });
-}
-
-export async function deleteTeacherFromSupabase(nip: string) {
-  return postSyncMutation('deleteTeacher', { nip }, nip);
-}
-
-export async function deleteJournalFromSupabase(id: string) {
-  return postSyncMutation('deleteJournal', { id });
-}
-
-export async function deleteFlashcardFromSupabase(id: string) {
-  return postSyncMutation('deleteFlashcard', { id });
-}
-
-export async function deleteAssignmentFromSupabase(id: string) {
-  return postSyncMutation('deleteAssignment', { id });
-}
-
-export async function deleteGradeFromSupabase(studentId: string, type?: string) {
-  return postSyncMutation('deleteGrade', { studentId, type });
-}
-
-export async function deleteAttendanceFromSupabase(studentId: string, date: string) {
-  return postSyncMutation('deleteAttendance', { studentId, date });
-}
+export * from "./postSyncMutation";
+export * from "./deleteMutations";
 
 export async function saveCounselingLogToSupabase(log: CounselingLog) {
   const payload = {
@@ -58,11 +14,7 @@ export async function saveCounselingLogToSupabase(log: CounselingLog) {
     follow_up: log.followUp || null,
     teacher_nip: log.teacherNip || null,
   };
-  return postSyncMutation('saveCounselingLog', payload);
-}
-
-export async function deleteCounselingLogFromSupabase(id: string) {
-  return postSyncMutation('deleteCounselingLog', { id });
+  return postSyncMutation("saveCounselingLog", payload);
 }
 
 export async function saveStudentToSupabase(student: Student) {
@@ -81,59 +33,53 @@ export async function saveStudentToSupabase(student: Student) {
     alamat: student.address || null,
     tahun_masuk: student.admissionYear || null,
   };
-  return postSyncMutation('saveStudent', payload);
+  return postSyncMutation("saveStudent", payload);
 }
 
 export async function saveTeacherToSupabase(teacher: any) {
-  return postSyncMutation('saveTeacher', teacher, teacher.nip);
+  return postSyncMutation("saveTeacher", teacher, teacher.nip);
 }
 
 export async function saveJournalToSupabase(journal: any) {
   const payload = {
     id: journal.id,
     date: journal.date,
-    time_slot: journal.time || journal.time_slot || '',
+    time_slot: journal.time || journal.time_slot || "",
     class_id: journal.classId || journal.class_id,
     topic: journal.topic,
-    notes: journal.notes || '',
-    attendance_summary: journal.attendance || journal.attendance_summary || '',
+    notes: journal.notes || "",
+    attendance_summary: journal.attendance || journal.attendance_summary || "",
     teacher_nip: journal.teacherNip || journal.teacher_nip,
   };
-  return postSyncMutation('saveJournal', payload, payload.teacher_nip);
+  return postSyncMutation("saveJournal", payload, payload.teacher_nip);
 }
 
 export async function saveFlashcardToSupabase(flashcard: any) {
   const payload = {
     id: flashcard.id,
-    title: flashcard.title || flashcard.category || 'General',
+    title: flashcard.title || flashcard.category || "General",
     word: flashcard.word,
     meaning: flashcard.meaning || flashcard.translate,
     phase: flashcard.phase,
     teacher_nip: flashcard.teacherNip || flashcard.teacher_nip || null,
   };
-  return postSyncMutation('saveFlashcard', payload, payload.teacher_nip || undefined);
+  return postSyncMutation("saveFlashcard", payload, payload.teacher_nip || undefined);
 }
 
 export async function saveAssignmentToSupabase(assignment: any) {
-  const title = (assignment.title || '').trim();
-  const fileUrl = assignment.fileUrl || assignment.file_url || null;
-  const fileName = assignment.fileName || assignment.file_name || null;
-  const type = assignment.type || 'Formatif';
-  const description = (assignment.description || '').trim() || null;
-
   const payload = {
     id: assignment.id,
-    title: title,
+    title: (assignment.title || "").trim(),
     class_id: assignment.classId || assignment.class_id,
     due_date: assignment.dueDate || assignment.due_date,
-    status: assignment.status || 'Aktif',
+    status: assignment.status || "Aktif",
     teacher_nip: assignment.teacherNip || assignment.teacher_nip,
-    file_url: fileUrl,
-    file_name: fileName,
-    description: description,
-    type: type,
+    file_url: assignment.fileUrl || assignment.file_url || null,
+    file_name: assignment.fileName || assignment.file_name || null,
+    description: (assignment.description || "").trim() || null,
+    type: assignment.type || "Formatif",
   };
-  return postSyncMutation('saveAssignment', payload, payload.teacher_nip);
+  return postSyncMutation("saveAssignment", payload, payload.teacher_nip);
 }
 
 export async function saveModuleToSupabase(moduleData: any) {
@@ -148,35 +94,27 @@ export async function saveModuleToSupabase(moduleData: any) {
     file_url: moduleData.fileUrl || moduleData.file_url,
     teacher_nip: moduleData.teacherNip || moduleData.teacher_nip,
   };
-  return postSyncMutation('saveModule', payload, payload.teacher_nip);
-}
-
-export async function deleteModuleFromSupabase(id: string) {
-  return postSyncMutation('deleteModule', { id });
+  return postSyncMutation("saveModule", payload, payload.teacher_nip);
 }
 
 export async function saveClassToSupabase(classData: any) {
-  return postSyncMutation('saveClass', classData);
-}
-
-export async function deleteClassFromSupabase(id: string) {
-  return postSyncMutation('deleteClass', { id });
+  return postSyncMutation("saveClass", classData);
 }
 
 export async function saveGradeToSupabase(studentIdOrGrade: any, type?: string, score?: number, classId?: string) {
-  const payload = typeof studentIdOrGrade === 'object' ? studentIdOrGrade : {
+  const payload = typeof studentIdOrGrade === "object" ? studentIdOrGrade : {
     student_id: studentIdOrGrade,
     type: type,
     score: score,
     class_id: classId,
   };
-  return postSyncMutation('saveGrade', payload);
+  return postSyncMutation("saveGrade", payload);
 }
 
 export async function saveAttendanceToSupabase(records: any[]) {
-  return postSyncMutation('saveAttendance', records);
+  return postSyncMutation("saveAttendance", records);
 }
 
 export async function saveSchoolSettingsToSupabase(settings: any) {
-  return postSyncMutation('saveSchoolSettings', settings);
+  return postSyncMutation("saveSchoolSettings", settings);
 }

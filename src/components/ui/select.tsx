@@ -38,10 +38,7 @@ const SelectScrollUpButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1 text-slate-500",
-      className
-    )}
+    className={cn("flex cursor-default items-center justify-center py-1 text-slate-500", className)}
     {...props}
   >
     <ChevronUp className="h-4 w-4" />
@@ -55,10 +52,7 @@ const SelectScrollDownButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1 text-slate-500",
-      className
-    )}
+    className={cn("flex cursor-default items-center justify-center py-1 text-slate-500", className)}
     {...props}
   >
     <ChevronDown className="h-4 w-4" />
@@ -146,14 +140,6 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
 export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
+  Select, SelectGroup, SelectValue, SelectTrigger, SelectContent,
+  SelectLabel, SelectItem, SelectSeparator, SelectScrollUpButton, SelectScrollDownButton
 }

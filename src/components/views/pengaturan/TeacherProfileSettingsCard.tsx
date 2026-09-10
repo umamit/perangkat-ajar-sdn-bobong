@@ -1,95 +1,63 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useApp } from '@/context/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { saveTeacherToSupabase } from '@/lib/supabase';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { AvatarUploadModal } from './AvatarUploadModal';
+import React, { useState } from "react";
+import { useApp } from "@/context/AppContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { saveTeacherToSupabase } from "@/lib/supabase";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { AvatarUploadModal } from "./AvatarUploadModal";
+import { PasswordFields } from "./PasswordFields";
 
 const profileSchema = z.object({
-  name: z.string().min(3, 'Nama minimal 3 karakter'),
-  nip: z.string().min(3, 'NIP minimal 3 karakter'),
-  role: z.string().min(3, 'Role/Jabatan minimal 3 karakter'),
-  school: z.string().min(3, 'Nama sekolah minimal 3 karakter'),
+  name: z.string().min(3, "Nama minimal 3 karakter"),
+  nip: z.string().min(3, "NIP minimal 3 karakter"),
+  role: z.string().min(3, "Role/Jabatan minimal 3 karakter"),
+  school: z.string().min(3, "Nama sekolah minimal 3 karakter"),
   oldPassword: z.string().optional(),
-  password: z.string().min(6, 'Kata sandi minimal 6 karakter')
+  password: z.string().min(6, "Kata sandi minimal 6 karakter")
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export function TeacherProfileSettingsCard() {
   const { currentTeacher, setCurrentTeacher, showToast, syncData } = useApp();
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [avatar, setAvatar] = useState(currentTeacher.avatar || '/assets/logo-sdn-bobong.png');
+  const [avatar, setAvatar] = useState(currentTeacher.avatar || "/assets/logo-sdn-bobong.png");
   const [isSaving, setIsSaving] = useState(false);
-
-  // Avatar Modal states
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: currentTeacher.name || '',
-      nip: currentTeacher.nip || '',
-      role: currentTeacher.role || '',
-      school: currentTeacher.school || '',
-      oldPassword: '',
-      password: currentTeacher.password || ''
+      name: currentTeacher.name || "", nip: currentTeacher.nip || "", role: currentTeacher.role || "",
+      school: currentTeacher.school || "", oldPassword: "", password: currentTeacher.password || ""
     }
   });
 
   const onSubmitForm = async (data: ProfileFormValues) => {
     setIsSaving(true);
-
-    const isPasswordChanging = data.password !== currentTeacher.password;
-    if (isPasswordChanging && data.oldPassword !== currentTeacher.password) {
-      showToast('Kata sandi lama salah! Perubahan ditolak.', 'error');
-      setIsSaving(false);
-      return;
+    if (data.password !== currentTeacher.password && data.oldPassword !== currentTeacher.password) {
+      showToast("Kata sandi lama salah! Perubahan ditolak.", "error");
+      setIsSaving(false); return;
     }
-
-    const updated = {
-      ...currentTeacher,
-      name: data.name,
-      nip: data.nip,
-      role: data.role,
-      school: data.school,
-      password: data.password,
-      avatar
-    };
-
+    const updated = { ...currentTeacher, ...data, avatar };
     setCurrentTeacher(updated);
+    try { localStorage.setItem("sdn_bobong_teacher", JSON.stringify(updated)); } catch {}
 
-    try {
-      localStorage.setItem('sdn_bobong_teacher', JSON.stringify(updated));
-    } catch (err) {}
-
-    const supabasePayload = {
-      nip: data.nip.trim(),
-      name: data.name.trim(),
-      role: data.role.trim(),
-      subject: currentTeacher.subject || 'Bahasa Inggris & Manajemen Sekolah',
-      password: data.password.trim(),
-      avatar_url: avatar
+    const payload = {
+      nip: data.nip.trim(), name: data.name.trim(), role: data.role.trim(),
+      subject: currentTeacher.subject || "Bahasa Inggris & Manajemen Sekolah",
+      password: data.password.trim(), avatar_url: avatar
     };
-
-    const success = await saveTeacherToSupabase(supabasePayload);
+    const success = await saveTeacherToSupabase(payload);
     await syncData();
-    reset({ ...data, oldPassword: '' });
+    reset({ ...data, oldPassword: "" });
     setIsSaving(false);
-
-    if (success) {
-      showToast('Profil & Kata Sandi Baru berhasil tersimpan!', 'success');
-    } else {
-      showToast('Profil diperbarui secara lokal (offline).', 'info');
-    }
+    if (success) showToast("Profil & Kata Sandi Baru berhasil tersimpan!", "success");
+    else showToast("Profil diperbarui secara lokal (offline).", "info");
   };
 
   return (
@@ -98,23 +66,14 @@ export function TeacherProfileSettingsCard() {
         <CardHeader className="pb-3 border-b border-slate-100 bg-white/35">
           <CardTitle className="text-xs font-black text-slate-800 flex items-center gap-2">
             <i className="ri-shield-keyhole-line text-primary text-base" />
-            <span>Form Informasi Akun &amp; Keamanan</span>
+            <span>Form Informasi Akun & Keamanan</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-5 text-xs">
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
-            {/* Interactive Profile Photo Section */}
             <div className="flex items-center gap-4 pb-4 border-b border-slate-100/50">
-              <div
-                onClick={() => setShowAvatarModal(true)}
-                className="relative w-16 h-16 rounded-full overflow-hidden cursor-pointer group border-2 border-primary/20 shadow-md transition-all hover:scale-105"
-                title="Klik untuk mengubah foto profil"
-              >
-                <img
-                  src={avatar}
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
+              <div onClick={() => setShowAvatarModal(true)} className="relative w-16 h-16 rounded-full overflow-hidden cursor-pointer group border-2 border-primary/20 shadow-md transition-all hover:scale-105" title="Klik untuk mengubah foto profil">
+                <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <i className="ri-camera-switch-line text-base" />
                   <span className="text-[7px] font-black uppercase tracking-wider mt-0.5">Ubah</span>
@@ -129,22 +88,12 @@ export function TeacherProfileSettingsCard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-600">Nama Lengkap Guru / Admin:</label>
-                <Input
-                  type="text"
-                  {...register('name')}
-                  className="h-9 rounded-xl"
-                />
+                <Input type="text" {...register("name")} className="h-9 rounded-xl" />
                 {errors.name && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.name.message}</p>}
               </div>
-
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-600">NIP Login:</label>
-                <Input
-                  type="text"
-                  {...register('nip')}
-                  disabled={currentTeacher?.nip !== '199610272019032006'}
-                  className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
-                />
+                <Input type="text" {...register("nip")} disabled={currentTeacher?.nip !== "199610272019032006"} className="h-9 rounded-xl bg-slate-50 disabled:opacity-80" />
                 {errors.nip && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.nip.message}</p>}
               </div>
             </div>
@@ -152,83 +101,26 @@ export function TeacherProfileSettingsCard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-600">Role / Jabatan:</label>
-                <Input
-                  type="text"
-                  {...register('role')}
-                  disabled={currentTeacher?.nip !== '199610272019032006'}
-                  className="h-9 rounded-xl bg-slate-50 disabled:opacity-80"
-                />
+                <Input type="text" {...register("role")} disabled={currentTeacher?.nip !== "199610272019032006"} className="h-9 rounded-xl bg-slate-50 disabled:opacity-80" />
                 {errors.role && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.role.message}</p>}
               </div>
-
               <div className="space-y-1 text-left">
                 <label className="font-bold text-slate-600">Nama Sekolah:</label>
-                <Input
-                  type="text"
-                  {...register('school')}
-                  className="h-9 rounded-xl"
-                />
+                <Input type="text" {...register("school")} className="h-9 rounded-xl" />
                 {errors.school && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.school.message}</p>}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
-              <div className="space-y-1 text-left font-semibold">
-                <label className="font-bold text-slate-800 flex items-center gap-1">
-                  <i className="ri-key-line text-slate-500" />
-                  <span>Kata Sandi Lama (Verifikasi):</span>
-                </label>
-                <Input
-                  type="password"
-                  {...register('oldPassword')}
-                  placeholder="Masukkan sandi lama"
-                  className="font-mono h-9 rounded-xl"
-                />
-                {errors.oldPassword && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.oldPassword.message}</p>}
-              </div>
+            <PasswordFields register={register} errors={errors} />
 
-              <div className="space-y-1 text-left font-semibold">
-                <label className="font-bold text-slate-800 flex items-center gap-1">
-                  <i className="ri-lock-password-line text-primary" />
-                  <span>Kata Sandi Baru:</span>
-                </label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    {...register('password')}
-                    placeholder="Sandi baru"
-                    className="pr-10 font-mono h-9 rounded-xl"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
-                  >
-                    <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                  </button>
-                </div>
-                {errors.password && <p className="text-[10px] text-rose-500 font-bold mt-0.5">{errors.password.message}</p>}
-              </div>
-            </div>
-
-            <Button type="submit" disabled={isSaving} className="mt-2 font-black text-[11px] h-9 rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1 shadow-sm">
-              <i className="ri-save-line" /> {isSaving ? 'Menyimpan...' : 'Simpan Profil & Kata Sandi'}
+            <Button type="submit" disabled={isSaving} className="mt-2 font-black text-[11px] h-9 rounded-xl bg-gradient-to-b from-primary via-primary to-primary-dark text-white shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 gap-1">
+              <i className="ri-save-line" /> {isSaving ? "Menyimpan..." : "Simpan Profil & Kata Sandi"}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      {/* Avatar Upload Modal */}
-      <AvatarUploadModal
-        isOpen={showAvatarModal}
-        onClose={() => setShowAvatarModal(false)}
-        currentTeacher={currentTeacher}
-        avatar={avatar}
-        setAvatar={setAvatar}
-        setCurrentTeacher={setCurrentTeacher}
-        showToast={showToast}
-        syncData={syncData}
-      />
+      <AvatarUploadModal isOpen={showAvatarModal} onClose={() => setShowAvatarModal(false)} currentTeacher={currentTeacher} avatar={avatar} setAvatar={setAvatar} setCurrentTeacher={setCurrentTeacher} showToast={showToast} syncData={syncData} />
     </>
   );
 }

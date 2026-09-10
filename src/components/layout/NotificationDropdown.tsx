@@ -1,146 +1,48 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { useApp } from '@/context/AppContext';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useApp } from "@/context/AppContext";
+import { requestBrowserPush } from "./notificationPushUtil";
 
 export interface NotificationItem {
   id: string;
   text: string;
-  type: 'warning' | 'info' | 'error' | 'success';
+  type: "warning" | "info" | "error" | "success";
   icon: string;
   targetView?: string;
 }
 
-interface NotificationDropdownProps {
-  items: NotificationItem[];
-  isOpen: boolean;
-  onClose: () => void;
-  dismissedIds?: string[];
-  onDismiss?: (id: string) => void;
-  onClearAll?: () => void;
-}
-
-function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-export function NotificationDropdown({
-  items,
-  isOpen,
-  onClose,
-  dismissedIds = [],
-  onDismiss,
-  onClearAll,
-}: NotificationDropdownProps) {
+export function NotificationDropdown({ items, isOpen, onClose, dismissedIds = [], onDismiss, onClearAll }: any) {
   const { currentTeacher, setActiveView, showToast } = useApp();
-  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [permission, setPermission] = useState<NotificationPermission>("default");
   const [isSubscribing, setIsSubscribing] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      setPermission(Notification.permission);
-    }
+    if (typeof window !== "undefined" && "Notification" in window) setPermission(Notification.permission);
   }, [isOpen]);
 
   const triggerTestNotification = () => {
-    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+    if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
       try {
-        new Notification('SD Negeri Bobong', {
-          body: 'Notifikasi browser Anda berhasil aktif dan siap menerima peringatan.',
-          icon: '/assets/logo-sdn-bobong.png'
-        });
-      } catch (e) {
-        console.warn('[Notification] Direct notification fallback triggered', e);
-      }
+        new Notification("SD Negeri Bobong", { body: "Notifikasi browser Anda berhasil aktif dan siap menerima peringatan.", icon: "/assets/logo-sdn-bobong.png" });
+      } catch {}
     }
   };
 
-  const handleSubscribePush = async () => {
-    if (typeof window === 'undefined') return;
-
-    if (!('Notification' in window)) {
-      showToast('Peramban Anda tidak mendukung fitur notifikasi desktop.', 'error');
-      return;
-    }
-
+  const handleSubscribe = async () => {
     setIsSubscribing(true);
-
-    try {
-      const perm = await Notification.requestPermission();
-      setPermission(perm);
-
-      if (perm !== 'granted') {
-        showToast('Izin notifikasi belum diizinkan oleh peramban.', 'error');
-        setIsSubscribing(false);
-        return;
-      }
-
-      triggerTestNotification();
-
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        showToast('Notifikasi desktop aktif (Push offline tidak didukung browser ini).', 'info');
-        setIsSubscribing(false);
-        return;
-      }
-
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('SW_TIMEOUT')), 3500)
-      );
-
-      const swReadyPromise = navigator.serviceWorker.ready;
-      const registration = await Promise.race([swReadyPromise, timeoutPromise]).catch(() => null) as ServiceWorkerRegistration | null;
-
-      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-      if (registration && vapidKey) {
-        const convertedVapidKey = urlBase64ToUint8Array(vapidKey);
-        let subscription = await registration.pushManager.getSubscription();
-        if (!subscription) {
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
-          });
-        }
-
-        await fetch('/api/webpush', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            subscription,
-            nip: currentTeacher?.nip
-          })
-        }).catch(err => console.warn('[WebPush Sync Warning]', err));
-      }
-
-      showToast('Notifikasi peramban berhasil diaktifkan!', 'success');
-    } catch (err: any) {
-      console.error('[Web Push Registration Error]', err);
-      showToast('Izin peramban aktif untuk notifikasi sistem.', 'info');
-    } finally {
-      setIsSubscribing(false);
-    }
+    await requestBrowserPush(currentTeacher?.nip, showToast, setPermission, triggerTestNotification);
+    setIsSubscribing(false);
   };
 
   const handleItemClick = (itemId: string, targetView?: string) => {
-    if (onDismiss) {
-      onDismiss(itemId);
-    }
-    if (targetView) {
-      setActiveView(targetView);
-      onClose();
-    }
+    if (onDismiss) onDismiss(itemId);
+    if (targetView) { setActiveView(targetView); onClose(); }
   };
 
   if (!isOpen) return null;
-
-  const visibleItems = items.filter((item) => !dismissedIds.includes(item.id));
+  const visibleItems = items.filter((item: any) => !dismissedIds.includes(item.id));
 
   return (
     <>
@@ -151,18 +53,9 @@ export function NotificationDropdown({
             <i className="ri-notification-badge-line text-primary text-sm" /> Notifikasi Harian
           </span>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-              {visibleItems.length} Peringatan
-            </span>
+            <span className="text-[10px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full">{visibleItems.length} Peringatan</span>
             {visibleItems.length > 0 && onClearAll && (
-              <button
-                type="button"
-                onClick={onClearAll}
-                className="text-[10px] font-extrabold text-rose-500 hover:text-rose-700 hover:underline cursor-pointer"
-                title="Bersihkan semua notifikasi"
-              >
-                Bersihkan
-              </button>
+              <button type="button" onClick={onClearAll} className="text-[10px] font-extrabold text-rose-500 hover:text-rose-700 hover:underline cursor-pointer">Bersihkan</button>
             )}
           </div>
         </div>
@@ -171,38 +64,17 @@ export function NotificationDropdown({
           {visibleItems.length === 0 ? (
             <p className="text-center py-6 text-slate-400 font-semibold">Semua tugas administrasi hari ini tuntas!</p>
           ) : (
-            visibleItems.map((item) => (
-              <div
-                key={item.id}
-                className="group relative flex gap-2.5 p-2.5 rounded-xl border bg-slate-50 border-slate-100 hover:bg-slate-100/70 hover:border-slate-200 transition-all"
-              >
-                <div
-                  onClick={() => handleItemClick(item.id, item.targetView)}
-                  className={`flex gap-2.5 flex-1 min-w-0 ${item.targetView ? 'cursor-pointer' : ''}`}
-                >
-                  <div className="text-amber-500 mt-0.5 shrink-0">
-                    <i className={`${item.icon} text-base`} />
-                  </div>
+            visibleItems.map((item: any) => (
+              <div key={item.id} className="group relative flex gap-2.5 p-2.5 rounded-xl border bg-slate-50 border-slate-100 hover:bg-slate-100/70 hover:border-slate-200 transition-all">
+                <div onClick={() => handleItemClick(item.id, item.targetView)} className={"flex gap-2.5 flex-1 min-w-0 " + (item.targetView ? "cursor-pointer" : "")}>
+                  <div className="text-amber-500 mt-0.5 shrink-0"><i className={item.icon + " text-base"} /></div>
                   <div className="flex-1 min-w-0 pr-4">
                     <p className="text-[11px] font-bold text-slate-700 leading-snug">{item.text}</p>
-                    {item.targetView && (
-                      <span className="text-[9px] font-extrabold text-primary flex items-center gap-1 mt-1">
-                        Buka Menu <i className="ri-arrow-right-line" />
-                      </span>
-                    )}
+                    {item.targetView && <span className="text-[9px] font-extrabold text-primary flex items-center gap-1 mt-1">Buka Menu <i className="ri-arrow-right-line" /></span>}
                   </div>
                 </div>
-
                 {onDismiss && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDismiss(item.id);
-                    }}
-                    className="absolute top-2 right-2 text-slate-400 hover:text-rose-500 p-1 rounded-lg transition-colors cursor-pointer"
-                    title="Hapus notifikasi ini"
-                  >
+                  <button type="button" onClick={(e) => { e.stopPropagation(); onDismiss(item.id); }} className="absolute top-2 right-2 text-slate-400 hover:text-rose-500 p-1 rounded-lg transition-colors cursor-pointer">
                     <i className="ri-close-line text-sm" />
                   </button>
                 )}
@@ -212,36 +84,14 @@ export function NotificationDropdown({
         </div>
 
         <div className="border-t border-slate-100 pt-2.5">
-          {permission === 'granted' ? (
+          {permission === "granted" ? (
             <div className="flex items-center justify-between px-2.5 py-1.5 bg-emerald-50/70 border border-emerald-200 rounded-xl text-emerald-800">
-              <span className="text-[10px] font-bold flex items-center gap-1.5">
-                <i className="ri-checkbox-circle-fill text-emerald-600" /> Notifikasi Browser Aktif
-              </span>
-              <button
-                type="button"
-                onClick={triggerTestNotification}
-                className="text-[9px] font-extrabold text-emerald-700 hover:underline cursor-pointer"
-              >
-                Uji Notifikasi
-              </button>
+              <span className="text-[10px] font-bold flex items-center gap-1.5"><i className="ri-checkbox-circle-fill text-emerald-600" /> Notifikasi Browser Aktif</span>
+              <button type="button" onClick={triggerTestNotification} className="text-[9px] font-extrabold text-emerald-700 hover:underline cursor-pointer">Uji Notifikasi</button>
             </div>
           ) : (
-            <Button
-              onClick={handleSubscribePush}
-              disabled={isSubscribing}
-              variant="outline"
-              className="w-full text-[10px] font-black h-8 rounded-xl bg-teal-50/60 hover:bg-teal-100/60 border-teal-200 text-teal-700 gap-1.5 transition-all"
-            >
-              {isSubscribing ? (
-                <>
-                  <i className="ri-loader-4-line animate-spin text-sm" /> Memproses Izin...
-                </>
-              ) : (
-                <>
-                  <i className="ri-notification-badge-line" />
-                  {permission === 'denied' ? 'Izin Diblokir di Browser' : 'Aktifkan Notifikasi Browser'}
-                </>
-              )}
+            <Button onClick={handleSubscribe} disabled={isSubscribing} variant="outline" className="w-full text-[10px] font-black h-8 rounded-xl bg-teal-50/60 hover:bg-teal-100/60 border-teal-200 text-teal-700 gap-1.5 transition-all">
+              {isSubscribing ? (<><i className="ri-loader-4-line animate-spin text-sm" /> Memproses Izin...</>) : (<><i className="ri-notification-badge-line" /> {permission === "denied" ? "Izin Diblokir di Browser" : "Aktifkan Notifikasi Browser"}</>)}
             </Button>
           )}
         </div>

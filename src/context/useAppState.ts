@@ -1,265 +1,128 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from '@/types';
-import { useQuery } from '@tanstack/react-query';
-import { verifyAndCleanClass6Students } from '@/lib/syncHelpers';
-import { saveAppCache, loadAppCache, flushOfflineQueue } from '@/lib/offlineSync';
-import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, mapModules, defaultAdminTeacher } from './syncMappers';
+import { useState, useCallback } from "react";
+import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, mapModules, defaultAdminTeacher } from "./syncMappers";
+import { useAuthSession, defaultTeacher } from "./useAuthSession";
+import { useUiState, ToastMessage } from "./useUiState";
 
-export interface ToastMessage {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
+export { defaultTeacher };
+export type { ToastMessage };
 
 export const defaultSchoolSettings: SchoolSettings = {
-  id: 'global',
-  school_name: 'SD Negeri Bobong',
-  npsn: '60101234',
-  academic_year: '2026/2027',
-  semester: 'Ganjil',
-  headmaster_name: 'Husnita Usman, M.Pd',
-  headmaster_nip: '199610272019032006'
+  id: "global",
+  school_name: "SD Negeri Bobong",
+  npsn: "60101234",
+  academic_year: "2026/2027",
+  semester: "Ganjil",
+  headmaster_name: "Husnita Usman, M.Pd",
+  headmaster_nip: "199610272019032006"
 };
 
-export const defaultTeacher: Teacher = {
-  nip: '199610272019032006',
-  name: 'Husnita Usman, M.Pd',
-  role: 'Kepala Sekolah / Executive Admin',
-  subject: 'Bahasa Inggris & Manajemen Sekolah',
-  school: 'SD Negeri Bobong',
-  kecamatan: 'Kabupaten Pulau Taliabu',
-  avatar: '/assets/logo-sdn-bobong.png'
-};
+const initialFlashcards: FlashcardItem[] = [
+  { id: 1, word: "Hello / Good Morning", translate: "Halo / Selamat Pagi", example: "", category: "Greetings", phase: "Fase A" },
+  { id: 2, word: "Pencil & Book", translate: "Pensil & Buku", example: "", category: "Classroom Objects", phase: "Fase A" },
+  { id: 3, word: "One, Two, Three...", translate: "Satu, Dua, Tiga...", example: "", category: "Numbers", phase: "Fase B" }
+];
+
+const initialAssignments: TaskItem[] = [
+  { id: "1", title: "Tugas 1: Vocabulary Greetings", classId: "1A", dueDate: "2026-08-10", type: "Tugas", status: "Aktif", description: "" }
+];
 
 export function useAppState() {
-  // Synchronous lazy state initialization to prevent initial flash glitch
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [currentTeacher, setCurrentTeacher] = useState<Teacher>(defaultTeacher);
+  const auth = useAuthSession();
+  const ui = useUiState();
 
-  const [isInitializing, setIsInitializing] = useState<boolean>(true);
-
-  useEffect(() => {
-    // Run client-side check to confirm auth and restore session safely
-    try {
-      const localAuth = localStorage.getItem('sdn_bobong_auth');
-      const cookieAuth = document.cookie.split('; ').find(row => row.startsWith('sdn_bobong_auth='));
-      const authed = localAuth === 'true' || (cookieAuth ? cookieAuth.split('=')[1] === 'true' : false);
-      
-      setIsLoggedIn(authed);
-      if (authed) {
-        const saved = localStorage.getItem('sdn_bobong_teacher');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          setCurrentTeacher(parsed);
-          if (parsed?.nip) {
-            document.cookie = `sdn_bobong_auth=true; path=/; max-age=604800; SameSite=Lax`;
-            document.cookie = `sdn_bobong_nip=${parsed.nip}; path=/; max-age=604800; SameSite=Lax`;
-          }
-        }
-      }
-    } catch (e) {
-      console.warn('[Session Recovery Failed]', e);
-    } finally {
-      setIsInitializing(false);
-    }
-  }, []);
-  const [activeView, setActiveView] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('sdn_bobong_active_view') || 'dashboard';
-      } catch (e) {
-        return 'dashboard';
-      }
-    }
-    return 'dashboard';
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('sdn_bobong_active_view', activeView);
-    } catch (e) {}
-  }, [activeView]);
-
-  const [selectedClassFilter, setSelectedClassFilter] = useState<string>('ALL');
-  const [activeRoleMode, setActiveRoleMode] = useState<string>('guru_inggris');
-  
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [modules, setModules] = useState<ModuleAjar[]>([]);
-  const [flashcards, setFlashcards] = useState<FlashcardItem[]>([
-    { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
-    { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
-    { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
-  ]);
-  const [assignments, setAssignments] = useState<TaskItem[]>([
-    { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
-  ]);
+  const [flashcards, setFlashcards] = useState<FlashcardItem[]>(initialFlashcards);
+  const [assignments, setAssignments] = useState<TaskItem[]>(initialAssignments);
   const [grades, setGrades] = useState<GradeRecord[]>([]);
   const [counselingLogs, setCounselingLogs] = useState<CounselingLog[]>([]);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [schoolSettings, setSchoolSettings] = useState<SchoolSettings>(defaultSchoolSettings);
-  
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [sidebarCollapsed, setSidebarCollapsedState] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('sdn_bobong_sidebar_collapsed') === 'true';
-      } catch (e) {
-        return false;
-      }
-    }
-    return false;
-  });
-
-  const setSidebarCollapsed = useCallback((collapsed: boolean) => {
-    setSidebarCollapsedState(collapsed);
-    try {
-      localStorage.setItem('sdn_bobong_sidebar_collapsed', String(collapsed));
-    } catch (e) {}
-  }, []);
-
-  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 4000);
-  }, []);
 
   const logout = useCallback(() => {
-    document.cookie = 'sdn_bobong_auth=; path=/; max-age=0';
-    document.cookie = 'sdn_bobong_nip=; path=/; max-age=0';
+    document.cookie = "sdn_bobong_auth=; path=/; max-age=0";
+    document.cookie = "sdn_bobong_nip=; path=/; max-age=0";
     try {
-      localStorage.removeItem('sdn_bobong_auth');
-      localStorage.removeItem('sdn_bobong_teacher');
-      localStorage.removeItem('sdn_bobong_cache');
-      localStorage.removeItem('sdn_bobong_active_view');
+      localStorage.removeItem("sdn_bobong_auth");
+      localStorage.removeItem("sdn_bobong_teacher");
+      localStorage.removeItem("sdn_bobong_cache");
+      localStorage.removeItem("sdn_bobong_active_view");
     } catch (e) {}
 
-    // Reset memory state immediately to secure teacher privacy
     setTeachers([]);
     setStudents([]);
     setClasses([]);
     setJournals([]);
     setAttendance([]);
     setModules([]);
-    setActiveView('dashboard');
-    setFlashcards([
-      { id: 1, word: 'Hello / Good Morning', translate: 'Halo / Selamat Pagi', example: '', category: 'Greetings', phase: 'Fase A' },
-      { id: 2, word: 'Pencil & Book', translate: 'Pensil & Buku', example: '', category: 'Classroom Objects', phase: 'Fase A' },
-      { id: 3, word: 'One, Two, Three...', translate: 'Satu, Dua, Tiga...', example: '', category: 'Numbers', phase: 'Fase B' }
-    ]);
-    setAssignments([
-      { id: '1', title: 'Tugas 1: Vocabulary Greetings', classId: '1A', dueDate: '2026-08-10', type: 'Tugas', status: 'Aktif', description: '' }
-    ]);
+    ui.setActiveView("dashboard");
+    setFlashcards(initialFlashcards);
+    setAssignments(initialAssignments);
     setGrades([]);
     setCounselingLogs([]);
     setSchedules([]);
     setSchoolSettings(defaultSchoolSettings);
 
-    setIsLoggedIn(false);
-    showToast('Anda telah keluar dari aplikasi', 'info');
-  }, [showToast]);
+    auth.setIsLoggedIn(false);
+    ui.showToast("Anda telah keluar dari aplikasi", "info");
+  }, [ui, auth]);
 
   const { refetch: refetchSync } = useQuery({
-    queryKey: ['syncData', currentTeacher?.nip || ''],
+    queryKey: ["syncData", auth.currentTeacher?.nip || ""],
     queryFn: async () => {
-      const nip = currentTeacher?.nip || '';
-      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ''}`, { cache: 'no-store' });
+      const nip = auth.currentTeacher?.nip || "";
+      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ""}`, { cache: "no-store" });
       return res.json();
     },
     enabled: false,
   });
 
   const syncData = useCallback(async () => {
-    setIsLoading(true);
+    ui.setIsLoading(true);
     try {
       const { data } = await refetchSync();
       if (data && data.success) {
-        const filtered = data.teachers?.length > 0 ? mapTeachers(data.teachers) : [defaultAdminTeacher];
-        setTeachers(filtered);
-
-        const finalStudents = data.students ? mapStudents(data.students) : [];
-        if (data.students) setStudents(finalStudents);
-
-        const mappedClasses = mapClasses(data.classes || []);
-        if (data.classes) setClasses(mappedClasses);
-
-        const mappedJournals = mapJournals(data.journals || []);
-        if (data.journals) setJournals(mappedJournals);
-
+        if (data.teachers?.length > 0) setTeachers(mapTeachers(data.teachers));
+        if (data.students) setStudents(mapStudents(data.students));
+        if (data.classes) setClasses(mapClasses(data.classes));
+        if (data.journals) setJournals(mapJournals(data.journals));
         if (data.attendance) setAttendance(data.attendance);
-        const mappedModules = mapModules(data.modules || []);
-        if (data.modules) setModules(mappedModules);
+        if (data.modules) setModules(mapModules(data.modules));
         if (data.flashcards) setFlashcards(data.flashcards);
-
-        const mappedAssignments = mapAssignments(data.assignments || []);
-        if (data.assignments) setAssignments(mappedAssignments);
+        if (data.assignments) setAssignments(mapAssignments(data.assignments));
         if (data.grades) setGrades(data.grades);
-        
-        const mappedCounseling = mapCounselingLogs(data.counselingLogs || []);
-        if (data.counselingLogs) setCounselingLogs(mappedCounseling);
+        if (data.counselingLogs) setCounselingLogs(mapCounselingLogs(data.counselingLogs));
         if (data.schedules) setSchedules(data.schedules);
         if (data.schoolSettings) setSchoolSettings(data.schoolSettings);
-
-        // Data is live synced directly from Supabase Cloud
       }
     } catch (err) {
-      console.warn('[Supabase Sync Error]', err);
+      console.warn("[Supabase Sync Error]", err);
     } finally {
-      setIsLoading(false);
+      ui.setIsLoading(false);
     }
-  }, []);
+  }, [refetchSync, ui]);
 
   return {
-    isLoggedIn,
-    setIsLoggedIn,
-    currentTeacher,
-    setCurrentTeacher,
-    isInitializing,
-    setIsInitializing,
-    activeView,
-    setActiveView,
-    selectedClassFilter,
-    setSelectedClassFilter,
-    activeRoleMode,
-    setActiveRoleMode,
-    teachers,
-    setTeachers,
-    students,
-    setStudents,
-    classes,
-    setClasses,
-    journals,
-    setJournals,
-    attendance,
-    setAttendance,
-    modules,
-    setModules,
-    flashcards,
-    setFlashcards,
-    assignments,
-    setAssignments,
-    grades,
-    setGrades,
-    counselingLogs,
-    setCounselingLogs,
-    schedules,
-    setSchedules,
-    schoolSettings,
-    setSchoolSettings,
-    toasts,
-    isLoading,
-    sidebarOpen,
-    setSidebarOpen,
-    sidebarCollapsed,
-    setSidebarCollapsed,
-    showToast,
+    ...auth,
+    ...ui,
+    teachers, setTeachers,
+    students, setStudents,
+    classes, setClasses,
+    journals, setJournals,
+    attendance, setAttendance,
+    modules, setModules,
+    flashcards, setFlashcards,
+    assignments, setAssignments,
+    grades, setGrades,
+    counselingLogs, setCounselingLogs,
+    schedules, setSchedules,
+    schoolSettings, setSchoolSettings,
     logout,
     syncData
   };
