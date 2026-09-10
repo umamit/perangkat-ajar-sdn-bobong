@@ -272,7 +272,7 @@ export function JurnalView() {
                   disabled={beautifying}
                   className="text-[9px] text-primary hover:bg-cyan-50/50 font-black flex items-center gap-1 bg-primary/5 px-2.5 py-1 rounded-lg border border-primary/10 transition-all duration-300 transform active:scale-95 shadow-sm"
                 >
-                  {beautifying ? 'Memproses...' : '✨ Perbaiki dengan AI'}
+                  {beautifying ? 'Memproses...' : <><i className="ri-magic-line text-amber-500" /> Perbaiki dengan AI</>}
                 </button>
               </div>
               <textarea

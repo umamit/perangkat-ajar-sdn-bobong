@@ -23,5 +23,5 @@ export function saveFlashcard(e: Event): void {
   saveStorage();
   renderMateriFlashcards();
   closeModal();
-  alert(`✅ Kartu kosakata "${word}" berhasil ditambahkan!`);
+  alert(`Kartu kosakata "${word}" berhasil ditambahkan!`);
 }

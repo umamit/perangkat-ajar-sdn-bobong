@@ -234,7 +234,7 @@ export function Navbar() {
                 </div>
                 <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
                   {notificationItems.length === 0 ? (
-                    <p className="text-center py-6 text-slate-400 font-semibold">Semua tugas administrasi hari ini tuntas! ✨</p>
+                    <p className="text-center py-6 text-slate-400 font-semibold">Semua tugas administrasi hari ini tuntas!</p>
                   ) : (
                     notificationItems.map((item, idx) => (
                       <div key={item.id || idx} className="flex gap-2.5 p-2 bg-slate-50 border border-slate-100 rounded-xl hover:bg-slate-100/50 transition-colors">

@@ -27,5 +27,5 @@ export function saveTugas(e: Event): void {
   saveStorage();
   renderTugas();
   closeModal();
-  alert(`✅ Penugasan "${title}" berhasil ditambahkan!`);
+  alert(`Penugasan "${title}" berhasil ditambahkan!`);
 }
