@@ -128,7 +128,10 @@ export function NotificationDropdown({
     }
   };
 
-  const handleItemClick = (targetView?: string) => {
+  const handleItemClick = (itemId: string, targetView?: string) => {
+    if (onDismiss) {
+      onDismiss(itemId);
+    }
     if (targetView) {
       setActiveView(targetView);
       onClose();
@@ -174,7 +177,7 @@ export function NotificationDropdown({
                 className="group relative flex gap-2.5 p-2.5 rounded-xl border bg-slate-50 border-slate-100 hover:bg-slate-100/70 hover:border-slate-200 transition-all"
               >
                 <div
-                  onClick={() => handleItemClick(item.targetView)}
+                  onClick={() => handleItemClick(item.id, item.targetView)}
                   className={`flex gap-2.5 flex-1 min-w-0 ${item.targetView ? 'cursor-pointer' : ''}`}
                 >
                   <div className="text-amber-500 mt-0.5 shrink-0">
