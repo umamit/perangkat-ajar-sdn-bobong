@@ -19,6 +19,7 @@ import { AiAssistantView } from '@/components/views/AiAssistantView';
 import { MateriFlashcardView } from '@/components/views/MateriFlashcardView';
 import { TugasView } from '@/components/views/TugasView';
 import { LaporanView } from '@/components/views/LaporanView';
+import { RapatView } from '@/components/views/RapatView';
 import { GuruView } from '@/components/views/GuruView';
 import { PengaturanView } from '@/components/views/PengaturanView';
 import { JadwalView } from '@/components/views/JadwalView';
@@ -69,6 +70,7 @@ function AppContent() {
           {activeView === 'materi' && <MateriFlashcardView />}
           {activeView === 'tugas' && <TugasView />}
           {activeView === 'laporan' && <LaporanView />}
+          {activeView === 'rapat' && <RapatView />}
           {activeView === 'guru' && isKepsek && <GuruView />}
           {activeView === 'pengaturan' && <PengaturanView />}
         </main>

@@ -18,6 +18,7 @@ const navItems = [
   { id: 'materi', label: 'Media Flashcard', icon: 'ri-folder-open-line' },
   { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
   { id: 'laporan', label: 'Laporan', icon: 'ri-bar-chart-box-line' },
+  { id: 'rapat', label: 'Agenda & Notula Rapat', icon: 'ri-discuss-line' },
   { id: 'guru', label: 'Kelola Data Guru', icon: 'ri-user-star-line' },
   { id: 'pengaturan', label: 'Pengaturan', icon: 'ri-settings-4-line' },
 ];

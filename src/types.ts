@@ -3,6 +3,7 @@ import { Student, AttendanceRecord, GradeRecord, ModuleAjar, FlashcardItem, Quiz
 
 export * from "./types/academic";
 export * from "./types/learning";
+export * from "./types/meeting";
 
 export interface AppData {
   teacher: Teacher;

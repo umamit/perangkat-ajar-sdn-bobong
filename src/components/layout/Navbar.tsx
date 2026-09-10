@@ -44,7 +44,7 @@ export function Navbar() {
     dashboard: "Dashboard", siswa: "Data Siswa", virtual_card: "Kartu Siswa Virtual", kelas: "Data Kelas",
     absensi: "Absensi", counseling: "Bimbingan Konseling", jadwal: "Jadwal Pelajaran", nilai: "Daftar Nilai",
     jurnal: "Jurnal Mengajar", modul: "Modul Ajar", materi: "Media Flashcard", tugas: "Tugas & Bank Soal",
-    laporan: "Laporan", guru: "Kelola Data Guru", pengaturan: "Pengaturan"
+    laporan: "Laporan", rapat: "Agenda & Notula Rapat", guru: "Kelola Data Guru", pengaturan: "Pengaturan"
   };
 
   const isKepsek = currentTeacher?.role?.toLowerCase().includes("kepala") || currentTeacher?.role?.toLowerCase().includes("admin") || currentTeacher?.nip === "199610272019032006";
