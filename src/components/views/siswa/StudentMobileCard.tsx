@@ -37,7 +37,7 @@ export function StudentMobileCard({
           </span>
           <div>
             <h4 className="font-extrabold text-sm text-slate-800 leading-snug">{s.name}</h4>
-            <p className="text-[10px] text-slate-455 font-bold mt-0.5">NIS: {s.nis || '-'}</p>
+            <p className="text-[10px] text-slate-500 font-bold mt-0.5">NIS: {s.nis || '-'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

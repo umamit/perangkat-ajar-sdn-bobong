@@ -76,7 +76,7 @@ export function StudentTable({ filteredStudents, isKepsek, handleEditClick, hand
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id} className="bg-slate-50/40 hover:bg-slate-50/40">
                 {headerGroup.headers.map(header => (
-                  <TableHead key={header.id} className="font-black text-[10px] uppercase text-slate-455">
+                  <TableHead key={header.id} className="font-black text-[10px] uppercase text-slate-500">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}

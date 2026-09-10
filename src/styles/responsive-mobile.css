@@ -4,9 +4,8 @@
 
 @media (max-width: 640px) {
   .top-bar {
-    padding: 8px 12px;
-    flex-wrap: wrap;
-    gap: 8px;
+    padding: 10px 14px;
+    gap: 10px;
   }
 
   .top-title h2 {
@@ -14,12 +13,7 @@
   }
 
   .top-actions {
-    width: 100%;
-    justify-content: space-between;
     gap: 6px;
-    margin-top: 4px;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 6px;
   }
 
   .btn {

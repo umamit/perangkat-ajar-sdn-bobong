@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { Student, Teacher, JournalEntry, ClassInfo, AttendanceRecord, ModuleAjar, FlashcardItem, TaskItem, GradeRecord, CounselingLog, Schedule, SchoolSettings } from "@/types";
-import { useQuery } from "@tanstack/react-query";
 import { mapTeachers, mapStudents, mapClasses, mapJournals, mapAssignments, mapCounselingLogs, mapModules, defaultAdminTeacher } from "./syncMappers";
 import { useAuthSession, defaultTeacher } from "./useAuthSession";
 import { useUiState, ToastMessage } from "./useUiState";
@@ -73,21 +72,14 @@ export function useAppState() {
     ui.showToast("Anda telah keluar dari aplikasi", "info");
   }, [ui, auth]);
 
-  const { refetch: refetchSync } = useQuery({
-    queryKey: ["syncData", auth.currentTeacher?.nip || ""],
-    queryFn: async () => {
-      const nip = auth.currentTeacher?.nip || "";
-      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ""}`, { cache: "no-store" });
-      return res.json();
-    },
-    enabled: false,
-  });
-
   const { setIsLoading } = ui;
+  const currentNip = auth.currentTeacher?.nip || "";
   const syncData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data } = await refetchSync();
+      const nip = auth.currentTeacher?.nip || "";
+      const res = await fetch(`/api/sync${nip ? `?nip=${encodeURIComponent(nip)}` : ""}`, { cache: "no-store" });
+      const data = await res.json();
       if (data && data.success) {
         if (data.teachers?.length > 0) setTeachers(mapTeachers(data.teachers));
         if (data.students) setStudents(mapStudents(data.students));
@@ -107,7 +99,7 @@ export function useAppState() {
     } finally {
       setIsLoading(false);
     }
-  }, [refetchSync, setIsLoading]);
+  }, [auth.currentTeacher?.nip, setIsLoading]);
 
   return {
     ...auth,

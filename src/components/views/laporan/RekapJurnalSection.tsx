@@ -56,7 +56,7 @@ export function RekapJurnalSection() {
         <CardTitle className="text-base font-black text-slate-800 flex items-center gap-2">
           <i className="ri-file-pdf-2-line text-[#2A9D5C]" /> Cetak Rekap Jurnal Mengajar Guru
         </CardTitle>
-        <p className="text-[10px] text-slate-455 font-bold">Fasilitas administrasi Kepala Sekolah untuk mengunduh kompilasi jurnal guru.</p>
+        <p className="text-[10px] text-slate-500 font-bold">Fasilitas administrasi Kepala Sekolah untuk mengunduh kompilasi jurnal guru.</p>
       </CardHeader>
       <CardContent className="p-5 space-y-4">
         <RekapJurnalFilters selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedTeacherNip={selectedTeacherNip} setSelectedTeacherNip={setSelectedTeacherNip} months={months} years={years} teachers={teachers} />
