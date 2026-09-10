@@ -24,7 +24,7 @@ interface RawStudent {
 }
 interface RawClass { id: string; name: string; phase?: string; room?: string; }
 interface RawJournal { id: string; date: string; time_slot?: string; class_id: string; topic: string; notes?: string; attendance_summary?: string; }
-interface RawAssignment { id: string; title: string; class_id: string; due_date: string; status?: string; }
+interface RawAssignment { id: string; title: string; class_id: string; due_date: string; status?: string; teacher_nip?: string; }
 
 export const ADMIN_NIP = '199610272019032006';
 export const LEGACY_NIP = '197508201999031002';
@@ -105,15 +105,54 @@ export function mapJournals(raw: RawJournal[]): JournalEntry[] {
 }
 
 export function mapAssignments(raw: RawAssignment[]): TaskItem[] {
-  return raw.map((a): TaskItem => ({
-    id: a.id,
-    title: a.title,
-    classId: a.class_id,
-    dueDate: a.due_date,
-    type: 'Tugas',
-    status: a.status || 'Aktif',
-    description: ''
-  }));
+  return raw.map((a): TaskItem => {
+    let cleanTitle = a.title || '';
+    let fileUrl: string | undefined;
+    let fileName: string | undefined;
+    let assignmentType = 'Formatif';
+    let description = '';
+
+    const metaMatch = cleanTitle.match(/\s*__META__\[(.*?)\]$/);
+    if (metaMatch) {
+      cleanTitle = cleanTitle.replace(metaMatch[0], '').trim();
+      const metaPairs = metaMatch[1].split('|');
+      for (const pair of metaPairs) {
+        const [k, ...vParts] = pair.split(':');
+        const v = vParts.join(':');
+        if (k === 'FILE_URL') fileUrl = v;
+        if (k === 'FILE_NAME') {
+          try { fileName = decodeURIComponent(v); } catch { fileName = v; }
+        }
+        if (k === 'TYPE') assignmentType = v;
+        if (k === 'DESC') {
+          try { description = decodeURIComponent(v); } catch { description = v; }
+        }
+      }
+    }
+
+    // Deteksi tipe berkas dari nama/url
+    let fileType: string | undefined;
+    const targetFile = fileName || fileUrl || '';
+    if (targetFile.match(/\.pdf$/i)) fileType = 'pdf';
+    else if (targetFile.match(/\.(docx|doc)$/i)) fileType = 'word';
+    else if (targetFile.match(/\.(xlsx|xls|csv)$/i)) fileType = 'excel';
+    else if (targetFile.match(/\.(pptx|ppt)$/i)) fileType = 'ppt';
+    else if (targetFile.match(/\.(zip|rar|7z)$/i)) fileType = 'zip';
+
+    return {
+      id: a.id,
+      title: cleanTitle,
+      classId: a.class_id,
+      dueDate: a.due_date,
+      type: assignmentType,
+      status: a.status || 'Aktif',
+      description: description,
+      teacherNip: a.teacher_nip,
+      fileUrl: fileUrl,
+      fileName: fileName,
+      fileType: fileType
+    };
+  });
 }
 
 interface RawCounselingLog {

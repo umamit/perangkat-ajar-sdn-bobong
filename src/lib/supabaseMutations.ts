@@ -115,12 +115,29 @@ export async function saveFlashcardToSupabase(flashcard: any) {
 }
 
 export async function saveAssignmentToSupabase(assignment: any) {
+  let title = (assignment.title || '').trim();
+  const fileUrl = assignment.fileUrl || assignment.file_url;
+  const fileName = assignment.fileName || assignment.file_name;
+  const type = assignment.type;
+  const description = (assignment.description || '').trim();
+
+  // Sematkan metadata terstruktur jika terdapat berkas atau tipe/deskripsi tambahan
+  const metaParts: string[] = [];
+  if (fileUrl) metaParts.push(`FILE_URL:${fileUrl}`);
+  if (fileName) metaParts.push(`FILE_NAME:${encodeURIComponent(fileName)}`);
+  if (type) metaParts.push(`TYPE:${type}`);
+  if (description) metaParts.push(`DESC:${encodeURIComponent(description)}`);
+
+  if (metaParts.length > 0) {
+    title = `${title} __META__[${metaParts.join('|')}]`;
+  }
+
   const payload = {
     id: assignment.id,
-    title: assignment.title,
+    title: title,
     class_id: assignment.classId || assignment.class_id,
     due_date: assignment.dueDate || assignment.due_date,
-    status: assignment.status,
+    status: assignment.status || 'Aktif',
     teacher_nip: assignment.teacherNip || assignment.teacher_nip,
   };
   return postSyncMutation('saveAssignment', payload, payload.teacher_nip);

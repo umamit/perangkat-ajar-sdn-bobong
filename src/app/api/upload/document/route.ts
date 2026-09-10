@@ -17,9 +17,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Path tujuan tidak ditemukan' }, { status: 400 });
     }
 
-    const MAX_SIZE = 15 * 1024 * 1024;
+    const MAX_SIZE = 20 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      return NextResponse.json({ success: false, error: 'Ukuran file dokumen maksimal 15MB' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Ukuran file dokumen maksimal 20MB' }, { status: 400 });
     }
 
     const supabase = getSupabase();

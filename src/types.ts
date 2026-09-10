@@ -155,6 +155,9 @@ export interface TaskItem {
   status: string;
   description: string;
   teacherNip?: string;
+  fileUrl?: string;
+  fileName?: string;
+  fileType?: string;
 }
 
 export interface CounselingLog {
