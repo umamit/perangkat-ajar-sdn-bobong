@@ -5,7 +5,6 @@ import { useApp } from '@/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { saveAttendanceToSupabase } from '@/lib/supabase';
 import { addToOfflineQueue } from '@/lib/offlineSync';
 import { downloadAbsensiPDF } from '@/modules/generateAbsensiPDF';
@@ -13,6 +12,7 @@ import { exportAbsensiExcel } from '@/modules/exportAbsensiExcel';
 import { RiwayatPresensiCard } from './absensi/RiwayatPresensiCard';
 import { StatCards } from './absensi/StatCards';
 import { AttendanceTable } from './absensi/AttendanceTable';
+import { AttendanceHeader } from './absensi/AttendanceHeader';
 
 import { getTeacherAssignedClass } from '@/lib/utils';
 import { AttendanceAiAnalyst } from './absensi/AttendanceAiAnalyst';
@@ -87,7 +87,6 @@ export function AbsensiView() {
       else if (status === 'Sakit') groups[key].sakit++;
       else if (status === 'Alpa') groups[key].alpa++;
     });
-    
     return Object.values(groups).sort((a, b) => b.date.localeCompare(a.date));
   }, [attendance]);
 
@@ -219,23 +218,11 @@ export function AbsensiView() {
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in text-slate-800">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h3 className="text-lg font-black text-slate-800 tracking-tight">Presensi &amp; Rekapitulasi Kehadiran Siswa</h3>
-          <p className="text-xs text-slate-500 font-semibold">Pencatatan presensi harian per kelas dan kalkulasi persentase kehadiran</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black bg-emerald-50/80 backdrop-blur-sm text-emerald-700 border border-emerald-200/60 hover:bg-emerald-100/80 shadow-xs gap-1.5 rounded-xl">
-            <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="text-xs font-black bg-rose-50/80 backdrop-blur-sm text-rose-700 border border-rose-200/60 hover:bg-rose-100/80 shadow-xs gap-1.5 rounded-xl">
-            <i className="ri-file-pdf-2-line text-sm" /> Cetak PDF Absensi
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleMarkAllHadir} className="text-xs font-black bg-teal-50/80 backdrop-blur-sm text-teal-700 border border-teal-200/60 hover:bg-teal-100/80 shadow-xs gap-1.5 rounded-xl">
-            <i className="ri-checkbox-multiple-line text-sm" /> Tandai Semua Hadir
-          </Button>
-        </div>
-      </div>
+      <AttendanceHeader
+        onExportExcel={handleExportExcel}
+        onDownloadPDF={handleDownloadPDF}
+        onMarkAllHadir={handleMarkAllHadir}
+      />
  
       {/* Attendance Summary Stat Cards */}
       <StatCards

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/context/AppContext';
 import { saveStudentToSupabase } from '@/lib/supabase';
+import { SyncPreviewTable } from './SyncPreviewTable';
 
 interface SyncDapodikModalProps {
   isOpen: boolean;
@@ -244,61 +245,12 @@ export function SyncDapodikModal({ isOpen, onClose, classes, showToast, syncData
         )}
 
         {/* Data Preview Table */}
-        {previewData.length > 0 && (
-          <div className="mt-4 space-y-3 text-left">
-            <div className="flex justify-between items-center">
-              <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Preview Hasil Pemetaan ({previewData.length} Siswa)</h5>
-              <Badge className="bg-teal-500/10 text-teal-700 border border-teal-500/20 text-[9px] font-black rounded-lg">Siap Disinkronkan</Badge>
-            </div>
-
-            <div className="border border-slate-200/80 rounded-xl overflow-hidden max-h-40 overflow-y-auto">
-              <table className="w-full text-left text-[10px] border-collapse">
-                <thead className="bg-slate-50 sticky top-0 border-b border-slate-200/80 font-bold text-slate-600">
-                  <tr>
-                    <th className="p-2">Nama Lengkap</th>
-                    <th className="p-2">NISN</th>
-                    <th className="p-2">L/P</th>
-                    <th className="p-2">Pemetaan Kelas</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 bg-white font-medium text-slate-700">
-                  {previewData.slice(0, 10).map((s, idx) => (
-                    <tr key={s.id || idx}>
-                      <td className="p-2 font-bold truncate max-w-[150px]">{s.name}</td>
-                      <td className="p-2">{s.nisn || '-'}</td>
-                      <td className="p-2">{s.gender}</td>
-                      <td className="p-2">
-                        <Badge className="bg-primary/10 text-primary font-black border border-primary/25 rounded px-1.5 py-0.5">{s.classId}</Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {previewData.length > 10 && (
-                <div className="bg-slate-50 p-2 text-center text-[9px] font-bold text-slate-400 border-t border-slate-100">
-                  + {previewData.length - 10} data siswa lainnya...
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-3 mt-4 print:hidden">
-              <Button
-                variant="outline"
-                onClick={() => setPreviewData([])}
-                className="flex-1 h-10 rounded-xl font-bold text-xs"
-              >
-                Batal
-              </Button>
-              <Button
-                onClick={handleSaveToSupabase}
-                disabled={loading}
-                className="flex-1 h-10 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-xl shadow-md shadow-teal-500/10"
-              >
-                {loading ? 'Menyimpan...' : 'Simpan & Sinkronkan ke Database'}
-              </Button>
-            </div>
-          </div>
-        )}
+        <SyncPreviewTable
+          previewData={previewData}
+          loading={loading}
+          onSave={handleSaveToSupabase}
+          onCancel={() => setPreviewData([])}
+        />
       </DialogContent>
     </Dialog>
   );

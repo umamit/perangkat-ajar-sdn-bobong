@@ -20,7 +20,7 @@ export function StudentCardItem({
 }: StudentCardItemProps) {
   return (
     <div
-      className="w-[340px] h-[215px] card-perspective cursor-pointer print:w-[340px] print:h-auto print:mb-12 print:inline-block print:mx-2 print:break-inside-avoid relative group"
+      className="max-w-[340px] w-full h-[215px] card-perspective cursor-pointer print:w-[340px] print:h-auto print:mb-12 print:inline-block print:mx-2 print:break-inside-avoid relative group mx-auto"
       onClick={onClick}
     >
       {/* 3D Flip Card Container: HIDE on print to prevent WebKit display/rotate bugs */}

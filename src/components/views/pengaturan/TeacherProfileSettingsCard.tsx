@@ -6,11 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { saveTeacherToSupabase, uploadAvatarToSupabaseStorage } from '@/lib/supabase';
+import { saveTeacherToSupabase } from '@/lib/supabase';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { AvatarUploadModal } from './AvatarUploadModal';
 
 const profileSchema = z.object({
   name: z.string().min(3, 'Nama minimal 3 karakter'),
@@ -32,9 +32,6 @@ export function TeacherProfileSettingsCard() {
 
   // Avatar Modal states
   const [showAvatarModal, setShowAvatarModal] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(avatar);
-  const [isUploading, setIsUploading] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -109,11 +106,7 @@ export function TeacherProfileSettingsCard() {
             {/* Interactive Profile Photo Section */}
             <div className="flex items-center gap-4 pb-4 border-b border-slate-100/50">
               <div
-                onClick={() => {
-                  setPreviewUrl(avatar);
-                  setSelectedFile(null);
-                  setShowAvatarModal(true);
-                }}
+                onClick={() => setShowAvatarModal(true)}
                 className="relative w-16 h-16 rounded-full overflow-hidden cursor-pointer group border-2 border-primary/20 shadow-md transition-all hover:scale-105"
                 title="Klik untuk mengubah foto profil"
               >
@@ -225,102 +218,17 @@ export function TeacherProfileSettingsCard() {
         </CardContent>
       </Card>
 
-      {/* Avatar Change Modal */}
-      {showAvatarModal && (
-        <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
-          <DialogContent className="max-w-xs sm:max-w-md bg-white rounded-3xl p-6 border border-slate-200/80">
-            <DialogHeader className="border-b border-slate-100 pb-3">
-              <DialogTitle className="text-sm font-black text-slate-800 flex items-center gap-1.5">
-                <i className="ri-image-edit-line text-primary" />
-                Ubah Foto Profil
-              </DialogTitle>
-            </DialogHeader>
-
-            <div className="py-6 flex flex-col items-center gap-4">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-primary/20 shadow-md">
-                <img
-                  src={previewUrl}
-                  alt="Preview Avatar"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div className="w-full text-center">
-                <label className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-[10px] sm:text-xs font-bold text-slate-700 cursor-pointer transition-all">
-                  <i className="ri-upload-2-line" /> Pilih File Gambar
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={e => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        setSelectedFile(file);
-                        setPreviewUrl(URL.createObjectURL(file));
-                      }
-                    }}
-                    className="hidden"
-                  />
-                </label>
-                {selectedFile && (
-                  <p className="text-[9px] text-slate-500 font-bold mt-1.5 truncate max-w-xs mx-auto">
-                    {selectedFile.name}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <DialogFooter className="flex justify-end gap-2 border-t border-slate-100 pt-3">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowAvatarModal(false)}
-                className="text-xs font-bold rounded-xl h-9"
-              >
-                Batal
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                disabled={isUploading || !selectedFile}
-                onClick={async () => {
-                  if (!selectedFile) return;
-                  setIsUploading(true);
-                  showToast('Mengunggah foto profil ke Supabase...', 'info');
-                  try {
-                    const url = await uploadAvatarToSupabaseStorage(selectedFile, currentTeacher.nip);
-                    setAvatar(url);
-                    
-                    const updated = { ...currentTeacher, avatar: url };
-                    setCurrentTeacher(updated);
-                    localStorage.setItem('sdn_bobong_teacher', JSON.stringify(updated));
-                    
-                    await saveTeacherToSupabase({
-                      nip: currentTeacher.nip,
-                      name: currentTeacher.name,
-                      role: currentTeacher.role,
-                      subject: currentTeacher.subject || 'Bahasa Inggris',
-                      password: currentTeacher.password,
-                      avatar_url: url
-                    });
-                    await syncData();
-
-                    showToast('Foto profil berhasil diperbarui!', 'success');
-                    setShowAvatarModal(false);
-                  } catch (err) {
-                    showToast('Gagal memperbarui foto profil.', 'error');
-                  }
-                  setIsUploading(false);
-                }}
-                className="text-xs font-black bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 rounded-xl gap-1 h-9 shadow-sm"
-              >
-                {isUploading ? <i className="ri-refresh-line animate-spin" /> : <i className="ri-checkbox-circle-line" />}
-                Simpan Foto
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Avatar Upload Modal */}
+      <AvatarUploadModal
+        isOpen={showAvatarModal}
+        onClose={() => setShowAvatarModal(false)}
+        currentTeacher={currentTeacher}
+        avatar={avatar}
+        setAvatar={setAvatar}
+        setCurrentTeacher={setCurrentTeacher}
+        showToast={showToast}
+        syncData={syncData}
+      />
     </>
   );
 }

@@ -15,22 +15,7 @@ import { StudentHeader } from './siswa/StudentHeader';
 import { parseStudentImport } from '@/modules/parseStudentImport';
 import { CounselingModal } from './siswa/CounselingModal';
 import { SyncDapodikModal } from './siswa/SyncDapodikModal';
-import * as z from 'zod';
-
-const studentSchema = z.object({
-  name: z.string().min(3, 'Nama lengkap minimal 3 karakter'),
-  nis: z.string().optional(),
-  nisn: z.string().regex(/^\d{10}$/, 'NISN harus terdiri dari 10 digit angka').optional().or(z.literal('')),
-  nik: z.string().regex(/^\d{16}$/, 'NIK harus terdiri dari 16 digit angka').optional().or(z.literal('')),
-  classId: z.string(),
-  gender: z.enum(['L', 'P']),
-  birthInfo: z.string().optional(),
-  parentName: z.string().optional(),
-  religion: z.string().optional(),
-  parentJob: z.string().optional(),
-  address: z.string().optional(),
-  admissionYear: z.string().regex(/^\d{4}$/, 'Tahun masuk harus 4 digit angka (misal: 2023)').optional().or(z.literal(''))
-});
+import { studentSchema, initialStudentForm } from './siswa/studentSchema';
 
 export function SiswaView() {
   const { students, classes, currentTeacher, showToast, setStudents, syncData, selectedClassFilter, setSelectedClassFilter, isLoading } = useApp();
@@ -51,9 +36,8 @@ export function SiswaView() {
   const [saving, setSaving] = useState(false);
 
   // Form states
-  const initialForm = { name: '', classId: '1A', gender: 'L' as 'L' | 'P', nis: '', nisn: '', nik: '', birthInfo: '', parentName: '', religion: '', parentJob: '', address: '', admissionYear: '' };
-  const [addForm, setAddForm] = useState({ ...initialForm, classId: lockedClass || classes[0]?.id || '1A' });
-  const [editForm, setEditForm] = useState({ ...initialForm, id: '' });
+  const [addForm, setAddForm] = useState({ ...initialStudentForm, classId: lockedClass || classes[0]?.id || '1A' });
+  const [editForm, setEditForm] = useState({ ...initialStudentForm, id: '' });
 
   const normalizeClass = (c: string) => (c ? c.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() : '');
 
