@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,7 @@ import { NotificationDropdown, NotificationItem } from './NotificationDropdown';
 
 export function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const {
     activeView,
     currentTeacher,
@@ -22,6 +23,35 @@ export function Navbar() {
     journals,
     assignments
   } = useApp();
+
+  // Load dismissed notifications from localStorage per date
+  useEffect(() => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const saved = localStorage.getItem(`dismissed_notifications_${today}`);
+      if (saved) {
+        setDismissedIds(JSON.parse(saved));
+      }
+    } catch {}
+  }, []);
+
+  const handleDismissNotification = (id: string) => {
+    const updated = [...dismissedIds, id];
+    setDismissedIds(updated);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`dismissed_notifications_${today}`, JSON.stringify(updated));
+    } catch {}
+  };
+
+  const handleClearAllNotifications = () => {
+    const allIds = notificationItems.map((n) => n.id);
+    setDismissedIds(allIds);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`dismissed_notifications_${today}`, JSON.stringify(allIds));
+    } catch {}
+  };
 
   const titleMap: Record<string, string> = {
     dashboard: 'Dashboard',
@@ -182,7 +212,7 @@ export function Navbar() {
             title="Pusat Peringatan & Notifikasi"
           >
             <i className="ri-notification-3-line text-xl" />
-            {notificationItems.length > 0 && (
+            {notificationItems.filter((n) => !dismissedIds.includes(n.id)).length > 0 && (
               <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full" />
             )}
           </button>
@@ -191,6 +221,9 @@ export function Navbar() {
             items={notificationItems}
             isOpen={showNotifications}
             onClose={() => setShowNotifications(false)}
+            dismissedIds={dismissedIds}
+            onDismiss={handleDismissNotification}
+            onClearAll={handleClearAllNotifications}
           />
         </div>
 

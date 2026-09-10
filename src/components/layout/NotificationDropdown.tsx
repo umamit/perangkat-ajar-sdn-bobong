@@ -16,6 +16,9 @@ interface NotificationDropdownProps {
   items: NotificationItem[];
   isOpen: boolean;
   onClose: () => void;
+  dismissedIds?: string[];
+  onDismiss?: (id: string) => void;
+  onClearAll?: () => void;
 }
 
 function urlBase64ToUint8Array(base64String: string) {
@@ -29,7 +32,14 @@ function urlBase64ToUint8Array(base64String: string) {
   return outputArray;
 }
 
-export function NotificationDropdown({ items, isOpen, onClose }: NotificationDropdownProps) {
+export function NotificationDropdown({
+  items,
+  isOpen,
+  onClose,
+  dismissedIds = [],
+  onDismiss,
+  onClearAll,
+}: NotificationDropdownProps) {
   const { currentTeacher, setActiveView, showToast } = useApp();
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -127,6 +137,8 @@ export function NotificationDropdown({ items, isOpen, onClose }: NotificationDro
 
   if (!isOpen) return null;
 
+  const visibleItems = items.filter((item) => !dismissedIds.includes(item.id));
+
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -135,34 +147,62 @@ export function NotificationDropdown({ items, isOpen, onClose }: NotificationDro
           <span className="font-black text-slate-800 flex items-center gap-1.5">
             <i className="ri-notification-badge-line text-primary text-sm" /> Notifikasi Harian
           </span>
-          <span className="text-[10px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-            {items.length} Peringatan
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+              {visibleItems.length} Peringatan
+            </span>
+            {visibleItems.length > 0 && onClearAll && (
+              <button
+                type="button"
+                onClick={onClearAll}
+                className="text-[10px] font-extrabold text-rose-500 hover:text-rose-700 hover:underline cursor-pointer"
+                title="Bersihkan semua notifikasi"
+              >
+                Bersihkan
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
-          {items.length === 0 ? (
+          {visibleItems.length === 0 ? (
             <p className="text-center py-6 text-slate-400 font-semibold">Semua tugas administrasi hari ini tuntas!</p>
           ) : (
-            items.map((item) => (
+            visibleItems.map((item) => (
               <div
                 key={item.id}
-                onClick={() => handleItemClick(item.targetView)}
-                className={`flex gap-2.5 p-2.5 rounded-xl border transition-all ${
-                  item.targetView ? 'cursor-pointer hover:bg-slate-100/70 hover:border-slate-300' : 'bg-slate-50 border-slate-100'
-                }`}
+                className="group relative flex gap-2.5 p-2.5 rounded-xl border bg-slate-50 border-slate-100 hover:bg-slate-100/70 hover:border-slate-200 transition-all"
               >
-                <div className="text-amber-500 mt-0.5 shrink-0">
-                  <i className={`${item.icon} text-base`} />
+                <div
+                  onClick={() => handleItemClick(item.targetView)}
+                  className={`flex gap-2.5 flex-1 min-w-0 ${item.targetView ? 'cursor-pointer' : ''}`}
+                >
+                  <div className="text-amber-500 mt-0.5 shrink-0">
+                    <i className={`${item.icon} text-base`} />
+                  </div>
+                  <div className="flex-1 min-w-0 pr-4">
+                    <p className="text-[11px] font-bold text-slate-700 leading-snug">{item.text}</p>
+                    {item.targetView && (
+                      <span className="text-[9px] font-extrabold text-primary flex items-center gap-1 mt-1">
+                        Buka Menu <i className="ri-arrow-right-line" />
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-bold text-slate-700 leading-snug">{item.text}</p>
-                  {item.targetView && (
-                    <span className="text-[9px] font-extrabold text-primary flex items-center gap-1 mt-1">
-                      Buka Menu <i className="ri-arrow-right-line" />
-                    </span>
-                  )}
-                </div>
+
+                {onDismiss && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDismiss(item.id);
+                    }}
+                    className="absolute top-2 right-2 text-slate-400 hover:text-rose-500 p-1 rounded-lg transition-colors cursor-pointer"
+                    title="Hapus notifikasi ini"
+                  >
+                    <i className="ri-close-line text-sm" />
+                  </button>
+                )}
               </div>
             ))
           )}
