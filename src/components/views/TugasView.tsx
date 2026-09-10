@@ -91,6 +91,13 @@ export function TugasView() {
     }
   };
 
+  const handleCopyPublicLink = () => {
+    if (typeof window === 'undefined') return;
+    const url = `${window.location.origin}/unggah-soal`;
+    navigator.clipboard.writeText(url);
+    showToast('Tautan unggah soal publik berhasil disalin!', 'success');
+  };
+
   const itemList = assignments || [];
 
   return (
@@ -102,13 +109,24 @@ export function TugasView() {
             Daftar penugasan &amp; repositori soal Kurikulum Merdeka (Word, PDF, Excel, PPT, ZIP)
           </p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => setShowModal(true)}
-          className="gap-1.5 rounded-xl font-black text-xs bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 shrink-0"
-        >
-          <i className="ri-file-upload-line" /> Buat Tugas / Unggah Soal
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopyPublicLink}
+            className="text-xs font-black bg-cyan-50/80 backdrop-blur-sm text-primary-dark border border-cyan-200/60 hover:bg-cyan-100/80 shadow-xs gap-1.5 rounded-xl shrink-0"
+            title="Salin link publik untuk orang luar yang ingin mengirim soal"
+          >
+            <i className="ri-share-forward-line text-sm text-cyan-600" /> Bagikan Link Publik
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => setShowModal(true)}
+            className="gap-1.5 rounded-xl font-black text-xs bg-gradient-to-b from-primary via-primary to-primary-dark text-white font-bold shadow-md shadow-primary/20 border border-white/30 hover:brightness-105 shrink-0"
+          >
+            <i className="ri-file-upload-line" /> Buat Tugas / Unggah Soal
+          </Button>
+        </div>
       </div>
 
       {/* Desktop Table Layout */}

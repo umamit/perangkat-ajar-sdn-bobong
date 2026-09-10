@@ -27,7 +27,14 @@ export function TaskCardsMobile({ tasks, onDelete, canDelete }: TaskCardsMobileP
         <Card key={item.id || idx} className="rounded-2xl border border-white/80 bg-white/80 backdrop-blur-md shadow-xs p-4 space-y-3">
           <div className="flex justify-between items-start gap-2">
             <div>
-              <span className="text-[10px] font-black text-slate-400 block uppercase">Tugas #{idx + 1}</span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[10px] font-black text-slate-400 block uppercase">Tugas #{idx + 1}</span>
+                {item.description?.includes('[PENGIRIM PUBLIK:') && (
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60 flex items-center gap-1">
+                    <i className="ri-earth-line text-[10px]" /> Publik
+                  </span>
+                )}
+              </div>
               <h4 className="font-extrabold text-sm text-slate-800 leading-snug mt-0.5">{item.title}</h4>
             </div>
             <Badge variant={item.status === 'Aktif' ? 'success' : 'secondary'} className="font-black text-[10px] rounded-md px-2 py-0.5 shrink-0">

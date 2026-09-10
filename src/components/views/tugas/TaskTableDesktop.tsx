@@ -40,7 +40,14 @@ export function TaskTableDesktop({ tasks, onDelete, canDelete }: TaskTableDeskto
               <TableRow key={item.id || idx} className="hover:bg-white/50 border-slate-100 transition-colors">
                 <TableCell className="font-bold text-xs text-slate-400">{idx + 1}</TableCell>
                 <TableCell>
-                  <div className="font-bold text-slate-800 text-xs">{item.title}</div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-bold text-slate-800 text-xs">{item.title}</span>
+                    {item.description?.includes('[PENGIRIM PUBLIK:') && (
+                      <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60 flex items-center gap-1">
+                        <i className="ri-earth-line text-[10px]" /> Publik
+                      </span>
+                    )}
+                  </div>
                   {item.description && (
                     <div className="text-[11px] text-slate-500 font-normal line-clamp-1 mt-0.5">
                       {item.description}
