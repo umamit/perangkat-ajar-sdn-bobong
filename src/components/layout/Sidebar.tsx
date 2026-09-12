@@ -17,6 +17,7 @@ const navItems = [
   { id: 'ai_assistant', label: 'AI Asisten Guru', icon: 'ri-magic-line' },
   { id: 'materi', label: 'Media Flashcard', icon: 'ri-folder-open-line' },
   { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
+  { id: 'forms', label: 'Formulir Digital', icon: 'ri-survey-line' },
   { id: 'laporan', label: 'Laporan', icon: 'ri-bar-chart-box-line' },
   { id: 'rapat', label: 'Agenda & Notula Rapat', icon: 'ri-discuss-line' },
   { id: 'guru', label: 'Kelola Data Guru', icon: 'ri-user-star-line' },

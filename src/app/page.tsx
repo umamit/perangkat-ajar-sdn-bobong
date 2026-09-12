@@ -25,6 +25,7 @@ import { PengaturanView } from '@/components/views/PengaturanView';
 import { JadwalView } from '@/components/views/JadwalView';
 import { CounselingView } from '@/components/views/CounselingView';
 import { VirtualCardView } from '@/components/views/VirtualCardView';
+import { FormsView } from '@/components/views/FormsView';
 
 function AppContent() {
   const { isLoggedIn, isInitializing, activeView, currentTeacher } = useApp();
@@ -69,6 +70,7 @@ function AppContent() {
           {activeView === 'ai_assistant' && <AiAssistantView />}
           {activeView === 'materi' && <MateriFlashcardView />}
           {activeView === 'tugas' && <TugasView />}
+          {activeView === 'forms' && <FormsView />}
           {activeView === 'laporan' && <LaporanView />}
           {activeView === 'rapat' && <RapatView />}
           {activeView === 'guru' && isKepsek && <GuruView />}
