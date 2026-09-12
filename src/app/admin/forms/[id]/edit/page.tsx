@@ -8,6 +8,7 @@ import { FormModel, FormFieldModel } from '@/types/form';
 import { FieldEditorCard } from '@/modules/forms/builder/FieldEditorCard';
 import { BuilderHeader } from '@/modules/forms/builder/BuilderHeader';
 import { FormSettingsCard } from '@/modules/forms/builder/FormSettingsCard';
+import { AiFormGeneratorModal } from '@/modules/forms/builder/AiFormGeneratorModal';
 
 export default function FormBuilderPage() {
   const params = useParams();
@@ -18,6 +19,7 @@ export default function FormBuilderPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [isAiOpen, setIsAiOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -43,6 +45,36 @@ export default function FormBuilderPage() {
       points: form?.type === 'quiz' ? 10 : 0,
     };
     setFields([...fields, newField]);
+  };
+
+  const handleApplyAi = (generated: any) => {
+    if (!form) return;
+    setForm({
+      ...form,
+      title: generated.title || form.title,
+      description: generated.description || form.description,
+      type: generated.type || form.type,
+    });
+    if (Array.isArray(generated.fields)) {
+      const mapped = generated.fields.map((f: any, idx: number) => ({
+        id: crypto.randomUUID(),
+        form_id: formId,
+        type: f.type || 'text',
+        label: f.label || `Pertanyaan ${idx + 1}`,
+        description: f.description || null,
+        is_required: !!f.is_required,
+        order_index: idx,
+        options: f.options || [],
+        scale_min: f.scale_min ?? 1,
+        scale_max: f.scale_max ?? 5,
+        scale_min_label: f.scale_min_label ?? null,
+        scale_max_label: f.scale_max_label ?? null,
+        correct_answer: f.correct_answer ?? null,
+        points: f.points ?? (generated.type === 'quiz' ? 10 : 0),
+      }));
+      setFields(mapped);
+    }
+    setMsg('Formulir berhasil dirancang oleh AI! Silakan periksa & simpan.');
   };
 
   const handleSave = async () => {
@@ -76,13 +108,9 @@ export default function FormBuilderPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
-      <BuilderHeader form={form} saving={saving} onSave={handleSave} />
+      <BuilderHeader form={form} saving={saving} onSave={handleSave} onOpenAi={() => setIsAiOpen(true)} />
 
-      <FormSettingsCard
-        form={form}
-        disabled={saving}
-        onChange={(updated) => setForm({ ...form, ...updated })}
-      />
+      <FormSettingsCard form={form} disabled={saving} onChange={(updated) => setForm({ ...form, ...updated })} />
 
       <div className="space-y-4">
         {fields.map((f, idx) => (
@@ -110,6 +138,8 @@ export default function FormBuilderPage() {
       </button>
 
       {msg && <p className="text-sm font-medium text-center text-[#2A9D5C]">{msg}</p>}
+
+      <AiFormGeneratorModal isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} onApply={handleApplyAi} />
     </div>
   );
 }
