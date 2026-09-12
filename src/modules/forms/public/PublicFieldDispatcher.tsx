@@ -25,36 +25,32 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
           disabled={disabled}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Tuliskan jawaban Anda..."
-          className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white/90 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#12A5B8] transition-all"
+          placeholder="Jawaban Anda"
+          className="w-full sm:w-80 border-0 border-b border-slate-300 focus:border-b-2 focus:border-[#12A5B8] focus:outline-none bg-transparent py-1.5 text-sm text-slate-800 placeholder:text-slate-400 transition-colors"
         />
       );
 
     case 'textarea':
       return (
         <textarea
-          rows={4}
+          rows={3}
           disabled={disabled}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Tuliskan jawaban lengkap Anda di sini..."
-          className="w-full p-4 rounded-xl border border-slate-200 bg-white/90 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#12A5B8] transition-all resize-y"
+          placeholder="Jawaban Anda"
+          className="w-full border-0 border-b border-slate-300 focus:border-b-2 focus:border-[#12A5B8] focus:outline-none bg-transparent py-1.5 text-sm text-slate-800 placeholder:text-slate-400 transition-colors resize-y"
         />
       );
 
     case 'radio':
       return (
-        <div className="space-y-2.5">
+        <div className="space-y-3 pt-1">
           {(field.options || []).map((opt, idx) => {
             const isChecked = value === opt.value;
             return (
               <label
                 key={idx}
-                className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all cursor-pointer ${
-                  isChecked
-                    ? 'border-[#12A5B8] bg-[#12A5B8]/5 text-slate-900 font-medium'
-                    : 'border-slate-200 bg-white/70 hover:bg-white text-slate-700'
-                }`}
+                className="flex items-center gap-3 cursor-pointer group select-none"
               >
                 <input
                   type="radio"
@@ -63,9 +59,11 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
                   checked={isChecked}
                   disabled={disabled}
                   onChange={() => onChange(opt.value)}
-                  className="w-4 h-4 text-[#12A5B8] focus:ring-[#12A5B8]"
+                  className="w-4 h-4 text-[#12A5B8] focus:ring-[#12A5B8] border-slate-300 cursor-pointer"
                 />
-                <span className="text-sm leading-relaxed">{opt.label}</span>
+                <span className="text-sm text-slate-800 group-hover:text-slate-900 leading-normal">
+                  {opt.label}
+                </span>
               </label>
             );
           })}
@@ -75,17 +73,13 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
     case 'checkbox':
       const currentList: string[] = Array.isArray(value) ? value : [];
       return (
-        <div className="space-y-2.5">
+        <div className="space-y-3 pt-1">
           {(field.options || []).map((opt, idx) => {
             const isChecked = currentList.includes(opt.value);
             return (
               <label
                 key={idx}
-                className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all cursor-pointer ${
-                  isChecked
-                    ? 'border-[#12A5B8] bg-[#12A5B8]/5 text-slate-900 font-medium'
-                    : 'border-slate-200 bg-white/70 hover:bg-white text-slate-700'
-                }`}
+                className="flex items-center gap-3 cursor-pointer group select-none"
               >
                 <input
                   type="checkbox"
@@ -99,9 +93,11 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
                       onChange(currentList.filter((v) => v !== opt.value));
                     }
                   }}
-                  className="w-4 h-4 rounded text-[#12A5B8] focus:ring-[#12A5B8]"
+                  className="w-4 h-4 rounded text-[#12A5B8] focus:ring-[#12A5B8] border-slate-300 cursor-pointer"
                 />
-                <span className="text-sm leading-relaxed">{opt.label}</span>
+                <span className="text-sm text-slate-800 group-hover:text-slate-900 leading-normal">
+                  {opt.label}
+                </span>
               </label>
             );
           })}
@@ -114,9 +110,9 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
           value={value || ''}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white/90 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#12A5B8] transition-all cursor-pointer"
+          className="w-full sm:w-64 h-11 px-3 text-sm rounded-md border border-slate-300 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#12A5B8] focus:border-[#12A5B8] cursor-pointer"
         >
-          <option value="" disabled>-- Pilih salah satu --</option>
+          <option value="" disabled>Pilih</option>
           {(field.options || []).map((opt, idx) => (
             <option key={idx} value={opt.value}>{opt.label}</option>
           ))}
@@ -133,7 +129,7 @@ export const PublicFieldDispatcher: React.FC<PublicFieldDispatcherProps> = ({
           disabled={disabled}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white/90 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#12A5B8] transition-all"
+          className="w-full sm:w-64 border-0 border-b border-slate-300 focus:border-b-2 focus:border-[#12A5B8] focus:outline-none bg-transparent py-1.5 text-sm text-slate-800"
         />
       );
 

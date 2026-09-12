@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Send, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { FormModel, PublicFormField, FormSubmitResult } from '@/types/form';
 import { PublicFormHeader } from './PublicFormHeader';
 import { PublicRespondentCard } from './PublicRespondentCard';
 import { PublicQuestionCard } from './PublicQuestionCard';
+import { PublicFormFooter } from './PublicFormFooter';
 import { QuizCountdownTimer } from './QuizCountdownTimer';
 import { SubmissionSuccessView } from './SubmissionSuccessView';
 
@@ -41,6 +42,14 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
     try {
       localStorage.setItem(storageKey, JSON.stringify({ answers: updated, respondentName }));
     } catch {}
+  };
+
+  const handleClearForm = () => {
+    if (confirm('Kosongkan semua isian formulir?')) {
+      setAnswers({});
+      setRespondentName('');
+      localStorage.removeItem(storageKey);
+    }
   };
 
   const filledCount = fields.filter((f) => answers[f.id] !== undefined && answers[f.id] !== '' && (!Array.isArray(answers[f.id]) || answers[f.id].length > 0)).length;
@@ -100,7 +109,7 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
   const hasTimer = form.type === 'quiz' && !!form.duration_minutes && form.duration_minutes > 0;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto pb-12 relative">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl mx-auto pb-16 relative">
       {hasTimer && (
         <QuizCountdownTimer
           formId={form.id}
@@ -125,20 +134,13 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
       ))}
 
       {errorMsg && (
-        <div className="flex items-center gap-2 p-4 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-sm">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+        <div className="flex items-center gap-2 p-3.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-xs font-medium">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full h-13 bg-[#12A5B8] hover:bg-[#0A7E8D] text-white rounded-xl font-semibold shadow-sm transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50 text-base"
-      >
-        <Send className="w-5 h-5" />
-        {isSubmitting ? 'Mengirim tanggapan...' : 'Kirim Tanggapan'}
-      </button>
+      <PublicFormFooter isSubmitting={isSubmitting} onClearForm={handleClearForm} />
     </form>
   );
 };

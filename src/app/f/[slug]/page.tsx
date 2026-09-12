@@ -31,7 +31,7 @@ export default async function PublicFormPage({ params }: PageProps) {
   const fields: PublicFormField[] = (rawFields || []) as PublicFormField[];
 
   return (
-    <main className="min-h-screen bg-[#F5F5F7] px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#F0EBF8] px-4 py-6 sm:py-10 selection:bg-[#12A5B8]/20 selection:text-[#0A7E8D]">
       <div className="max-w-2xl mx-auto">
         <PublicFormContainer form={form as FormModel} fields={fields} />
       </div>
