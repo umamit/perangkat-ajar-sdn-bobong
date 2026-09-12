@@ -91,7 +91,7 @@ export default function AdminFormsListPage() {
             <Link href="/" className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 shadow-sm" title="Kembali ke Dashboard">
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">AetherForms</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">FormAjar</h1>
           </div>
           <p className="text-slate-500 text-sm mt-1">Formulir digital mandiri, kuis penilaian otomatis, & survei online.</p>
         </div>

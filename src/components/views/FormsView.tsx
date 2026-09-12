@@ -10,7 +10,7 @@ export const FormsView: React.FC = () => {
     <div className="w-full space-y-4">
       <div className="flex items-center justify-between bg-white/70 backdrop-blur-md px-5 py-3 rounded-2xl border border-slate-200 shadow-sm">
         <div>
-          <h2 className="text-sm font-bold text-slate-800">Modul Formulir Digital Mandiri (AetherForms)</h2>
+          <h2 className="text-sm font-bold text-slate-800">Modul Formulir Digital Mandiri (FormAjar)</h2>
           <p className="text-xs text-slate-500">Kelola kuis ujian otomatis, kuisioner survei, & formulir tanpa login Google.</p>
         </div>
         <Link

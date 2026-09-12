@@ -19,7 +19,7 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitResult, setSubmitResult] = useState<FormSubmitResult | null>(null);
 
-  const storageKey = `aetherform_draft_${form.id}`;
+  const storageKey = `formajar_draft_${form.id}`;
 
   useEffect(() => {
     try {
