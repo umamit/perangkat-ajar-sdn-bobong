@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Plus } from 'lucide-react';
-import { getSupabase } from '@/lib/supabase';
 import { FormModel, FormFieldModel } from '@/types/form';
 import { FieldEditorCard } from '@/modules/forms/builder/FieldEditorCard';
 import { BuilderHeader } from '@/modules/forms/builder/BuilderHeader';
@@ -23,12 +22,16 @@ export default function FormBuilderPage() {
 
   useEffect(() => {
     async function loadData() {
-      const supabase = getSupabase();
-      const { data: formData } = await supabase.from('forms').select('*').eq('id', formId).single();
-      const { data: fieldData } = await supabase.from('form_fields').select('*').eq('form_id', formId).order('order_index', { ascending: true });
-      if (formData) setForm(formData as FormModel);
-      if (fieldData) setFields(fieldData as FormFieldModel[]);
-      setLoading(false);
+      try {
+        const res = await fetch(`/api/admin/forms/${formId}`);
+        const json = await res.json();
+        if (json.success) {
+          if (json.form) setForm(json.form as FormModel);
+          if (json.fields) setFields(json.fields as FormFieldModel[]);
+        }
+      } catch {} finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, [formId]);
@@ -82,21 +85,17 @@ export default function FormBuilderPage() {
     setSaving(true);
     setMsg(null);
     try {
-      const supabase = getSupabase();
-      await supabase.from('forms').update({
-        title: form.title,
-        description: form.description,
-        type: form.type,
-        is_active: form.is_active,
-        duration_minutes: form.duration_minutes,
-        updated_at: new Date().toISOString(),
-      }).eq('id', form.id);
-
-      await supabase.from('form_fields').delete().eq('form_id', form.id);
-      if (fields.length > 0) {
-        await supabase.from('form_fields').insert(fields.map((f, idx) => ({ ...f, order_index: idx })));
+      const res = await fetch(`/api/admin/forms/${formId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ form, fields }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setMsg('Formulir berhasil disimpan.');
+      } else {
+        setMsg(json.error || 'Gagal menyimpan.');
       }
-      setMsg('Formulir berhasil disimpan.');
     } catch (err: any) {
       setMsg(err.message || 'Gagal menyimpan.');
     } finally {

@@ -1,18 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { Plus, ArrowLeft } from 'lucide-react';
-import { getSupabase } from '@/lib/supabase';
 import { useApp } from '@/context/AppContext';
 import { FormModel } from '@/types/form';
 import { FormCard } from '@/modules/forms/admin/FormCard';
 import { DeleteFormDialog } from '@/modules/forms/admin/DeleteFormDialog';
+import { FormsListHeader } from '@/modules/forms/admin/FormsListHeader';
 
 export default function AdminFormsListPage() {
   const { currentTeacher } = useApp();
   const [forms, setForms] = useState<FormModel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<FormModel | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -24,17 +23,17 @@ export default function AdminFormsListPage() {
   );
 
   const fetchForms = useCallback(async () => {
-    const supabase = getSupabase();
-    let query = supabase.from('forms').select('*').order('created_at', { ascending: false });
+    try {
+      const q = new URLSearchParams();
+      if (currentTeacher?.nip) q.set('nip', currentTeacher.nip);
+      if (isKepsek) q.set('isKepsek', 'true');
 
-    // Multi-teacher isolation: guru biasa hanya melihat miliknya sendiri
-    if (!isKepsek && currentTeacher?.nip) {
-      query = query.eq('created_by', currentTeacher.nip);
+      const res = await fetch(`/api/admin/forms?${q.toString()}`);
+      const json = await res.json();
+      if (json.success && json.data) setForms(json.data as FormModel[]);
+    } catch {} finally {
+      setLoading(false);
     }
-
-    const { data } = await query;
-    if (data) setForms(data as FormModel[]);
-    setLoading(false);
   }, [isKepsek, currentTeacher?.nip]);
 
   useEffect(() => {
@@ -45,22 +44,30 @@ export default function AdminFormsListPage() {
     const title = prompt('Masukkan judul formulir baru:');
     if (!title?.trim()) return;
 
-    const slug = title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.random().toString(36).substring(2, 6);
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-      .from('forms')
-      .insert({
-        title: title.trim(),
-        slug,
-        type: 'standard',
-        is_active: true,
-        created_by: currentTeacher?.nip || 'Guru',
-      })
-      .select()
-      .single();
+    setCreating(true);
+    try {
+      const slug = title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.random().toString(36).substring(2, 6);
+      const res = await fetch('/api/admin/forms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          slug,
+          type: 'standard',
+          created_by: currentTeacher?.nip || 'Guru',
+        }),
+      });
 
-    if (data && !error) {
-      setForms([data as FormModel, ...forms]);
+      const json = await res.json();
+      if (json.success && json.data) {
+        setForms([json.data as FormModel, ...forms]);
+      } else {
+        alert(json.error || 'Gagal membuat formulir');
+      }
+    } catch (err: any) {
+      alert('Terjadi kesalahan: ' + err.message);
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -68,11 +75,17 @@ export default function AdminFormsListPage() {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      const supabase = getSupabase();
-      await supabase.from('forms').delete().eq('id', deleteTarget.id);
-      setForms(forms.filter((f) => f.id !== deleteTarget.id));
-      setDeleteTarget(null);
-    } catch {} finally {
+      const res = await fetch(`/api/admin/forms?id=${deleteTarget.id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setForms(forms.filter((f) => f.id !== deleteTarget.id));
+        setDeleteTarget(null);
+      } else {
+        alert(json.error || 'Gagal menghapus formulir');
+      }
+    } catch (err: any) {
+      alert('Gagal menghapus: ' + err.message);
+    } finally {
       setIsDeleting(false);
     }
   };
@@ -85,23 +98,7 @@ export default function AdminFormsListPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <Link href="/" className="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 shadow-sm" title="Kembali ke Dashboard">
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">FormAjar</h1>
-          </div>
-          <p className="text-slate-500 text-sm mt-1">Formulir digital mandiri, kuis penilaian otomatis, & survei online.</p>
-        </div>
-        <button
-          onClick={handleCreateNew}
-          className="h-11 px-5 rounded-xl bg-[#12A5B8] hover:bg-[#0A7E8D] text-white font-semibold text-sm inline-flex items-center gap-2 shadow-sm transition-all active:scale-95"
-        >
-          <Plus className="w-4 h-4" /> Buat Formulir Baru
-        </button>
-      </div>
+      <FormsListHeader creating={creating} onCreateNew={handleCreateNew} />
 
       {loading ? (
         <div className="p-8 text-center text-slate-400">Memuat formulir...</div>
