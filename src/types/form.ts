@@ -41,6 +41,7 @@ export interface FormModel {
   description?: string | null;
   type: FormType;
   is_active: boolean;
+  duration_minutes?: number | null;
   header_image_url?: string | null;
   theme_color?: string | null;
   created_by?: string | null;

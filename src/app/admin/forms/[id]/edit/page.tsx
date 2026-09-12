@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import { getSupabase } from '@/lib/supabase';
-import { FormModel, FormFieldModel, FormType } from '@/types/form';
+import { FormModel, FormFieldModel } from '@/types/form';
 import { FieldEditorCard } from '@/modules/forms/builder/FieldEditorCard';
 import { BuilderHeader } from '@/modules/forms/builder/BuilderHeader';
+import { FormSettingsCard } from '@/modules/forms/builder/FormSettingsCard';
 
 export default function FormBuilderPage() {
   const params = useParams();
@@ -55,6 +56,7 @@ export default function FormBuilderPage() {
         description: form.description,
         type: form.type,
         is_active: form.is_active,
+        duration_minutes: form.duration_minutes,
         updated_at: new Date().toISOString(),
       }).eq('id', form.id);
 
@@ -76,45 +78,11 @@ export default function FormBuilderPage() {
     <div className="min-h-screen bg-[#F5F5F7] p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       <BuilderHeader form={form} saving={saving} onSave={handleSave} />
 
-      <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-sm rounded-2xl p-6 space-y-4">
-        <input
-          type="text"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          placeholder="Judul Formulir..."
-          className="w-full text-2xl sm:text-3xl font-bold text-slate-800 bg-transparent border-b border-slate-200 pb-2 focus:outline-none focus:border-[#12A5B8]"
-        />
-        <textarea
-          rows={2}
-          value={form.description || ''}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="Deskripsi atau petunjuk pengerjaan..."
-          className="w-full text-sm text-slate-600 bg-transparent border-b border-slate-200 pb-2 focus:outline-none focus:border-[#12A5B8] resize-none"
-        />
-        <div className="flex flex-wrap items-center gap-4 pt-2">
-          <label className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-            Tipe Formulir:
-            <select
-              value={form.type}
-              onChange={(e) => setForm({ ...form, type: e.target.value as FormType })}
-              className="h-8 px-2 rounded-lg border border-slate-200 bg-white text-xs font-medium"
-            >
-              <option value="standard">Formulir Standar</option>
-              <option value="quiz">Kuis / Ujian Dinilai</option>
-              <option value="assessment">Instrumen Asesmen</option>
-            </select>
-          </label>
-          <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={form.is_active}
-              onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-              className="w-4 h-4 rounded text-[#12A5B8] focus:ring-[#12A5B8]"
-            />
-            Formulir Aktif & Dapat Diakses Publik
-          </label>
-        </div>
-      </div>
+      <FormSettingsCard
+        form={form}
+        disabled={saving}
+        onChange={(updated) => setForm({ ...form, ...updated })}
+      />
 
       <div className="space-y-4">
         {fields.map((f, idx) => (

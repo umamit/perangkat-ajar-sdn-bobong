@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Send, AlertCircle } from 'lucide-react';
 import { FormModel, PublicFormField, FormSubmitResult } from '@/types/form';
-import { PublicFieldDispatcher } from './PublicFieldDispatcher';
 import { PublicFormHeader } from './PublicFormHeader';
+import { PublicRespondentCard } from './PublicRespondentCard';
+import { PublicQuestionCard } from './PublicQuestionCard';
+import { QuizCountdownTimer } from './QuizCountdownTimer';
 import { SubmissionSuccessView } from './SubmissionSuccessView';
 
 interface PublicFormContainerProps {
@@ -20,6 +22,7 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
   const [submitResult, setSubmitResult] = useState<FormSubmitResult | null>(null);
 
   const storageKey = `formajar_draft_${form.id}`;
+  const startStorageKey = `formajar_start_${form.id}`;
 
   useEffect(() => {
     try {
@@ -43,21 +46,9 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
   const filledCount = fields.filter((f) => answers[f.id] !== undefined && answers[f.id] !== '' && (!Array.isArray(answers[f.id]) || answers[f.id].length > 0)).length;
   const progressPercent = fields.length > 0 ? Math.round((filledCount / fields.length) * 100) : 0;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg(null);
-
-    for (const f of fields) {
-      if (f.is_required) {
-        const val = answers[f.id];
-        if (val === undefined || val === '' || (Array.isArray(val) && val.length === 0)) {
-          setErrorMsg(`Pertanyaan "${f.label}" wajib diisi.`);
-          return;
-        }
-      }
-    }
-
+  const executeSubmit = useCallback(async (isAutoTimeout = false) => {
     setIsSubmitting(true);
+    setErrorMsg(null);
     try {
       const res = await fetch('/api/forms/submit', {
         method: 'POST',
@@ -69,12 +60,27 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
       if (!res.ok || !data.success) throw new Error(data.message || 'Gagal mengirim formulir.');
 
       localStorage.removeItem(storageKey);
+      localStorage.removeItem(startStorageKey);
       setSubmitResult(data);
     } catch (err: any) {
       setErrorMsg(err.message || 'Terjadi kesalahan jaringan.');
     } finally {
       setIsSubmitting(false);
     }
+  }, [form.id, respondentName, answers, storageKey, startStorageKey]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    for (const f of fields) {
+      if (f.is_required) {
+        const val = answers[f.id];
+        if (val === undefined || val === '' || (Array.isArray(val) && val.length === 0)) {
+          setErrorMsg(`Pertanyaan "${f.label}" wajib diisi.`);
+          return;
+        }
+      }
+    }
+    await executeSubmit(false);
   };
 
   if (submitResult) {
@@ -91,39 +97,31 @@ export const PublicFormContainer: React.FC<PublicFormContainerProps> = ({ form, 
     );
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto pb-12">
-      <PublicFormHeader form={form} progressPercent={progressPercent} />
+  const hasTimer = form.type === 'quiz' && !!form.duration_minutes && form.duration_minutes > 0;
 
-      <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-sm rounded-2xl p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nama Anda (Opsional)</label>
-        <input
-          type="text"
-          value={respondentName}
-          onChange={(e) => setRespondentName(e.target.value)}
-          placeholder="Tuliskan nama lengkap..."
-          className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-white/90 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#12A5B8] transition-all text-sm"
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto pb-12 relative">
+      {hasTimer && (
+        <QuizCountdownTimer
+          formId={form.id}
+          durationMinutes={form.duration_minutes!}
+          onTimeout={() => executeSubmit(true)}
+          disabled={isSubmitting}
         />
-      </div>
+      )}
+
+      <PublicFormHeader form={form} progressPercent={progressPercent} />
+      <PublicRespondentCard respondentName={respondentName} disabled={isSubmitting} onChange={setRespondentName} />
 
       {fields.map((f, idx) => (
-        <div key={f.id} className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-sm rounded-2xl p-5 sm:p-6 space-y-3">
-          <div>
-            <span className="text-xs font-bold text-[#12A5B8] uppercase tracking-wider">Pertanyaan {idx + 1}</span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <h3 className="text-base font-semibold text-slate-800">{f.label}</h3>
-              {f.is_required && <span className="text-rose-500 font-bold">*</span>}
-            </div>
-            {f.description && <p className="text-xs text-slate-500 mt-1">{f.description}</p>}
-          </div>
-
-          <PublicFieldDispatcher
-            field={f}
-            value={answers[f.id]}
-            onChange={(val) => handleAnswerChange(f.id, val)}
-            disabled={isSubmitting}
-          />
-        </div>
+        <PublicQuestionCard
+          key={f.id}
+          field={f}
+          index={idx}
+          value={answers[f.id]}
+          disabled={isSubmitting}
+          onChange={(val) => handleAnswerChange(f.id, val)}
+        />
       ))}
 
       {errorMsg && (

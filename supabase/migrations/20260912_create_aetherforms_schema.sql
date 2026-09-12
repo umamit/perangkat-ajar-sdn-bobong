@@ -85,3 +85,6 @@ CREATE POLICY "Public can submit responses" ON public.form_responses
 DROP POLICY IF EXISTS "Admin can view all responses" ON public.form_responses;
 CREATE POLICY "Admin can view all responses" ON public.form_responses
     FOR SELECT USING (true);
+
+-- Add Quiz Duration in minutes
+ALTER TABLE public.forms ADD COLUMN IF NOT EXISTS duration_minutes INTEGER DEFAULT NULL;
