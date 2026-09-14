@@ -4,7 +4,7 @@ import { getFallbackForm } from './fallbackTemplates';
 
 export async function POST(req: Request) {
   try {
-    const { prompt, formType } = await req.json();
+    const { prompt, formType, questionCount } = await req.json();
     if (!prompt?.trim()) {
       return NextResponse.json({ success: false, message: 'Prompt tidak boleh kosong' }, { status: 400 });
     }
@@ -16,8 +16,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, data: fallback, source: 'fallback' });
     }
 
-    const systemPrompt = 'Anda adalah asisten AI Kurikulum Merdeka spesialis perancang kuis, survei, dan instrumen asesmen pendidikan. Kembalikan HANYA format JSON murni tanpa pembuka/penutup markdown.';
-    const userPrompt = buildFormAiPrompt(prompt, formType);
+    const systemPrompt = 'Anda adalah asisten AI Kurikulum Merdeka spesialis kuis dan asesmen. Kembalikan HANYA JSON murni tanpa markdown.';
+    const userPrompt = buildFormAiPrompt(prompt, formType, questionCount);
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
           { role: 'user', content: userPrompt },
         ],
         temperature: 0.6,
-        max_tokens: 3000,
+        max_tokens: 4096,
       }),
     });
 
