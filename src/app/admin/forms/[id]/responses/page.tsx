@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Download, Users, Award, Calendar } from 'lucide-react';
-import { getSupabase } from '@/lib/supabase';
+import { ArrowLeft, Download, Users, Award } from 'lucide-react';
 import { FormModel, FormFieldModel, FormResponseModel } from '@/types/form';
 import { exportFormResponsesToExcel } from '@/modules/forms/analytics/exportFormResponses';
 
@@ -16,23 +15,41 @@ export default function FormResponsesPage() {
   const [fields, setFields] = useState<FormFieldModel[]>([]);
   const [responses, setResponses] = useState<FormResponseModel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
-      const supabase = getSupabase();
-      const { data: formData } = await supabase.from('forms').select('*').eq('id', formId).single();
-      const { data: fieldData } = await supabase.from('form_fields').select('*').eq('form_id', formId).order('order_index', { ascending: true });
-      const { data: respData } = await supabase.from('form_responses').select('*').eq('form_id', formId).order('created_at', { ascending: false });
-
-      if (formData) setForm(formData as FormModel);
-      if (fieldData) setFields(fieldData as FormFieldModel[]);
-      if (respData) setResponses(respData as FormResponseModel[]);
-      setLoading(false);
+      try {
+        const res = await fetch(`/api/admin/forms/${formId}/responses`);
+        const json = await res.json();
+        if (json.success) {
+          setForm(json.form as FormModel);
+          setFields(json.fields as FormFieldModel[]);
+          setResponses(json.responses as FormResponseModel[]);
+        } else {
+          setErrorMsg(json.error || 'Gagal memuat data formulir');
+        }
+      } catch (err: any) {
+        setErrorMsg('Terjadi kesalahan jaringan: ' + err.message);
+      } finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, [formId]);
 
-  if (loading || !form) return <div className="p-8 text-center text-slate-500">Memuat data respon...</div>;
+  if (loading) return <div className="p-8 text-center text-slate-500 font-medium">Memuat data respon...</div>;
+
+  if (errorMsg || !form) {
+    return (
+      <div className="min-h-screen bg-[#F5F5F7] p-8 max-w-4xl mx-auto text-center space-y-4">
+        <p className="text-rose-600 font-semibold">{errorMsg || 'Formulir tidak ditemukan.'}</p>
+        <Link href="/admin/forms" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#12A5B8]">
+          <ArrowLeft className="w-4 h-4" /> Kembali ke Daftar Formulir
+        </Link>
+      </div>
+    );
+  }
 
   const avgScore = form.type === 'quiz' && responses.length > 0
     ? (responses.reduce((acc, r) => acc + (r.score || 0), 0) / responses.length).toFixed(1)
