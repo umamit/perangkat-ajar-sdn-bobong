@@ -21,12 +21,13 @@ export function GradeFullMobileCard({ row, index, onCellChange }: GradeFullMobil
         type="number"
         min={0}
         max={100}
-        value={val !== undefined && val !== null ? val : ''}
+        value={val !== undefined && val !== null && val !== 0 ? val : ''}
+        placeholder="-"
         onChange={(e) => {
           const num = e.target.value === '' ? 0 : Math.min(100, Math.max(0, parseInt(e.target.value, 10)));
           onCellChange(row.studentId, path, num);
         }}
-        className="w-16 h-8 text-center text-xs font-bold rounded-lg border border-slate-200 bg-white"
+        className="w-16 h-8 text-center text-xs font-bold rounded-lg border border-slate-200 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:ring-1 focus:ring-primary focus:border-primary outline-none"
       />
     </div>
   );
