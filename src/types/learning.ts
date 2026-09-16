@@ -36,7 +36,7 @@ export interface GradeRecord {
   studentId: string;
   classId: string;
   subject: string;
-  type: "Formatif" | "Sumatif" | "STS" | "SAS";
+  type: "Formatif" | "Sumatif" | "STS" | "SAS" | string;
   score: number;
   topic?: string;
   student_id?: string;
