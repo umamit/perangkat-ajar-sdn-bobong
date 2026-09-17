@@ -37,7 +37,20 @@ export function TaskCardsMobile({ tasks, onDelete, canDelete, onVerify, isKepsek
                   </span>
                 )}
               </div>
-              <h4 className="font-extrabold text-sm text-slate-800 leading-snug mt-0.5">{item.title}</h4>
+              {item.fileUrl ? (
+                <a
+                  href={item.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-extrabold text-sm text-slate-800 hover:text-primary hover:underline leading-snug mt-0.5 inline-flex items-center gap-1 group"
+                  title="Klik untuk membuka/mengunduh berkas"
+                >
+                  <span>{item.title}</span>
+                  <i className="ri-external-link-line text-xs text-slate-400 group-hover:text-primary" />
+                </a>
+              ) : (
+                <h4 className="font-extrabold text-sm text-slate-800 leading-snug mt-0.5">{item.title}</h4>
+              )}
             </div>
             <Badge
               variant={item.status === 'Aktif' ? 'success' : item.status === 'Menunggu Verifikasi' ? 'outline' : 'secondary'}
