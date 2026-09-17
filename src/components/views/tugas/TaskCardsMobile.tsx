@@ -36,6 +36,9 @@ export function TaskCardsMobile({ tasks, onDelete, canDelete, onVerify, isKepsek
                     <i className="ri-earth-line text-[10px]" /> Publik
                   </span>
                 )}
+                {item.fileUrl && (
+                  <FileBadge fileUrl={item.fileUrl} fileName={item.fileName} fileType={item.fileType} />
+                )}
               </div>
               {item.fileUrl ? (
                 <a

@@ -57,6 +57,9 @@ export function TaskTableDesktop({ tasks, onDelete, canDelete, onVerify, isKepse
                     ) : (
                       <span className="font-bold text-slate-800 text-xs">{item.title}</span>
                     )}
+                    {item.fileUrl && (
+                      <FileBadge fileUrl={item.fileUrl} fileName={item.fileName} fileType={item.fileType} />
+                    )}
                     {item.description?.includes('[PENGIRIM PUBLIK:') && (
                       <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60 flex items-center gap-1">
                         <i className="ri-earth-line text-[10px]" /> Publik
