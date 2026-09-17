@@ -9,6 +9,7 @@ import { StudentTable } from "./siswa/StudentTable";
 import { StudentHeader } from "./siswa/StudentHeader";
 import { CounselingModal } from "./siswa/CounselingModal";
 import { SyncDapodikModal } from "./siswa/SyncDapodikModal";
+import { StudentCollectionModal } from "./siswa/StudentCollectionModal";
 import { useStudentManagement } from "./siswa/useStudentManagement";
 
 export function SiswaView() {
@@ -23,6 +24,7 @@ export function SiswaView() {
         setShowAddModal={m.setShowAddModal}
         setShowImportModal={m.setShowImportModal}
         setShowSyncModal={m.setShowSyncModal}
+        setShowCollectionModal={m.setShowCollectionModal}
         search={m.search}
         setSearch={m.setSearch}
         lockedClass={m.lockedClass}
@@ -82,6 +84,14 @@ export function SiswaView() {
         classes={m.classes}
         showToast={m.showToast}
         syncData={m.syncData}
+      />
+      <StudentCollectionModal
+        isOpen={m.showCollectionModal}
+        onOpenChange={m.setShowCollectionModal}
+        classes={m.classes}
+        students={m.students}
+        normalizeClass={m.normalizeClass}
+        showToast={m.showToast}
       />
     </div>
   );

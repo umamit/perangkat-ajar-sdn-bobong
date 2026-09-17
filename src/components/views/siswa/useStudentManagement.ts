@@ -20,6 +20,7 @@ export function useStudentManagement() {
   const [showImportModal, setShowImportModal] = useState(false);
   const [showCounselingModal, setShowCounselingModal] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
   const [selectedCounselingStudent, setSelectedCounselingStudent] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
@@ -129,7 +130,8 @@ export function useStudentManagement() {
     search, setSearch, lockedClass, selectedClass, setSelectedClass, isKepsek,
     showAddModal, setShowAddModal, showEditModal, setShowEditModal,
     showImportModal, setShowImportModal, showCounselingModal, setShowCounselingModal,
-    showSyncModal, setShowSyncModal, selectedCounselingStudent,
+    showSyncModal, setShowSyncModal, showCollectionModal, setShowCollectionModal,
+    selectedCounselingStudent,
     saving, setSaving, addForm, setAddForm, editForm, setEditForm,
     filteredStudents, handleDelete, handleAddSubmit, handleEditSubmit, handleDirectImport,
     handleEditClick, handleCounselingClick, handleDownloadPDF, handleExportExcel, normalizeClass

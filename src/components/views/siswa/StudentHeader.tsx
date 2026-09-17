@@ -13,6 +13,7 @@ interface StudentHeaderProps {
   setShowAddModal: (val: boolean) => void;
   setShowImportModal: (val: boolean) => void;
   setShowSyncModal: (val: boolean) => void;
+  setShowCollectionModal?: (val: boolean) => void;
   search: string;
   setSearch: (val: string) => void;
   lockedClass: string | null;
@@ -30,6 +31,7 @@ export function StudentHeader({
   setShowAddModal,
   setShowImportModal,
   setShowSyncModal,
+  setShowCollectionModal,
   search,
   setSearch,
   lockedClass,
@@ -47,6 +49,17 @@ export function StudentHeader({
           <p className="text-xs text-slate-500 font-semibold">Kelola data siswa, NIS/NISN, dan kelas binaan</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {setShowCollectionModal && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowCollectionModal(true)}
+              className="text-xs font-black bg-amber-50/90 text-amber-800 border border-amber-300/70 hover:bg-amber-100 rounded-xl gap-1.5 shadow-xs"
+              title="Koleksi Data Siswa Baru (Bagi Link per Kelas)"
+            >
+              <i className="ri-share-forward-line text-sm text-amber-600" /> Koleksi Data Baru
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={handleExportExcel} className="text-xs font-black bg-emerald-50/80 backdrop-blur-sm text-emerald-700 border border-emerald-200/60 hover:bg-emerald-100/80 shadow-xs gap-1.5 rounded-xl">
             <i className="ri-file-excel-2-line text-sm text-emerald-600" /> Export Excel
           </Button>
