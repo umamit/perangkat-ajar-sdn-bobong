@@ -19,6 +19,8 @@ interface Props {
 
 export function SupervisionModalForm({ isOpen, onOpenChange, initialData, teachers, classes, onSave }: Props) {
   const [teacherNip, setTeacherNip] = useState('');
+  const [customTeacherName, setCustomTeacherName] = useState('');
+  const [isCustomTeacher, setIsCustomTeacher] = useState(false);
   const [classId, setClassId] = useState('1A');
   const [subject, setSubject] = useState('Matematika');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -29,7 +31,10 @@ export function SupervisionModalForm({ isOpen, onOpenChange, initialData, teache
 
   useEffect(() => {
     if (initialData) {
+      const match = teachers.some((t) => t.nip === initialData.teacherNip);
+      setIsCustomTeacher(!match);
       setTeacherNip(initialData.teacherNip);
+      setCustomTeacherName(initialData.teacherName);
       setClassId(initialData.classId);
       setSubject(initialData.subject);
       setDate(initialData.date);
@@ -38,7 +43,9 @@ export function SupervisionModalForm({ isOpen, onOpenChange, initialData, teache
       setNotesGood(initialData.notesGood);
       setRecommendations(initialData.recommendations);
     } else {
+      setIsCustomTeacher(false);
       setTeacherNip(teachers[0]?.nip || '');
+      setCustomTeacherName('');
       setClassId(classes[0]?.id || '1A');
       setTopic('');
       setScores(initialSupervisionScores);
@@ -52,10 +59,14 @@ export function SupervisionModalForm({ isOpen, onOpenChange, initialData, teache
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const tObj = teachers.find((t) => t.nip === teacherNip);
+    const finalName = isCustomTeacher
+      ? customTeacherName.trim() || 'Guru SD Negeri Bobong'
+      : tObj?.name || 'Guru SD Negeri Bobong';
+
     onSave({
       id: initialData?.id || crypto.randomUUID(),
-      teacherNip,
-      teacherName: tObj?.name || 'Guru SD Negeri Bobong',
+      teacherNip: isCustomTeacher ? teacherNip.trim() || '-' : teacherNip,
+      teacherName: finalName,
       classId,
       subject,
       date,
@@ -84,6 +95,8 @@ export function SupervisionModalForm({ isOpen, onOpenChange, initialData, teache
         <form onSubmit={handleSubmit} className="space-y-4 mt-2 text-xs">
           <SupervisionFormInputs
             teacherNip={teacherNip} setTeacherNip={setTeacherNip}
+            customTeacherName={customTeacherName} setCustomTeacherName={setCustomTeacherName}
+            isCustomTeacher={isCustomTeacher} setIsCustomTeacher={setIsCustomTeacher}
             classId={classId} setClassId={setClassId}
             subject={subject} setSubject={setSubject}
             date={date} setDate={setDate}
