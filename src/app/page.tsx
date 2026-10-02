@@ -26,6 +26,7 @@ import { JadwalView } from '@/components/views/JadwalView';
 import { CounselingView } from '@/components/views/CounselingView';
 import { VirtualCardView } from '@/components/views/VirtualCardView';
 import { FormsView } from '@/components/views/FormsView';
+import { SupervisiView } from '@/components/views/SupervisiView';
 
 function AppContent() {
   const { isLoggedIn, isInitializing, activeView, currentTeacher } = useApp();
@@ -72,6 +73,7 @@ function AppContent() {
           {activeView === 'tugas' && <TugasView />}
           {activeView === 'forms' && <FormsView />}
           {activeView === 'laporan' && <LaporanView />}
+          {activeView === 'supervisi' && isKepsek && <SupervisiView />}
           {activeView === 'rapat' && <RapatView />}
           {activeView === 'guru' && isKepsek && <GuruView />}
           {activeView === 'pengaturan' && <PengaturanView />}

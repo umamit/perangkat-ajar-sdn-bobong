@@ -19,6 +19,7 @@ const navItems = [
   { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
   { id: 'forms', label: 'Formulir Digital', icon: 'ri-survey-line' },
   { id: 'laporan', label: 'Laporan', icon: 'ri-bar-chart-box-line' },
+  { id: 'supervisi', label: 'Supervisi Akademik', icon: 'ri-shield-check-line' },
   { id: 'rapat', label: 'Agenda & Notula Rapat', icon: 'ri-discuss-line' },
   { id: 'guru', label: 'Kelola Data Guru', icon: 'ri-user-star-line' },
   { id: 'pengaturan', label: 'Pengaturan', icon: 'ri-settings-4-line' },
@@ -34,7 +35,7 @@ export const Sidebar = React.memo(function Sidebar() {
   );
 
   const visibleItems = navItems.filter(item => {
-    if (item.id === 'guru' || item.id === 'virtual_card') return isKepsek;
+    if (item.id === 'guru' || item.id === 'virtual_card' || item.id === 'supervisi') return isKepsek;
     return true;
   });
 
