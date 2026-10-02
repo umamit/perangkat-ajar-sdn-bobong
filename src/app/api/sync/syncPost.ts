@@ -109,6 +109,12 @@ export async function handleSyncPost(request: Request) {
         if (data) verifyOwnership(data.teacher_nip);
         return NextResponse.json({ success: !(await supabase.from("schedules").delete().eq("id", payload.id)).error });
       }
+      case "saveSupervision":
+        if (!isKepsek) return NextResponse.json({ success: false, error: "Hanya Kepala Sekolah" }, { status: 403 });
+        return NextResponse.json({ success: !(await supabase.from("supervisions").upsert(payload)).error });
+      case "deleteSupervision":
+        if (!isKepsek) return NextResponse.json({ success: false, error: "Hanya Kepala Sekolah" }, { status: 403 });
+        return NextResponse.json({ success: !(await supabase.from("supervisions").delete().eq("id", payload.id)).error });
       default:
         return NextResponse.json({ success: false, error: "Aksi tidak dikenal" }, { status: 400 });
     }

@@ -43,7 +43,7 @@ export async function handleSyncGet(request: Request) {
     const [
       teachersRes, classesRes, studentsRes, journalsRes, attendanceRes,
       modulesRes, gradesRes, flashcardsRes, assignmentsRes, counselingRes,
-      schedulesRes, settingsRes
+      schedulesRes, settingsRes, supervisionsRes
     ] = await Promise.allSettled([
       supabase.from("teachers").select("*"),
       supabase.from("classes").select("*"),
@@ -56,7 +56,8 @@ export async function handleSyncGet(request: Request) {
       assignmentQuery,
       counselingQuery,
       scheduleQuery,
-      supabase.from("school_settings").select("*")
+      supabase.from("school_settings").select("*"),
+      supabase.from("supervisions").select("*").order("date", { ascending: false })
     ]);
 
     const getValue = (res: PromiseSettledResult<any>) =>
@@ -94,6 +95,7 @@ export async function handleSyncGet(request: Request) {
       assignments: getValue(assignmentsRes),
       counselingLogs: getValue(counselingRes),
       schedules: getValue(schedulesRes),
+      supervisions: getValue(supervisionsRes),
       schoolSettings
     });
   } catch (err: any) {
