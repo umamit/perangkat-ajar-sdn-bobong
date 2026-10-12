@@ -14,6 +14,7 @@ const navItems = [
   { id: 'nilai', label: 'Daftar Nilai', icon: 'ri-graduation-cap-line' },
   { id: 'jurnal', label: 'Jurnal Mengajar', icon: 'ri-book-read-line' },
   { id: 'modul', label: 'Modul Ajar', icon: 'ri-file-list-3-line' },
+  { id: 'lkpd', label: 'LKPD Siswa', icon: 'ri-article-line' },
   { id: 'ai_assistant', label: 'AI Asisten Guru', icon: 'ri-magic-line' },
   { id: 'materi', label: 'Media Flashcard', icon: 'ri-folder-open-line' },
   { id: 'tugas', label: 'Tugas & Bank Soal', icon: 'ri-clipboard-line' },
