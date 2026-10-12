@@ -36,7 +36,20 @@ export function LkpdCardItem({ item, classNameTitle, isOwner, onDelete, onDownlo
           </div>
         </div>
         <CardTitle className="text-sm font-extrabold text-slate-800 mt-3 line-clamp-1">
-          {item.title}
+          {item.fileUrl ? (
+            <a
+              href={item.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary hover:underline inline-flex items-center gap-1 group transition-colors"
+              title="Klik untuk membuka/melihat berkas LKPD"
+            >
+              <span>{item.title}</span>
+              <i className="ri-external-link-line text-xs text-slate-400 group-hover:text-primary" />
+            </a>
+          ) : (
+            item.title
+          )}
         </CardTitle>
         <div className="text-[10px] font-semibold text-slate-500 mt-1 flex items-center gap-1">
           <i className="ri-user-line text-[10px]" />
@@ -80,9 +93,10 @@ export function LkpdCardItem({ item, classNameTitle, isOwner, onDelete, onDownlo
                 variant="outline"
                 size="sm"
                 onClick={() => window.open(item.fileUrl, "_blank")}
-                className="h-8 rounded-lg text-[10px] font-black text-emerald-700 border-emerald-200 hover:bg-emerald-50/50 gap-1"
+                className="h-8 rounded-lg text-[10px] font-black text-emerald-700 bg-emerald-50/50 border-emerald-300 hover:bg-emerald-100/60 gap-1"
+                title="Buka dan lihat berkas LKPD"
               >
-                <i className="ri-download-2-line text-emerald-600" /> Berkas
+                <i className="ri-eye-line text-emerald-600" /> Lihat Berkas
               </Button>
             )}
           </div>
