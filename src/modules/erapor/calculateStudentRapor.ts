@@ -1,51 +1,9 @@
 import { Student, GradeRecord, AttendanceRecord, ClassInfo, Teacher, SchoolSettings } from "@/types";
-import { StudentRaporData, SubjectGradeRapor } from "@/types/erapor";
+import { StudentRaporData, SubjectGradeRapor, ExtracurricularRapor } from "@/types/erapor";
 import { SUBJECTS } from "@/components/views/nilai/useGradeManagement";
 import { computeCompleteGrade } from "@/components/views/nilai/gradeCalculator";
 import { StudentCurriculumGrade } from "@/components/views/nilai/gradeCurriculumTypes";
-
-const SUBJECT_TOPICS: Record<string, { high: string; guidance: string }> = {
-  "Pendidikan Agama Islam": {
-    high: "memahami nilai-nilai keimanan, akhlak mulia, dan praktik ibadah sehari-hari",
-    guidance: "kelancaran melafalkan bacaan doa serta penerapan adab secara konsisten"
-  },
-  "Pendidikan Agama Kristen": {
-    high: "memahami kasih Tuhan dalam keluarga, gereja, dan lingkungan sekitar",
-    guidance: "penerapan nilai pelayanan dan refleksi iman dalam keseharian"
-  },
-  "Pendidikan Pancasila": {
-    high: "mengamalkan nilai-nilai sila Pancasila serta mematuhi aturan di sekolah dan rumah",
-    guidance: "pemahaman keberagaman identitas dan kerja sama dalam kegiatan kelompok"
-  },
-  "Bahasa Indonesia": {
-    high: "menyimak, memahami isi teks bacaan, dan menyampaikan gagasan secara lisan maupun tulisan",
-    guidance: "penggunaan kosakata baku dan penulisan kalimat efektif sesuai kaidah"
-  },
-  "Matematika": {
-    high: "mengenal konsep bilangan, operasi hitung dasar, dan pemecahan masalah sederhana",
-    guidance: "ketelitian dalam menyelesaikan soal cerita dan penalaran geometri ruang"
-  },
-  "IPAS": {
-    high: "mengamati fenomena alam sekitar serta mengenali interaksi sosial di lingkungan",
-    guidance: "keterampilan menyimpulkan hasil pengamatan percobaan sains sederhana"
-  },
-  "PJOK": {
-    high: "mempraktikkan gerak dasar lokomotor, non-lokomotor, dan menjaga kebugaran jasmani",
-    guidance: "koordinasi gerak manipulatif dan sportivitas dalam permainan beregu"
-  },
-  "Seni Budaya": {
-    high: "mengekspresikan kreativitas melalui karya seni rupa dan apresiasi estetika",
-    guidance: "kerapian teknik pewarnaan dan penyelesaian detail karya seni"
-  },
-  "Bahasa Inggris": {
-    high: "merespons instruksi sederhana dan menyebutkan kosakata bahasa Inggris kontekstual",
-    guidance: "pelafalan (pronunciation) dan keberanian berbicara dalam percakapan pendek"
-  },
-  "Muatan Lokal": {
-    high: "mengenal kearifan budaya lokal Kabupaten Pulau Taliabu dan pelestarian lingkungan",
-    guidance: "pemahaman istilah adat daerah dan keterampilan praktik budaya setempat"
-  }
-};
+import { SUBJECT_TOPICS, DEFAULT_EXTRACURRICULARS } from "./raporSubjectTopics";
 
 export function calculateSubjectFinalScore(student: Student, subject: string, grades: GradeRecord[]): number {
   const sGrades = grades.filter(g => (g.student_id === student.id || g.studentId === student.id) && g.subject === subject);
@@ -82,7 +40,8 @@ export function calculateSubjectFinalScore(student: Student, subject: string, gr
 export function buildStudentRaporData(
   student: Student, classes: ClassInfo[], teachers: Teacher[],
   grades: GradeRecord[], attendance: AttendanceRecord[],
-  schoolSettings?: SchoolSettings, customNotes?: string
+  schoolSettings?: SchoolSettings, customNotes?: string,
+  customEkskul?: ExtracurricularRapor[]
 ): StudentRaporData {
   const cls = classes.find(c => c.id === student.classId);
   const religion = (student.religion || "Islam").toLowerCase();
@@ -128,7 +87,9 @@ export function buildStudentRaporData(
     schoolName: schoolSettings?.school_name || "SD Negeri Bobong",
     npsn: schoolSettings?.npsn || "60101234",
     schoolAddress: "Jl. Mansur Sou, Desa Wayo, Kec. Taliabu Barat, Kab. Pulau Taliabu, Provinsi Maluku Utara, 97791",
-    subjects, attendance: { sakit, izin, alpa },
+    subjects,
+    extracurriculars: customEkskul || DEFAULT_EXTRACURRICULARS,
+    attendance: { sakit, izin, alpa },
     homeroomNotes: customNotes || `Ananda ${student.name} menunjukkan sikap positif, semangat belajar yang baik, serta aktif mengikuti kegiatan pembelajaran di kelas. Terus tingkatkan kedisiplinan dan rajin membaca di rumah.`,
     homeroomTeacherName: homeroomTeacher?.name || "Wali Kelas",
     homeroomTeacherNip: homeroomTeacher?.nip || "-",

@@ -1,12 +1,14 @@
 import React from "react";
-import { StudentRaporData } from "@/types/erapor";
+import { StudentRaporData, ExtracurricularRapor } from "@/types/erapor";
+import { EraporEkskulSection } from "./EraporEkskulSection";
 
 interface EraporSheetViewProps {
   rapor: StudentRaporData;
   onUpdateNotes: (note: string) => void;
+  onUpdateEkskul: (idx: number, field: keyof ExtracurricularRapor, val: string) => void;
 }
 
-export function EraporSheetView({ rapor, onUpdateNotes }: EraporSheetViewProps) {
+export function EraporSheetView({ rapor, onUpdateNotes, onUpdateEkskul }: EraporSheetViewProps) {
   const todayStr = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 
   return (
@@ -74,6 +76,8 @@ export function EraporSheetView({ rapor, onUpdateNotes }: EraporSheetViewProps) 
           </div>
         ))}
       </div>
+
+      <EraporEkskulSection extracurriculars={rapor.extracurriculars} onUpdateEkskul={onUpdateEkskul} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
         <div className="rounded-xl border border-slate-300 overflow-hidden">

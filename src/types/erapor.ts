@@ -7,6 +7,13 @@ export interface SubjectGradeRapor {
   fullDescription: string;
 }
 
+export interface ExtracurricularRapor {
+  no: number;
+  name: string;
+  predicate: string;
+  description: string;
+}
+
 export interface StudentRaporData {
   studentId: string;
   name: string;
@@ -21,6 +28,7 @@ export interface StudentRaporData {
   npsn: string;
   schoolAddress: string;
   subjects: SubjectGradeRapor[];
+  extracurriculars: ExtracurricularRapor[];
   attendance: {
     sakit: number;
     izin: number;

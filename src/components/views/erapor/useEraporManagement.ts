@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { getTeacherAssignedClass } from "@/lib/utils";
 import { buildStudentRaporData } from "@/modules/erapor/calculateStudentRapor";
+import { DEFAULT_EXTRACURRICULARS } from "@/modules/erapor/raporSubjectTopics";
+import { ExtracurricularRapor } from "@/types/erapor";
 import { downloadEraporPDF } from "@/modules/generateEraporPDF";
 
 export function useEraporManagement() {
@@ -21,6 +23,7 @@ export function useEraporManagement() {
 
   const [selectedStudentId, setSelectedStudentId] = useState<string>("");
   const [customNotesMap, setCustomNotesMap] = useState<Record<string, string>>({});
+  const [customEkskulMap, setCustomEkskulMap] = useState<Record<string, ExtracurricularRapor[]>>({});
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
@@ -38,14 +41,22 @@ export function useEraporManagement() {
   const raporData = useMemo(() => {
     if (!currentStudent) return null;
     const customNote = customNotesMap[currentStudent.id];
+    const customEkskul = customEkskulMap[currentStudent.id];
     return buildStudentRaporData(
-      currentStudent, classes, teachers, grades, attendance, schoolSettings, customNote
+      currentStudent, classes, teachers, grades, attendance, schoolSettings, customNote, customEkskul
     );
-  }, [currentStudent, classes, teachers, grades, attendance, schoolSettings, customNotesMap]);
+  }, [currentStudent, classes, teachers, grades, attendance, schoolSettings, customNotesMap, customEkskulMap]);
 
   const handleUpdateNotes = (note: string) => {
     if (!currentStudent) return;
     setCustomNotesMap(prev => ({ ...prev, [currentStudent.id]: note }));
+  };
+
+  const handleUpdateEkskul = (idx: number, field: keyof ExtracurricularRapor, val: string) => {
+    if (!currentStudent) return;
+    const currentList = customEkskulMap[currentStudent.id] || DEFAULT_EXTRACURRICULARS.map(item => ({ ...item }));
+    const updated = currentList.map((item, i) => (i === idx ? { ...item, [field]: val } : item));
+    setCustomEkskulMap(prev => ({ ...prev, [currentStudent.id]: updated }));
   };
 
   const handlePrintCurrentPDF = async () => {
@@ -64,22 +75,18 @@ export function useEraporManagement() {
 
   const handleNextStudent = () => {
     const idx = classStudents.findIndex(s => s.id === selectedStudentId);
-    if (idx >= 0 && idx < classStudents.length - 1) {
-      setSelectedStudentId(classStudents[idx + 1].id);
-    }
+    if (idx >= 0 && idx < classStudents.length - 1) setSelectedStudentId(classStudents[idx + 1].id);
   };
 
   const handlePrevStudent = () => {
     const idx = classStudents.findIndex(s => s.id === selectedStudentId);
-    if (idx > 0) {
-      setSelectedStudentId(classStudents[idx - 1].id);
-    }
+    if (idx > 0) setSelectedStudentId(classStudents[idx - 1].id);
   };
 
   return {
     classes, lockedClass, selectedClass, setSelectedClass,
     classStudents, selectedStudentId, setSelectedStudentId,
     currentStudent, raporData, downloading,
-    handleUpdateNotes, handlePrintCurrentPDF, handleNextStudent, handlePrevStudent
+    handleUpdateNotes, handleUpdateEkskul, handlePrintCurrentPDF, handleNextStudent, handlePrevStudent
   };
 }

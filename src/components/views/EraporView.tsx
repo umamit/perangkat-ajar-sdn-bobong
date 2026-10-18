@@ -10,7 +10,7 @@ export function EraporView() {
     classes, lockedClass, selectedClass, setSelectedClass,
     classStudents, selectedStudentId, setSelectedStudentId,
     raporData, downloading,
-    handleUpdateNotes, handlePrintCurrentPDF, handleNextStudent, handlePrevStudent
+    handleUpdateNotes, handleUpdateEkskul, handlePrintCurrentPDF, handleNextStudent, handlePrevStudent
   } = useEraporManagement();
 
   return (
@@ -43,6 +43,7 @@ export function EraporView() {
         <EraporSheetView
           rapor={raporData}
           onUpdateNotes={handleUpdateNotes}
+          onUpdateEkskul={handleUpdateEkskul}
         />
       )}
     </div>
