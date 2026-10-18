@@ -13,6 +13,7 @@ import { SiswaView } from '@/components/views/SiswaView';
 import { KelasView } from '@/components/views/KelasView';
 import { AbsensiView } from '@/components/views/AbsensiView';
 import { NilaiView } from '@/components/views/NilaiView';
+import { EraporView } from '@/components/views/EraporView';
 import { JurnalView } from '@/components/views/JurnalView';
 import { ModulView } from '@/components/views/ModulView';
 import { LkpdView } from '@/components/views/LkpdView';
@@ -67,6 +68,7 @@ function AppContent() {
           {activeView === 'counseling' && <CounselingView />}
           {activeView === 'jadwal' && <JadwalView />}
           {activeView === 'nilai' && <NilaiView />}
+          {activeView === 'erapor' && <EraporView />}
           {activeView === 'jurnal' && <JurnalView />}
           {activeView === 'modul' && <ModulView />}
           {activeView === 'lkpd' && <LkpdView />}

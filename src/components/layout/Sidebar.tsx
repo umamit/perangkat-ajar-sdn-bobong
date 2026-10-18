@@ -12,6 +12,7 @@ const navItems = [
   { id: 'counseling', label: 'Bimbingan Konseling', icon: 'ri-heart-pulse-line' },
   { id: 'jadwal', label: 'Jadwal Pelajaran', icon: 'ri-calendar-2-line' },
   { id: 'nilai', label: 'Daftar Nilai', icon: 'ri-graduation-cap-line' },
+  { id: 'erapor', label: 'e-Rapor Siswa', icon: 'ri-file-paper-2-line' },
   { id: 'jurnal', label: 'Jurnal Mengajar', icon: 'ri-book-read-line' },
   { id: 'modul', label: 'Modul Ajar', icon: 'ri-file-list-3-line' },
   { id: 'lkpd', label: 'LKPD Siswa', icon: 'ri-article-line' },

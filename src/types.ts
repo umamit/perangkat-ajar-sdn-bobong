@@ -5,6 +5,7 @@ export * from "./types/academic";
 export * from "./types/learning";
 export * from "./types/meeting";
 export * from "./types/lkpd";
+export * from "./types/erapor";
 
 export interface AppData {
   teacher: Teacher;
